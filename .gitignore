@@ -1,0 +1,15 @@
+*.swp
+*ini-modified
+/build/
+_build/
+*.egg-info/
+log/
+*.pyc
+.mypy_cache/
+dist/
+.doctrees
+/Documentation/output*/
+.hypothesis/
+/tbot/_version.py
+/.coverage
+*output

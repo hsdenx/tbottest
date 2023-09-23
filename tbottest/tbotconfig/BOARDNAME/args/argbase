@@ -1,0 +1,11 @@
+-c
+tbottest.labgeneric
+-c
+tbottest.boardgeneric
+-fdo_power
+-f
+inifile:tbotconfig/BOARDNAME/tbot.ini
+-f
+boardfile:tbotconfig/BOARDNAME/BOARDNAME.ini
+-f
+useifconfig

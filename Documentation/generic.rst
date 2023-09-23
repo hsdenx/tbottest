@@ -1,0 +1,776 @@
+.. py:module:: tbottest.generic
+
+``tbottest.generic``
+=========================
+
+This is an example approach for a hopefully easy to use lab and board support.
+
+Therefore we use init file based configuration, based on
+
+https://docs.python.org/3/library/configparser.html
+
+with all its limitiations.
+
+But it showed, that for a first use of tbot, it is easier to explain
+to edit a tbot.ini file and start!
+
+
+remarks
+-------
+
+The following example can be used directly through copy&paste. Please
+replace the following placeholders in the files:
+
+
+.. csv-table:: placeholders
+        :header: "Name", "Description"
+
+        "@@LABNAME@@", "placeholder for your lab hostname"
+        "BOARDNAME", "rename BOARDNAME.ini -> to your boardsname, and replace it in tbottest/tbotconfig/BOARDNAME/args/argbase"
+
+requirements for lab host:
+
+sudo command should work without entering a password (or add support for this
+in tbot!)
+
+You should be able to ssh between lab host, build host and board
+without entering a password or something else!
+
+supported hardware/tools
+------------------------
+
+serial console access with:
+
+* piccom
+* kermit
+
+Powercontrol:
+
+* sispmctl
+* TinkerForge
+
+It should be easy to extend this.
+
+.. _genericconfiguration:
+
+configuration
+-------------
+
+Best, use the following directory structure:
+
+.. code-block:: shell
+
+        $ tree .
+        <your repo with your setup and testcases> (see below)
+        tbot (checkout from https://github.com/Rahix/tbot)
+        tbottest (this repo, checkout from github)
+
+Create for your tbot configuration and own testcase your own repo
+and use the following directory structure:
+
+.. code-block:: shell
+
+        $ tree -I log*
+        newtbot_starter.py
+        tbotconfig
+        ├── boardspecific.py
+        └── BOARDNAME
+            ├── args
+            │   ├── argsbase (from tbottest/tbotconfig/BOARDNAME/args/argbase, replace BOARDNAME with real name)
+            │   ├── argsBOARDNAME
+            │   └── [...]
+            ├── README.BOARDNAME
+            ├── tbot.ini
+            ├── BOARDNAME.ini
+
+see example in tbottest/tbotconfig.
+
+start script
+............
+
+with the newbot_starter.py script you can start tbot and your setup
+without the need to install tbot and tbottest.
+
+tbotconfig
+..........
+
+contains the whole lab and board configuration.
+
+README
+......
+
+README.BOARDNAME is not mandatory, but it is helpfull to collect/document at least some tbot usecases/commands.
+
+file/directory overview
+.......................
+
+.. csv-table:: subdirectories
+        :header: "Name", "content", "fastlink to documentation"
+
+        "args", "contains tbot arguments files, for easier usage", "`argumentfiles`_"
+        "tbot.ini", "init file for easy configuration", "`tbot ini file (tbot.ini)`_"
+        "BOARDNAME.ini", "init file with boardspecific onfigs for generic testcases", "boardconfiguration file"
+
+tbot ini file (tbot.ini)
+........................
+
+we use for configuring lab and board settings with:
+
+https://docs.python.org/3/library/configparser.html
+
+Find an example file here: tbottest:/tbottest/tbotconfig/BOARDNAME/tbot.ini
+
+boardspecfic runtime adaptions
+..............................
+
+You can add a python file "boardspecific.py" which tbot
+searches on startup and calls it, if found.
+
+The ini file approach is static, which means we cannot change
+configuration @runtime. For special cases there are some
+callbacks we can define in boardspecific.py so we can
+setup stuff in ini files on startup. Therefore the following
+callback are used:
+
+set_board_cfg(temp: str = None, filename: str = None)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This file is called early in bootup before any ini file
+is parsed. So you can adapt them for your needs
+
+.. code-block:: python
+
+    import tbot
+    from tbottest.generic.iniconfig import replace_in_file
+
+    tbot.selectable.printed = False
+
+    def print_log(msg):
+         if tbot.selectable.printed:
+                return
+
+            tbot.log.message(tbot.log.c(msg).yellow)
+
+    def set_board_cfg(temp: str = None, filename: str = None):
+        """
+        setup board specific stuff in ini files before they get parsed
+        """
+        # print tbot.flags, as tbot prints them not longer
+        print_log(f"TBOT.FLAGS {tbot.flags}")
+
+        replace_in_file(filename, "@@TBOTBOARD@@", "<boardname in your lab setup>")
+        replace_in_file(filename, "@@TBOTDATE@@", "20230221")
+        replace_in_file(filename, "@@TBOTMACHINE@@", "<yocto machine name>")
+
+        tbot.selectable.boardname = None
+        for f in tbot.flags:
+            if "selectableboardname" in f:
+                tbot.selectable.boardname = f.split(":")[1]
+
+        if tbot.selectable.boardname == None:
+            tbot.selectable.boardname = "wandboard"
+
+
+board_set_boardname
+^^^^^^^^^^^^^^^^^^^
+
+called from initconfig.py generic_get_boardname()
+
+.. code-block:: python
+
+    import tbot
+
+
+    def board_set_boardname() -> str:
+        # do not use selectableboardname flag
+        BOARDNAME = "foo"
+        for f in tbot.flags:
+            if "8G" in f:
+                if len(f) == 2:
+                    BOARDNAME = "foo-8G"
+
+        return BOARDNAME
+
+
+set_ub_board_specific
+^^^^^^^^^^^^^^^^^^^^^
+
+called from boardgeneric.py in init function.
+
+setup U-Boot specific parts after entering the U-Boot shell
+
+.. code-block:: python
+
+    def set_ub_board_specific(self):
+        optargs = self.env("optargs")
+        optupd = False
+        if "bootchartd" in tbot.flags:
+            optargs = f"{optargs} init=/lib/systemd/systemd-bootchart"
+            optupd = True
+
+        if "debug_initcalls" in tbot.flags:
+            optargs = f"{optargs} initcall_debug"
+            optupd = True
+
+        if optupd == True:
+            self.env("optargs", optargs)
+
+        if "silent" in tbot.flags:
+            self.env("console", "silent")
+
+
+Currently there are the following sections in tbot.ini:
+
+tbot.ini sections
+.................
+
+[LABHOST]
+^^^^^^^^^
+
+here you configure common lab host setting. Mandatory.
+
+.. csv-table:: [LABHOST]
+        :header: "key", "value", "example"
+
+        "labname", "name of your lab", "lab7"
+        "hostname", "hostname of lab host", "192.168.1.123"
+        "username", "username on lab host", "pi"
+        "port", "ssh port number", "22"
+        "sshkeyfile", "path to the ssh keyfile, tbot uses", "/home/USERNAME/.ssh/id_rsa"
+        "date", "subdirectory in boards tftp path", "20210803-ml"
+        "toolsdir", "where does tbot find tools installed on lab host", "/home/USERNAME/source"
+        "tftproot", "rootpath to tftp directory on lab host. tbot stores there build results.", "/srv/tftpboot"
+        "tftpsubdir", "boards subdir in tftproot", "BOARD/DATE"
+        "tftpsubdirkas", "boards subdir in tftproot, where kas build results are stored if flag 'kas' is set", "BOARD/DATE/kas"
+        "tftpsubdiruuu", "path, where uuu tool looks for binaries", "BOARD/DATE"
+        "workdir", "tbots workdirectory on lab host", "/work/USERNAME/tbot-workdir/BOARD"
+        "tmpdir", "path to where tbot stores temporary data", "/tmp/tbot/USERNAME/BOARD"
+        "proxyjump", "if set, proxyjump settings for ssh login on lab host", "pi@xeidos.ddns.net"
+        "labinit", "array of strings which contains commands, executed when you init the lab", "['sudo systemctl --all --no-pager restart tftpd-hpa']"
+
+[BUILDHOST]
+^^^^^^^^^^^
+
+here you configure common build host setting. Only used, if you use a buildhost.
+
+.. csv-table:: [BUILDHOST]
+        :escape: '
+        :header: "key", "value", "example"
+
+        "name", "name of your build host", "threadripper-big-build"
+        "username", "username on your build host", "hs"
+        "hostname", "hostname of your build machine", "192.168.1.120"
+        "port", "portnumber of your build machine", "12004"
+        "docker", "porxy jump configuration", "hs@192.168.1.120:22"
+        "dl_dir", "for yocto builds, sets DL_DIR", "/work/downloads"
+        "sstate_dir", "for yocto builds, set SSTATE_DIR", "/work2/hs/tbot2go/yocto-sstate"
+        "kas_ref_dir", "when using kas, path where kas finds git trees for reference cloning", "/work/hs/src"
+        "workdir", "path to directory where tbot can work on", "/work/big/hs/tbot2go"
+        "authenticator", "path to ssh id key file", "/home/hs/.ssh/id_rsa"
+        "initcmd", "list of commands executed after login", "['"uname -a'", '"cat /etc/os-release'"]"
+
+The next sections depend on your board configuration
+
+[BOOTMODE_BOARDNAME]
+^^^^^^^^^^^^^^^^^^^^
+
+if you need to set a bootmode for your board, you can add this section.
+
+You can give each bootmode a name and if you pass this name
+to tbot with the "-f" flag, the lab approach first
+sets all gpios you have defined for this bootmode to the
+respective states, before it powers on the board.
+
+.. csv-table:: [BOOTMODE_testboard]
+        :header: "key", "description", "default", "example"
+
+        "modes", "list of dictionary with 'name' and 'gpios' keys", "[]", "modes = [{'name':'usb_sdp', 'gpios':'26:1 19:0'}, {'name':'spinor', 'gpios':'26:0 19:0'} ]"
+
+which defines 2 bootmodes "usb_sdp" and "spinor" and sets
+the gpios number 26 and 19 to the state 0 or 1
+
+[PICOCOM_BOARDNAME]
+^^^^^^^^^^^^^^^^^^^
+
+if you want to use picocom for connecting to your boards console.
+
+:py:meth:`tbottest.connector.PicocomConnector`
+
+replace BOARDNAME with the name of your board!
+Here as example wandboard.
+
+.. csv-table:: [PICOCOM_wandboard]
+        :header: "key", "value", "example"
+
+        "baudrate", "baudrate of the boards console", "115200"
+        "device", "linux device name for the serial device on lab host", "/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller-if00-port0"
+        "delay", "delay for power off", "3"
+        "noreset", "set picocom noreset parameter", "True"
+
+
+[KERMIT_BOARDNAME]
+^^^^^^^^^^^^^^^^^^
+
+if you want to use kermit for connecting to your boards console
+
+:py:meth:`tbottest.connector.KermitConnector`
+
+replace BOARDNAME with the name of your board!
+Here as example wandboard.
+
+.. csv-table:: [KERMIT_wandboard]
+        :header: "key", "value", "example"
+
+        "cfgfile", "path to kermit config file, which is passed to kermit when starting", "/home/pi/kermrc_wandboard"
+        "delay", "delay for poweroff", "3"
+
+[GPIOPMCTRL_BOARDNAME]
+^^^^^^^^^^^^^^^^^^^^^^
+
+If you want to control boards power with gpio pins
+
+
+replace BOARDNAME with the name of your board!
+Here as example wandboard.
+
+.. csv-table:: [GPIOPMCTRL_wandboard]
+        :header: "key", "value", "example"
+
+        "pin", "pin number of gpio pin", "17"
+        "state", "on state", "1"
+
+
+[SISPMCTRL_BOARDNAME]
+^^^^^^^^^^^^^^^^^^^^^
+
+If you want to control boards power with sispmctl
+
+:py:meth:`tbottest.powercontrol.SispmControl`
+
+replace BOARDNAME with the name of your board!
+Here as example wandboard.
+
+.. csv-table:: [SISPMCTRL_wandboard]
+        :header: "key", "value", "example"
+
+        "device", "id of sispmctl device", "01:01:4f:d4:b1"
+        "port", "sispmctl port used for the boards power", "3"
+
+
+[TF_BOARDNAME]
+^^^^^^^^^^^^^^
+
+If you want to control boards power with tinkerforge
+
+:py:meth:`tbottest.powercontrol.TinkerforgeControl`
+
+replace BOARDNAME with the name of your board!
+Here as example wandboard.
+
+.. csv-table:: [TF_wandboard]
+        :header: "key", "value", "example"
+
+        "uid", "tinkerforges uid", "Nt2"
+        "channel", "channel", "1"
+
+ethernet config
+^^^^^^^^^^^^^^^
+
+ipsetup for an ethernetdevice on board, add section
+
+[IPSETUP_BOARDNAME_<ethdevice_board>]
+:::::::::::::::::::::::::::::::::::::
+
+replace BOARDNAME with the name of your board!
+Here as example for setup eth0 on wandboard.
+
+.. csv-table:: [IPSETUP_wandboard_eth0]
+        :header: "key", "value", "example"
+
+        "labdevice", "device which is connected to eth0 on board", "eth0"
+        "netmask", "netmask", "255.255.255.0"
+        "ethaddr", "ethaddr (MAC) of the device on board", "00:1f:7b:b2:00:0e"
+        "ipaddr", "ipaddr of the board for device on board", "192.168.3.21"
+        "serverip", "server ip, ip address of lab host", "192.168.3.1"
+
+[UBCFG_BOARDNAME]
+:::::::::::::::::
+
+if you need to specifiy in U-Boot which lab host ethernetinterface is should use, define
+this section.
+
+replace BOARDNAME with the name of your board!
+Here as example for setup eth0 on wandboard.
+
+.. csv-table:: [UBCFG__wandboard]
+        :header: "key", "value", "example"
+
+        "ethintf", "ethernetinterface used on lab host for u-boot, default is eth0", "eth0"
+
+
+setup for uuu tool
+^^^^^^^^^^^^^^^^^^
+
+if you want to use NXPs uuu tool with class
+
+:py:meth:`tbottest.machineinit.UUULoad`
+
+define the section
+
+
+.. csv-table:: [UUU_CONFIG__wandboard]
+        :header: "key", "value", "example"
+
+        "cmd", "comma seperated list of uuu commands to load SPL/U-Boot with uuu tool.", "LBD/SPL,SDPV: delay 100,SDPV: write -f LBD/u-boot.img -addr 0x877fffc0,SDPV: jump -addr 0x877fffc0"
+
+setup for Lauterbacher debugger
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+if you want to use Lauterbacher debugger use this class
+
+Currently we use the python script t32apicmd.py
+from lauterbach installation directory "install_path" in
+subdir "demo/api/python". Later we will use this api directly.
+
+:py:meth:`tbottest.machineinit.LauterbachLoad`
+
+define the section
+
+.. csv-table:: [LAUTERBACH_CONFIG_wandboard]
+        :header: "key", "value", "example"
+
+        "verbose", "1 = verbose output", "1"
+        "cmd", "", "/opt/t32/bin/pc_linux64/t32marm-qt"
+        "install_path", "path to your installation of Lauterbacher tools", "/opt/t32"
+        "config", "path to config.t32 file", "/from_ftp/lauterbach-scripts/hsconfig.t32"
+        "script", "path to script which gets executed", "/from_ftp/lauterbach-scripts/autostart.cmm"
+
+setup for Segger debugger
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+if you want to use Segger debugger use this class
+
+:py:meth:`tbottest.machineinit.SeggerLoad`
+
+define the section
+
+.. csv-table:: [SEGGER_CONFIG_wandboard]
+        :header: "key", "value", "example"
+
+        "install_path", "path to your installation of the Segger tools", "/opt/segger"
+        "cmds", "list of commands executed in JLinkExe shell to bring up U-Boot", "[{'cmd':'go', 'prompt':'J-Link>'}]"
+
+
+boardconfiguration file
+.......................
+
+we use for configuring for boardspecific testcasesettings with:
+
+https://docs.python.org/3/library/configparser.html
+
+add therefore a BOARDNAME.ini file into config/BOARDNAME
+
+It contains only one section with name ```TC``` from where the generic
+board testcase approach boardgeneric.py takes the config to generate
+the class GenericBoardConfig, used from generic testcases.
+
+common settings
+^^^^^^^^^^^^^^^
+
+common settings for your board.
+
+.. csv-table:: [TC]
+        :header: "key", "description", "default", "example"
+
+        "tmpdir", "path to place on board, which could be used for temporary data testcases need.", "/tmp", "/tmp/tbot"
+        "death_strings", "array of strings, which should not ocur in stream", "[]", "['Kernel panic']"
+
+u-boot settings
+^^^^^^^^^^^^^^^
+
+settings needed for U-Boot testcases.
+
+.. csv-table:: [TC]
+        :escape: '
+        :header: "key", "description", "default", "example"
+
+        "uboot_boot_timeout", "config boot_timeout, set None if None", "90", "None"
+        "autoboot_prompt", "set autoboot_prompt, None if None", b'"autoboot:\\s{0,5}\\d{0,3}\\s{0,3}.{0,80}'", "None"
+        "autoboot_timeout", "UBootAutobootInterceptSimple timeout for waiting for U-Boot prompt", '0.05', "0.1"
+        "rescueimage", "name of rescueimage", "None", "rescueimage-fit.itb"
+        "qspiheader", "name of qspi header", "None", "qspiheader.bin"
+        "splimage", "name of spl image", "None", "SPL"
+        "fb_res_setup", "u-boot commands for setting up rescue image boot with fastboot and uuu tool", "None", "run ramargs addcon addmtd addopt"
+        "fb_res_boot", "u-boot command for booting rescue image with fastboot and uuu tool", "None", "bootm 94000000"
+        "fb_cmd", "fastboot init command", "None", "fastboot usb 0"
+        "ub_env", "list dict of u-boot environment variables which get set after login into u-boot", "[]", "[{'"name'":'"optargs'", '"val'":'"earlycon clk_ignore_unused'"}]"
+
+linux settings
+^^^^^^^^^^^^^^
+
+settings needed for linux testcases.
+
+.. csv-table:: [TC]
+        :escape: '
+        :header: "key", "description", "default", "example"
+
+        "linux_user", "username for linux login", "root", "root"
+        "linux_password", "password for linux login, None for no password required", "None", "None"
+        "linux_login_delay", "login delay in seconds", "5", "1"
+        "linux_boot_timeout", "Maximum time for Linux to reach the login prompt.", "None", "30"
+        "linux_init_timeout", "If not None, timeout in seconds after ethernetconfig", "None", "2.0" 
+        "linux_init", "list of commands send after login. mode = exec or exec0", "[]", "[{'"mode'":'"exec0'", '"cmd'":'"echo Hallo'"}]" 
+        "beep", "list of dictionary of commands for beep command", "[]", "[{'"freq'": '"440'", '"length'":'"1000'"}]"
+        "cyclictestmaxvalue", "maximum allowed value from stress-ng 'Max' colum", "100", "cyclictestmaxvalue = 100"
+        "dmesg", "list of strings, which should be in dmesg output", "[]", "dmesg = ['"OF: fdt: Machine model:'", '"gpio-193 (eeprom-wc): hogged as output/low'",]"
+        "dmesg_false", "list of strings, which should be not in dmesg output", "[]", "dmesg = ['"crash'"]"
+        "leds", "list of dictionary for checking leds", "[]", "leds = [{'"path'":'"/sys/class/leds/led-orange'", #bootval'":'"0'", '"onval'":'"1'},]"
+        "network_iperf_intervall", "iperf intervall", "1", "network_iperf_intervall = 1"
+        "network_iperf_minval", "iperf minimum network throughput", "1", "network_iperf_minval = 9000000"
+        "network_iperf_cylces", "iperf cycles", "1", "network_iperf_cycles = 30"
+        "nvramdev", "nvram device", "6", "nvramdev = 6"
+        "nvramcomp", "compatibility string of nvram device", "microchip,48l640", "nvramcomp = 'microchip,48l640'"
+        "nvramsz", "size of nvram device", "8192", "nvramsz = 8192"
+        "rs485labdev", "path to device", "/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0", 'rs485labdev = "/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0"'
+        "rs485baud", "baudrate used for test", "115200", 'rs485baud = "115200"'
+        "rs485boarddev", "list of strings, each string contains a path to device which used in test", '["/dev/ttymxc2"]', 'rs485boarddev = ["/dev/ttymxc2"]'
+        "rs485lengths", "list of strings. Each string is a length of data send over rs485 line", '["20", "100", "1024"]', 'rs485lengths = ["20", "100", "1024"]'
+        "sensors", "list of dictionary for checking temperature sensors", "[]", "sensors = [{'path':''/sys/class/hwmon/hwmon0, "name":"tmp102", "tmpvalues":[{"valname" : "temp1_input", "min":"0", "max" : "100000" }]},]"
+        "mtd_parts", "list of dictionary for MTD parts definition", "[]", "leds = [{'name':'SPL', 'size':'10000'},]"
+        "ub_mtd_delete", "list of strings with MTD names which are allowed to delete", "[]", "ub_mtd_delete = ['SPL", "uboot"]"
+
+
+swupdate settings
+^^^^^^^^^^^^^^^^^
+
+settings needed for swupdate testcases.
+
+.. csv-table:: [TC]
+        :header: "key", "description", "default", "example"
+
+        "swuethdevice", "device which is used for getting ethernetconfiguration on lab host", "eth0", "eth0"
+        "swuimage", "Name of swu image name which get installed on board", "mandatory, no fallback", "swu-image.swu"
+
+kas settings
+^^^^^^^^^^^^
+
+settings needed for yocto build with kas tool.
+
+.. csv-table:: [TC]
+        :header: "key", "description", "default", "example"
+
+        "kas", "dictionary with values need for class KAS", "mandatory, no default", "see: tbottest/tbotconfig/BOARDNAME.ini"
+        "kas_check_files", "list of files, which must exist after building", "[]", "['tmp/deploy/images/wandboard/SPL']"
+        "kas_results", "list of files, which get copied from build host to lab host for later use. Basepath is machine directory in tmp/deploy/images", "[]", "['SPL']"
+
+argumentfiles
+.............
+
+it is convenient to collect tbot arguments in argumentsfile. As you
+will have a lot of tbot arguments. We start in this example with
+a base "argsBOARDNAME" file, which than other files include.
+
+.. note::
+
+    You can use shell variables also in argumentfiles!
+
+The following example uses piccom for accessing serial console and
+sispmctl for boards power control.
+
+If you have another setup, adapt this "base" argument file accordingly.
+
+For example, if you want to use kermit for accessing console, remove the
+tbot flag piccom (as kermit is default).
+
+If you want to use Tinkerforge for controlling boards power, add flag "tinkerforge"
+
+
+.. code-block:: shell
+
+   $ cat tbotconfig/BOARDNAME/args/argsBOARDNAME
+   @tbotconfig/BOARDNAME/args/argsbase
+   -fpicocom
+
+.. note::
+
+   argsbase is a simple copy from tbottest/tbotconfig/BOARDNAME/argsfiles/argbase
+
+With executing tbot on lab host, you do not need to ssh to lab host,
+so use local flag.
+
+.. code-block:: shell
+
+   $ cat config/BOARDNAME/args/argsBOARDNAME-local
+   @config/BOARDNAME/args/argsBOARDNAME
+   -flocal
+
+
+If you do not want that tbot always initialize ethernet configuration
+on your lab host, use
+
+.. code-block:: shell
+
+    $ cat config/BOARDNAME/args/argsBOARDNAME-local-noeth
+    @config/BOARDNAME/args/argsBOARDNAME-local
+    -fnoethinit
+
+If you want to login to a board, which is already on and runs linux
+
+.. code-block:: shell
+
+    $ cat config/BOARDNAME/args/argsBOARDNAME-local-noeth-on
+    @config/BOARDNAME/args/argsBOARDNAME-local-noeth
+    -falways-on
+    -fnouboot
+    -fnopoweroff
+
+.. note::
+
+    start tbot with flag "always-on" and tbot will not poweroff
+    the board when ending, so if you have bootet into linux, and
+    logout, linux will remain and tbot can logon again!
+
+    This helps a lot when developing testcases!
+
+If you want to login per ssh into an already running linux on the board
+
+.. code-block:: shell
+
+    $ cat config/BOARDNAME/args/argsBOARDNAME-local-noeth-on
+    @config/BOARDNAME/args/argsBOARDNAME-local-noeth
+    -fssh
+
+
+And last but not least, if you have an imx6 based board and want to load
+SPL/U-Boot with tbot onto it, start tbot with:
+
+.. code-block:: shell
+
+   $ cat config/BOARDNAME/args/argsBOARDNAME-local-uuu
+   @config/BOARDNAME/args/argsBOARDNAME-local
+   -fuuuloader
+
+
+tbot call example
+
+.. code-block:: shell
+
+    $ ./newtbot_starter.py @tbotconfig/BOARDNAME/args/argsBOARDNAME-asus-kirkstone-nfs -f kas tbottest.inter.uboot
+    tbot starting ...
+    ├─TBOT.FLAGS {'boardfile:tbotconfig/BOARDNAME/BOARDNAME.ini', 'useifconfig', 'bootcmd:tftp_nfs', 'noboardethinit', 'noethinit', 'kas', 'do_power', 'kaslayerbranch:kirkstone', 'inifile:tbotconfig/BOARDNAME/tbot.ini', 'bootmode:emmc', 'picocom'}
+    ├─boardname now BOARDNAME
+    ├─Using kas file kas-denx-withdldir.yml
+    ├─Calling uboot ...
+    │   ├─[local] ssh -o BatchMode=yes -i /home/pi/.ssh/id_rsa -p 22 pi@tbotlab
+    │   ├─set bootmode bootmode:emmc
+    │   ├─[lab8] test -d /sys/class/gpio/gpio14
+    │   ├─[lab8] cat /sys/class/gpio/gpio14/direction
+    │   │    ## out
+    │   ├─[lab8] printf %s 1 >/sys/class/gpio/gpio14/value
+    │   ├─[local] ssh -o BatchMode=yes -i /home/pi/.ssh/id_rsa -p 22 pi@BOARDNAMElab
+    │   ├─set bootmode bootmode:emmc
+    │   ├─[lab8] test -d /sys/class/gpio/gpio14
+    │   ├─[lab8] cat /sys/class/gpio/gpio14/direction
+    │   │    ## out
+    │   ├─[lab8] printf %s 1 >/sys/class/gpio/gpio14/value
+    │   ├─[lab8] picocom -r -b 115200 -l /dev/serial/by-id/usb-FTDI_C232HM-EDHSL-0_FT57MR3U-if00-port0
+    │   ├─POWERON (board-control-full)
+    │   ├─[lab8] sispmctl -D 01:01:4f:09:5b -o 1
+    │   │    ## Accessing Gembird #0 USB device 012
+    │   │    ## Switched outlet 1 on
+    │   ├─UBOOT (BOARDNAME-uboot)
+    │   │    <> picocom v3.1
+    │   │    <>
+    │   │    <> port is        : /dev/serial/by-id/usb-FTDI_C232HM-EDHSL-0_FT57MR3U-if00-port0
+    │   │    <> flowcontrol    : none
+    │   │    <> baudrate is    : 115200
+    │   │    <> parity is      : none
+    │   │    <> databits are   : 8
+    │   │    <> stopbits are   : 1
+    │   │    <> escape is      : C-a
+    │   │    <> local echo is  : no
+    │   │    <> noinit is      : no
+    │   │    <> noreset is     : yes
+    │   │    <> hangup is      : no
+    │   │    <> nolock is      : yes
+    │   │    <> send_cmd is    : sz -vv
+    │   │    <> receive_cmd is : rz -vv -E
+    │   │    <> imap is        :
+    │   │    <> omap is        :
+    │   │    <> emap is        : crcrlf,delbs,
+    │   │    <> logfile is     : none
+    │   │    <> initstring     : none
+    │   │    <> exit_after is  : not set
+    │   │    <> exit is        : no
+    │   │    <>
+    │   │    <> Type [C-a] [C-h] to see available commands
+    │   │    <> Terminal ready
+    │   │    <>
+    │   │    <> U-Boot SPL 2023.04 (Apr 03 2023 - 20:38:50 +0000)
+    │   │    <> Trying to boot from MMC1
+    │   │    <>
+    │   │    <>
+    │   │    <> U-Boot 2023.04 (Apr 03 2023 - 20:38:50 +0000)
+    │   │    <>
+    │   │    <> CPU  : AM335X-GP rev 2.1
+    │   │    <> Model: XXX
+    │   │    <> DRAM:  512 MiB
+    │   │    <> Core:  172 devices, 20 uclasses, devicetree: separate
+    │   │    <> MMC:   OMAP SD/MMC: 0
+    │   │    <> Loading Environment from MMC... OK
+    │   │    <> In:    serial@0
+    │   │    <> Out:   serial@0
+    │   │    <> Err:   serial@0
+    │   │    <> Net:   eth2: ethernet@4a100000
+    │   │    <> Press SPACE to abort autoboot in 2 seconds
+    │   │    <> => <INTERRUPT>
+    │   │    <> =>
+    │   ├─[BOARDNAME-uboot] setenv serverip 192.168.3.1
+    │   ├─[BOARDNAME-uboot] printenv serverip
+    │   │    ## serverip=192.168.3.1
+    [...]
+    │   ├─[BOARDNAME-uboot] printenv optargs
+    │   │    ## optargs=consoleblank=0 vt.global_cursor_default=0 lpj=2988032 quiet  rauc.slot=A
+    │   ├─Entering interactive shell...
+    │   ├─Press CTRL+] three times within 1 second to exit.
+    
+    =>
+
+tbot flags
+----------
+
+The generic lab and board approach defines some tbot flags, so tbot can handle different usage challenges.
+It is recommended to collect arguments in so called argumentsfiles, else you are lost in tbot flags...
+
+======================== ====================================================
+tbot flag                Description
+======================== ====================================================
+bootcmd                  format bootcmd:<real bootcmd>, example bootcmd:net_nfs will execute "run net_nfs"
+gpiopower                use a gpio pin for boards power control
+tinkerforge              use tinkerforge for boards power control
+picocom                  use picocom for serial console
+uuuloader                load SPL/U-Boot with uuu tool from NXP
+ignore_loglevel          add ignore_level to miscargs (deprecated, use set_ub_board_specific)
+enterinitramfs           enter initramfs, add enterinitramfs to miscargs(deprecated, use set_ub_board_specific)
+linux_no_cmd_after_login set nothing after linux login (beside disable clutter)
+local                    enable if labhost and tbot host are the same (use SubprocessConnector)
+noboardethinit           do no board ethinit in linux after login
+nobootcon                set console to silent (deprecated, use set_ub_board_specific)
+yoctobuild               use images from yoctobuild
+ssh                      login to linux console through ssh (only possible if board already on and in linux)
+do_power                 tbot handles boards power
+always-on                board is already on, log into linux
+rescue                   boot rescue system (deprecated, use flag bootcmd)
+rescuetftp               boot rescue system, rescue image loaded through tftp (deprecated, use flag bootcmd)
+emmc                     u-boot bootcmd "run boot_emmc" (deprecated, use flag bootcmd)
+sdcard                   u-boot bootcmd "run boot_mmc" (deprecated, use flag bootcmd)
+tftpfit                  u-boot bootcmd "run tftp_mmc" (deprecated, use flag bootcmd)
+panic                    add death string "Kernel panic"
+docker                   if you need to login to a docker container with proxyjump
+uboot_no_env_set         do not set any U-Boot Environment after U-Boot login
+set-ethconfig            setup ip config in U-Boot
+useifconfig              use ifconfig for ip setup, else ip
+poweroffonstart          if set, power off board before powering on
+seggerloader             use segger debugger for breathing life into board
+outside                  if lab host is only reachable with proxyjump
+======================== ====================================================
