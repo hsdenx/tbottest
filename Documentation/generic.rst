@@ -26,7 +26,7 @@ replace the following placeholders in the files:
         :header: "Name", "Description"
 
         "@@LABNAME@@", "placeholder for your lab hostname"
-        "BOARDNAME", "rename BOARDNAME.ini -> to your boardsname, and replace it in tbottest/tbotconfig/BOARDNAME/args/argbase"
+        "BOARDNAME", "rename BOARDNAME.ini -> to your boardsname, and replace it in tbottest/tbotconfig/BOARDNAME/args/argsbase"
 
 requirements for lab host:
 
@@ -76,7 +76,7 @@ and use the following directory structure:
         ├── boardspecific.py
         └── BOARDNAME
             ├── args
-            │   ├── argsbase (from tbottest/tbotconfig/BOARDNAME/args/argbase, replace BOARDNAME with real name)
+            │   ├── argsbase (from tbottest/tbotconfig/BOARDNAME/args/argsbase, replace BOARDNAME with real name)
             │   ├── argsBOARDNAME
             │   └── [...]
             ├── README.BOARDNAME
@@ -593,7 +593,7 @@ If you want to use Tinkerforge for controlling boards power, add flag "tinkerfor
 
 .. note::
 
-   argsbase is a simple copy from tbottest/tbotconfig/BOARDNAME/argsfiles/argbase
+   argsbase is a simple copy from tbottest/tbotconfig/BOARDNAME/argsfiles/argsbase
 
 With executing tbot on lab host, you do not need to ssh to lab host,
 so use local flag.
