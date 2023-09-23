@@ -1,0 +1,69 @@
+From c2ad416f7d702b0d2098ad5c689b8eb2e20543ef Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@denx.de>
+Date: Fri, 7 Jul 2023 09:33:59 +0200
+Subject: [PATCH 12/18] channel.py: introduce new function
+ read_until_prompt_save
+
+especially on linux login it is may hard to get a clean prompt line.
+
+SO use this function if you have this problem. It polls for prompt.
+
+Signed-off-by: Heiko Schocher <hs@denx.de>
+---
+ tbot/machine/channel/channel.py | 40 +++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+
+diff --git a/tbot/machine/channel/channel.py b/tbot/machine/channel/channel.py
+index b6d41ce9..64cad99a 100644
+--- a/tbot/machine/channel/channel.py
++++ b/tbot/machine/channel/channel.py
+@@ -872,6 +872,46 @@ class Channel(typing.ContextManager):
+         finally:
+             self.prompt = previous
+ 
++    _prompt_timeout: float = None
++    prompt_poll_timeout: float = 0.5
++    _prompt_start: float
++
++    def _timeout_remaining(self) -> typing.Optional[float]:
++        if self._prompt_timeout is None:
++            return None
++        remaining = self._prompt_timeout - (time.monotonic() - self._prompt_start)
++        if remaining <= 0:
++            raise TimeoutError
++        else:
++            return remaining
++
++    def read_until_prompt_save(
++        self,
++        prompt: typing.Optional[ConvenientSearchString] = None,
++        timeout: typing.Optional[float] = 2,
++    ) -> str:
++        """
++        same as read_until_prompt, but it waits with timeout (default 2s)
++        not endless as read_until_prompt. Also it waits internally
++        prompt_poll_timeout = 0,5s for a prompt and if no prompt
++        is found, it sends a 2\r" to get a new prompt
++
++        This should be used when on the console other stuff is also poping
++        up (you should really try for reproducable tests to get rid of them)
++        """
++        self._prompt_start = time.monotonic()
++        self._prompt_timeout = timeout
++        while 1:
++            remaining = self._timeout_remaining()
++            try:
++                self.read_until_prompt(prompt, self.prompt_poll_timeout)
++                break
++            except:
++                pass
++
++            self.sendline("")
++
++
+     def read_until_prompt(
+         self,
+         prompt: typing.Optional[ConvenientSearchString] = None,
+-- 
+2.30.2
+

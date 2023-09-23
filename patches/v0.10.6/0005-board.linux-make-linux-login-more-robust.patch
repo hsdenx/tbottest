@@ -1,0 +1,61 @@
+From 381dbac71c3c1c0decd38ab5bf9f04f23e22fb26 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@denx.de>
+Date: Fri, 27 Mar 2020 07:35:29 +0100
+Subject: [PATCH 05/18] board.linux: make linux login more robust
+
+There is already the login_delay parameter, which
+helps to make login more robust if console is
+flooded on boot up time.
+
+tbot waits for the string "login: " and expects that
+there are no more characters after it. But in case the
+console get flooded with characters on boot up time,
+it can happen that there are characters in the same line
+after "login: ".
+
+Currently, read_until_prompt waits endless, when trying
+to get "login: " and so tbot never login into linux.
+
+rework this part, so read_until_prompt waits "login_delay"
+seconds, and after that, trigger a new login prompt.
+
+Signed-off-by: Heiko Schocher <hs@denx.de>
+Series-to: tbot@lists.denx.de
+---
+ tbot/machine/board/linux.py | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/tbot/machine/board/linux.py b/tbot/machine/board/linux.py
+index 5e6e2a59..aa8694e7 100644
+--- a/tbot/machine/board/linux.py
++++ b/tbot/machine/board/linux.py
+@@ -171,6 +171,16 @@ class LinuxBootLogin(machine.Initializer, LinuxBoot):
+                     prompt=self.login_prompt, timeout=self._timeout_remaining()
+                 )
+ 
++                while 1:
++                    try:
++                        self.ch.read_until_prompt(
++                            prompt=self.login_prompt, timeout=self.login_delay
++                        )
++                        break
++                    except TimeoutError:
++                        self.ch.sendline("")
++                        pass
++
+             self.ch.sendline(self.username)
+             if self.password is not None:
+                 timeout = self._timeout_remaining()
+@@ -198,6 +208,9 @@ class LinuxBootLogin(machine.Initializer, LinuxBoot):
+                     # No timeout exception means we're at the password prompt.
+                     self.ch.sendline(self.password)
+ 
++            if self.login_delay != 0:
++                time.sleep(self.login_delay)
++
+         yield None
+ 
+ 
+-- 
+2.30.2
+

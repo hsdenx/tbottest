@@ -1,0 +1,41 @@
+From 70ba9d30e7a296beef51575632d02226c10130e7 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@denx.de>
+Date: Wed, 28 Apr 2021 17:43:16 +0200
+Subject: [PATCH 09/18] subprocess.py: slow down sending
+
+slow down sending bytes to DUT ... fixes some
+problems with USB serial adapters.
+
+How can we do this nicer?
+
+Signed-off-by: Heiko Schocher <hs@denx.de>
+---
+ tbot/machine/channel/subprocess.py | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/tbot/machine/channel/subprocess.py b/tbot/machine/channel/subprocess.py
+index 8052ab09..d4b1c281 100644
+--- a/tbot/machine/channel/subprocess.py
++++ b/tbot/machine/channel/subprocess.py
+@@ -60,7 +60,17 @@ class SubprocessChannelIO(channel.ChannelIO):
+         if self.pty_master not in w:
+             raise TimeoutError("write timeout exceeded")
+ 
+-        bytes_written = os.write(self.pty_master, buf)
++        chunk_delay = 0.01
++        chunk_size = 8
++
++        # Patch the `write()` method to send bytes slowly, with delays.
++        bw = 0
++        bytes_written = 0
++        for chunk in (buf[i : i + chunk_size] for i in range(0, len(buf), chunk_size)):
++            bw = os.write(self.pty_master, chunk)
++            bytes_written += bw
++            time.sleep(chunk_delay)
++
+         if bytes_written == 0:
+             raise tbot.error.ChannelClosedError
+         return bytes_written
+-- 
+2.30.2
+

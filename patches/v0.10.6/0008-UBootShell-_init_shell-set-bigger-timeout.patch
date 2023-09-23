@@ -1,0 +1,43 @@
+From a21ee581b24a21940ccad4d2d0cd328fbce5e400 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@denx.de>
+Date: Sun, 24 May 2020 07:54:09 +0200
+Subject: [PATCH 08/18] UBootShell, _init_shell: set bigger timeout
+
+Git a lot of TimeoutError, and increased the timeout
+when calling read_until_prompt from 0.5 to 2.
+
+Now uboottest.py runs much more stable
+
+Signed-off-by: Heiko Schocher <hs@denx.de>
+---
+ tbot/machine/board/uboot.py | 2 +-
+ tbot/machine/linux/copy.py  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tbot/machine/board/uboot.py b/tbot/machine/board/uboot.py
+index f19447a9..19cfd076 100644
+--- a/tbot/machine/board/uboot.py
++++ b/tbot/machine/board/uboot.py
+@@ -244,7 +244,7 @@ class UBootShell(shell.Shell, UbootStartup):
+                     if (time.monotonic() - self._timeout_start) > self.boot_timeout:
+                         raise TimeoutError("U-Boot did not reach shell in time")
+                 try:
+-                    self.ch.read_until_prompt(timeout=0.5)
++                    self.ch.read_until_prompt(timeout=2)
+                     break
+                 except TimeoutError:
+                     self.ch.sendintr()
+diff --git a/tbot/machine/linux/copy.py b/tbot/machine/linux/copy.py
+index 4490bf20..676618a9 100644
+--- a/tbot/machine/linux/copy.py
++++ b/tbot/machine/linux/copy.py
+@@ -207,5 +207,5 @@ def copy(p1: linux.Path[H1], p2: linux.Path[H2], remote_copy=False) -> None:
+             use_multiplexing=p1.host.use_multiplexing,
+             remote_copy=True,
+         )
+-   else:
++    else:
+         raise NotImplementedError(f"Can't copy from {p1.host} to {p2.host}!")
+-- 
+2.30.2
+

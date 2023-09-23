@@ -1,0 +1,112 @@
+From e4b887393e4c746204cd1dea34a8f1c8158a05b2 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@denx.de>
+Date: Thu, 22 Apr 2021 07:45:49 +0200
+Subject: [PATCH 02/18] shell.py: allow copy between two ssh host
+
+if you know, that you can copy betweenn the two ssh hosts,
+pass remote_copy=True to this testcase.
+
+This is for example the case, when you want to copy
+from ssh build host and ssh lab host.
+
+Signed-off-by: Heiko Schocher <hs@denx.de>
+---
+ tbot/machine/linux/copy.py | 33 +++++++++++++++++++++++++++++++--
+ tbot/tc/shell.py           |  4 ++--
+ 2 files changed, 33 insertions(+), 4 deletions(-)
+
+diff --git a/tbot/machine/linux/copy.py b/tbot/machine/linux/copy.py
+index 229e0eb2..4490bf20 100644
+--- a/tbot/machine/linux/copy.py
++++ b/tbot/machine/linux/copy.py
+@@ -19,6 +19,7 @@ def _scp_copy(
+     ssh_config: typing.List[str],
+     authenticator: auth.Authenticator,
+     use_multiplexing: bool,
++    remote_copy=False,
+ ) -> None:
+     local_host = local_path.host
+ 
+@@ -56,6 +57,16 @@ def _scp_copy(
+             authenticator._undefined_marker
+         raise ValueError("Unknown authenticator {authenticator!r}")
+ 
++    if remote_copy:
++        rh = remote_path.host
++        local_host.exec0(
++            *scp_command,
++            f"{local_host.username}@{local_host.hostname}:{local_path._local_str()}",
++            f"{rh.username}@{rh.hostname}:{remote_path._local_str()}",
++        )
++
++        return
++
+     if copy_to_remote:
+         local_host.exec0(
+             *scp_command,
+@@ -70,7 +81,7 @@ def _scp_copy(
+         )
+ 
+ 
+-def copy(p1: linux.Path[H1], p2: linux.Path[H2]) -> None:
++def copy(p1: linux.Path[H1], p2: linux.Path[H2], remote_copy=False) -> None:
+     """
+     Copy a file, possibly from one host to another.
+ 
+@@ -88,6 +99,10 @@ def copy(p1: linux.Path[H1], p2: linux.Path[H2]) -> None:
+     * **ssh-machine** 🢥 **ssh-machine** (There is no guarantee that two remote hosts can
+       connect to each other.  If you need this, transfer to the lab-host first
+       and then to the other remote)
++
++      except you now that you can copy between two remote hosts, so pass
++      remote_copy=True
++
+     * **lab-host** 🢥 **board-machine** (Transfers over serial are not (yet) implemented.
+       To 'upload' files, connect to your target via ssh or use a tftp download)
+ 
+@@ -178,5 +193,19 @@ def copy(p1: linux.Path[H1], p2: linux.Path[H2]) -> None:
+             authenticator=p1.host.authenticator,
+             use_multiplexing=p1.host.use_multiplexing,
+         )
+-    else:
++    elif remote_copy:
++        _scp_copy(
++            local_path=p1,
++            remote_path=p2,
++            copy_to_remote=True,  # unused
++            username=p2.host.username,  # unused
++            hostname=p2.host.hostname,  # unused
++            ignore_hostkey=p1.host.ignore_hostkey,
++            port=p1.host.port,
++            ssh_config=p1.host.ssh_config,
++            authenticator=p1.host.authenticator,
++            use_multiplexing=p1.host.use_multiplexing,
++            remote_copy=True,
++        )
++   else:
+         raise NotImplementedError(f"Can't copy from {p1.host} to {p2.host}!")
+diff --git a/tbot/tc/shell.py b/tbot/tc/shell.py
+index 8eb85d83..c8d65e33 100644
+--- a/tbot/tc/shell.py
++++ b/tbot/tc/shell.py
+@@ -26,7 +26,7 @@ H2 = typing.TypeVar("H2", bound=linux.LinuxShell)
+ 
+ 
+ @tbot.testcase
+-def copy(p1: linux.Path[H1], p2: linux.Path[H2]) -> None:
++def copy(p1: linux.Path[H1], p2: linux.Path[H2], remote_copy=False) -> None:
+     """
+     Copy a file, possibly from one host to another.
+ 
+@@ -36,7 +36,7 @@ def copy(p1: linux.Path[H1], p2: linux.Path[H2]) -> None:
+         Please read its documentation for more details.  The old name here is a
+         compatibility alias.
+     """
+-    return linux.copy(p1, p2)
++    return linux.copy(p1, p2, remote_copy)
+ 
+ 
+ _TOOL_CACHE: typing.Dict[linux.LinuxShell, typing.Dict[str, bool]] = {}
+-- 
+2.30.2
+
