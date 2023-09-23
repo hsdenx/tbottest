@@ -5,8 +5,8 @@ cd "$(dirname "$0")"
 
 echo build with "export PYTHONPATH=<path to tbot>"
 
-sphinx-build -b html . ./output
+sphinx-build -b html Documentation ./Documentation/output
 
 if [ "$1" = "--open" ]; then
-   xdg-open ./output/index.html
+   xdg-open ./Documentation/output/index.html
 fi
