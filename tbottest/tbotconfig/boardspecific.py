@@ -263,6 +263,9 @@ def set_board_cfg(temp: str = None, filename: str = None):
         replace_in_file(filename, "@@TBOTSERVERIP@@", BOARDNAME_get_lab_serverip())
         replace_in_file(filename, "@@TBOTIPADDR@@", BOARDNAME_get_board_ipaddr())
 
+    # only for creating docs!
+    replace_in_file(filename, "@@PICOCOMDELAY@@", "3")
+
 FLAGS = {
         "selectableboardname" : "set value of tbot.selectable.boardname format selectableboardname:<name>",
 }
