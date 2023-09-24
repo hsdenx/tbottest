@@ -13,6 +13,10 @@
 
 simply follow the instructions on Documentation/generic.rst
 
+## Documentation
+
+https://hsdenx.github.io/tbottest/index.html
+
 ## Contributing
 Help is really appreciated!
 
