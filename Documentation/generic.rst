@@ -85,6 +85,12 @@ and use the following directory structure:
 
 see example in tbottest/tbotconfig.
 
+.. Note::
+
+   You can simply use the script **start script** in scripts, which
+   will create all files and directories. You get asked some questions
+
+
 start script
 ............
 
