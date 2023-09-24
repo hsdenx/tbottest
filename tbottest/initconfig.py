@@ -100,7 +100,7 @@ class IniTBotConfig:
         else:
             tbotinifile = pathinifile
     else:
-        tbotinifile = workdir + f"/tbottest/tbotconfig/{generic_get_boardname()}/tbot.ini"
+        tbotinifile = workdir + f"/../tbottest/tbotconfig/{generic_get_boardname()}/tbot.ini"
 
     newfilename = tbotinifile + "-modified"
     copy_file(tbotinifile, newfilename)
@@ -234,7 +234,7 @@ class IniConfig:
         else:
             filename = pathinifile
     else:
-        filename = workdir + f"/tbottest/tbotconfig/{generic_get_boardname()}/{generic_get_boardname()}.ini"
+        filename = workdir + f"/../tbottest/tbotconfig/{generic_get_boardname()}/{generic_get_boardname()}.ini"
 
     newfilename = pathlib.Path(filename).parent.resolve()
     newfilename = newfilename / f"{os.path.basename(filename)}-modified"
