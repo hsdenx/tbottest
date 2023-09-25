@@ -32,9 +32,18 @@ jobs:
           echo "SSHUSER: $SSH_USER"
           chmod 600 ~/.ssh/staging.key
           cat >>~/.ssh/config <<END
-            Host xeidos.ddns.net
+            Host $SSH_HOST
               HostName $SSH_HOST
               User $SSH_USER
+              IdentityFile ~/.ssh/staging.key
+              StrictHostKeyChecking no
+              HostkeyAlgorithms +ssh-rsa
+              PubkeyAcceptedAlgorithms +ssh-rsa
+
+            Host 192.168.1.113
+              HostName 192.168.1.113
+              User $SSH_USER
+              ProxyJump $SSH_HOST
               IdentityFile ~/.ssh/staging.key
               StrictHostKeyChecking no
               HostkeyAlgorithms +ssh-rsa
@@ -48,24 +57,17 @@ jobs:
           export PYTHONPATH=/home/runner/.local/lib/python3.7/site-packages
           mkdir temp
           cd temp
-          echo "-----------------------------"
+          # set some git default values so git am works
           git config --global user.email "hs@denx.de"
           git config --global user.name "Heiko Schocher"
           ../scripts/create_setup.sh
-          echo "-----------------------------"
-          echo $PYTHONPATH
-          echo $PYTHONHOME
-          echo "-----------------------------"
-          ls -al /etc/ssh/sshd_config.d
-          ls -al /etc/ssh/sshd_config
-          echo "HostKeyAlgorithms +ssh-rsa" > /etc/ssh/sshd_config.d/50-rsa.conf
-          echo "PubkeyAcceptedKeyTypes +ssh-rsa" >> /etc/ssh/sshd_config.d/50-rsa.conf
-          chmod 644 /etc/ssh/sshd_config.d/50-rsa.conf
-          ls -al /etc/ssh/sshd_config.d
-          sudo systemctl restart sshd
-          echo "-----------------------------"
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key pi@xeidos.ddns.net /tmp/hello.sh
-          echo "-----------------------------"
-          ssh -o BatchMode=yes -i /home/runner/.ssh/staging.key -p 22 -o ProxyJump=pi@xeidos.ddns.net pi@192.168.1.113 /tmp/hello.sh
-          echo "-----------------------------"
-          tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth -f outside tbotconfig.ci.lab_uname
+          # test if ssh works
+          echo "--------------------- try forwarder ------------------"
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key pi@xeidos.ddns.net /home/pi/hello.sh
+          echo "---------------------- try to login on lab -----------"
+          ssh -o StrictHostKeyChecking=no -i '~/.ssh/staging.key' pi@192.168.1.113 /home/pi/hello.sh
+          # correct path to keyfile
+          sed -i "s|/home/\${username}/.ssh/id_rsa|~/.ssh/staging.key|g" tbotconfig/foo/tbot.ini
+          echo "----- now try to login into lab with tbot setup -----"
+          # try to go to our lab
+          tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth tbotconfig.ci.lab_uname
