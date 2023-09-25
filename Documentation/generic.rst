@@ -55,6 +55,7 @@ https://github.com/hsdenx/tbottest/tree/master/scripts/create_setup.sh
 
 which will create you a complete base setup, as described in `configuration`_.
 
+Here an example run:
 
 .. code-block:: bash
 
@@ -89,13 +90,13 @@ which will create you a complete base setup, as described in `configuration`_.
     
     edit linux settings in tbotconfig/foobar/foobar.ini and interactive U-Boot should work
     tbottest/newtbot_starter.py @tbotconfig/foobar/args/argsfoobar-noeth tbotconfig.interactive.linux
-    $ tbottest/newtbot_starter.py @tbotconfig/foobar/args/argsfoobar-noeth tbotconfig.interactive.lab
 
 
 Test your new config and setup with:
 
 .. code-block:: bash
 
+    $ tbottest/newtbot_starter.py @tbotconfig/foobar/args/argsfoobar-noeth tbotconfig.interactive.lab
     tbot starting ...
     ├─TBOT.FLAGS {'boardfile:tbotconfig/foobar/foobar.ini', 'noethinit', 'picocom', 'inifile:tbotconfig/foobar/tbot.ini', 'do_power', 'useifconfig'}
     ├─boardname now foobar
