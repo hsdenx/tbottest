@@ -5,7 +5,7 @@
 
 This is an example approach for a hopefully easy to use lab and board support.
 
-Therefore we use init file based configuration, based on
+Therefore we use ini file based configuration, based on
 
 https://docs.python.org/3/library/configparser.html
 
@@ -15,20 +15,8 @@ But it showed, that for a first use of tbot, it is easier to explain
 to edit a tbot.ini file and start!
 
 
-remarks
--------
-
-The following example can be used directly through copy&paste. Please
-replace the following placeholders in the files:
-
-
-.. csv-table:: placeholders
-        :header: "Name", "Description"
-
-        "@@LABNAME@@", "placeholder for your lab hostname"
-        "BOARDNAME", "rename BOARDNAME.ini -> to your boardsname, and replace it in tbottest/tbotconfig/BOARDNAME/args/argsbase"
-
-requirements for lab host:
+requirements for lab host
+-------------------------
 
 sudo command should work without entering a password (or add support for this
 in tbot!)
@@ -48,8 +36,25 @@ Powercontrol:
 
 * sispmctl
 * TinkerForge
+* simple GPIO
 
 It should be easy to extend this.
+
+
+Quick Start
+-----------
+
+To be independent of the installed tbot on the system, you can use the
+tbot starter script:
+
+https://github.com/hsdenx/tbottest/blob/master/newtbot_starter.py
+
+To get a working setup you can use the script:
+
+https://github.com/hsdenx/tbottest/tree/master/scripts/create_setup.sh
+
+which will create you a complete base setup, as described in `configuration`_.
+
 
 .. _genericconfiguration:
 
@@ -61,12 +66,12 @@ Best, use the following directory structure:
 .. code-block:: shell
 
         $ tree .
-        <your repo with your setup and testcases> (see below)
+        tbotconfig
         tbot (checkout from https://github.com/Rahix/tbot)
         tbottest (this repo, checkout from github)
 
-Create for your tbot configuration and own testcase your own repo
-and use the following directory structure:
+Create for your tbot configuration and own testcases your own repo
+**tbotconfig** and use the following directory structure there:
 
 .. code-block:: shell
 
@@ -126,23 +131,30 @@ https://docs.python.org/3/library/configparser.html
 
 Find an example file here: tbottest:/tbottest/tbotconfig/BOARDNAME/tbot.ini
 
+.. _boardspecificruntimeadaption:
+
 boardspecfic runtime adaptions
 ..............................
 
-You can add a python file "boardspecific.py" which tbot
-searches on startup and calls it, if found.
-
 The ini file approach is static, which means we cannot change
-configuration @runtime. For special cases there are some
-callbacks we can define in boardspecific.py so we can
-setup stuff in ini files on startup. Therefore the following
-callback are used:
+configuration @runtime. This generic approach searches in **tbotconfig**
+for a **boardspecific.py** file, which can contains several
+functions, the generic approach tries to call.
+
+In this functions you can adapt settings dependend on the usecase.
+Or may do special stuff in machine shells.
+
+In the default ini files there are placeholders beginning with **@@**
+and ending with **@@**. You can easily replace them with
+:ref:`iniconfighelperfunctions`.
+
+Therefore the following functions are used:
 
 set_board_cfg(temp: str = None, filename: str = None)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This file is called early in bootup before any ini file
-is parsed. So you can adapt them for your needs
+is parsed. So you can adapt the ini files for your needs
 
 .. code-block:: python
 
@@ -274,6 +286,23 @@ here you configure common build host setting. Only used, if you use a buildhost.
         "workdir", "path to directory where tbot can work on", "/work/big/hs/tbot2go"
         "authenticator", "path to ssh id key file", "/home/hs/.ssh/id_rsa"
         "initcmd", "list of commands executed after login", "['"uname -a'", '"cat /etc/os-release'"]"
+
+The above buidlhost defintion is the default one, You can add more than
+one buildhost, simply add them with the following section naming
+
+.. code-block:: ini
+
+   [BUILDHOST_<NAME_OF_BUILDER>]
+
+
+You can now select this builder by adding tbot flag
+
+.. code-block:: bash
+
+   -f buildname:<NAME_OF_BUILDER>
+
+on start of tbot.
+
 
 The next sections depend on your board configuration
 
@@ -752,6 +781,7 @@ It is recommended to collect arguments in so called argumentsfiles, else you are
 tbot flag                Description
 ======================== ====================================================
 bootcmd                  format bootcmd:<real bootcmd>, example bootcmd:net_nfs will execute "run net_nfs"
+buildname                format buildname:<name of builder>, select the used buildhost.
 gpiopower                use a gpio pin for boards power control
 tinkerforge              use tinkerforge for boards power control
 picocom                  use picocom for serial console

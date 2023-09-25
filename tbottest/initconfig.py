@@ -32,6 +32,12 @@ def generic_get_boardname():
     raise RuntimeError("please set your boardname with tbot.flag -f selectableboardname:<NAME>")
 
 def copy_file(filename, newfile):
+    """
+    copy file filename to newfile
+
+    :param filename: full path and name of source file
+    :param newfile: full path and name of target file
+    """
     fin = open(filename, "rt")
     data = fin.read()
     fin.close()
@@ -40,6 +46,13 @@ def copy_file(filename, newfile):
     fin.close()
 
 def replace_in_file(filename, string, newv):
+    """
+    replace string in filename with string newv
+
+    :param filename: full path and name of source file
+    :param string: searchstring
+    :param newv: new value
+    """
     fin = open(filename, "rt")
     data = fin.read()
     data = data.replace(string, newv)
@@ -49,6 +62,13 @@ def replace_in_file(filename, string, newv):
     fin.close()
 
 def find_in_file_and_append(filename, substring, append):
+    """
+    append in file filename to the string substring the string append
+
+    :param filename: full path and name of source file
+    :param substring: string to which string append gets appended
+    :param append: appended string
+    """
     with open(filename, 'r') as IN, open('output.txt', 'w') as OUT:
         for line in IN:
             if substring in line and append not in line:
@@ -59,6 +79,12 @@ def find_in_file_and_append(filename, substring, append):
     copy_file("output.txt", filename)
 
 def find_in_file_and_delete(filename, substring):
+    """
+    delete line in file filename when substring is found
+
+    :param filename: full path and name of source file
+    :param substring: substring which get searched
+    """
     with open(filename, 'r') as IN, open('output.txt', 'w') as OUT:
         for line in IN:
             if substring not in line.strip("\n"):
@@ -81,6 +107,8 @@ except:
 class IniTBotConfig:
     """
     reads common tbot config
+
+    see: :ref:`boardspecificruntimeadaption`
     """
     # may we pass an ini file path through tbot flags
     # with for example: -f inifile_/tmp/tbot.ini
@@ -210,6 +238,8 @@ class IniTBotConfig:
 class IniConfig:
     """
     reads board config
+
+    see: :ref:`boardspecificruntimeadaption`
     """
     # read common tbot config and generate later [default] section
     cfg = IniTBotConfig()

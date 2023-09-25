@@ -12,9 +12,10 @@ Welcome to *tbot-test*!
    :maxdepth: 1
    :caption: generic approach
 
-   connector
    generic
+   iniconfig
    machineinit
+   connector
    powercontrol
 
 
