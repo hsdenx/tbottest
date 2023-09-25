@@ -13,11 +13,6 @@ Welcome to *tbot-test*!
    :caption: generic approach
 
    generic
-   iniconfig
-   machineinit
-   connector
-   decorators
-   powercontrol
    tips
 
 
@@ -26,6 +21,11 @@ Welcome to *tbot-test*!
    :caption: Testcase Modules
 
    tc
+   iniconfig
+   machineinit
+   connector
+   decorators
+   powercontrol
 
 .. toctree::
    :maxdepth: 3
