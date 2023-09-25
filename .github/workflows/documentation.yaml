@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install recommonmark sphinx sphinx_rtd_theme
+          pip install recommonmark sphinx sphinx_rtd_theme sphinxcontrib.aafig
           # tbot dependencies
           pip install --user pytest mypy paramiko termcolor2 pyserial coverage pytest-cov
           # for unknown reasons termcolor2 get not found

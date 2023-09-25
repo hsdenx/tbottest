@@ -17,6 +17,7 @@ Welcome to *tbot-test*!
    machineinit
    connector
    powercontrol
+   tips
 
 
 .. toctree::

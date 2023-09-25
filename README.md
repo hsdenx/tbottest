@@ -17,6 +17,10 @@ https://hsdenx.github.io/tbottest/generic.html#quick-start
 
 https://hsdenx.github.io/tbottest/index.html
 
+## Lab Host setup with PI
+
+https://hsdenx.github.io/tbottest/tips.html#lab-setup
+
 ## Contributing
 Help is really appreciated!
 

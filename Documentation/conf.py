@@ -43,12 +43,16 @@ version = release
 # ones.
 extensions = [
     "recommonmark",
+    "sphinxcontrib.aafig",
     "sphinx.ext.autodoc",
     "sphinx.ext.coverage",
     "sphinx.ext.intersphinx",
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
 ]
+
+# https://aafigure.readthedocs.io/en/latest/sphinxext.html
+aafig_format = dict(latex='pdf', html='svg', text=None)
 
 source_parsers = {".md": recommonmark.parser.CommonMarkParser}
 source_suffix = [".rst", ".md"]

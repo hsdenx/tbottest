@@ -732,6 +732,11 @@ If you want to login to a board, which is already on and runs linux
 
     This helps a lot when developing testcases!
 
+.. _argumentfilesshlogin:
+
+Argumentfile for ssh login
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 If you want to login per ssh into an already running linux on the board
 
 .. code-block:: shell
