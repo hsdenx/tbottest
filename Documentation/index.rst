@@ -16,6 +16,7 @@ Welcome to *tbot-test*!
    iniconfig
    machineinit
    connector
+   decorators
    powercontrol
    tips
 
