@@ -55,7 +55,6 @@ https://github.com/hsdenx/tbottest/tree/master/scripts/create_setup.sh
 
 which will create you a complete base setup, as described in `configuration`_.
 
-
 .. _genericconfiguration:
 
 configuration
@@ -93,7 +92,13 @@ see example in tbottest/tbotconfig.
 .. Note::
 
    You can simply use the script **create_setup.sh** in scripts, which
-   will create all files and directories. You get asked some questions
+   will create all files and directories. Start it with the option "--inter"
+   and you get asked some questions, which help to make a better basic setup.
+
+
+.. code-block:: bash
+
+   $ ./scripts/create_setup.sh --inter
 
 
 start script

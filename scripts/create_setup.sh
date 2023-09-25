@@ -29,6 +29,10 @@ IPSETUPETH=00:30:D6:2C:A6:3D
 IPSETUPIP=192.168.3.40
 IPSETUPSERVERIP=192.168.3.1
 
+if [ "$1" = "--inter" ]; then
+	INTER=yes
+fi
+
 INTER=no
 if [ "${INTER}" == "yes" ];then
 	echo -n "Name of the lab: "
