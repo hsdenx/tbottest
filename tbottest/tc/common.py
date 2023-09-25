@@ -137,6 +137,25 @@ def lnx_get_ipaddr(lnx: linux.LinuxShell, name: str, ip6: bool = False) -> str:
 
     raise RuntimeError(f"Could not get ip for device {name}")
 
+@tbot.testcase
+def lnx_start_bin_with_timeout(
+    lnx: linux.LinuxShell,
+    binary: str,
+    seconds: float,
+) -> None:  # noqa: D107
+    """
+    start binary binary for n seconds
+
+    :param lnx: linux machine we work on
+    :param binary: name of the binary which get started
+    :param seconds: seconds it get executed
+    """
+    lnx.exec(linux.Raw(f"{binary} 2>/dev/null 1>/dev/null &"))
+    pid = lnx.env("!")
+
+    time.sleep(seconds)
+    lnx.exec("kill", pid, linux.Then, "wait", pid)
+
 
 @tbot.testcase
 def linux_test_uname(
