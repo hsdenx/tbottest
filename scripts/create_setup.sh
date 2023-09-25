@@ -29,11 +29,10 @@ IPSETUPETH=00:30:D6:2C:A6:3D
 IPSETUPIP=192.168.3.40
 IPSETUPSERVERIP=192.168.3.1
 
+INTER=no
 if [ "$1" = "--inter" ]; then
 	INTER=yes
 fi
-
-INTER=no
 if [ "${INTER}" == "yes" ];then
 	echo -n "Name of the lab: "
 	read -r LABNAME
@@ -53,80 +52,103 @@ if [ "${INTER}" == "yes" ];then
 fi
 
 ## clone and create repos
-git clone $tboturl tbot
-git clone $tbottesturl tbottest
+TBOTEXISTS=no
+if [ -d tbot ];then
+	TBOTEXISTS=yes
+	echo "Found existing tbot diretory, do nothing with it!"
+	echo "Please check if it has the patches applied"
+else
+	git clone $tboturl tbot
+fi
 
-mkdir tbotconfig
+TBOTTESTEXISTS=no
+if [ -d tbottest ];then
+	TBOTTESTEXISTS=yes
+	echo "Found existing tbottest diretory, do nothing with it!"
+else
+	git clone $tbottesturl tbottest
+fi
 
-cd tbottest
-git checkout $tbottestbranch
-git checkout -b "devel"
-cd ..
+TBOTCONFIGEXISTS=no
+if [ -d tbotconfig ];then
+	TBOTCONFIGEXISTS=yes
+else
+	mkdir tbotconfig
+fi
 
-cd tbot
-git checkout $tbottag
-git checkout -b "devel"
-git am ../tbottest/patches/$tbottag/00*
-cd ..
+if [ "$TBOTTESTEXISTS" == "no" ];then
+	cd tbottest
+	git checkout $tbottestbranch
+	git checkout -b "devel"
+	cd ..
+fi
 
-cd tbotconfig
+if [ "$TBOTEXISTS" == "no" ];then
+	cd tbot
+	git checkout $tbottag
+	git checkout -b "devel"
+	git am ../tbottest/patches/$tbottag/00*
+	cd ..
+fi
 
-cp ../tbottest/tbottest/tbotconfig/boardspecific.py .
-cp ../tbottest/tbottest/tbotconfig/interactive.py .
-# and only for github CI from interest
-cp ../tbottest/tbottest/tbotconfig/ci.py .
+if [ "$TBOTCONFIGEXISTS" == "no" ];then
+	cd tbotconfig
 
-mkdir $BOARDNAME
-cd $BOARDNAME
-mkdir args
-cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/args/args* args/
+	cp ../tbottest/tbottest/tbotconfig/boardspecific.py .
+	cp ../tbottest/tbottest/tbotconfig/interactive.py .
+	# and only for github CI from interest
+	cp ../tbottest/tbottest/tbotconfig/ci.py .
 
-cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/README.BOARDNAME README.$BOARDNAME
-cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/tbot.ini tbot.ini
-cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini $BOARDNAME.ini
-cd ../..
+	mkdir $BOARDNAME
+	cd $BOARDNAME
+	mkdir args
+	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/args/args* args/
 
-# prepare some argumentfiles
-sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/args/argsbase
+	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/README.BOARDNAME README.$BOARDNAME
+	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/tbot.ini tbot.ini
+	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini $BOARDNAME.ini
+	cd ../..
 
-echo "@tbotconfig/${BOARDNAME}/args/argsbase" > ./tbotconfig/$BOARDNAME/args/args$BOARDNAME
-echo "-f${TERMPROG}" >> ./tbotconfig/$BOARDNAME/args/args$BOARDNAME
+	# prepare some argumentfiles
+	sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/args/argsbase
 
-echo "@tbotconfig/${BOARDNAME}/args/args$BOARDNAME" > ./tbotconfig/$BOARDNAME/args/args$BOARDNAME-noeth
-echo "-fnoethinit" >> ./tbotconfig/$BOARDNAME/args/args$BOARDNAME-noeth
+	echo "@tbotconfig/${BOARDNAME}/args/argsbase" > ./tbotconfig/$BOARDNAME/args/args$BOARDNAME
+	echo "-f${TERMPROG}" >> ./tbotconfig/$BOARDNAME/args/args$BOARDNAME
 
-# replace BOARDNAME
-sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	echo "@tbotconfig/${BOARDNAME}/args/args$BOARDNAME" > ./tbotconfig/$BOARDNAME/args/args$BOARDNAME-noeth
+	echo "-fnoethinit" >> ./tbotconfig/$BOARDNAME/args/args$BOARDNAME-noeth
 
-sed -i "/SET BOARDNAME to BOARDNAME/d" ./tbotconfig/boardspecific.py
-sed -i "/!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!/d" ./tbotconfig/boardspecific.py
-sed -i "/You use example implementation of boardspecific.py/d" ./tbotconfig/boardspecific.py
-sed -i "/You really should use your own implementation/d" ./tbotconfig/boardspecific.py
-sed -i "s|BOARDNAME_|$BOARDNAME\_|g" ./tbotconfig/boardspecific.py
-sed -i "s|\"BOARDNAME\"|\"$BOARDNAME\"|g" ./tbotconfig/boardspecific.py
-sed -i "s|\"BOARDNAME8g\"|\""$BOARDNAME"8g\"|g" ./tbotconfig/boardspecific.py
+	# replace BOARDNAME
+	sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
 
+	sed -i "/SET BOARDNAME to BOARDNAME/d" ./tbotconfig/boardspecific.py
+	sed -i "/!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!/d" ./tbotconfig/boardspecific.py
+	sed -i "/You use example implementation of boardspecific.py/d" ./tbotconfig/boardspecific.py
+	sed -i "/You really should use your own implementation/d" ./tbotconfig/boardspecific.py
+	sed -i "s|BOARDNAME_|$BOARDNAME\_|g" ./tbotconfig/boardspecific.py
+	sed -i "s|\"BOARDNAME\"|\"$BOARDNAME\"|g" ./tbotconfig/boardspecific.py
+	sed -i "s|\"BOARDNAME8g\"|\""$BOARDNAME"8g\"|g" ./tbotconfig/boardspecific.py
 
-# insert LAB config in ./tbotconfig/$BOARDNAME/tbot.ini
-sed -i "s|@@LABNAME@@|$LABNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
-sed -i "s|@@LABHOSTNAME@@|$LABHOSTNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
-sed -i "s|@@LABUSER@@|$LABUSER|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	# insert LAB config in ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@LABNAME@@|$LABNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@LABHOSTNAME@@|$LABHOSTNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@LABUSER@@|$LABUSER|g" ./tbotconfig/$BOARDNAME/tbot.ini
 
-sed -i "s|@@SISPMCTRLMAC@@|$SISPMCTRLMAC|g" ./tbotconfig/$BOARDNAME/tbot.ini
-sed -i "s|@@SISPMCTRLPORT@@|$SISPMCTRLPORT|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@SISPMCTRLMAC@@|$SISPMCTRLMAC|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@SISPMCTRLPORT@@|$SISPMCTRLPORT|g" ./tbotconfig/$BOARDNAME/tbot.ini
 
-sed -i "s|@@PICOCOMBAUDRATE@@|$PICOCOMBAUDRATE|g" ./tbotconfig/$BOARDNAME/tbot.ini
-sed -i "s|@@PICOCOMDEV@@|$PICOCOMDEV|g" ./tbotconfig/$BOARDNAME/tbot.ini
-sed -i "s|@@PICOCOMDELAY@@|$PICOCOMDELAY|g" ./tbotconfig/$BOARDNAME/tbot.ini
-sed -i "s|@@PICOCOMNORESET@@|$PICOCOMNORESET|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@PICOCOMBAUDRATE@@|$PICOCOMBAUDRATE|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@PICOCOMDEV@@|$PICOCOMDEV|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@PICOCOMDELAY@@|$PICOCOMDELAY|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@PICOCOMNORESET@@|$PICOCOMNORESET|g" ./tbotconfig/$BOARDNAME/tbot.ini
 
-sed -i "s|@@IPSETUPMASK@@|$IPSETUPMASK|g" ./tbotconfig/$BOARDNAME/tbot.ini
-sed -i "s|@@IPSETUPETH@@|$IPSETUPETH|g" ./tbotconfig/$BOARDNAME/tbot.ini
-sed -i "s|@@IPSETUPIP@@|$IPSETUPIP|g" ./tbotconfig/$BOARDNAME/tbot.ini
-sed -i "s|@@IPSETUPSERVERIP@@|$IPSETUPSERVERIP|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@IPSETUPMASK@@|$IPSETUPMASK|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@IPSETUPETH@@|$IPSETUPETH|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@IPSETUPIP@@|$IPSETUPIP|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@IPSETUPSERVERIP@@|$IPSETUPSERVERIP|g" ./tbotconfig/$BOARDNAME/tbot.ini
 
-#sed -i "s|@@@@|$|g" ./tbotconfig/$BOARDNAME/tbot.ini
-
+	#sed -i "s|@@@@|$|g" ./tbotconfig/$BOARDNAME/tbot.ini
+fi
 
 # end print some starter help
 echo "add commandline completions with:
