@@ -37,6 +37,8 @@ jobs:
               User $SSH_USER
               IdentityFile ~/.ssh/staging.key
               StrictHostKeyChecking no
+              HostkeyAlgorithms +ssh-rsa
+              PubkeyAcceptedAlgorithms +ssh-rsa
           END
       - name: Run tbottest selftests
         run: |
