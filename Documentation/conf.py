@@ -114,7 +114,7 @@ latex_elements = {
 }
 latex_show_pagerefs = True
 
-latex_documents = [("index", "tbot.tex", "tbot Documentation", "Rahix", "manual", True)]
+latex_documents = [("index", "tbot.tex", "tbot Documentation", "hs@denx", "manual", True)]
 
 # }}}
 
