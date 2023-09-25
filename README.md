@@ -11,7 +11,7 @@
 
 ## Installation
 
-simply follow the instructions on Documentation/generic.rst
+https://hsdenx.github.io/tbottest/generic.html#quick-start
 
 ## Documentation
 
