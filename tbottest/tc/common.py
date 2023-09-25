@@ -152,6 +152,135 @@ def linux_test_uname(
         lnx.exec0("uname", "-a")
 
 
+def lnx_wait_for_ip(
+    lnx: linux.LinuxShell,
+    name: str,
+    loops: int,
+    timeout: int,
+    ip6: bool = False,
+) -> str:  # noqa: D107
+    """
+    wait until ip is set on device name
+
+    :param lnx: linux machine we run
+    :param name: name of the device for which we wait for the ip
+    :param ip6: set to True if you want to get ipv6 ipaddr
+    :param loops: maximal wait loops
+    :param timeout: timeout if process is not found
+    :return: ip addr
+    """
+    found = False
+    loop = 0
+    while (found == False):
+        try:
+            ret = lnx_get_ipaddr(lnx, name, ip6)
+            return ret
+        except:
+            break
+        loop += 1
+        if loop > loops:
+            break
+
+        time.sleep(timeout)
+
+    if found == False:
+        raise RuntimeError(f"ip on device {name} not found")
+
+
+def lnx_wait_for_file(
+    lnx: linux.LinuxShell,
+    name: str,
+    loops: int,
+    timeout: int
+) -> bool:  # noqa: D107
+    """
+    wait until file with name name is found with "ls -l"
+
+    :param lnx: linux machine we run
+    :param name: name of the file for which we wait
+    :param loops: maximal wait loops
+    :param timeout: timeout if file is not found
+    """
+    found = False
+    loop = 0
+    while (found == False):
+        ret, log = lnx.exec("ls", "-l", name)
+        if ret == 0:
+            return True
+
+        loop += 1
+        if loop > loops:
+            break
+
+        time.sleep(timeout)
+
+    if found == False:
+        raise RuntimeError(f"file {name} not found")
+
+
+def lnx_wait_for_module(
+    lnx: linux.LinuxShell,
+    name: str,
+    loops: int,
+    timeout: int
+) -> bool:  # noqa: D107
+    """
+    wait until module with name is loaded
+
+    :param lnx: linux machine we run
+    :param name: name of the module for which we wait
+    :param loops: maximal wait loops
+    :param timeout: timeout if modulename is not found
+    """
+    found = False
+    loop = 0
+    while (found == False):
+        log = lnx.exec0("lsmod")
+        for l in log.split("\n"):
+            if name in l:
+                return True
+
+        loop += 1
+        if loop > loops:
+            break
+
+        time.sleep(timeout)
+
+    if found == False:
+        raise RuntimeError(f"module {name} not loaded")
+
+
+def lnx_wait_for_process(
+    lnx: linux.LinuxShell,
+    name: str,
+    loops: int,
+    timeout: int
+) -> bool:  # noqa: D107
+    """
+    wait until process with name name is found with pidof
+
+    :param lnx: linux machine we run
+    :param name: name of the process for which we wait
+    :param loops: maximal wait loops
+    :param timeout: timeout if process is not found
+    """
+    found = False
+    loop = 0
+    while (found == False):
+        ret, log = lnx.exec("pidof", name)
+        if ret == 0:
+            return True
+
+        loop += 1
+        if loop > loops:
+            break
+
+        time.sleep(timeout)
+
+    if found == False:
+        raise RuntimeError(f"process {name} not found")
+
+
 @tbot.testcase
 def board_ub_delete_env(
     ub: Optional[board.UBootShell] = None, mtdparts=["env", "env-red"],
