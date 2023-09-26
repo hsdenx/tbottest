@@ -98,7 +98,7 @@ def generic_lnx_test_led(
         if lnx is None:
             lnx = cx.request(tbot.role.BoardLinux)
 
-        lnx_test_led_simple(lab, lnx, cfg.leds)
+        lnx_test_led_simple(lnx, cfg.leds)
 
 
 ##############################################################
@@ -106,7 +106,8 @@ def generic_lnx_test_led(
 ##############################################################
 @tbot.testcase
 def generic_kas_get_config(
-    lab: Optional[linux.LinuxShell] = None, bh: Optional[linux.LinuxShell] = None,
+    lab: Optional[linux.LinuxShell] = None,
+    bh: Optional[linux.LinuxShell] = None,
 ) -> None:
     """
     return current kas configuration
@@ -131,7 +132,8 @@ def generic_kas_get_config(
 
 @tbot.testcase
 def generic_kas_checkout(
-    lab: Optional[linux.LinuxShell] = None, bh: Optional[linux.LinuxShell] = None,
+    lab: Optional[linux.LinuxShell] = None,
+    bh: Optional[linux.LinuxShell] = None,
 ) -> None:
     """
     checks out all yocto layer we need for our yocto build
@@ -143,7 +145,7 @@ def generic_kas_checkout(
     :param bh: Build host machine
     """
     if "kasskipcheckout" in tbot.flags:
-        tbot.log.message(tbot.log.c(f"skip kas checkout step").green)
+        tbot.log.message(tbot.log.c("skip kas checkout step").green)
         return
 
     with tbot.ctx() as cx:
@@ -162,7 +164,8 @@ def generic_kas_checkout(
 
 @tbot.testcase
 def generic_kas_build(
-    lab: Optional[linux.LinuxShell] = None, bh: Optional[linux.LinuxShell] = None,
+    lab: Optional[linux.LinuxShell] = None,
+    bh: Optional[linux.LinuxShell] = None,
 ) -> None:
     """
     build all targets defined in kas configuration
@@ -189,7 +192,8 @@ def generic_kas_build(
 
 @tbot.testcase
 def generic_kas_check_build(
-    lab: Optional[linux.LinuxShell] = None, bh: Optional[linux.LinuxShell] = None,
+    lab: Optional[linux.LinuxShell] = None,
+    bh: Optional[linux.LinuxShell] = None,
 ) -> None:
     """
     check if oe build finished, if all files listed in kas_check_files
@@ -230,7 +234,8 @@ def generic_kas_check_build(
 
 @tbot.testcase
 def generic_kas_copy(
-    lab: Optional[linux.LinuxShell] = None, bh: Optional[linux.LinuxShell] = None,
+    lab: Optional[linux.LinuxShell] = None,
+    bh: Optional[linux.LinuxShell] = None,
 ) -> linux.Path:
     """
     simply copy all files listed in kas_results from our build host
@@ -267,7 +272,8 @@ def generic_kas_copy(
 
 @tbot.testcase
 def generic_kas_all(
-    lab: Optional[linux.LinuxShell] = None, bh: Optional[linux.LinuxShell] = None,
+    lab: Optional[linux.LinuxShell] = None,
+    bh: Optional[linux.LinuxShell] = None,
 ) -> None:
     """
     simply do all build task in one testcase
@@ -293,6 +299,7 @@ def generic_kas_all(
         generic_kas_build(lab, bh)
         generic_kas_check_build(lab, bh)
         generic_kas_copy(lab, bh)
+
 
 FLAGS = {
     "kasskipcheckout": "skip kas checkout step",

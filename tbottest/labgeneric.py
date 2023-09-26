@@ -2,7 +2,6 @@ import typing
 import tbot
 from tbot.machine import connector, linux, board
 import time
-import sys
 import tbottest.initconfig as ini
 from tbot_contrib.gpio import Gpio
 from tbottest.connector import KermitConnector
@@ -24,6 +23,7 @@ try:
     IP_BOARD = cfgt.config_parser.get(ssh_ip_section, "ipaddr")
 except:
     IP_BOARD = None
+
 
 class boardPicocomConnector(PicocomConnector):
     bn = ini.generic_get_boardname()
@@ -55,13 +55,16 @@ class boardSSHConnector(connector.SSHConnector):
 
     cfgl = ini.IniConfig()
     cfgp = cfgl.config_parser
-    tmpdir = cfgp.get(f"TC", "tmpdir", fallback="/tmp")
+    tmpdir = cfgp.get("TC", "tmpdir", fallback="/tmp")
 
     username = "root"
-    if IP_BOARD == None:
-        RuntimeError(f"Please set ipaddr for ssh machine. Expect section {ssh_ip_section} with key ipaddr")
+    if IP_BOARD is None:
+        RuntimeError(
+            f"Please set ipaddr for ssh machine. Expect section {ssh_ip_section} with key ipaddr"
+        )
 
     hostname = IP_BOARD
+
 
 class boardGpioControl(powercontrol.GpiopmControl):
     def power_check(self) -> bool:
@@ -128,6 +131,7 @@ class boardControlUUU(BOARDCTL, machineinit.UUULoad):
 
         return cmds
 
+
 # if we want to download bootloader with Lauterbach TRACE32
 # after powering on the board, we must load the bootloader
 # with the trace32 tool onto the board
@@ -139,11 +143,11 @@ class boardControlLauterbach(BOARDCTL, machineinit.LauterbachLoad):
 
                 if lab.has_sshmachine():
                     with lab.sshmachine() as lnxssh:
-                        #lnxssh.exec0("uname", "-a")
-                        #ret, log = lnxssh.exec("ps", "afx", linux.Raw("|"), "grep", "dummy-1920x1080.conf", linux.Raw("|"), "grep", "-v", "grep")
-                        #if ret != 0:
+                        # lnxssh.exec0("uname", "-a")
+                        # ret, log = lnxssh.exec("ps", "afx", linux.Raw("|"), "grep", "dummy-1920x1080.conf", linux.Raw("|"), "grep", "-v", "grep")
+                        # if ret != 0:
                         #    lnxssh.exec0("sudo", "X", "-config", "/home/hs/data/Entwicklung/XXX/dummy-1920x1080.conf", ":99", linux.Raw("&"))
-                        #lnxssh.exec0("export", "DISPLAY=:99")
+                        # lnxssh.exec0("export", "DISPLAY=:99")
 
                         return lnxssh
 
@@ -168,6 +172,7 @@ class boardControlLauterbach(BOARDCTL, machineinit.LauterbachLoad):
     def get_trace32_script(self):
         cfg = cfgt.lauterbachcfg[ini.generic_get_boardname()]
         return cfg["script"]
+
 
 # if we want to download bootloader with Segger JLink
 # after powering on the board, we must load the bootloader
@@ -228,7 +233,6 @@ class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
     uuucfg = cfgt.uuucfg
     lauterbachcfg = cfgt.lauterbachcfg
     seggercfg = cfgt.seggercfg
-
 
     @property
     def ssh_config(self) -> typing.List[str]:
@@ -316,7 +320,10 @@ class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
     def toolchains(self) -> typing.Dict[str, linux.build.Toolchain]:
         return {
             "bootlin-armv5-eabi": linux.build.EnvSetBootlinToolchain(
-                arch="armv5-eabi", libc="glibc", typ="stable", date="2018.11-1",
+                arch="armv5-eabi",
+                libc="glibc",
+                typ="stable",
+                date="2018.11-1",
             ),
             "linaro-gnueabi": linux.build.EnvSetLinaroToolchain(
                 host_arch="x86_64",
@@ -347,7 +354,7 @@ class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
                 md,
             )
         except:  # noqa: E722
-            tbot.log.message(tbot.log.c(f"no sd wire on this labhost").yellow)
+            tbot.log.message(tbot.log.c("no sd wire on this labhost").yellow)
             pass
 
     def set_bootmode(self) -> bool:
@@ -438,6 +445,7 @@ class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
 
         return None
 
+
 class SSHMachine(connector.SSHConnector, linux.Bash):
     try:
         name = cfgt.config_parser.get("SSHMACHINE", "name")
@@ -463,6 +471,7 @@ class SSHMachine(connector.SSHConnector, linux.Bash):
         # do stuff after login
         # self.exec0("uname", "-a")
         return None
+
 
 def register_machines(ctx):
     ctx.register(GenericLab, tbot.role.LabHost)

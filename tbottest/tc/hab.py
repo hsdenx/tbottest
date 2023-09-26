@@ -1,5 +1,4 @@
 import tbot
-from tbot.machine import linux
 from tbot.machine import board
 from tbot.context import Optional
 

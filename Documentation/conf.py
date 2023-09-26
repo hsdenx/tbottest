@@ -52,7 +52,7 @@ extensions = [
 ]
 
 # https://aafigure.readthedocs.io/en/latest/sphinxext.html
-aafig_format = dict(latex='pdf', html='svg', text=None)
+aafig_format = dict(latex="pdf", html="svg", text=None)
 
 source_parsers = {".md": recommonmark.parser.CommonMarkParser}
 source_suffix = [".rst", ".md"]

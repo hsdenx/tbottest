@@ -2,8 +2,13 @@ import abc
 import tbot
 import time
 from tbot.machine import board
+from tbot_contrib.gpio import Gpio
 
-__all__ = ("GpiopmControl", "SispmControl", "TinkerforgeControl",)
+__all__ = (
+    "GpiopmControl",
+    "SispmControl",
+    "TinkerforgeControl",
+)
 
 
 class GpiopmControl(board.PowerControl):
@@ -35,12 +40,11 @@ class GpiopmControl(board.PowerControl):
     def poweron(self) -> None:
         try:
             self._gpio
-        except:
+        except:  # noqa: E722
             self._gpio = Gpio(self.host, self.gpiopmctl_pin)
             self._gpio.set_direction("out")
 
         self._gpio.set_value(int(self.gpiopmctl_state))
-            
 
     def poweroff(self) -> None:
         if "nopoweroff" in tbot.flags:
@@ -49,7 +53,7 @@ class GpiopmControl(board.PowerControl):
 
         try:
             self._gpio
-        except:
+        except:  # noqa: E722
             self._gpio = Gpio(self.host, self.gpiopmctl_pin)
             self._gpio.set_direction("out")
 
@@ -102,9 +106,7 @@ class SispmControl(board.PowerControl):
         raise Exception("abstract method")
 
     def poweron(self) -> None:
-        self.host.exec0(
-            "sispmctl", "-D", self.sispmctl_device, "-o", self.sispmctl_port
-        )
+        self.host.exec0("sispmctl", "-D", self.sispmctl_device, "-o", self.sispmctl_port)
 
     def poweroff(self) -> None:
         if "nopoweroff" in tbot.flags:

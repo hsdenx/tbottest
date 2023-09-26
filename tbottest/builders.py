@@ -3,12 +3,11 @@ import typing
 import pathlib
 import tbot
 from tbot.machine import linux, connector
-import os
-import sys
 
 cfgt = ini.IniTBotConfig()
 
 _INIT_CACHE: typing.Dict[str, bool] = {}
+
 
 class genericbuilder(connector.SSHConnector, linux.Bash, linux.Builder):
     def builder_get_sectionname() -> str:
@@ -90,6 +89,7 @@ class genericbuilder(connector.SSHConnector, linux.Bash, linux.Builder):
     def toolchains(self) -> typing.Dict[str, linux.build.Toolchain]:
         raise RuntimeError("toolchains not implemented yet, please add support!")
 
+
 FLAGS = {
-        "buildername" : "buildername:<name of builder> searches for BUILDHOST_<name of builder> section if passed to tbot. If not searches for BUILDHOST section",
+    "buildername": "buildername:<name of builder> searches for BUILDHOST_<name of builder> section if passed to tbot. If not searches for BUILDHOST section",
 }

@@ -20,6 +20,5 @@ index 00000000..86b0e97a
 +++ b/tbot/_version.py
 @@ -0,0 +1 @@
 +version = "0.10.6-patched"
--- 
+--
 2.30.2
-

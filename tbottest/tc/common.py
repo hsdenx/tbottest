@@ -1,14 +1,13 @@
-#
-# collection of testcases, which may can go into mainline
-#
+import contextlib
+import re
 import typing
 import tbot
 import time
+import uuid
 from tbot.machine import linux
 from tbot.machine import board
 from tbot.context import Optional
-import re
-import contextlib
+import tbottest.initconfig as ini
 
 
 def escape_ansi(line: str) -> str:
@@ -23,7 +22,11 @@ def escape_ansi(line: str) -> str:
     return ansi_escape.sub("", line)
 
 
-def lnx_create_random(lnx: linux.LinuxShell, f: str, len: int,) -> bool:
+def lnx_create_random(
+    lnx: linux.LinuxShell,
+    f: str,
+    len: int,
+) -> bool:
     """
     create file f with len bytes and random content
 
@@ -36,7 +39,12 @@ def lnx_create_random(lnx: linux.LinuxShell, f: str, len: int,) -> bool:
 
 
 def lnx_compare_files(
-    lnx: linux.LinuxShell, f1: str, o1: int, f2: str, o2: int, length: int,
+    lnx: linux.LinuxShell,
+    f1: str,
+    o1: int,
+    f2: str,
+    o2: int,
+    length: int,
 ) -> bool:
     """
     compare the content of the 2 files f1 @ offset o1 and f2 @ o2
@@ -52,18 +60,13 @@ def lnx_compare_files(
     option = "--skip"
     # busybox
     option = "-s"
-    out1 = lnx.exec0(
-        "hexdump", "-e", '"%03.2x"', option, str(o1), "-n", str(length), f1
-    )
-    out2 = lnx.exec0(
-        "hexdump", "-e", '"%03.2x"', option, str(o2), "-n", str(length), f2
-    )
+    out1 = lnx.exec0("hexdump", "-e", '"%03.2x"', option, str(o1), "-n", str(length), f1)
+    out2 = lnx.exec0("hexdump", "-e", '"%03.2x"', option, str(o2), "-n", str(length), f2)
     if out1 != out2:
-        tbot.log.message(
-            tbot.log.c(f"content differ:\n{f1}:\n{out1}\n{f2}\n{out2}").red
-        )
+        tbot.log.message(tbot.log.c(f"content differ:\n{f1}:\n{out1}\n{f2}\n{out2}").red)
         raise RuntimeError("files have not same content")
     return True
+
 
 @tbot.testcase
 def lnx_get_hwaddr(lnx: linux.LinuxShell, name: str) -> str:
@@ -79,7 +82,7 @@ def lnx_get_hwaddr(lnx: linux.LinuxShell, name: str) -> str:
     for line in out.split("\n"):
         if "HWaddr" in line:
             match = re.match(
-                    r".*HWaddr (?P<hwaddr>[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+)",  # noqa: E501
+                r".*HWaddr (?P<hwaddr>[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+)",  # noqa: E501
                 line,
             )
             if match is None:
@@ -137,6 +140,7 @@ def lnx_get_ipaddr(lnx: linux.LinuxShell, name: str, ip6: bool = False) -> str:
 
     raise RuntimeError(f"Could not get ip for device {name}")
 
+
 @tbot.testcase
 def lnx_start_bin_with_timeout(
     lnx: linux.LinuxShell,
@@ -159,7 +163,8 @@ def lnx_start_bin_with_timeout(
 
 @tbot.testcase
 def linux_test_uname(
-    lab: Optional[linux.LinuxShell] = None, lnx: Optional[linux.LinuxShell] = None,
+    lab: Optional[linux.LinuxShell] = None,
+    lnx: Optional[linux.LinuxShell] = None,
 ) -> None:
     with tbot.ctx() as cx:
         if lab is None:
@@ -188,29 +193,22 @@ def lnx_wait_for_ip(
     :param timeout: timeout if process is not found
     :return: ip addr
     """
-    found = False
     loop = 0
-    while (found == False):
+    while loop < loops:
         try:
             ret = lnx_get_ipaddr(lnx, name, ip6)
             return ret
         except:
             break
-        loop += 1
-        if loop > loops:
-            break
 
         time.sleep(timeout)
+        loop += 1
 
-    if found == False:
-        raise RuntimeError(f"ip on device {name} not found")
+    raise RuntimeError(f"ip on device {name} not found")
 
 
 def lnx_wait_for_file(
-    lnx: linux.LinuxShell,
-    name: str,
-    loops: int,
-    timeout: int
+    lnx: linux.LinuxShell, name: str, loops: int, timeout: int
 ) -> bool:  # noqa: D107
     """
     wait until file with name name is found with "ls -l"
@@ -220,28 +218,20 @@ def lnx_wait_for_file(
     :param loops: maximal wait loops
     :param timeout: timeout if file is not found
     """
-    found = False
     loop = 0
-    while (found == False):
+    while loop < loops:
         ret, log = lnx.exec("ls", "-l", name)
         if ret == 0:
             return True
 
-        loop += 1
-        if loop > loops:
-            break
-
         time.sleep(timeout)
+        loop += 1
 
-    if found == False:
-        raise RuntimeError(f"file {name} not found")
+    raise RuntimeError(f"file {name} not found")
 
 
 def lnx_wait_for_module(
-    lnx: linux.LinuxShell,
-    name: str,
-    loops: int,
-    timeout: int
+    lnx: linux.LinuxShell, name: str, loops: int, timeout: int
 ) -> bool:  # noqa: D107
     """
     wait until module with name is loaded
@@ -251,29 +241,21 @@ def lnx_wait_for_module(
     :param loops: maximal wait loops
     :param timeout: timeout if modulename is not found
     """
-    found = False
     loop = 0
-    while (found == False):
+    while loop < loops:
         log = lnx.exec0("lsmod")
-        for l in log.split("\n"):
-            if name in l:
+        for line in log.split("\n"):
+            if name in line:
                 return True
 
-        loop += 1
-        if loop > loops:
-            break
-
         time.sleep(timeout)
+        loop += 1
 
-    if found == False:
-        raise RuntimeError(f"module {name} not loaded")
+    raise RuntimeError(f"module {name} not loaded")
 
 
 def lnx_wait_for_process(
-    lnx: linux.LinuxShell,
-    name: str,
-    loops: int,
-    timeout: int
+    lnx: linux.LinuxShell, name: str, loops: int, timeout: int
 ) -> bool:  # noqa: D107
     """
     wait until process with name name is found with pidof
@@ -283,26 +265,22 @@ def lnx_wait_for_process(
     :param loops: maximal wait loops
     :param timeout: timeout if process is not found
     """
-    found = False
     loop = 0
-    while (found == False):
+    while loop < loops:
         ret, log = lnx.exec("pidof", name)
         if ret == 0:
             return True
 
-        loop += 1
-        if loop > loops:
-            break
-
         time.sleep(timeout)
+        loop += 1
 
-    if found == False:
-        raise RuntimeError(f"process {name} not found")
+    raise RuntimeError(f"process {name} not found")
 
 
 @tbot.testcase
 def board_ub_delete_env(
-    ub: Optional[board.UBootShell] = None, mtdparts=["env", "env-red"],
+    ub: Optional[board.UBootShell] = None,
+    mtdparts=["env", "env-red"],
 ) -> None:
     """
     erase the SPI Environment sectors in U-Boot
@@ -321,7 +299,9 @@ def board_ub_delete_env(
 
 @tbot.testcase
 def board_ub_delete_emmc(
-    ub: Optional[board.UBootShell] = None, device: str = None, erasesz: str = None,
+    ub: Optional[board.UBootShell] = None,
+    device: str = None,
+    erasesz: str = None,
 ) -> None:
     """
     delete the emmc device
@@ -419,7 +399,9 @@ def board_set_default(
 
 
 def lab_check_part_exists_and_create(
-    lab: Optional[linux.LinuxShell] = None, device: str = None, partition: str = None,
+    lab: Optional[linux.LinuxShell] = None,
+    device: str = None,
+    partition: str = None,
 ) -> None:
     """
     check if partition exists on device.
@@ -493,7 +475,9 @@ def board_prepare_tmpmnt(
         return tmppath
 
 
-def board_lx_getbootcounter(lnx: Optional[linux.LinuxShell] = None,) -> str:
+def board_lx_getbootcounter(
+    lnx: Optional[linux.LinuxShell] = None,
+) -> str:
     val = lnx.exec0("bootcount", "/sys/bus/nvmem/devices/rv3028_nvram0/nvmem", "read")
     tbot.log.message(tbot.log.c(f"bootcount linux {val}").green)
     return val
@@ -528,9 +512,7 @@ def board_ub_bootcounter(
                     ub = cx.enter_context(tbot.acquire_uboot(b))
                     ret = ub.env("bootcount")
                     if ret != str(bval):
-                        raise RuntimeError(
-                            f"bootcount not {bval} after soft reset {ret}"
-                        )
+                        raise RuntimeError(f"bootcount not {bval} after soft reset {ret}")
                     if bval <= int(blimit):
                         if "Warning: Bootlimit" in ub.bootlog:
                             raise RuntimeError(
@@ -543,9 +525,7 @@ def board_ub_bootcounter(
                             )
 
                     tbot.log.message(
-                        tbot.log.c(
-                            f"test bootcount bval {bval} blimit {blimit} Ok"
-                        ).green
+                        tbot.log.c(f"test bootcount bval {bval} blimit {blimit} Ok").green
                     )
                     bval += 1
                     ub.ch.sendline("res")
@@ -610,7 +590,10 @@ def board_bootcounter_with_linux(
 
 
 @tbot.testcase
-def lnx_check_beeper(lnx: Optional[linux.LinuxShell] = None, beeper=None,) -> None:
+def lnx_check_beeper(
+    lnx: Optional[linux.LinuxShell] = None,
+    beeper=None,
+) -> None:
     """
     check if dmesg output contains strings in dmesg_list
 
@@ -669,19 +652,28 @@ def lnx_check_dmesg(
     return ret
 
 
-def common_install_debian(lnx: linux.LinuxShell, package,) -> bool:
+def common_install_debian(
+    lnx: linux.LinuxShell,
+    package,
+) -> bool:
     # may convert package into real package name on OS
     lnx.exec0("sudo", "apt-get", "-y", "install", package)
     return True
 
 
-def common_install_fedora(lnx: linux.LinuxShell, package,) -> bool:
+def common_install_fedora(
+    lnx: linux.LinuxShell,
+    package,
+) -> bool:
     # may convert package into real package name on OS
     lnx.exec0("sudo", "dnf", "-y", "install", package)
     return True
 
 
-def lnx_install_package(lnx: linux.LinuxShell, package: str,) -> bool:
+def lnx_install_package(
+    lnx: linux.LinuxShell,
+    package: str,
+) -> bool:
     """
     detect OS version installed on linux machine
     and try to install package
@@ -700,7 +692,10 @@ def lnx_install_package(lnx: linux.LinuxShell, package: str,) -> bool:
 
 
 def tbot_copy_file_to_board(
-    lab: linux.LinuxShell, lnx: linux.LinuxShell, ethdevice: str, filename: str,
+    lab: linux.LinuxShell,
+    lnx: linux.LinuxShell,
+    ethdevice: str,
+    filename: str,
 ) -> None:
     """
     copy file filename from lab host in tmpdir
@@ -736,7 +731,10 @@ def tbot_copy_file_to_board(
 
 
 def tbot_start_script_on_board(
-    lab: linux.LinuxShell, lnx: linux.LinuxShell, ethdevice: str, scriptname: str,
+    lab: linux.LinuxShell,
+    lnx: linux.LinuxShell,
+    ethdevice: str,
+    scriptname: str,
 ):
     """
     copy script scriptname from lab host in tftp dir
@@ -872,8 +870,9 @@ def tbot_start_script_on_lab(
 
     return ret, out
 
+
 THREADS = {}
-import uuid
+
 
 def tbot_start_thread(
     lnx: linux.LinuxShell = None,
@@ -900,15 +899,22 @@ def tbot_start_thread(
     lnx.exec(linux.Raw(f"{cmd} 2>{logfile_stderr} 1>{logfile_stdout} &"))
     pid = lnx.env("!")
 
-    newt = {"lnx":lnx, "pid":pid, "cmd":cmd, "stdout":logfile_stdout, "stderr":logfile_stderr}
+    newt = {
+        "lnx": lnx,
+        "pid": pid,
+        "cmd": cmd,
+        "stdout": logfile_stdout,
+        "stderr": logfile_stderr,
+    }
     try:
-        tmpdict = THREADS[tid]
+        tmpdict = THREADS[tid]  # noqa: F841
     except:
         RuntimeError(f"threadid {tid} already in use")
 
     THREADS[tid] = newt
 
     return tid
+
 
 def tbot_stop_thread(
     tid: uuid.UUID = None,
@@ -924,12 +930,9 @@ def tbot_stop_thread(
     tmp = THREADS[tid]
     lnx = tmp["lnx"]
     pid = tmp["pid"]
-    sig = ""
-    if signal != None:
+    if signal is not None:
         lnx.exec("kill", signal, pid, linux.Then, "wait", pid)
     else:
         lnx.exec("kill", pid, linux.Then, "wait", pid)
 
     return THREADS.pop(tid)
-
-

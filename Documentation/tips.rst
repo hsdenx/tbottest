@@ -38,7 +38,7 @@ shell window one:
    ├─Calling linux ...
    [...]
    │   ├─Press CTRL+] three times within 1 second to exit.
-   
+
    BOARDNAME-linux: ~>
 
 
@@ -190,7 +190,7 @@ Install vim and create .vimrc
 
 .. code-block:: bash
 
-    pi@pilab-9:~  $ cat /home/pi/.vimrc 
+    pi@pilab-9:~  $ cat /home/pi/.vimrc
     set tabstop=4
     set shiftwidth=4
     set expandtab
@@ -301,7 +301,7 @@ don;t forget to reload rules with:
 
     $ sudo udevadm control --reload-rules
 
-    
+
 sudo without password
 ---------------------
 
@@ -316,7 +316,7 @@ usb hub power control
 
     $ cd hubpower
 
-    $ gcc -o hubpower hubpower.c 
+    $ gcc -o hubpower hubpower.c
 
 
     $ sudo ./hubpower 1:2 status
@@ -422,7 +422,7 @@ https://www.segger.com/downloads/jlink/#ESforARM
 
 https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPackBeta
 
-uncompress it and 
+uncompress it and
 
 .. code-block:: bash
 
@@ -488,7 +488,7 @@ folders exported config:
 
 .. code-block:: bash
 
-    pi@pilab-9:~  $ cat /etc/exports 
+    pi@pilab-9:~  $ cat /etc/exports
     /work/pi/tbot-workdir/nfs  192.168.3.0/255.255.255.0(rw,no_root_squash,sync)
     /work/pi/tbot-workdir/nfs  192.168.7.0/255.255.255.0(rw,no_root_squash,sync)
 
@@ -522,17 +522,17 @@ and use this config file
 
 .. code-block:: bash
 
-    pi@pilab-9:local  $ cat /etc/dhcp/dhcpd.conf 
+    pi@pilab-9:local  $ cat /etc/dhcp/dhcpd.conf
     option domain-name "pilab.local";
     option domain-name-servers 8.8.8.8, 8.8.4.4;
-    
+
     default-lease-time 6000;
     max-lease-time 7200;
 
     ddns-update-style none;
-    
+
     authoritative;
-    
+
     subnet 192.168.3.0 netmask 255.255.255.0 {
       range 192.168.3.1 192.168.3.100;
       option subnet-mask 255.255.255.0;

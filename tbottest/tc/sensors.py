@@ -1,7 +1,3 @@
-#
-# collection of testcases for sensor testing
-# may go into mainline
-#
 import tbot
 from tbot.machine import linux
 from tbot.context import Optional
@@ -9,7 +5,8 @@ from tbot.context import Optional
 
 @tbot.testcase
 def board_lnx_tempsensors(
-    lnx: Optional[linux.LinuxShell] = None, sensors=None,
+    lnx: Optional[linux.LinuxShell] = None,
+    sensors=None,
 ) -> None:
     """
     prerequisite: Board boots into linux
@@ -46,10 +43,6 @@ def board_lnx_tempsensors(
             out = lnx.exec0("cat", tmp)
             tempval = int(out.strip(""))
             if tempval > int(val["max"]):
-                raise RuntimeError(
-                    f'temp values {tempval} > allowed value {val["max"]}'
-                )
+                raise RuntimeError(f'temp values {tempval} > allowed value {val["max"]}')
             if tempval < int(val["min"]):
-                raise RuntimeError(
-                    f'temp values {tempval} < allowed value {val["min"]}'
-                )
+                raise RuntimeError(f'temp values {tempval} < allowed value {val["min"]}')

@@ -2,6 +2,7 @@ import tbot
 from tbot.machine import linux
 from tbot.tc.shell import copy as shell_copy
 
+
 class KAS:
     """
     helper class for building yocto projects with kas
@@ -142,6 +143,7 @@ class KAS:
         $ bitbake -q -q swu-image
 
     """
+
     def __init__(self, cfg: dict) -> None:  # noqa: D107
         self.cfg = cfg
         self.env_inited = False
@@ -189,7 +191,16 @@ class KAS:
             self.kas_version = self.cfg["kasversion"]
             self.kaspath = linux.Workdir.static(self.bh, self.bh.workdir / "kasdownload")
             self.bh.exec0("cd", self.kaspath._local_str())
-            self.bh.exec("git", "-C", f'kas', "pull", linux.Raw("||"), "git", "clone", self.kasurl)
+            self.bh.exec(
+                "git",
+                "-C",
+                "kas",
+                "pull",
+                linux.Raw("||"),
+                "git",
+                "clone",
+                self.kasurl,
+            )
             if self.kas_version:
                 self.bh.exec0("cd", "kas")
                 self.bh.exec0("git", "checkout", self.kas_version)
@@ -325,9 +336,21 @@ class KAS:
         path = self.kas_get_basepath()
         post = []
         if self.kaslayername is not None:
-                post = [linux.Raw(f" {self.kaslayername}")]
+            post = [linux.Raw(f" {self.kaslayername}")]
         self.bh.exec0("cd", path)
-        self.bh.exec0("git", "-C", f'{self.kaslayername}', "pull", linux.Raw("||"), "git", "clone", self.kaslayer, "-b", self.kaslayerbranch, *post)
+        self.bh.exec0(
+            "git",
+            "-C",
+            f"{self.kaslayername}",
+            "pull",
+            linux.Raw("||"),
+            "git",
+            "clone",
+            self.kaslayer,
+            "-b",
+            self.kaslayerbranch,
+            *post,
+        )
         pre = []
         try:
             kas_ref_dir = self.bh.kas_ref_dir
@@ -336,7 +359,7 @@ class KAS:
             pass
 
         # do not execute in case we use docker
-        if self.container == False:
+        if self.container is False:
             self.bh.exec0(*pre, self.kascmd, "checkout", self.kasconfigfile)
 
     def kas_call_container(self, t: str) -> None:
@@ -372,8 +395,8 @@ class KAS:
                     break
                 if "-c" in c:
                     foundtask = True
-            if foundtask == False:
-                raise RuntimeError(f"no task found, please set it with -c option")
+            if foundtask is False:
+                raise RuntimeError("no task found, please set it with -c option")
         else:
             target = t
 
@@ -389,7 +412,6 @@ class KAS:
 
         if self.container_engine:
             kasarg.append("KAS_CONTAINER_ENGINE={self.container_engine}")
-
 
     def kas_call_bitbake(self, t: str) -> None:
         if "bitbake" in t:
@@ -409,8 +431,10 @@ class KAS:
 
         self.bh.exec0(*cmd)
 
-
-    def kas_build(self, buildtargets=None,) -> None:
+    def kas_build(
+        self,
+        buildtargets=None,
+    ) -> None:
         """
         build all `buildtargets`_.
         """
@@ -427,7 +451,10 @@ class KAS:
             else:
                 self.kas_call_bitbake(t)
 
-    def kas_copy(self, resultimages=None,) -> linux.path:
+    def kas_copy(
+        self,
+        resultimages=None,
+    ) -> linux.path:
         """
         copy all results to tftp path on lab host
 

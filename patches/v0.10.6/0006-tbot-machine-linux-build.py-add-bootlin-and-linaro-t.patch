@@ -17,24 +17,24 @@ index 3baa87c5..7585cc54 100644
 +++ b/tbot/machine/linux/build.py
 @@ -19,6 +19,9 @@ import contextlib
  import typing
- 
+
  from . import linux_shell, path
 +import tbot
 +from tbot.machine import linux
 +from tbot import log_event
- 
- 
+
+
  class Toolchain(abc.ABC):
 @@ -81,11 +84,24 @@ class DistroToolchain(Toolchain):
              }
      """
- 
+
 -    def __init__(self, arch: str, prefix: str) -> None:
 +    def __init__(self, path: str, arch: str, prefix: str) -> None:
 +        self.path = path
          self.arch = arch
          self.prefix = prefix
- 
+
      def enable(self, host: H) -> None:
 +        ret = host.exec(
 +            "printenv",
@@ -50,14 +50,14 @@ index 3baa87c5..7585cc54 100644
 +
          host.env("ARCH", self.arch)
          host.env("CROSS_COMPILE", self.prefix)
- 
+
 @@ -104,6 +120,8 @@ class DistroToolchain(Toolchain):
          ]:
              host.env(tool.upper(), self.prefix + tool)
- 
+
 +        log_event.doc_tag("BUILD_TOOLCHAIN", f"{self.path}")
 +
- 
+
  class Builder(linux_shell.LinuxShell):
      """
 @@ -195,3 +213,173 @@ class Builder(linux_shell.LinuxShell):
@@ -234,6 +234,5 @@ index 3baa87c5..7585cc54 100644
 +        self.libc = libc
 +        self.typ = typ
 +        self.date = date
--- 
+--
 2.30.2
-

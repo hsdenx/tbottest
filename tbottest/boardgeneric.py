@@ -15,49 +15,54 @@ from tbottest.labgeneric import cfgt as cfglab
 try:
     from tbotconfig.boardspecific import set_ub_board_specific
 except:
-    raise RuntimeError("Please define at least a dummy set_ub_board_specific in tbotconfig.boardspecific")
+    raise RuntimeError(
+        "Please define at least a dummy set_ub_board_specific in tbotconfig.boardspecific"
+    )
     set_ub_board_specific = None
 
 cfg = ini.IniConfig()
 
+
 class GenericBoardConfig:
-    currentdir = os.path.dirname(
-        os.path.abspath(inspect.getfile(inspect.currentframe()))
-    )
+    currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     workdir = os.path.dirname(currentdir)
 
     boardname = ini.generic_get_boardname()
     cfgp = cfg.config_parser
-    tmpdir = cfgp.get(f"TC", "tmpdir", fallback="/tmp")
+    tmpdir = cfgp.get("TC", "tmpdir", fallback="/tmp")
 
     ##############################################
     # Imagenames
     ##############################################
-    rescueimage = cfgp.get(f"TC", "rescueimage", fallback=None)
-    qspiheader = cfgp.get(f"TC", "qspiheader", fallback=None)
-    splimage = cfgp.get(f"TC", "splimage", fallback=None)
+    rescueimage = cfgp.get("TC", "rescueimage", fallback=None)
+    qspiheader = cfgp.get("TC", "qspiheader", fallback=None)
+    splimage = cfgp.get("TC", "splimage", fallback=None)
 
-    mtd_parts = eval(cfgp.get(f"TC", "mtd_parts", fallback="[]"))
-    ub_mtd_delete = eval(cfgp.get(f"TC", "ub_mtd_delete", fallback="[]"))
+    mtd_parts = eval(cfgp.get("TC", "mtd_parts", fallback="[]"))
+    ub_mtd_delete = eval(cfgp.get("TC", "ub_mtd_delete", fallback="[]"))
 
     ##############################################
     # U-Boot testcases
     ##############################################
-    fb_res_setup = cfgp.get(f"TC", "fb_res_setup", fallback=None)
-    fb_res_boot = cfgp.get(f"TC", "fb_res_boot", fallback=None)
-    fb_cmd = cfgp.get(f"TC", "fb_cmd", fallback=None)
+    fb_res_setup = cfgp.get("TC", "fb_res_setup", fallback=None)
+    fb_res_boot = cfgp.get("TC", "fb_res_boot", fallback=None)
+    fb_cmd = cfgp.get("TC", "fb_cmd", fallback=None)
 
     ##############################################
     # Linux testcases
     ##############################################
-    beep = eval(cfgp.get(f"TC", "beep", fallback="[]"))
-    cyclictestmaxvalue = eval(cfgp.get(f"TC", "cyclictestmaxvalue", fallback="100"))
-    dmesg = eval(cfgp.get(f"TC", "dmesg", fallback="[]"))
-    dmesg_false = eval(cfgp.get(f"TC", "dmesg_false", fallback="[]"))
-    leds = eval(cfgp.get(f"TC", "leds", fallback="[]"))
-    network_iperf_intervall = eval(cfgp.get(f"TC", "network_iperf_intervall", fallback="1"))
-    network_iperf_minval = eval(cfgp.get(f"TC", "network_iperf_minval", fallback="90000000"))
-    network_iperf_cycles = eval(cfgp.get(f"TC", "network_iperf_cycles", fallback="30"))
+    beep = eval(cfgp.get("TC", "beep", fallback="[]"))
+    cyclictestmaxvalue = eval(cfgp.get("TC", "cyclictestmaxvalue", fallback="100"))
+    dmesg = eval(cfgp.get("TC", "dmesg", fallback="[]"))
+    dmesg_false = eval(cfgp.get("TC", "dmesg_false", fallback="[]"))
+    leds = eval(cfgp.get("TC", "leds", fallback="[]"))
+    network_iperf_intervall = eval(
+        cfgp.get("TC", "network_iperf_intervall", fallback="1")
+    )
+    network_iperf_minval = eval(
+        cfgp.get("TC", "network_iperf_minval", fallback="90000000")
+    )
+    network_iperf_cycles = eval(cfgp.get("TC", "network_iperf_cycles", fallback="30"))
 
     nvramdev = cfgp.get("TC", "nvramdev", fallback=None)
     nvramcomp = cfgp.get("TC", "nvramcomp", fallback=None)
@@ -68,57 +73,62 @@ class GenericBoardConfig:
     rs485boarddev = eval(cfgp.get("TC", "rs485boarddev", fallback='["/dev/ttymxc2"]'))
     rs485lengths = eval(cfgp.get("TC", "rs485lengths", fallback='["20", "100", "1024"]'))
 
-    sensors = eval(cfgp.get(f"TC", "sensors", fallback="[]"))
+    sensors = eval(cfgp.get("TC", "sensors", fallback="[]"))
 
     ##############################################
     # swupdate testcases
     ##############################################
-    swuethdevice = cfgp.get(f"TC", "swuethdevice", fallback="eth0")
-    swuimage = cfgp.get(f"TC", "swuimage", fallback=None)
+    swuethdevice = cfgp.get("TC", "swuethdevice", fallback="eth0")
+    swuimage = cfgp.get("TC", "swuimage", fallback=None)
 
     ##############################################
     # kas testcases
     ##############################################
-    kas = eval(cfgp.get(f"TC", "kas", fallback="[]"))
-    kas_check_files = eval(cfgp.get(f"TC", "kas_check_files", fallback="[]"))
-    kas_results = eval(cfgp.get(f"TC", "kas_results", fallback="[]"))
+    kas = eval(cfgp.get("TC", "kas", fallback="[]"))
+    kas_check_files = eval(cfgp.get("TC", "kas_check_files", fallback="[]"))
+    kas_results = eval(cfgp.get("TC", "kas_results", fallback="[]"))
 
 
 cfggeneric = GenericBoardConfig()
 
 BOARD_LINUX_SHELL = linux.Ash
-#BOARD_LINUX_SHELL = linux.Bash
+# BOARD_LINUX_SHELL = linux.Bash
+
 
 class GenericUBoot(
     board.Connector, board.UBootAutobootInterceptSimple, board.UBootShell
 ):  # noqa: E501
     cfgp = cfg.config_parser
     name = f"{ini.generic_get_boardname()}-uboot"
-    prompt = cfgp.get(f"TC", "uboot_prompt", fallback="=> ")
+    prompt = cfgp.get("TC", "uboot_prompt", fallback="=> ")
     # remove ""
     prompt = prompt.strip('"')
 
     # If U-Boot is not up after 90 seconds, something is seriously wrong
     # we must use here 90 seconds as wdt timeout is 90 seconds.
-    bt = cfgp.get(f"TC", "uboot_boot_timeout", fallback=90)
+    bt = cfgp.get("TC", "uboot_boot_timeout", fallback=90)
     if bt == "None":
         boot_timeout = None
     else:
         boot_timeout = int(bt)
 
-    ap = cfgp.get(f"TC", "uboot_autoboot_prompt", fallback=b"autoboot:\s{0,5}\d{0,3}\s{0,3}.{0,80}")
+    ap = cfgp.get(
+        "TC",
+        "uboot_autoboot_prompt",
+        fallback=b"autoboot:\s{0,5}\d{0,3}\s{0,3}.{0,80}",  # noqa: W605
+    )
     if ap == "None":
         autoboot_prompt = None
     else:
         autoboot_prompt = tbot.Re(ap, re.DOTALL)
 
-    ap = cfgp.get(f"TC", "uboot_autoboot_timeout", fallback="0.1")
+    ap = cfgp.get("TC", "uboot_autoboot_timeout", fallback="0.1")
     if ap == "None":
         autoboot_timeout = 0.1
     else:
         autoboot_timeout = float(ap)
 
-    ap = cfgp.get(f"TC", "uboot_autoboot_keys", fallback="None")
+    ap = cfgp.get("TC", "uboot_autoboot_keys", fallback="None")
     if ap == "None":
         autoboot_keys = None
     elif ap == "SPACE":
@@ -126,14 +136,14 @@ class GenericUBoot(
     else:
         autoboot_keys = str(ap)
 
-    ap = cfgp.get(f"TC", "uboot_autoboot_iter", fallback="None")
+    ap = cfgp.get("TC", "uboot_autoboot_iter", fallback="None")
     if ap == "None":
         pass
     else:
         autoboot_iter = int(ap)
 
     def get_death_strings(self) -> List[str]:
-        return eval(cfg.config_parser.get(f"TC", "uboot_death_strings", fallback="[]"))
+        return eval(cfg.config_parser.get("TC", "uboot_death_strings", fallback="[]"))
 
     def init(self) -> None:
         if "uboot_no_env_set" in tbot.flags:
@@ -172,37 +182,41 @@ class GenericUBoot(
         if set_ub_board_specific:
             set_ub_board_specific(self)
 
+
 def add_death_strings(ch):
-    dstr = eval(cfg.config_parser.get(f"TC", "death_strings", fallback="[]"))
+    dstr = eval(cfg.config_parser.get("TC", "death_strings", fallback="[]"))
     for m in dstr:
         ch.add_death_string(m)
 
-class GenericLinuxBoot(board.LinuxUbootConnector, board.LinuxBootLogin, BOARD_LINUX_SHELL):
+
+class GenericLinuxBoot(
+    board.LinuxUbootConnector, board.LinuxBootLogin, BOARD_LINUX_SHELL
+):
     name = f"{ini.generic_get_boardname()}-linux"
 
     uboot = GenericUBoot
 
     cfgp = cfg.config_parser
-    username = cfgp.get(f"TC", "linux_user", fallback="root")
-    pwd = cfgp.get(f"TC", "linux_password", fallback="None")
+    username = cfgp.get("TC", "linux_user", fallback="root")
+    pwd = cfgp.get("TC", "linux_password", fallback="None")
     if pwd == "None":
-            password = None
+        password = None
     else:
-            password = pwd
+        password = pwd
 
-    bt = cfgp.get(f"TC", "linux_login_delay", fallback=None)
-    if bt == None:
+    bt = cfgp.get("TC", "linux_login_delay", fallback=None)
+    if bt is None:
         login_delay = None
     else:
         login_delay = int(bt)
 
-    bt = cfgp.get(f"TC", "linux_boot_timeout", fallback=None)
-    if bt == None:
+    bt = cfgp.get("TC", "linux_boot_timeout", fallback=None)
+    if bt is None:
         boot_timeout = None
     else:
         boot_timeout = int(bt)
 
-    def get_channel(self, ub: board.UBootShell)-> channel.Channel:
+    def get_channel(self, ub: board.UBootShell) -> channel.Channel:
         """
         old bootcommands hardcoded... we should get rid of it
         only for backwardcompatibility
@@ -223,11 +237,7 @@ class GenericLinuxBoot(board.LinuxUbootConnector, board.LinuxBootLogin, BOARD_LI
                 # load images and boot
                 cmd = f"{bd}/{cfggeneric.rescueimage}"
                 cmd = cmd.strip('"')
-                lab.exec0(
-                    linux.Raw(
-                        f"sudo {up} FB: download -f {cmd}"
-                    )
-                )
+                lab.exec0(linux.Raw(f"sudo {up} FB: download -f {cmd}"))
                 cmd = f"{cfggeneric.fb_res_setup}"
                 cmd = cmd.strip('"')
                 lab.exec0(linux.Raw(f"sudo {up} FB: ucmd {cmd}"))
@@ -255,7 +265,7 @@ class GenericLinuxBoot(board.LinuxUbootConnector, board.LinuxBootLogin, BOARD_LI
                 bootcmd = f.split(":")[1]
                 ch = ub.boot("run", bootcmd)
 
-        if ch == None:
+        if ch is None:
             ch = self.get_channel(ub)
 
         add_death_strings(ch)
@@ -274,7 +284,7 @@ class GenericLinuxBoot(board.LinuxUbootConnector, board.LinuxBootLogin, BOARD_LI
         """
         returns tbot tmpdir for this lab
         """
-        return linux.Workdir.static(self, f"/tmp")
+        return linux.Workdir.static(self, "/tmp")
 
     def init(self) -> None:
         # Disable all clutter on the console
@@ -288,7 +298,7 @@ class GenericLinuxBoot(board.LinuxUbootConnector, board.LinuxBootLogin, BOARD_LI
                 # try with ip
                 ret, out = self.exec("ip", "--help")
                 if "useifconfig" in tbot.flags:
-                        ret = 0
+                    ret = 0
 
                 if ret == 255:
                     # Yes, ip --help return 255 !?!?!?!?!
@@ -326,7 +336,9 @@ class GenericLinuxBoot(board.LinuxUbootConnector, board.LinuxBootLogin, BOARD_LI
                         "up",
                     )
 
-            lx_init_timeout = eval(self.cfgp.get("TC", "linux_init_timeout", fallback="None"))
+            lx_init_timeout = eval(
+                self.cfgp.get("TC", "linux_init_timeout", fallback="None")
+            )
             if lx_init_timeout != "None":
                 time.sleep(float(lx_init_timeout))
 
@@ -342,15 +354,17 @@ class GenericLinuxBoot(board.LinuxUbootConnector, board.LinuxBootLogin, BOARD_LI
             else:
                 self.exec(linux.Raw(cmd["cmd"]))
 
+
 class GenericLinuxBootwithoutUBootwithoutLogin(board.Connector, BOARD_LINUX_SHELL):
     """
     removed init function as we have an already running board, so we
     do not want to execute any init tasks.
     """
+
     name = f"{ini.generic_get_boardname()}-linux"
 
     cfgp = cfg.config_parser
-    username = cfgp.get(f"TC", "linux_user", fallback="root")
+    username = cfgp.get("TC", "linux_user", fallback="root")
     pwd = None
 
     @property
@@ -361,32 +375,33 @@ class GenericLinuxBootwithoutUBootwithoutLogin(board.Connector, BOARD_LINUX_SHEL
         """
         returns tbot tmpdir for this lab
         """
-        return linux.Workdir.static(self, f"/tmp")
+        return linux.Workdir.static(self, "/tmp")
 
 
-class GenericLinuxBootwithoutUBoot(board.Connector, board.LinuxBootLogin, BOARD_LINUX_SHELL):
+class GenericLinuxBootwithoutUBoot(
+    board.Connector, board.LinuxBootLogin, BOARD_LINUX_SHELL
+):
     name = f"{ini.generic_get_boardname()}-linux"
 
     cfgp = cfg.config_parser
-    username = cfgp.get(f"TC", "linux_user", fallback="root")
-    pwd = cfgp.get(f"TC", "linux_password", fallback="None")
+    username = cfgp.get("TC", "linux_user", fallback="root")
+    pwd = cfgp.get("TC", "linux_password", fallback="None")
     if pwd == "None":
-            password = None
+        password = None
     else:
-            password = pwd
+        password = pwd
 
-    bt = cfgp.get(f"TC", "linux_login_delay", fallback=None)
-    if bt == None:
+    bt = cfgp.get("TC", "linux_login_delay", fallback=None)
+    if bt is None:
         login_delay = None
     else:
         login_delay = int(bt)
 
-    bt = cfgp.get(f"TC", "linux_boot_timeout", fallback=None)
-    if bt == None:
+    bt = cfgp.get("TC", "linux_boot_timeout", fallback=None)
+    if bt is None:
         boot_timeout = None
     else:
         boot_timeout = int(bt)
-
 
     @property
     def workdir(self) -> "linux.Path[GenericLinux]":
@@ -396,7 +411,7 @@ class GenericLinuxBootwithoutUBoot(board.Connector, board.LinuxBootLogin, BOARD_
         """
         returns tbot tmpdir for this lab
         """
-        return linux.Workdir.static(self, f"/tmp")
+        return linux.Workdir.static(self, "/tmp")
 
     def init(self) -> None:
         add_death_strings(self.ch)
@@ -435,7 +450,7 @@ class GenericLinuxAlwaysOn(board.Connector, BOARD_LINUX_SHELL):
         """
         returns tbot tmpdir for this lab
         """
-        return linux.Workdir.static(self, f"/tmp")
+        return linux.Workdir.static(self, "/tmp")
 
 
 GenericLinux = GenericLinuxBoot
@@ -452,6 +467,7 @@ if "nouboot" in tbot.flags:
         GenericLinux = GenericLinuxBootwithoutUBootwithoutLogin
     else:
         GenericLinux = GenericLinuxBootwithoutUBoot
+
 
 class GenericSSH(connector.SSHConnector, linux.Ash):
     hostname: str = None  # type: ignore
@@ -484,7 +500,7 @@ class GenericSSH(connector.SSHConnector, linux.Ash):
         """
         returns tbot tmpdir for this lab
         """
-        return linux.Workdir.static(self, f"/tmp")
+        return linux.Workdir.static(self, "/tmp")
 
 
 def register_machines(ctx):
@@ -504,9 +520,9 @@ FLAGS = {
     "sdcard": "boot linux from sd card",
     "emmc": "boot linux from emmc",
     "panic": "add death string for kernel panic",
-    "nouboot" : "boot into linux without uboot interaction",
-    "set-ethconfig" : "set ethernet config in u-boot",
+    "nouboot": "boot into linux without uboot interaction",
+    "set-ethconfig": "set ethernet config in u-boot",
     "nobootcon": "silent bootlogs on console",
-    "bootcmd" : "run bootcommand command in U-Boot shell format: bootcmd:<command>",
-    "useifconfig" : "use oldstyle ifconfig instead of ip",
+    "bootcmd": "run bootcommand command in U-Boot shell format: bootcmd:<command>",
+    "useifconfig": "use oldstyle ifconfig instead of ip",
 }

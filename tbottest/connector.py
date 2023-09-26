@@ -3,7 +3,10 @@ import contextlib
 import time
 from tbot.machine import channel, connector, linux
 
-__all__ = ("KermitConnector", "PicocomConnector",)
+__all__ = (
+    "KermitConnector",
+    "PicocomConnector",
+)
 
 
 class KermitConnector(connector.ConsoleConnector):

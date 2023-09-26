@@ -1,8 +1,6 @@
 import time
-import typing
 
 from tbot import log
-from tbot.log import u, c
 
 __all__ = ("doc_begin", "doc_image", "doc_cmd", "doc_tag", "doc_end")
 
@@ -42,10 +40,11 @@ __all__ = ("doc_begin", "doc_image", "doc_cmd", "doc_tag", "doc_end")
     :param str docid: ID of the doc section
 """
 
+
 def doc_begin(docid: str) -> None:
     """
     Log a doc ID beginning.
-    
+
     :param str docid: ID of the doc section
     """
     log.EventIO(
@@ -54,6 +53,7 @@ def doc_begin(docid: str) -> None:
         verbosity=log.Verbosity.CHANNEL,
         docid=docid,
     )
+
 
 def doc_image(imagename: str) -> None:
     """
@@ -68,6 +68,7 @@ def doc_image(imagename: str) -> None:
         imagename=imagename,
     )
 
+
 def doc_cmd(docid: str) -> None:
     """
     Log a doc cmd ID event
@@ -81,6 +82,7 @@ def doc_cmd(docid: str) -> None:
         docid=docid,
     )
 
+
 def doc_tag(tagid: str, tagval: str) -> None:
     """
     Log a doc tag ID event
@@ -92,8 +94,9 @@ def doc_tag(tagid: str, tagval: str) -> None:
         message=f"add doc tag {tagid} {tagval}",
         verbosity=log.Verbosity.CHANNEL,
         tagid=tagid,
-        tagval=tagval
+        tagval=tagval,
     )
+
 
 def doc_end(docid: str) -> None:
     """

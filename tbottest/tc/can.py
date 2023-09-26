@@ -53,6 +53,7 @@ def board_setup_can(
     for n in candev:
         sudo_exec0(lnx, usesudo, "ifconfig", n, "up")
 
+
 def lnx_can_write_dump_compare(
     lab: linux.LinuxShell,
     lnx: linux.LinuxShell,
@@ -103,12 +104,22 @@ def lnx_can_write_dump_compare(
     for d in data:
         lnxsend.exec0("cansend", d["dev"], linux.Raw(d["data"]))
 
-    result = tbot_stop_thread(tid, "-9")
+    tbot_stop_thread(tid, "-9")
 
     # check stderr
-    log = lnxread.exec0("wc", "-c", f"/tmp/thread_2_{tid}", linux.Pipe, "cut", "-d", linux.Raw('" "'), "-f", "1")
+    log = lnxread.exec0(
+        "wc",
+        "-c",
+        f"/tmp/thread_2_{tid}",
+        linux.Pipe,
+        "cut",
+        "-d",
+        linux.Raw('" "'),
+        "-f",
+        "1",
+    )
     if int(log.strip()) != 0:
-        tbot.log.message(tbot.log.c(f"found output in stderr").yellow)
+        tbot.log.message(tbot.log.c("found output in stderr").yellow)
         lnxread.exec0("cat", f"/tmp/thread_2_{tid}")
 
     log = lnxread.exec0("cat", f"/tmp/thread_1_{tid}")
@@ -116,21 +127,25 @@ def lnx_can_write_dump_compare(
     i = 0
     ign = 0
     error = False
-    for l in log.split("\n"):
-        l = l.strip()
-        if "interface" in l:
+    for line in log.split("\n"):
+        line = line.strip()
+        if "interface" in line:
             i += 1
             ign += 1
             continue
 
-        if l != data[i - ign]["res"]:
-            tbot.log.message(tbot.log.c(f"found difference in candump '{l}' != '{data[i - ign]['res']}' send: '{data[i - ign]['data']}'").red)
+        if line != data[i - ign]["res"]:
+            tbot.log.message(
+                tbot.log.c(
+                    f"found difference in candump '{line}' != '{data[i - ign]['res']}' send: '{data[i - ign]['data']}'"
+                ).red
+            )
             error = True
 
         i += 1
 
     if error:
-        raise RuntimeError(f"candump errors")
+        raise RuntimeError("candump errors")
 
 
 @tbot.testcase
@@ -248,9 +263,7 @@ def board_lnx_cangen(
                         tmppath,
                     )
 
-            ret, out = lab.exec(
-                "python3", f"{tmppath}/check_cangen_output.py", "-i", df
-            )
+            ret, out = lab.exec("python3", f"{tmppath}/check_cangen_output.py", "-i", df)
             if ret != 0:
                 lnx.interactive()
 

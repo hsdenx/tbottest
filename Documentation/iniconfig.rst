@@ -24,9 +24,9 @@ classes
 - :py:class:`~tbottest.initconfig.IniTBotConfig` - Init generic setup from tbot.ini.
 
 .. autoclass:: tbottest.initconfig.IniTBotConfig
-   :members: 
+   :members:
 
 - :py:class:`~tbottest.initconfig.IniConfig` - Init generic setup from BOARDNAME.ini.
 
 .. autoclass:: tbottest.initconfig.IniConfig
-   :members: 
+   :members:

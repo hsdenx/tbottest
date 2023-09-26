@@ -13,7 +13,9 @@ from tbottest.tc.systemd import systemd_active
 
 
 @tbot.testcase
-def board_lnx_check_swu(lab: typing.Optional[linux.LinuxShell] = None, usesshmachine: bool = False) -> None:
+def board_lnx_check_swu(
+    lab: typing.Optional[linux.LinuxShell] = None, usesshmachine: bool = False
+) -> None:
     """
     check if swupdate-client.py is installed on lab host
     if not, try  install into lab.toolsdir
@@ -27,9 +29,10 @@ def board_lnx_check_swu(lab: typing.Optional[linux.LinuxShell] = None, usesshmac
 
         if lab.has_sshmachine() and usesshmachine:
             with lab.sshmachine() as lnxssh:
-                    _board_lnx_check_swu(lnxssh)
+                _board_lnx_check_swu(lnxssh)
         else:
             _board_lnx_check_swu(lab)
+
 
 def _board_lnx_check_swu(lab: typing.Optional[linux.LinuxShell] = None) -> None:
     p = lab.toolsdir()
@@ -39,11 +42,8 @@ def _board_lnx_check_swu(lab: typing.Optional[linux.LinuxShell] = None) -> None:
 
     # swupdate-client.py not installed, try to install it
     tbot.log.message(
-        tbot.log.c(
-            f"swupdate-client.py not installed in {p}. Try to install it"
-        ).green
+        tbot.log.c(f"swupdate-client.py not installed in {p}. Try to install it").green
     )
-    curdir = lab.exec0("pwd").strip()
     lab.exec0("mkdir", "-p", p)
     lab.exec0("cd", p)
     lab.exec0(
@@ -101,10 +101,28 @@ def board_lnx_swu(
             with lab.sshmachine() as lnxssh:
                 # copy file from labhost to sshmachine
                 # copy only if different md5sums
-                md5lab = lab.exec0("md5sum", lab.tftp_dir() / swuimage, linux.Pipe, "cut", "-d" , " ",  "-f", "1")
+                md5lab = lab.exec0(
+                    "md5sum",
+                    lab.tftp_dir() / swuimage,
+                    linux.Pipe,
+                    "cut",
+                    "-d",
+                    " ",
+                    "-f",
+                    "1",
+                )
                 ret, log = lnxssh.exec("ls", lnxssh.tftp_dir() / swuimage)
                 if ret == 0:
-                    md5ssh = lnxssh.exec0("md5sum", lnxssh.tftp_dir() / swuimage, linux.Pipe, "cut", "-d" , " ",  "-f", "1")
+                    md5ssh = lnxssh.exec0(
+                        "md5sum",
+                        lnxssh.tftp_dir() / swuimage,
+                        linux.Pipe,
+                        "cut",
+                        "-d",
+                        " ",
+                        "-f",
+                        "1",
+                    )
                 else:
                     md5ssh = "none"
 
@@ -117,11 +135,12 @@ def board_lnx_swu(
 
 
 def _board_lnx_swu(lab, swuimage, ipaddr):
-        pa = lab.toolsdir()._local_str()
-        pt = lab.tftp_dir()._local_str()
-        rcode, log = lab.exec(f"{pa}/swupdate_client.py", f"{pt}/{swuimage}", ipaddr)
+    pa = lab.toolsdir()._local_str()
+    pt = lab.tftp_dir()._local_str()
+    rcode, log = lab.exec(f"{pa}/swupdate_client.py", f"{pt}/{swuimage}", ipaddr)
 
-        return rcode, log
+    return rcode, log
+
 
 @tbot.testcase
 def swu_swupdate_from_file(

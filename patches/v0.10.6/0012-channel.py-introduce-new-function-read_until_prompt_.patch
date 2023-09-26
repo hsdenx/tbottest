@@ -20,7 +20,7 @@ index b6d41ce9..64cad99a 100644
 @@ -872,6 +872,46 @@ class Channel(typing.ContextManager):
          finally:
              self.prompt = previous
- 
+
 +    _prompt_timeout: float = None
 +    prompt_poll_timeout: float = 0.5
 +    _prompt_start: float
@@ -64,6 +64,5 @@ index b6d41ce9..64cad99a 100644
      def read_until_prompt(
          self,
          prompt: typing.Optional[ConvenientSearchString] = None,
--- 
+--
 2.30.2
-

@@ -5,29 +5,25 @@ import tbot
 
 from tbottest.initconfig import generic_get_boardname
 from tbottest.initconfig import replace_in_file
-from tbottest.initconfig import find_in_file_and_append
 from tbottest.initconfig import find_in_file_and_delete
 
-tbot.selectable.printed = False
-
-import traceback
-
 SERVERIP = None
+
+
 def BOARDNAME_get_lab_serverip(filename: str = None):
     """
     helper to save ini file reads
     """
     global SERVERIP
 
-    if SERVERIP != None:
+    if SERVERIP is not None:
         return SERVERIP
 
-    if filename == None:
+    if filename is None:
         raise RuntimeError("serverip not setup")
 
     # read from ini file
     config_parser = configparser.RawConfigParser(interpolation=ExtendedInterpolation())
-    print("FILENAME ", filename)
     config_parser.read(filename)
     for s in config_parser.sections():
         if "IPSETUP" in s:
@@ -40,17 +36,20 @@ def BOARDNAME_get_lab_serverip(filename: str = None):
 
     raise RuntimeError("serverip setup not found")
 
+
 IPADDR = None
+
+
 def BOARDNAME_get_board_ipaddr(filename: str = None):
     """
     helper to save ini file reads
     """
     global IPADDR
 
-    if IPADDR != None:
+    if IPADDR is not None:
         return IPADDR
 
-    if filename == None:
+    if filename is None:
         raise RuntimeError("ipaddr not setup")
 
     # read from ini file
@@ -66,6 +65,7 @@ def BOARDNAME_get_board_ipaddr(filename: str = None):
                 return IPADDR
 
     raise RuntimeError("ipaddr not found")
+
 
 def board_set_boardname() -> str:
     """
@@ -85,14 +85,17 @@ def board_set_boardname() -> str:
 
     return BOARDNAME
 
+
 ROOTFSNAME = None
+
+
 def BOARDNAME_get_rootfsname():
     """
     helper to save ini file reads
     """
     global ROOTFSNAME
 
-    if ROOTFSNAME != None:
+    if ROOTFSNAME is not None:
         return ROOTFSNAME
 
     for f in tbot.flags:
@@ -105,13 +108,15 @@ def BOARDNAME_get_rootfsname():
 
 
 MACHINENAME = None
+
+
 def BOARDNAME_get_machinename():
     """
     helper to save ini file reads
     """
     global MACHINENAME
 
-    if MACHINENAME != None:
+    if MACHINENAME is not None:
         return MACHINENAME
 
     MACHINENAME = "CUSTOMER-board"
@@ -119,12 +124,10 @@ def BOARDNAME_get_machinename():
 
 
 def print_log(msg):
-    if tbot.selectable.printed:
-        return
-
     tbot.log.message(tbot.log.c(msg).yellow)
 
-def set_ub_board_specific(self):
+
+def set_ub_board_specific(self):  # noqa: C901
     """
     sample implementation for U-Boot setup dependent on tbot.flags
     """
@@ -140,7 +143,6 @@ def set_ub_board_specific(self):
 
     # for tftp_nfs boot, set rauc.slot correct
     if "bootcmd:tftp_nfs" in tbot.flags:
-        found = False
         try:
             bo = self.env("BOOT_ORDER")
         except:
@@ -165,7 +167,7 @@ def set_ub_board_specific(self):
         optargs = optargs.replace("rauc.slot=A", "")
         optupd = True
 
-    if optupd == True:
+    if optupd is True:
         self.env("optargs", optargs)
 
     if "silent" in tbot.flags:
@@ -179,7 +181,7 @@ def set_ub_board_specific(self):
             self.env("optargs", optargs)
 
 
-def set_board_cfg(temp: str = None, filename: str = None):
+def set_board_cfg(temp: str = None, filename: str = None):  # noqa: C901
     """
     setup board specific stuff in ini files before they get parsed
     """
@@ -223,13 +225,21 @@ def set_board_cfg(temp: str = None, filename: str = None):
             kasfilename = f.split(":")[1]
 
         if "lauterbachloader" in f:
-            replace_in_file(filename, "uboot_autoboot_iter = 1", "uboot_autoboot_iter = 2")
+            replace_in_file(
+                filename, "uboot_autoboot_iter = 1", "uboot_autoboot_iter = 2"
+            )
 
         if "kaslayerbranch" in f:
             br = f.split(":")[1]
             tftpsubdir_addbranch = br
-            replace_in_file(filename, "subdir = ${vendor}/${machine}", f"subdir = ${{vendor}}/${{machine}}/{br}")
-            replace_in_file(filename, "denxlayerbranch = master", f"denxlayerbranch = {br}")
+            replace_in_file(
+                filename,
+                "subdir = ${vendor}/${machine}",
+                f"subdir = ${{vendor}}/${{machine}}/{br}",
+            )
+            replace_in_file(
+                filename, "denxlayerbranch = master", f"denxlayerbranch = {br}"
+            )
             if "kirkstone" in br:
                 # build kirkstone based sources in ubuntu 20.04 container
                 replace_in_file(filename, "port = 11606", "port = 12004")
@@ -240,10 +250,10 @@ def set_board_cfg(temp: str = None, filename: str = None):
     if tftpsubdir_addkas:
         tftpsubdir = f"{tftpsubdir}/kas"
     if tftpsubdir_addsisyphus:
-        tftpsubdir = f"{tftpsubdir}/sisyphus"
+        tftpsubdir = "{tftpsubdir}/sisyphus"
 
     if "oldbsp" in tbot.flags:
-        tftpsubdir = f"${{board}}//${{date}}"
+        tftpsubdir = "${{board}}//${{date}}"
 
     replace_in_file(filename, "@@TBOTBOARD@@", boardname)
     replace_in_file(filename, "@@TFTPSUBDIR@@", tftpsubdir)
@@ -254,18 +264,17 @@ def set_board_cfg(temp: str = None, filename: str = None):
     replace_in_file(filename, "@@KASCONTAINER@@", kascontainer)
     if sshkeypath:
         replace_in_file(filename, "/home/hs/.ssh", sshkeypath)
-    tbot.selectable.printed = True
     if "tbot.ini" in str(filename):
         BOARDNAME_get_lab_serverip(filename)
         BOARDNAME_get_board_ipaddr(filename)
     else:
-        sip = BOARDNAME_get_lab_serverip()
         replace_in_file(filename, "@@TBOTSERVERIP@@", BOARDNAME_get_lab_serverip())
         replace_in_file(filename, "@@TBOTIPADDR@@", BOARDNAME_get_board_ipaddr())
 
     # only for creating docs!
     replace_in_file(filename, "@@PICOCOMDELAY@@", "3")
 
+
 FLAGS = {
-        "selectableboardname" : "set value of tbot.selectable.boardname format selectableboardname:<name>",
+    "selectableboardname": "set value of tbot.selectable.boardname format selectableboardname:<name>",
 }

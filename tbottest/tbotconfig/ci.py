@@ -1,6 +1,7 @@
 import tbot
 from tbot.machine import linux
 
+
 @tbot.testcase
 def lab_uname(
     lab: linux.LinuxShell = None,
@@ -13,4 +14,3 @@ def lab_uname(
             lab = cx.request(tbot.role.LabHost)
 
         lab.exec0("uname", "-a")
-

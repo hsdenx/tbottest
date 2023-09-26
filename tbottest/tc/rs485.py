@@ -1,21 +1,19 @@
-import typing
 import tbot
-import time
 from tbot.machine import linux
-from tbot.machine import board
 from tbot.context import Optional
 
 from tbottest.tc.common import lnx_create_random
 from tbottest.tc.common import tbot_copy_file_to_board
 
+
 def board_lnx_rs485(
-    lab: Optional[linux.LinuxShell]=None,
-    lnx: Optional[linux.LinuxShell]=None,
-    ethdevice = None,
-    rs485labdev = None,
-    rs485baud = None,
-    rs485boarddev = None,
-    rs485lengths = None
+    lab: Optional[linux.LinuxShell] = None,
+    lnx: Optional[linux.LinuxShell] = None,
+    ethdevice=None,
+    rs485labdev=None,
+    rs485baud=None,
+    rs485boarddev=None,
+    rs485lengths=None,
 ):
     """
     prerequisite: Board boots into linux
@@ -37,8 +35,8 @@ def board_lnx_rs485(
     .. code-block:: python
 
         board_lnx_rs485(
-            lab, 
-            lnx, 
+            lab,
+            lnx,
             ethdevice="eth0",
             rs485labdev="/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0",
             rs485baud="115200",
@@ -46,15 +44,15 @@ def board_lnx_rs485(
             rs485lengths="['1", '100']"
         )
     """
-    if ethdevice == None:
+    if ethdevice is None:
         raise RuntimeError("please configure ethdevice")
-    if rs485labdev == None:
+    if rs485labdev is None:
         raise RuntimeError("please configure rs485labdev")
-    if rs485baud == None:
+    if rs485baud is None:
         raise RuntimeError("please configure rs485baud")
-    if rs485boarddev == None:
+    if rs485boarddev is None:
         raise RuntimeError("please configure rs485boarddev")
-    if rs485lengths == None:
+    if rs485lengths is None:
         raise RuntimeError("please configure rs485lengths")
 
     with tbot.ctx() as cx:
@@ -64,11 +62,53 @@ def board_lnx_rs485(
             lnx = cx.request(tbot.role.BoardLinux)
 
         lab.exec0("export", f"SERIAL_DEV={rs485labdev}")
-        lab.exec0("stty", "-F", linux.Raw("$SERIAL_DEV"), rs485baud, "ignbrk", "ignpar", "-brkint", "-icrnl", "-imaxbel", "-opost", "-onlcr", "-isig", "-icanon", "-iexten", "-echo", "-echoe", "-echok", "-echoctl", "-echoke", "raw")
+        lab.exec0(
+            "stty",
+            "-F",
+            linux.Raw("$SERIAL_DEV"),
+            rs485baud,
+            "ignbrk",
+            "ignpar",
+            "-brkint",
+            "-icrnl",
+            "-imaxbel",
+            "-opost",
+            "-onlcr",
+            "-isig",
+            "-icanon",
+            "-iexten",
+            "-echo",
+            "-echoe",
+            "-echok",
+            "-echoctl",
+            "-echoke",
+            "raw",
+        )
 
         for boarddev in rs485boarddev:
             lnx.exec0("export", f"SERIAL_DEV={boarddev}")
-            lnx.exec0("stty", "-F", linux.Raw("$SERIAL_DEV"), rs485baud, "ignbrk", "ignpar", "-brkint", "-icrnl", "-imaxbel", "-opost", "-onlcr", "-isig", "-icanon", "-iexten", "-echo", "-echoe", "-echok", "-echoctl", "-echoke", "raw")
+            lnx.exec0(
+                "stty",
+                "-F",
+                linux.Raw("$SERIAL_DEV"),
+                rs485baud,
+                "ignbrk",
+                "ignpar",
+                "-brkint",
+                "-icrnl",
+                "-imaxbel",
+                "-opost",
+                "-onlcr",
+                "-isig",
+                "-icanon",
+                "-iexten",
+                "-echo",
+                "-echoe",
+                "-echok",
+                "-echoctl",
+                "-echoke",
+                "raw",
+            )
 
             sendfilebase = "rs485send"
             sendfilehexbase = sendfilebase + "hex"
@@ -82,16 +122,32 @@ def board_lnx_rs485(
             rcvtmpfile = tar.tmpdir() / rcvfile
 
             tbot.log.message(tbot.log.c("Testing RS485 from lab to board").green)
-            for l in rs485lengths:
+            for length in rs485lengths:
                 # enable receiver
-                tar.exec("cat", linux.Raw("$SERIAL_DEV"), linux.RedirStdout(rcvtmpfile), linux.Raw("&"))
+                tar.exec(
+                    "cat",
+                    linux.Raw("$SERIAL_DEV"),
+                    linux.RedirStdout(rcvtmpfile),
+                    linux.Raw("&"),
+                )
                 pid = tar.env("!")
 
                 # create randomfile and send
-                lnx_create_random(src, sendfile._local_str(), l)
-                src.exec0("hexdump", "-C", sendfile._local_str(), linux.Raw(">"), sendfilehex._local_str())
-                src.exec0("cat", sendfilehex._local_str(), linux.Raw(">"), linux.Raw("$SERIAL_DEV"))
-                tar.exec("kill", pid , linux.Then, "wait", pid)
+                lnx_create_random(src, sendfile._local_str(), length)
+                src.exec0(
+                    "hexdump",
+                    "-C",
+                    sendfile._local_str(),
+                    linux.Raw(">"),
+                    sendfilehex._local_str(),
+                )
+                src.exec0(
+                    "cat",
+                    sendfilehex._local_str(),
+                    linux.Raw(">"),
+                    linux.Raw("$SERIAL_DEV"),
+                )
+                tar.exec("kill", pid, linux.Then, "wait", pid)
 
                 # compare send and received file
                 tbot_copy_file_to_board(lab, lnx, ethdevice, sendfilehexbase)
@@ -104,19 +160,33 @@ def board_lnx_rs485(
             sendfilehex = src.tmpdir() / sendfilehexbase
             rcvtmpfile = tar.tmpdir() / rcvfile
 
-            for l in rs485lengths:
+            for length in rs485lengths:
                 # enable receiver
-                tar.exec("cat", linux.Raw("$SERIAL_DEV"), linux.RedirStdout(rcvtmpfile), linux.Raw("&"))
+                tar.exec(
+                    "cat",
+                    linux.Raw("$SERIAL_DEV"),
+                    linux.RedirStdout(rcvtmpfile),
+                    linux.Raw("&"),
+                )
                 pid = tar.env("!")
 
                 # create randomfile and send
-                lnx_create_random(src, sendfile._local_str(), l)
-                src.exec0("hexdump", "-C", sendfile._local_str(), linux.Raw(">"), sendfilehex._local_str())
-                src.exec0("cat", sendfilehex._local_str(), linux.Raw(">"), linux.Raw("$SERIAL_DEV"))
-                tar.exec("kill", pid , linux.Then, "wait", pid)
+                lnx_create_random(src, sendfile._local_str(), length)
+                src.exec0(
+                    "hexdump",
+                    "-C",
+                    sendfile._local_str(),
+                    linux.Raw(">"),
+                    sendfilehex._local_str(),
+                )
+                src.exec0(
+                    "cat",
+                    sendfilehex._local_str(),
+                    linux.Raw(">"),
+                    linux.Raw("$SERIAL_DEV"),
+                )
+                tar.exec("kill", pid, linux.Then, "wait", pid)
 
                 # compare send and received file
                 tbot_copy_file_to_board(lab, lnx, ethdevice, rcvfile)
                 lnx.exec0("cmp", sendfilehex, lnx.tmpdir() / rcvfile)
-
-

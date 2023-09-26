@@ -84,10 +84,10 @@ Here an example run:
     echo check that 'ssh pi@192.168.1.113' works without typing password
     than interactive lab should work:
     tbottest/newtbot_starter.py @tbotconfig/foobar/args/argsfoobar-noeth tbotconfig.interactive.lab
-    
+
     edit and adapt U-Boot settings in tbotconfig/foobar/foobar.ini and interactive U-Boot should work
     tbottest/newtbot_starter.py @tbotconfig/foobar/args/argsfoobar-noeth tbotconfig.interactive.uboot
-    
+
     edit linux settings in tbotconfig/foobar/foobar.ini and interactive U-Boot should work
     tbottest/newtbot_starter.py @tbotconfig/foobar/args/argsfoobar-noeth tbotconfig.interactive.linux
 
@@ -106,7 +106,7 @@ Test your new config and setup with:
     │   ├─[local] ssh -o BatchMode=yes -i /home/pi/.ssh/id_rsa -p 22 pi@192.168.1.113
     │   ├─Entering interactive shell ...
     │   ├─Press CTRL+] three times within 1 second to exit.
-    
+
     foolabname: ~> exit
     │   ├─Exiting interactive shell ...
     │   └─Done. (3.496s)
@@ -618,8 +618,8 @@ settings needed for linux testcases.
         "linux_password", "password for linux login, None for no password required", "None", "None"
         "linux_login_delay", "login delay in seconds", "5", "1"
         "linux_boot_timeout", "Maximum time for Linux to reach the login prompt.", "None", "30"
-        "linux_init_timeout", "If not None, timeout in seconds after ethernetconfig", "None", "2.0" 
-        "linux_init", "list of commands send after login. mode = exec or exec0", "[]", "[{'"mode'":'"exec0'", '"cmd'":'"echo Hallo'"}]" 
+        "linux_init_timeout", "If not None, timeout in seconds after ethernetconfig", "None", "2.0"
+        "linux_init", "list of commands send after login. mode = exec or exec0", "[]", "[{'"mode'":'"exec0'", '"cmd'":'"echo Hallo'"}]"
         "beep", "list of dictionary of commands for beep command", "[]", "[{'"freq'": '"440'", '"length'":'"1000'"}]"
         "cyclictestmaxvalue", "maximum allowed value from stress-ng 'Max' colum", "100", "cyclictestmaxvalue = 100"
         "dmesg", "list of strings, which should be in dmesg output", "[]", "dmesg = ['"OF: fdt: Machine model:'", '"gpio-193 (eeprom-wc): hogged as output/low'",]"
@@ -838,7 +838,7 @@ tbot call example
     │   │    ## optargs=consoleblank=0 vt.global_cursor_default=0 lpj=2988032 quiet  rauc.slot=A
     │   ├─Entering interactive shell...
     │   ├─Press CTRL+] three times within 1 second to exit.
-    
+
     =>
 
 tbot flags

@@ -7,13 +7,20 @@ from tbot.machine import linux
 from typing import List
 import time
 
-from ctypes import *
+import platform
+
+import ctypes
 
 H = typing.TypeVar("H", bound=linux.LinuxShell)
 
 
 class LauterbachLoad(machine.Initializer):
     """
+    BIG FAT WARNING:
+
+    I do not longer own a Lauterbach debugger, so may this class is broken
+
+
     TRACE32's configuration file "config.t32" has to contain these lines:
     RCL=NETASSIST
     PORT=20000
@@ -30,18 +37,16 @@ class LauterbachLoad(machine.Initializer):
     so if you start trace32 and there is another running (or crashed)
     instance running, it get killed.
     """
+
     T32_OK = 0
 
     def trace32_execute_cmd(self) -> str:
         dllpath = f"{self.get_trace32_install_path()}/demo/api/python"
         print("DLL PATH ", dllpath)
 
-        import sys, getopt, ctypes, array, atexit, signal, os, platform
-        from signal import SIGINT
-
         # auto-detect the correct library
-        if (platform.system()=='Windows') or (platform.system()[0:6]=='CYGWIN') :
-            if ctypes.sizeof(ctypes.c_voidp)==4:
+        if (platform.system() == "Windows") or (platform.system()[0:6] == "CYGWIN"):
+            if ctypes.sizeof(ctypes.c_voidp) == 4:
                 # WINDOWS 32bit
                 t32api = ctypes.CDLL(f"{dllpath}/t32api.dll")
                 # alternative using windows DLL search order:
@@ -51,30 +56,30 @@ class LauterbachLoad(machine.Initializer):
                 t32api = ctypes.CDLL(f"{dllpath}/t32api64.dll")
                 # alternative using windows DLL search order:
                 #   t32api = ctypes.cdll.t32api64
-        elif platform.system()=='Darwin' :
+        elif platform.system() == "Darwin":
             # Mac OS X
             t32api = ctypes.CDLL(f"{dllpath}/t32api.dylib")
-        else :
-            if ctypes.sizeof(ctypes.c_voidp)==4:
+        else:
+            if ctypes.sizeof(ctypes.c_voidp) == 4:
                 # Linux 32bit
                 t32api = ctypes.CDLL(f"{dllpath}/t32api.so")
             else:
                 # Linux 64bit
                 t32api = ctypes.CDLL(f"{dllpath}/t32api64.so")
 
-        node = 'localhost'
-        port = '20000'
-        packlen = '1024'
-        if t32api.T32_Config(b"NODE=",node.encode('latin-1'))!= self.T32_OK:
-            print('invalid node: %s' %(node))
-        if t32api.T32_Config(b"PACKLEN=",packlen.encode('latin-1'))!= self.T32_OK:
-            print('invalid packet length: %s' %(packlen))
-        if t32api.T32_Config(b"PORT=",port.encode('latin-1'))!= self.T32_OK:
-            print('port number %s not accepted' %(port))
-        print('Connecting...')
-        if t32api.T32_Init()== self.T32_OK:
+        node = "localhost"
+        port = "20000"
+        packlen = "1024"
+        if t32api.T32_Config(b"NODE=", node.encode("latin-1")) != self.T32_OK:
+            print("invalid node: %s" % (node))
+        if t32api.T32_Config(b"PACKLEN=", packlen.encode("latin-1")) != self.T32_OK:
+            print("invalid packet length: %s" % (packlen))
+        if t32api.T32_Config(b"PORT=", port.encode("latin-1")) != self.T32_OK:
+            print("port number %s not accepted" % (port))
+        print("Connecting...")
+        if t32api.T32_Init() == self.T32_OK:
             print("Init okay")
-            if t32api.T32_Attach(1)== self.T32_OK:
+            if t32api.T32_Attach(1) == self.T32_OK:
                 print("Attach okay")
                 if self._send_commands(t32api) != self.T32_OK:
                     t32api.T32_Exit()
@@ -84,17 +89,16 @@ class LauterbachLoad(machine.Initializer):
             t32api.T32_Exit()
 
     def _send_commands(self, t32api):
-        line = create_string_buffer(800)
-        for line in self.get_trace32_script(): 
-            line=line.rstrip()
-        if (self.get_trace32_verbose() == '1') :
+        for line in self.get_trace32_script():
+            line = line.rstrip()
+        if self.get_trace32_verbose() == "1":
             print(line)
-        error = t32api.T32_Cmd(line.encode('latin-1'))
-        if (error != self.T32_OK) :
-            print("command failed: \"%s\""% (line))
+        error = t32api.T32_Cmd(line.encode("latin-1"))
+        if error != self.T32_OK:
+            print('command failed: "%s"' % (line))
 
     def get_trace32_verbose(self) -> str:
-        return '1'
+        return "1"
 
     def get_trace32_install_path(self) -> str:
         """
@@ -155,9 +159,11 @@ class LauterbachLoad(machine.Initializer):
             yield None
             return
 
-        tbot.log.message(tbot.log.c("Using Lauterbach debuggger for loading SPL/U-Boot").yellow)
-        cmd = self.get_trace32_cmd()
-        config = self.get_trace32_config()
+        tbot.log.message(
+            tbot.log.c("Using Lauterbach debuggger for loading SPL/U-Boot").yellow
+        )
+        # cmd = self.get_trace32_cmd()
+        # config = self.get_trace32_config()
         script = self.get_trace32_script()
         host = self.get_host()
 
@@ -167,23 +173,23 @@ class LauterbachLoad(machine.Initializer):
         # and we get no info when script calls "go" ...
         # and we cannot execute this in background, as
         # if we execute it in  ssh machine, which may gets closed...
-        #host.exec0(cmd, "-c", config, linux.Background)
-        #host.exec0(cmd, "-c", config, "-s", script)
+        # host.exec0(cmd, "-c", config, linux.Background)
+        # host.exec0(cmd, "-c", config, "-s", script)
 
         # rework this, as not working
-        #self.trace32_execute_cmd()
+        # self.trace32_execute_cmd()
         # so use code from lauterbach installation...
         dllpath = f"{self.get_trace32_install_path()}/demo/api/python"
         host.exec0("cd", dllpath)
-        host.exec0("python3", f"t32apicmd.py", "do", script)
+        host.exec0("python3", "t32apicmd.py", "do", script)
 
         # how to clear now receive buffer in channel from serial console ?
 
-        #print("tbot.machine.channel.subprocess.SubprocessChannel ", tbot.machine.channel.subprocess.SubprocessChannel)
-        #attrs = vars(tbot.machine.channel.subprocess.SubprocessChannel)
-        #print(', '.join("%s: %s" % item for item in attrs.items()))
-        #ub = tbot.selectable.Board
-        #ub.ch.read_until_prompt()
+        # print("tbot.machine.channel.subprocess.SubprocessChannel ", tbot.machine.channel.subprocess.SubprocessChannel)
+        # attrs = vars(tbot.machine.channel.subprocess.SubprocessChannel)
+        # print(', '.join("%s: %s" % item for item in attrs.items()))
+        # ub = tbot.selectable.Board
+        # ub.ch.read_until_prompt()
         yield None
 
 
@@ -194,6 +200,7 @@ class SeggerLoad(machine.Initializer):
 
     This class uses JLinkExe.
     """
+
     timeout = False
     name = "Segger"
 
@@ -224,7 +231,7 @@ class SeggerLoad(machine.Initializer):
                 with host.ch.with_stream(ev, show_prompt=False):
                     out = host.ch.read_until_prompt()
                     if "go" in cmd:
-                        if self.timeout == False:
+                        if self.timeout is False:
                             # give SPL some time
                             time.sleep(2)
                             self.timeout = True
@@ -233,7 +240,7 @@ class SeggerLoad(machine.Initializer):
         # may we add here a check, if command was correct
         # unfortunately Segger JLinkExe has no return code,
         # so we need to check command output...
-        # 
+        #
         # we have command output now in ev.data["stdout"]
         #
         # add a list of strings/regular expressions and check them?
@@ -246,13 +253,15 @@ class SeggerLoad(machine.Initializer):
             yield None
             return
 
-        tbot.log.message(tbot.log.c("Using Segger debuggger for loading SPL/U-Boot").yellow)
+        tbot.log.message(
+            tbot.log.c("Using Segger debuggger for loading SPL/U-Boot").yellow
+        )
         cmds = self.get_segger_cmds()
         host = self.get_host()
 
         for cmd in cmds:
             ret = self._send_one_cmd(host, cmd["cmd"], cmd["prompt"])
-            if ret != True:
+            if ret is not True:
                 raise RuntimeError(f"segger command {cmd['cmd']} failed")
 
         host.exec0("q")
@@ -441,9 +450,7 @@ class UUULoad(machine.Initializer):
         if ret != 0:
             # uuu tool not installed try to install
             tbot.log.message(
-                tbot.log.c(
-                    f"mfgtools not installed in {uuu}. Try to install them"
-                ).green
+                tbot.log.c(f"mfgtools not installed in {uuu}. Try to install them").green
             )
             curdir = self.host.exec0("pwd").strip()
             self.host.exec0("cd", uuu)

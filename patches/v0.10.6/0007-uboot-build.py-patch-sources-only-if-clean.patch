@@ -16,14 +16,13 @@ index eb7630d7..b439cf68 100644
 +++ b/tbot/tc/uboot/build.py
 @@ -231,7 +231,8 @@ class UBootBuilder(abc.ABC):
                  path = builder.do_repo_path(host)
- 
+
              repo = builder.do_checkout(path, clean=clean, rev=rev or builder.revision)
 -            builder.do_patch(repo)
 +            if clean:
 +                builder.do_patch(repo)
- 
-         return repo
- 
--- 
-2.30.2
 
+         return repo
+
+--
+2.30.2

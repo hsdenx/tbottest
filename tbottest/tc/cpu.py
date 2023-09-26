@@ -1,8 +1,3 @@
-#
-# collection of linux testcases, for CPU
-# may go into mainline
-#
-import typing
 import tbot
 from tbot.machine import linux
 from tbot.context import Optional
@@ -40,4 +35,4 @@ def board_lnx_cpufreq(
         for c in cpufreq:
             out = lnx.exec0("cat", c["file"])
             if c["val"] not in out:
-                raise RuntimeError(f'c["val"] not found in c["file"]')
+                raise RuntimeError(f'{c["val"]} not found in {c["file"]}')

@@ -1,5 +1,5 @@
 import re
-import typing
+
 
 def string_to_dict(string: str, pattern: str) -> dict:
     """

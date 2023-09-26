@@ -38,6 +38,5 @@ index 4490bf20..676618a9 100644
 -   else:
 +    else:
          raise NotImplementedError(f"Can't copy from {p1.host} to {p2.host}!")
--- 
+--
 2.30.2
-

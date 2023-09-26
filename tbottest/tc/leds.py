@@ -11,7 +11,6 @@ from tbot.context import Optional
 
 @tbot.testcase
 def lnx_test_led_simple(
-    lab: Optional[linux.LinuxShell] = None,
     lnx: Optional[linux.LinuxShell] = None,
     leds: List[dict] = None,
 ) -> None:
@@ -38,9 +37,6 @@ def lnx_test_led_simple(
         raise RuntimeError("please configure leds")
 
     with tbot.ctx() as cx:
-        if lab is None:
-            lab = cx.request(tbot.role.LabHost)
-
         if lnx is None:
             lnx = cx.request(tbot.role.BoardLinux)
 

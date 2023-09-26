@@ -5,9 +5,13 @@ from tbot import log_event
 import math
 
 from tbottest.tc.common import lnx_install_package
-from tbottest.docgenevent import doc_begin, doc_end, doc_tag
 
-def lnx_network_ping(lnx: linux.LinuxShell, ip: str, retry: int,) -> None:
+
+def lnx_network_ping(
+    lnx: linux.LinuxShell,
+    ip: str,
+    retry: int,
+) -> None:
     i = 0
     while i < retry:
         ret, out = lnx.exec("ping", ip, "-c", "1", "-W", "1")
@@ -19,7 +23,11 @@ def lnx_network_ping(lnx: linux.LinuxShell, ip: str, retry: int,) -> None:
 
 
 def lnx_network_up(
-    lnx: linux.LinuxShell, device: str, ip: str, sip: str, retry: int,
+    lnx: linux.LinuxShell,
+    device: str,
+    ip: str,
+    sip: str,
+    retry: int,
 ) -> None:
     lnx.exec0("ifconfig", device, "down", ip, "up")
     lnx_network_ping(lnx, sip, 5)
@@ -27,7 +35,10 @@ def lnx_network_up(
     raise RuntimeError(f"Could not bring up device {device}")
 
 
-def _check_iperf_installed(lnx: linux.LinuxShell, try_install: bool = True,) -> bool:
+def _check_iperf_installed(
+    lnx: linux.LinuxShell,
+    try_install: bool = True,
+) -> bool:
     """
     check if iperf3 is installed on lnx machine
 
@@ -54,7 +65,7 @@ def network_linux_iperf(
     minval: str = "40",
     filename: str = "iperf.dat",
     subject: str = "unkown",
-) -> bool:
+) -> bool:  # noqa: C901
     """
     start iperf measurement between lnx and lnxh machine
 
@@ -152,9 +163,7 @@ def network_linux_iperf(
 
         if float(val) < float(minval):
             if good:
-                tbot.log.message(
-                    tbot.log.c(f"Not enough Bandwith {val} < {minval}").red
-                )
+                tbot.log.message(tbot.log.c(f"Not enough Bandwith {val} < {minval}").red)
                 good = False
 
         if float(lowestval) > float(val):
@@ -177,7 +186,11 @@ def network_linux_iperf(
     try:
         fd = open(fname, "w")
     except:
-        tbot.log.message(tbot.log.c(f"could not open {fname}, May you create results/iperf, if you want to use the iperf results later").yellow)
+        tbot.log.message(
+            tbot.log.c(
+                f"could not open {fname}, May you create results/iperf, if you want to use the iperf results later"
+            ).yellow
+        )
         return good
 
     # save the xmax and ymax value behind the headlines

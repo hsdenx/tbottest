@@ -16,7 +16,7 @@ index 210b549c..4de4e8a0 100644
 +++ b/tbot/tc/git.py
 @@ -169,7 +169,11 @@ class GitRepository(linux.Path[H]):
          self.git0("reset", mode.value, rev)
- 
+
      def clean(
 -        self, force: bool = True, untracked: bool = False, noignore: bool = False
 +        self,
@@ -32,7 +32,7 @@ index 210b549c..4de4e8a0 100644
          :param bool untracked: ``-d``
          :param bool noignore: ``-x``
 +        :param bool quiet: ``-q``
- 
+
          Refer to the ``git-clean`` man-page for more info.
          """
 @@ -188,6 +193,8 @@ class GitRepository(linux.Path[H]):
@@ -41,9 +41,8 @@ index 210b549c..4de4e8a0 100644
              options += "x"
 +        if quiet:
 +            options += "q"
- 
-         self.git0("clean", options if options != "-" else "")
- 
--- 
-2.30.2
 
+         self.git0("clean", options if options != "-" else "")
+
+--
+2.30.2

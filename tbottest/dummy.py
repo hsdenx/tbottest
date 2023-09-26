@@ -1,4 +1,3 @@
-def dummyfunc():
-    """
-    """
+def dummyfunc() -> None:
+    """ """
     pass

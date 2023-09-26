@@ -23,20 +23,20 @@ index 15620cc3..e8a60bf8 100644
 @@ -14,10 +14,12 @@
  # You should have received a copy of the GNU General Public License
  # along with this program.  If not, see <https://www.gnu.org/licenses/>.
- 
+
 +import abc
  import contextlib
  import re
  import time
  import typing
 +from typing import List
- 
+
  import tbot
  from .. import shell, machine, channel
 @@ -97,8 +99,21 @@ class UBootAutobootIntercept(machine.Initializer, UbootStartup):
      Keys to press as soon as autoboot prompt is detected.
      """
- 
+
 +    @property
 +    @abc.abstractmethod
 +    def get_death_strings(self) -> List[str]:
@@ -55,6 +55,5 @@ index 15620cc3..e8a60bf8 100644
          if self.autoboot_prompt is not None:
              with self.ch.with_stream(self._uboot_startup_event()):
                  timeout = None
--- 
+--
 2.30.2
-

@@ -20,7 +20,7 @@ index 8052ab09..d4b1c281 100644
 @@ -60,7 +60,17 @@ class SubprocessChannelIO(channel.ChannelIO):
          if self.pty_master not in w:
              raise TimeoutError("write timeout exceeded")
- 
+
 -        bytes_written = os.write(self.pty_master, buf)
 +        chunk_delay = 0.01
 +        chunk_size = 8
@@ -36,6 +36,5 @@ index 8052ab09..d4b1c281 100644
          if bytes_written == 0:
              raise tbot.error.ChannelClosedError
          return bytes_written
--- 
+--
 2.30.2
-

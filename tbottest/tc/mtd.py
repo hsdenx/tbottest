@@ -7,7 +7,9 @@ from tbottest.tc.common import lnx_compare_files
 
 
 def lnx_mtd_nvram(
-    lnx: linux.LinuxShell, dev: Optional[str] = "/dev/mtd0", tests=None,
+    lnx: linux.LinuxShell,
+    dev: Optional[str] = "/dev/mtd0",
+    tests=None,
 ) -> None:
     """
     write and reread random data on device dev
@@ -15,7 +17,7 @@ def lnx_mtd_nvram(
     array tests which contain dictionary of form
 
     .. code-block:: python
-    
+
         {"bs" : "1", "cnt" : "2", "seek" : "0"}
 
     example:
@@ -68,7 +70,10 @@ def lnx_mtd_nvram(
 
 
 @tbot.testcase
-def lnx_mtd_nvram_reboot(dev: str = "/dev/mtd0", tests=None,) -> None:
+def lnx_mtd_nvram_reboot(
+    dev: str = "/dev/mtd0",
+    tests=None,
+) -> None:
     """
     prerequisite: Board boots into linux
 

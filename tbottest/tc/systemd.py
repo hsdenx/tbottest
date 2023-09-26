@@ -5,7 +5,8 @@ from tbot.context import Optional
 
 @tbot.testcase
 def systemd_stop_service(
-    lnx: Optional[linux.LinuxShell] = None, name: str = "",
+    lnx: Optional[linux.LinuxShell] = None,
+    name: str = "",
 ) -> None:  # noqa: D107
     """
     stops a service on linux machine lnx
@@ -26,7 +27,8 @@ def systemd_stop_service(
 
 @tbot.testcase
 def systemd_get_log_from_service(
-    lnx: Optional[linux.LinuxShell] = None, name: str = "",
+    lnx: Optional[linux.LinuxShell] = None,
+    name: str = "",
 ) -> str:  # noqa: D107
     """
     returns the log of a systemd service
