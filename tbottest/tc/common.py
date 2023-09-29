@@ -22,6 +22,192 @@ def escape_ansi(line: str) -> str:
     return ansi_escape.sub("", line)
 
 
+@tbot.testcase
+def lx_cmd_exists(
+    lnx: linux.LinuxShell,
+    cmd,
+) -> bool:
+    """
+    check if command on linux machine exists
+
+    :param lnx: Linux machine we run on
+    :param cmd: command name
+    """
+    ret = lnx.exec(linux.Raw(("command -v " + cmd + " >/dev/null 2>&1")))
+    if ret[0] == 0:
+        return True
+    return False
+
+
+@tbot.testcase
+def lx_devmem2_get(
+    lnx: linux.LinuxShell,
+    addr: str,
+    typ: str,
+) -> str:
+    """
+    use devmem2 to read value from addr
+
+    :param lnx: Linux machine we run on
+    :param addr: address we act on
+    :param type: | devmem2 type
+        | access operation type : [b]yte, [h]alfword, [w]ord, [l]ong
+    :return: value
+    """
+    strings = ["Value at address", "Read at address"]
+    ret = lnx.exec0("devmem2", addr, typ).splitlines()
+    for line in ret:
+        if any(s in line for s in strings):
+            val = line.split(" ")
+            return val[-1]
+
+    raise RuntimeError("devmem2 unexpected output")
+
+
+@tbot.testcase
+def lx_check_revfile(
+    lnx: linux.LinuxShell,
+    revfile,
+    difffile=None,
+    timeout=None,
+) -> bool:
+    """
+    compare the register values defined in revfile with the values
+    read on Linux machine with devmem2
+
+    If difffile != None write differences found into this file.
+
+    :param lnx: Linux machine we run on
+    :param revfile: reference file we use
+    :param diffile: if not None, file in which testcase writes differences found
+    :param timeout: timeout between devmem2 calls
+    """
+    # check if devmem exist
+    ret = lx_cmd_exists(lnx, "devmem2")
+    if ret is False:
+        return
+
+    ret = True
+    try:
+        fd = open(revfile, "r")
+    except IOError:
+        raise RuntimeError("Could not open: " + revfile)
+
+    if difffile is not None:
+        try:
+            fddiff = open(difffile, "a")
+        except IOError:
+            raise RuntimeError("Could not open diffile: " + difffile)
+
+    lnr = 0
+    for line in fd.readlines():
+        lnr += 1
+        cols = line.split()
+        if cols[0] == "#":
+            continue
+
+        val = lx_devmem2_get(lnx, cols[0], cols[2])
+        msg = f"diff args: {revfile} line: {lnr} {val}@{cols[0]} & {cols[1]} != {cols[3]}"
+        if (int(val, 16) & int(cols[1], 16)) != (int(cols[3], 16) & int(cols[1], 16)):
+            tbot.log.message(tbot.log.c(msg).red)
+            if difffile is not None:
+                fddiff.write(msg + "\n")
+
+            ret = False
+
+        if timeout is not None:
+            time.sleep(timeout)
+
+    fd.close()
+    if difffile is not None:
+        fddiff.close()
+    return ret
+
+
+@tbot.testcase
+def lx_create_revfile(
+    lnx: linux.LinuxShell,
+    revfile,
+    startaddr,
+    endaddr,
+    mask="0xffffffff",
+    readtype="w",
+) -> bool:
+    """
+    create a reference file revfile with values read on Linux machine
+    with devmem2 from startaddr to endaddress, and readtype "w"
+
+
+    :param lnx: Linux machine we run on
+    :param revfile: created revfile
+    :param startaddr: address from which the testcase starts dumping
+    :param endaddr: address on which the testcase stops dumping
+    :param mask: written mask into revfile
+    :param readtype: used tpye for devmem2 call, default "w"
+    """
+    # check if devmem exist
+    ret = lx_cmd_exists(lnx, "devmem2")
+    if ret is False:
+        return False
+
+    try:
+        fd = open(revfile, "w")
+    except IOError:
+        raise RuntimeError("Could not open: " + revfile)
+
+    ret = lnx.exec0("uname", "-a").splitlines()
+    vers = ret[0]
+
+    processor = "ToDo"
+    hw = "ToDo"
+
+    fd.write("# pinmux\n")
+    fd.write("# processor: %s\n" % processor)
+    fd.write("# hardware : %s\n" % hw)
+    fd.write("# Linux    : %s\n" % vers)
+    fd.write("# regaddr mask type defval\n")
+
+    start = int(startaddr, 16)
+    stop = int(endaddr, 16)
+
+    if readtype == "w":
+        step = 4
+    if readtype == "h":
+        step = 2
+    if readtype == "b":
+        step = 1
+
+    for i in iter(range(start, stop, step)):
+        val = lx_devmem2_get(lnx, hex(i), readtype)
+        fd.write("%-10s %10s %10s %10s\n" % (hex(i), mask, readtype, val))
+
+    fd.close()
+    return True
+
+
+@tbot.testcase
+def lnx_check_cmd(
+    lnx: linux.LinuxShell,
+    cmd_dict,
+) -> bool:
+    """
+    check commands in list of dictionaries cmd_dict.
+    for each element in list execute command cmd_dict["cmd"] and
+    if cmd_dict["val"] != "undef" check if cmd_dict["val"]
+    is in command output
+
+    :param machine lnx: machine on which commands are executed
+    :param dict cmd_dict: list of dictionary with command and return values.
+    """
+    for c in cmd_dict:
+        cmdret = lnx.exec0(linux.Raw(c["cmd"]))
+        if c["val"] != "undef":
+            if c["val"] not in cmdret:
+                raise RuntimeError(c["val"] + " not found in " + cmdret)
+
+    return True
+
+
 def lnx_create_random(
     lnx: linux.LinuxShell,
     f: str,
@@ -547,6 +733,54 @@ def board_ub_bootcounter(
                 raise RuntimeError(
                     f"bootlimit notreached, but U-Boot uses altbootcmd!\n {ub.bootlog}"
                 )
+
+
+@tbot.testcase
+def ub_check_i2c_dump(ub, dev, address, i2c_dump) -> bool:
+    """
+    check if i2c dump is correct
+
+    :param ub: U-Boot Machine we run
+    :param dev: i2c dev number
+    :param address: i2c addr
+    :param i2c_dump: list of dumped lines, see example below
+
+    .. code-block:: python
+
+        sample_i2c_dump = [
+            "0x00: 11 00 00 21 00 01 3f 01 00 7f 00 00 00 00 00 81",
+            "0x10: 00 00 3f 00 00 00 00 00 00 00 00 10 ad de xx xx",
+        ]
+
+        before ":" start address, after list of values
+               'xx' ignore
+    """
+    retval = True
+    ub.exec0("i2c", "dev", dev)
+    for line in i2c_dump:
+        addr, values, *_ = line.split(":")
+        values = values.split(" ")
+        ad = int(addr, 0)
+        for v in values:
+            if v == "":
+                continue
+            if v == "xx":
+                ad += 1
+                continue
+            adh = format(ad, "02x")
+            ret = ub.exec0("i2c", "md", address, adh + ".1", "1")
+            rval = ret.split(":")[1]
+            rval = rval.split(" ")[1]
+            if rval != str(v):
+                tbot.log.message(
+                    tbot.log.c(
+                        f"diff for device {address} on bus {dev} found @{adh} {rval} != {v}"
+                    ).red
+                )
+                retval = False
+            ad += 1
+
+    return retval
 
 
 # test bootcounter with linux
