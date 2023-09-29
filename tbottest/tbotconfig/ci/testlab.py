@@ -3,7 +3,7 @@ from tbot.machine import linux
 
 
 @tbot.testcase
-def lab_uname(
+def uname(
     lab: linux.LinuxShell = None,
 ) -> str:  # noqa: D107
     """
@@ -14,3 +14,11 @@ def lab_uname(
             lab = cx.request(tbot.role.LabHost)
 
         lab.exec0("uname", "-a")
+
+
+@tbot.testcase
+def laball() -> str:  # noqa: D107
+    """
+    start all tests on lab
+    """
+    uname()

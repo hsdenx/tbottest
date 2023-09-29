@@ -70,4 +70,4 @@ jobs:
           sed -i "s|/home/\${username}/.ssh/id_rsa|~/.ssh/staging.key|g" tbotconfig/foo/tbot.ini
           echo "----- now try to login into lab with tbot setup -----"
           # try to go to our lab
-          tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth tbotconfig.ci.lab_uname
+          tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth tbotconfig.ci.testlab.laball
