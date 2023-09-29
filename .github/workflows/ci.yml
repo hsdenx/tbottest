@@ -68,6 +68,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i '~/.ssh/staging.key' pi@192.168.1.113 /home/pi/hello.sh
           # correct path to keyfile
           sed -i "s|/home/\${username}/.ssh/id_rsa|~/.ssh/staging.key|g" tbotconfig/foo/tbot.ini
-          echo "----- now try to login into lab with tbot setup -----"
-          # try to go to our lab
-          tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth tbotconfig.ci.testlab.laball
+          echo "----- now try to login into lab with tbot setup and do all tests -----"
+          tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth -q -q tbotconfig.ci.tests.all
+          # and test second build host
+          tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth -q -q tbotconfig.ci.testbh.bhall
+          tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth -f buildername:sisyphus -q -q tbotconfig.ci.testbh.bhall
