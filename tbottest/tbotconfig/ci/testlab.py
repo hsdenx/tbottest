@@ -1,11 +1,13 @@
 import tbot
 from tbot.machine import linux
 
+from tbotconfig.ci.tests_helper import run_all_tests, FAILED, SUCCESS
+
 
 @tbot.testcase
 def uname(
     lab: linux.LinuxShell = None,
-) -> str:  # noqa: D107
+) -> bool:  # noqa: D107
     """
     simply try to connect to lab and exec0 uname
     """
@@ -14,11 +16,19 @@ def uname(
             lab = cx.request(tbot.role.LabHost)
 
         lab.exec0("uname", "-a")
+        return SUCCESS
+
+    return FAILED
+
+
+lab_tests = [
+    "uname",
+]
 
 
 @tbot.testcase
-def laball() -> str:  # noqa: D107
+def laball() -> None:  # noqa: D107
     """
     start all tests on lab
     """
-    uname()
+    return run_all_tests(lab_tests, "tbotconfig.ci.testlab", "LAB Host")

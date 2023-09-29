@@ -97,7 +97,8 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	cp ../tbottest/tbottest/tbotconfig/boardspecific.py .
 	cp ../tbottest/tbottest/tbotconfig/interactive.py .
 	# and only for github CI from interest
-	cp ../tbottest/tbottest/tbotconfig/ci.py .
+	mkdir ci
+	cp ../tbottest/tbottest/tbotconfig/ci/* ci
 
 	mkdir $BOARDNAME
 	cd $BOARDNAME
@@ -169,3 +170,6 @@ echo "tbottest/newtbot_starter.py @tbotconfig/${BOARDNAME}/args/args${BOARDNAME}
 echo
 echo "edit linux settings in tbotconfig/$BOARDNAME/${BOARDNAME}.ini and interactive U-Boot should work"
 echo "tbottest/newtbot_starter.py @tbotconfig/${BOARDNAME}/args/args${BOARDNAME}-noeth tbotconfig.interactive.linux"
+echo
+echo "start CI tests with"
+echo "tbottest/newtbot_starter.py @tbotconfig/${BOARDNAME}/args/args${BOARDNAME}-noeth tbotconfig.ci.tests.all"
