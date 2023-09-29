@@ -56,6 +56,7 @@ class GenericBoardConfig:
     dmesg = eval(cfgp.get("TC", "dmesg", fallback="[]"))
     dmesg_false = eval(cfgp.get("TC", "dmesg_false", fallback="[]"))
     leds = eval(cfgp.get("TC", "leds", fallback="[]"))
+    lnx_commands = eval(cfgp.get("TC", "lnx_commands", fallback="[]"))
     network_iperf_intervall = eval(
         cfgp.get("TC", "network_iperf_intervall", fallback="1")
     )

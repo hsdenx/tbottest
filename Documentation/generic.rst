@@ -625,6 +625,7 @@ settings needed for linux testcases.
         "dmesg", "list of strings, which should be in dmesg output", "[]", "dmesg = ['"OF: fdt: Machine model:'", '"gpio-193 (eeprom-wc): hogged as output/low'",]"
         "dmesg_false", "list of strings, which should be not in dmesg output", "[]", "dmesg = ['"crash'"]"
         "leds", "list of dictionary for checking leds", "[]", "leds = [{'"path'":'"/sys/class/leds/led-orange'", #bootval'":'"0'", '"onval'":'"1'},]"
+        "lnx_commands", "list of dictionary for checking linux commands", "[]", "lnx_commands = [{'"cmd'":'"<your linux command'", '"val'":'"<string which is in output of command> or undef'"},]"
         "network_iperf_intervall", "iperf intervall", "1", "network_iperf_intervall = 1"
         "network_iperf_minval", "iperf minimum network throughput", "1", "network_iperf_minval = 9000000"
         "network_iperf_cylces", "iperf cycles", "1", "network_iperf_cycles = 30"
