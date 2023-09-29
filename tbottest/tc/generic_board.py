@@ -4,6 +4,7 @@ from tbot.context import Optional
 
 from tbottest.boardgeneric import cfggeneric
 from tbottest.tc.common import lnx_check_beeper
+from tbottest.tc.common import lnx_check_cmd
 from tbottest.tc.common import lnx_check_dmesg
 from tbottest.tc.kas import KAS
 from tbottest.tc.leds import lnx_test_led_simple
@@ -35,6 +36,34 @@ def generic_lnx_test_beep(
             lnx = cx.request(tbot.role.BoardLinux)
 
         lnx_check_beeper(lnx, cfg.beep)
+
+
+@tbot.testcase
+def generic_lnx_commands(
+    lnx: Optional[linux.LinuxShell] = None,
+) -> None:  # noqa: D107
+    """
+    prerequisite: Board boots into linux
+
+    :param lnx: Linux machine we run on
+
+    Uses config variables:
+
+    lnx_commands -- list of dictionary, see below
+
+    .. code-block:: python
+
+        lnx_commands = [
+           {"cmd":"linux command", "val":"string commandoutput, 'undef' if none"},
+           ]
+    """
+    with tbot.ctx() as cx:
+        if lnx is None:
+            lnx = cx.request(tbot.role.BoardLinux)
+
+        ret = lnx_check_cmd(lnx, cfg.lnx_commands)
+        if not ret:
+            raise RuntimeError("Error in dmesg output")
 
 
 @tbot.testcase
