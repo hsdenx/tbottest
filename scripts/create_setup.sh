@@ -118,6 +118,13 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 
 	echo "@tbotconfig/${BOARDNAME}/args/args$BOARDNAME" > ./tbotconfig/$BOARDNAME/args/args$BOARDNAME-noeth
 	echo "-fnoethinit" >> ./tbotconfig/$BOARDNAME/args/args$BOARDNAME-noeth
+	echo "-fnoboardethinit" >> ./tbotconfig/$BOARDNAME/args/args$BOARDNAME-noeth
+
+	echo "@tbotconfig/${BOARDNAME}/args/args$BOARDNAME-noeth" > ./tbotconfig/$BOARDNAME/args/args$BOARDNAME-noeth-ssh
+	echo "-fnopoweroff" >> ./tbotconfig/$BOARDNAME/args/args$BOARDNAME-noeth-ssh
+	echo "-falways-on" >> ./tbotconfig/$BOARDNAME/args/args$BOARDNAME-noeth-ssh
+	echo "-fssh" >> ./tbotconfig/$BOARDNAME/args/args$BOARDNAME-noeth-ssh
+	echo "-fnouboot" >> ./tbotconfig/$BOARDNAME/args/args$BOARDNAME-noeth-ssh
 
 	# replace BOARDNAME
 	sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
