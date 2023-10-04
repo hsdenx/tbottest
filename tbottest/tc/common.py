@@ -77,6 +77,9 @@ def lnx_check_revfile(
 
     If difffile != None write differences found into this file.
 
+    see also:
+    :py:func:`tbottest.tc.generic_board.generic_lnx_check_dump_files`
+
     :param lnx: Linux machine we run on
     :param revfile: reference file we use
     :param diffile: if not None, file in which testcase writes differences found
@@ -137,6 +140,8 @@ def lnx_create_revfile(
     create a reference file revfile with values read on Linux machine
     with devmem2 from startaddr to endaddress, and readtype "w"
 
+    see also:
+    :py:func:`tbottest.tc.generic_board.generic_lnx_create_dump_files`
 
     :param lnx: Linux machine we run on
     :param revfile: created revfile
