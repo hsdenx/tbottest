@@ -129,6 +129,7 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 
 	# replace BOARDNAME
 	sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/$BOARDNAME.ini
 
 	sed -i "/SET BOARDNAME to BOARDNAME/d" ./tbotconfig/boardspecific.py
 	sed -i "/!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!/d" ./tbotconfig/boardspecific.py
