@@ -102,6 +102,7 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 
 	mkdir $BOARDNAME
 	cd $BOARDNAME
+	mkdir -p files/dumpfiles
 	mkdir args
 	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/args/args* args/
 
