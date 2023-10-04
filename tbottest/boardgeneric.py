@@ -76,6 +76,24 @@ class GenericBoardConfig:
 
     sensors = eval(cfgp.get("TC", "sensors", fallback="[]"))
 
+    # better we use for each testcase own section, so start with it
+    lnx_dump_files = []
+    for section in cfgp.sections():
+        # lnx_dump_files = eval(cfgp.get(f"TC_DUMPFILES_{boardname}", "sensors", fallback="[]"))
+        if f"TC_DUMPFILES_{boardname}" in section:
+            # configuration for generic_lnx_create_dump_files and generic_lnx_check_dump_files
+            lnx_dump_files = eval(
+                cfgp.get(f"TC_DUMPFILES_{boardname}", "lnx_dump_files", fallback="[]")
+            )
+            for entry in lnx_dump_files:
+                entry[
+                    "revfile"
+                ] = f"{cfg.workdir}/tbotconfig/{boardname}/files/dumpfiles/{entry['revfile']}"
+                if entry["difffile"] == "None":
+                    entry["difffile"] = None
+                if entry["timeout"] == "None":
+                    entry["timeout"] = None
+
     ##############################################
     # swupdate testcases
     ##############################################
