@@ -24,6 +24,9 @@ jobs:
           export PYTHONPATH=/home/runner/.local/lib/python3.7/site-packages
           mkdir temp
           cd temp
+          # set some git default values so git am works
+          git config --global user.email "hs@denx.de"
+          git config --global user.name "Heiko Schocher"
           ../scripts/create_setup.sh
       - name: Sphinx build
         run: |
