@@ -65,7 +65,7 @@ def lx_devmem2_get(
 
 
 @tbot.testcase
-def lx_check_revfile(
+def lnx_check_revfile(
     lnx: linux.LinuxShell,
     revfile,
     difffile=None,
@@ -125,7 +125,7 @@ def lx_check_revfile(
 
 
 @tbot.testcase
-def lx_create_revfile(
+def lnx_create_revfile(
     lnx: linux.LinuxShell,
     revfile,
     startaddr,
