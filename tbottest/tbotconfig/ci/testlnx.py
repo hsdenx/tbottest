@@ -26,6 +26,8 @@ def lnx_test_linux_init_cfg() -> bool:  # noqa: D107
 
 
 lnx_generic = [
+    "generic_lnx_create_dump_files",
+    "generic_lnx_check_dump_files",
     "generic_lnx_test_dmesg",
     "generic_lnx_commands",
 ]
