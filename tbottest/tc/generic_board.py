@@ -6,10 +6,123 @@ from tbottest.boardgeneric import cfggeneric
 from tbottest.tc.common import lnx_check_beeper
 from tbottest.tc.common import lnx_check_cmd
 from tbottest.tc.common import lnx_check_dmesg
+from tbottest.tc.common import lnx_check_revfile
+from tbottest.tc.common import lnx_create_revfile
 from tbottest.tc.kas import KAS
 from tbottest.tc.leds import lnx_test_led_simple
 
 cfg = cfggeneric
+
+
+@tbot.testcase
+def generic_lnx_check_dump_files(
+    lnx: Optional[linux.LinuxShell] = None,
+) -> None:  # noqa: D107
+    """
+    prerequisite: Board boots into linux
+
+    compares for all register dumped into ``revfile`` if they have the
+    same value on linux machine lnx. Register values are read with devmem2 tool.
+
+    You can configure a ``difffile`` to which found differences are written.
+
+    :param lnx: linux machine where we run
+
+    Uses config variable lnx_dump_files from section TC_DUMPFILES_BOARDNAME in BOARDNAME.ini
+
+    lnx_dump_files -- array of dictionary with configuration for lnx_check_revfile, see
+
+    :py:func:`tbottest.tc.generic_board.generic_lnx_create_dump_files`
+    """
+    with tbot.ctx() as cx:
+        if lnx is None:
+            lnx = cx.request(tbot.role.BoardLinux)
+
+        if len(cfg.lnx_dump_files) == 0:
+            return
+
+        for config in cfg.lnx_dump_files:
+            lnx_check_revfile(
+                lnx, config["revfile"], config["difffile"], config["timeout"]
+            )
+
+
+@tbot.testcase
+def generic_lnx_create_dump_files(
+    lnx: Optional[linux.LinuxShell] = None,
+) -> None:  # noqa: D107
+    """
+    prerequisite: Board boots into linux
+
+    create a register dump file with name ``revfile`` from ``startaddr`` to ``endaddr``
+    with the devmem2 tool. You find the register file in subdir ``tbotconfig/BOARDNAME/files/dumpfiles``
+
+    You need to create this subdir before starting this testcase
+
+    Once created this register dump file it can be used with testcase
+
+    :py:func:`tbottest.tc.generic_board.generic_lnx_check_dump_files`
+
+    which will check if all register still have the same value. so for example
+    dump for your current linux kernel the pinmux registers into a dump file
+    and after upgrading to a new linux kernel you can be sure that all pinmux
+    registers stil have the same value!
+
+    :param lnx: linux machine where we run
+
+    Uses config variable lnx_dump_files from section TC_DUMPFILES_BOARDNAME in BOARDNAME.ini
+
+    lnx_dump_files -- array of dictionary with configuration for lnx_check_revfile
+
+    .. code-block:: python
+
+        lnx_dump_files = [{"revfile":"name of revfile", \n
+                "startaddr":"startaddress of dump", \n
+                "endaddr":"endaddress of dump", \n
+                "mask":"0xffffffff", \n
+                "readtype":"readtype of devmem2 command", \n
+                "difffile":"file which gets created when there are differences (Set to None to disable it)", \n
+                "timeout":"timeout between devmem2 calls (set to None to disable it)" \n
+                }]
+
+    example:
+
+    .. code-block:: ini
+
+        [TC_DUMPFILES_BOARDNAME]
+        lnx_dump_files = [{"revfile":"control_module.reg", "startaddr":"0x44e10800", "endaddr":"0x44e10808", "mask":"0xffffffff", "readtype":"w", "difffile":"None", "timeout":"None"}]
+
+    creates in tbotconfig/BOARDNAME/files/dump the file control_module.reg with content
+
+    .. code-block:: bash
+
+        $ cat tbotconfig/BOARDNAME/files/dumpfiles/control_module.reg
+        # pinmux
+        # processor: ToDo
+        # hardware : ToDo
+        # Linux    : Linux xxx-board 5.15.105-stable-standard #1 PREEMPT Thu Mar 30 10:48:01 UTC 2023 armv7l armv7l armv7l GNU/Linux
+        # regaddr mask type defval
+        0x44e10800 0xffffffff          w 0x00000031
+        0x44e10804 0xffffffff          w 0x00000031
+
+
+    """
+    with tbot.ctx() as cx:
+        if lnx is None:
+            lnx = cx.request(tbot.role.BoardLinux)
+
+        if len(cfg.lnx_dump_files) == 0:
+            return
+
+        for config in cfg.lnx_dump_files:
+            lnx_create_revfile(
+                lnx,
+                config["revfile"],
+                config["startaddr"],
+                config["endaddr"],
+                config["mask"],
+                config["readtype"],
+            )
 
 
 @tbot.testcase
