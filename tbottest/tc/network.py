@@ -1,7 +1,6 @@
 import tbot
 import time
 from tbot.machine import linux
-from tbot import log_event
 import math
 
 from tbottest.tc.common import lnx_install_package
@@ -117,10 +116,10 @@ def network_linux_iperf(
         # lnxh.ch.sendline("iperf -s &")
         time.sleep(1)
 
-    log_event.doc_tag("iperf_minval", minval)
-    log_event.doc_tag("iperf_cycles", cycles)
-    log_event.doc_tag("iperf_intervall", intervall)
-    log_event.doc_begin("iperf_test")
+    # log_event.doc_tag("iperf_minval", minval)
+    # log_event.doc_tag("iperf_cycles", cycles)
+    # log_event.doc_tag("iperf_intervall", intervall)
+    # log_event.doc_begin("iperf_test")
 
     ret = lnx.exec0(toolname, "-c", sip, "-i", intervall, "-t", xmax)  # noqa: E501
 
@@ -171,8 +170,8 @@ def network_linux_iperf(
 
         step = str(float(step) + float(intervall))
 
-    log_event.doc_tag("iperf_unit", unit)
-    log_event.doc_end("iperf_test")
+    # log_event.doc_tag("iperf_unit", unit)
+    # log_event.doc_end("iperf_test")
     if pid != "notstarted":
         lnxh.exec("kill", pid, linux.Then, "wait", pid)
 
