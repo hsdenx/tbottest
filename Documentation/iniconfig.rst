@@ -8,6 +8,8 @@
 helper functions
 ----------------
 
+.. autofunction:: tbottest.initconfig.init_get_config
+
 .. autofunction:: tbottest.initconfig.generic_get_boardname
 
 .. autofunction:: tbottest.initconfig.copy_file

@@ -568,11 +568,18 @@ we use for configuring for boardspecific testcasesettings with:
 
 https://docs.python.org/3/library/configparser.html
 
-add therefore a BOARDNAME.ini file into config/BOARDNAME
+add therefore a BOARDNAME.ini file must exist in tbotconfig/BOARDNAME
 
-It contains only one section with name ```TC``` from where the generic
-board testcase approach boardgeneric.py takes the config to generate
-the class GenericBoardConfig, used from generic testcases.
+It contains two sections:
+
+```TC_BOARDNAME``` and ```TC```
+
+see also:
+:py:func:`tbottest.initconfig.init_get_config`
+
+from where the generic board testcase approach boardgeneric.py
+takes the config to generate the class GenericBoardConfig,
+used from generic testcases.
 
 common settings
 ^^^^^^^^^^^^^^^

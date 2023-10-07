@@ -7,6 +7,36 @@ import os
 BOARDNAME = None
 
 
+def init_get_config(
+    cfgp: configparser.RawConfigParser,
+    name: str,
+    default: str,
+) -> str:
+    """
+    returns value of key name from configparser.
+
+    Searches first for a "TC_BOARDNAME" section and if it there
+    is not the key, search in section "TC". If not found, return
+    default value. If default value is "None" return None
+
+    :param cfgp: current config parser
+    :param name: name of key
+    :param default: default value if key is not found
+    """
+    boardname = generic_get_boardname()
+    # first try boardname specific config
+    try:
+        value = cfgp.get(f"TC_{boardname}", name)
+        return value
+    except:
+        pass
+    # next common config
+    value = cfgp.get("TC", name, fallback=default)
+    if value == "None":
+        return None
+    return value
+
+
 def generic_get_boardname():
     """
     return the boards name in your lab setup
