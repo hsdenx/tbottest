@@ -29,7 +29,7 @@ class GenericBoardConfig:
 
     boardname = ini.generic_get_boardname()
     cfgp = cfg.config_parser
-    tmpdir = cfgp.get("TC", "tmpdir", fallback="/tmp")
+    tmpdir = ini.init_get_config(cfgp, "tmpdir", "/tmp")
 
     ##############################################
     # Imagenames
@@ -38,74 +38,68 @@ class GenericBoardConfig:
     qspiheader = cfgp.get("TC", "qspiheader", fallback=None)
     splimage = cfgp.get("TC", "splimage", fallback=None)
 
-    mtd_parts = eval(cfgp.get("TC", "mtd_parts", fallback="[]"))
-    ub_mtd_delete = eval(cfgp.get("TC", "ub_mtd_delete", fallback="[]"))
+    mtd_parts = eval(ini.init_get_config(cfgp, "mtd_parts", "[]"))
+    ub_mtd_delete = eval(ini.init_get_config(cfgp, "ub_mtd_delete", "[]"))
 
     ##############################################
     # U-Boot testcases
     ##############################################
-    fb_res_setup = cfgp.get("TC", "fb_res_setup", fallback=None)
-    fb_res_boot = cfgp.get("TC", "fb_res_boot", fallback=None)
-    fb_cmd = cfgp.get("TC", "fb_cmd", fallback=None)
+    fb_res_setup = ini.init_get_config(cfgp, "fb_res_setup", "None")
+    fb_res_boot = ini.init_get_config(cfgp, "fb_res_boot", "None")
+    fb_cmd = ini.init_get_config(cfgp, "fb_cmd", "None")
 
     ##############################################
     # Linux testcases
     ##############################################
-    beep = eval(cfgp.get("TC", "beep", fallback="[]"))
-    cyclictestmaxvalue = eval(cfgp.get("TC", "cyclictestmaxvalue", fallback="100"))
-    dmesg = eval(cfgp.get("TC", "dmesg", fallback="[]"))
-    dmesg_false = eval(cfgp.get("TC", "dmesg_false", fallback="[]"))
-    leds = eval(cfgp.get("TC", "leds", fallback="[]"))
-    lnx_commands = eval(cfgp.get("TC", "lnx_commands", fallback="[]"))
+    beep = eval(ini.init_get_config(cfgp, "beep", "[]"))
+    cyclictestmaxvalue = eval(ini.init_get_config(cfgp, "cyclictestmaxvalue", "100"))
+    dmesg = eval(ini.init_get_config(cfgp, "dmesg", "[]"))
+    dmesg_false = eval(ini.init_get_config(cfgp, "dmesg_false", "[]"))
+    leds = eval(ini.init_get_config(cfgp, "leds", "[]"))
+    lnx_commands = eval(ini.init_get_config(cfgp, "lnx_commands", "[]"))
     network_iperf_intervall = eval(
-        cfgp.get("TC", "network_iperf_intervall", fallback="1")
+        ini.init_get_config(cfgp, "network_iperf_intervall", "1")
     )
     network_iperf_minval = eval(
-        cfgp.get("TC", "network_iperf_minval", fallback="90000000")
+        ini.init_get_config(cfgp, "network_iperf_minval", "90000000")
     )
-    network_iperf_cycles = eval(cfgp.get("TC", "network_iperf_cycles", fallback="30"))
+    network_iperf_cycles = eval(ini.init_get_config(cfgp, "network_iperf_cycles", "30"))
 
-    nvramdev = cfgp.get("TC", "nvramdev", fallback=None)
-    nvramcomp = cfgp.get("TC", "nvramcomp", fallback=None)
-    nvramsz = cfgp.get("TC", "nvramsz", fallback=None)
+    nvramdev = ini.init_get_config(cfgp, "nvramdev", "None")
+    nvramcomp = ini.init_get_config(cfgp, "nvramcomp", "None")
+    nvramsz = ini.init_get_config(cfgp, "nvramsz", "None")
 
-    rs485labdev = cfgp.get("TC", "rs485labdev", fallback=None)
-    rs485baud = cfgp.get("TC", "rs485baud", fallback=None)
-    rs485boarddev = eval(cfgp.get("TC", "rs485boarddev", fallback='["/dev/ttymxc2"]'))
-    rs485lengths = eval(cfgp.get("TC", "rs485lengths", fallback='["20", "100", "1024"]'))
+    rs485labdev = ini.init_get_config(cfgp, "rs485labdev", "None")
+    rs485baud = ini.init_get_config(cfgp, "rs485baud", "None")
+    rs485boarddev = eval(ini.init_get_config(cfgp, "rs495boarddev", '["/dev/ttymxc2"]'))
+    rs485lengths = eval(
+        ini.init_get_config(cfgp, "rs485lengths", '["20", "100", "1024"]')
+    )
 
-    sensors = eval(cfgp.get("TC", "sensors", fallback="[]"))
+    sensors = eval(ini.init_get_config(cfgp, "sensors", "[]"))
 
-    # better we use for each testcase own section, so start with it
-    lnx_dump_files = []
-    for section in cfgp.sections():
-        # lnx_dump_files = eval(cfgp.get(f"TC_DUMPFILES_{boardname}", "sensors", fallback="[]"))
-        if f"TC_DUMPFILES_{boardname}" in section:
-            # configuration for generic_lnx_create_dump_files and generic_lnx_check_dump_files
-            lnx_dump_files = eval(
-                cfgp.get(f"TC_DUMPFILES_{boardname}", "lnx_dump_files", fallback="[]")
-            )
-            for entry in lnx_dump_files:
-                entry[
-                    "revfile"
-                ] = f"{cfg.workdir}/tbotconfig/{boardname}/files/dumpfiles/{entry['revfile']}"
-                if entry["difffile"] == "None":
-                    entry["difffile"] = None
-                if entry["timeout"] == "None":
-                    entry["timeout"] = None
+    lnx_dump_files = eval(ini.init_get_config(cfgp, "lnx_dump_files", "[]"))
+    for entry in lnx_dump_files:
+        entry[
+            "revfile"
+        ] = f"{cfg.workdir}/tbotconfig/{boardname}/files/dumpfiles/{entry['revfile']}"
+        if entry["difffile"] == "None":
+            entry["difffile"] = None
+        if entry["timeout"] == "None":
+            entry["timeout"] = None
 
     ##############################################
     # swupdate testcases
     ##############################################
-    swuethdevice = cfgp.get("TC", "swuethdevice", fallback="eth0")
-    swuimage = cfgp.get("TC", "swuimage", fallback=None)
+    swuethdevice = ini.init_get_config(cfgp, "swuethdevice", "eth0")
+    swuimage = ini.init_get_config(cfgp, "swuimage", "None")
 
     ##############################################
     # kas testcases
     ##############################################
-    kas = eval(cfgp.get("TC", "kas", fallback="[]"))
-    kas_check_files = eval(cfgp.get("TC", "kas_check_files", fallback="[]"))
-    kas_results = eval(cfgp.get("TC", "kas_results", fallback="[]"))
+    kas = eval(ini.init_get_config(cfgp, "kas", "[]"))
+    kas_check_files = eval(ini.init_get_config(cfgp, "kas_check_files", "[]"))
+    kas_results = eval(ini.init_get_config(cfgp, "kas_results", "[]"))
 
 
 cfggeneric = GenericBoardConfig()
