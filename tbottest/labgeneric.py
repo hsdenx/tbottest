@@ -221,6 +221,7 @@ BH = typing.TypeVar("BH", bound=linux.Builder)
 
 
 class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
+    tmpdir_exists = False
     name = cfgt.config_parser.get("LABHOST", "labname")
     hostname = cfgt.config_parser.get("LABHOST", "hostname")
     username = cfgt.config_parser.get("LABHOST", "username")
@@ -294,6 +295,12 @@ class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
         returns tbot tmpdir for this lab
         """
         tmp = cfgt.config_parser.get("LABHOST", "tmpdir")
+        if self.tmpdir_exists is False:
+            ret, log = self.exec("ls", tmp)
+            if ret != 0:
+                self.exec0("mkdir", "-p", tmp)
+                self.tmpdir_exists = True
+
         return linux.Workdir.static(self, tmp)
 
     def tmpmntdir(self, name: str) -> "linux.path.Path[GenericLab]":
