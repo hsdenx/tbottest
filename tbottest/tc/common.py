@@ -22,6 +22,46 @@ def escape_ansi(line: str) -> str:
     return ansi_escape.sub("", line)
 
 
+def search_string_in_multiline(search, lines) -> bool:
+    """
+    search string search in multiline lines
+
+    :param search: string to search
+    :param lines: multiline string, in which we search the string
+    :return: True if found else False
+    """
+    for line in lines.split("\n"):
+        if search in line:
+            return True
+
+    return False
+
+
+def search_multistring_in_multiline(searches, lines) -> bool:
+    """
+    search mutliple strings in mutli liner
+
+    :param search: array of strings to search in lines
+    :param lines: multiline string, in which we search the string
+    :return: True if all strings are found else False
+    """
+    found = True
+    loop = True
+    while loop:
+        for findstr in searches:
+            found = search_string_in_multiline(findstr, lines)
+            if found is False:
+                loop = False
+
+        loop = False
+
+    if found is False:
+        msg = "Not found all output in crypto"
+        tbot.log.message(tbot.log.c(msg).red)
+
+    return found
+
+
 @tbot.testcase
 def lx_cmd_exists(
     lnx: linux.LinuxShell,
