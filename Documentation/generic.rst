@@ -667,7 +667,7 @@ settings needed for yocto build with kas tool.
 .. csv-table:: [TC]
         :header: "key", "description", "default", "example"
 
-        "kas", "dictionary with values need for class KAS", "mandatory, no default", "see: tbottest/tbotconfig/BOARDNAME.ini"
+        "kas", "dictionary with values need for class KAS, see :py:class:`tbottest.tc.kas.KAS`", "mandatory, no default", "see: tbottest/tbotconfig/BOARDNAME.ini"
         "kas_check_files", "list of files, which must exist after building", "[]", "['tmp/deploy/images/wandboard/SPL']"
         "kas_results", "list of files, which get copied from build host to lab host for later use. Basepath is machine directory in tmp/deploy/images", "[]", "['SPL']"
 
