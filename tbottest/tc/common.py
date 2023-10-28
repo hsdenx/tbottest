@@ -514,10 +514,21 @@ def board_ub_delete_env(
     mtdparts=["env", "env-red"],
 ) -> None:
     """
-    erase the SPI Environment sectors in U-Boot
+    erase the MTD partitions defined in mtdparts
 
     :param ub: U-Boot machine we run on
-    :param mtdparts: List of MTD parts we want to delete
+    :param mtdparts: List of dictionary with MTD parts we want to delete
+
+    .. code-block:: python
+
+        mtdparts = [
+            {"name":"bootloader", "size":"180000"},
+            {"name":"env", "size":"10000"},
+            {"name":"env-red", "size":"10000"},
+            {"name":"keys", "size":"10000"},
+            {"name":"rescue", "size":"3e50000"},
+        ]
+
     """
     with tbot.ctx() as cx:
         if ub is None:
