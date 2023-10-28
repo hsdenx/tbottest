@@ -1226,3 +1226,63 @@ def tbot_stop_thread(
         lnx.exec("kill", pid, linux.Then, "wait", pid)
 
     return THREADS.pop(tid)
+
+
+@tbot.testcase
+def sudo_subshell(
+    lnx: linux.LinuxShell = None,
+    cmds: str = [],
+    password: str = None,
+) -> list:
+    """
+    execute in a sudo subshell the commands in cmds
+
+    Best you use a passwordless sudo approach, for example
+    add in /etc/sudoers
+
+    .. code-block::
+
+        <username>     ALL=(ALL) NOPASSWD: ALL
+
+    If not possible pass the sudo password to this function.
+
+    This function is more or less just an example how to
+    execute commands under sudo, because the commands are
+    only executed without any possibility to check the output.
+
+    If you need this, see this as an example how to!
+
+    :param lnx: linux machine where the command **cmd** is started in background
+    :param str: sudo password, pass None (default) if not needed
+    :param list cmds: list of commands (strings), which are run under sudo
+    """
+
+    ret = []
+    if len(cmds) == 0:
+        return ret
+
+    if password is None:
+        with lnx.subshell("sudo", "-ni", "bash", "--norc", "--noprofile") as root:
+            for cmd in cmds:
+                log = root.exec0(linux.Raw(cmd))
+                ret.append(log)
+    else:
+        # create askpass file"
+        tmpfile = "/tmp/sendpass.sh"
+
+        lnx.exec0(linux.Raw(f'echo "#!/bin/sh\n\necho {password}" > {tmpfile}'))
+        lnx.exec0("chmod", "777", tmpfile)
+        lnx.exec0("cat", tmpfile)
+
+        with lnx.subshell(
+            "export",
+            linux.Raw(f"SUDO_ASKPASS={tmpfile}"),
+            linux.Raw(";"),
+            "sudo",
+            "-A",
+            "bash",
+        ) as root:
+            for cmd in cmds:
+                root.exec0(linux.Raw(cmd))
+
+    return ret
