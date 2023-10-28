@@ -19,6 +19,13 @@ def linux() -> None:
 
 
 @tbot.testcase
+def local() -> None:
+    """Open an interactive session on the board's Linux shell."""
+    with tbot.ctx.request(tbot.role.LocalHost) as lnx:
+        lnx.interactive()
+
+
+@tbot.testcase
 def uboot() -> None:
     """Open an interactive session on the board's U-Boot shell."""
     tbot.ctx.teardown_if_alive(tbot.role.BoardLinux)
