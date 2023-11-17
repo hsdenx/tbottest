@@ -546,6 +546,80 @@ and use this config file
     INTERFACESv4="eth0"
     INTERFACESv6=""
 
+install chrony on PI
+....................
+
+.. code-block:: bash
+
+        $ sudo apt-get install chrony
+
+To enable NTP server daemon add in ```/etc/chrony/chrony.conf```
+
+.. code-block:: bash
+
+        local stratum 10
+        allow 192.168.3.0/16
+
+the last line ```allow...``` limits NTP server for eth0 interface only!
+
+.. hint::
+
+        install chrony commandline tool on DUT
+
+pass NTP server address through DHCP to the DUT
+...............................................
+
+add option:
+
+.. code-block:: bash
+
+        option ntp-servers 192.168.3.1;
+
+in file ```/etc/dhcp/dhcpd.conf```. You can than use the NTP server
+address in udhcpc scripts in variable ```ntpsrv```
+
+configure chrony to get NTP server address from DHCP
+....................................................
+
+first ensure NTP server address is passed to the DUT via DHCP, see
+
+`pass NTP server address through DHCP to the DUT`_
+
+create on the target a config file for chrony in your DHCP clients
+configuration scripts.
+
+For example udhcpc setup
+
+add ```/etc/udhcpc.d/60-set-chrony-ntp-server``` with
+
+.. code-block:: bash
+
+        #!/bin/sh
+
+        echo "Calling /etc/udhcpc.d/60-set-chrony-ntp-server ntpsrv ${ntpsrv}"
+
+        CHRONYCONFIG=/var/run/chrony.d
+        mkdir -p $CHRONYCONFIG
+
+        echo server ${ntpsrv} > $CHRONYCONFIG/ntpserver.conf
+        echo allow ${ntpsrv} >> $CHRONYCONFIG/ntpserver.conf
+
+Now when your udhcpc starts and get the NTP server address, it should
+call ```/etc/udhcpc.d/60-set-chrony-ntp-server``` which creates chrony
+configuration file ```/var/run/chrony.d/ntpserver.conf```
+
+Don;t forget to add ```/var/run/chrony.d``` in ```/etc/chrony.conf```,
+so that chrony scans config files in ```/var/run/chrony.d```
+
+.. code-block:: bash
+
+        # add other config directories chrony can use
+        confdir /var/run/chrony.d
+
+Now if chrony starts, it passes the config files in ```/var/run/chrony.d```
+and so, get the NTP server address from udhcpc. Of course, ensure, that
+chrony starts after udhcpc is finished.
+
 enable Internet access from DUT over ethernet
 .............................................
 
