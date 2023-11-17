@@ -6,6 +6,37 @@ from tbotconfig.ci.tests_helper import run_all_tests, FAILED, SUCCESS
 
 
 @tbot.testcase
+def test_create_file(
+    lab: linux.LinuxShell = None,
+) -> bool:  # noqa: D107
+    """
+    test if file creation works
+    """
+    with tbot.ctx() as cx:
+        if lab is None:
+            lab = cx.request(tbot.role.LabHost)
+
+        scriptname = "/tmp/createfiletest.sh"
+        filedata = [
+            "#!/bin/sh",
+            "",
+            "while true;do",
+            "    sleep 5",
+            "    echo hello world!",
+            "done",
+        ]
+        common.lnx_create_file(lab, scriptname, filedata)
+        log = lab.exec0("md5sum", scriptname)
+
+        musthave = ["9385297f1a82efb7f1f48c931691a20b"]
+        ret = common.search_multistring_in_multiline(musthave, log)
+        if ret is not True:
+            return FAILED
+
+    return SUCCESS
+
+
+@tbot.testcase
 def test_sudo_subshell(
     lab: linux.LinuxShell = None,
 ) -> bool:  # noqa: D107
@@ -45,8 +76,9 @@ def uname(
 
 
 lab_tests = [
-    "uname",
+    "test_create_file",
     "test_sudo_subshell",
+    "uname",
 ]
 
 

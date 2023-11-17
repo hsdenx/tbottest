@@ -7,6 +7,7 @@ import uuid
 from tbot.machine import linux
 from tbot.machine import board
 from tbot.context import Optional
+from typing import AnyStr, List
 import tbottest.initconfig as ini
 
 
@@ -940,6 +941,44 @@ def lnx_check_dmesg(
                 ret = False
 
     return ret
+
+
+def lnx_create_file(
+    lnx: linux.LinuxShell = None,
+    filename: AnyStr = None,
+    filedata: List = [],
+) -> str:  # noqa: D107
+    """
+    create a file with filename on linux machine lnx with lines
+    in array filedata.
+
+    example:
+
+    .. code-block:: python
+
+            scriptname = "/tmp/cansend.sh"
+            filedata = ["#!/bin/sh",
+                "",
+                "while true;do",
+                "    sleep 5",
+                "",
+                "    cansend can0 15a#1122334455667788",
+                "done"
+
+            lnx_create_file(lab, scriptname, filedata)
+
+
+    :param lnx: linux machine on which the file is created
+    :param filename: string of the created file
+    :param filedata: List of lines
+    """
+    if filename is None:
+        raise RuntimeError("only call with valid filename")
+
+    act = ">"
+    for line in filedata:
+        lnx.exec0(linux.Raw(f"echo '{line}' {act} {filename}"))
+        act = ">>"
 
 
 def common_install_debian(
