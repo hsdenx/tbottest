@@ -325,7 +325,7 @@ def lnx_get_hwaddr(lnx: linux.LinuxShell, name: str) -> str:
 
 
 @tbot.testcase
-def lnx_get_ipaddr(lnx: linux.LinuxShell, name: str, ip6: bool = False) -> str:
+def _lnx_get_ipaddr(lnx: linux.LinuxShell, name: str, ip6: bool = False) -> str:
     """
     get ipaddr from ifconfig output
 
@@ -369,6 +369,33 @@ def lnx_get_ipaddr(lnx: linux.LinuxShell, name: str, ip6: bool = False) -> str:
                 if match is None:
                     continue
                 return match.group("ipaddr")
+
+    raise RuntimeError(f"Could not get ip for device {name}")
+
+
+@tbot.testcase
+def lnx_get_ipaddr(
+    lnx: linux.LinuxShell, name: str, ip6: bool = False, poll: int = 5, sleep: int = 2
+) -> str:
+    """
+    get ipaddr from ifconfig output
+
+    ToDo: add a cache if often called
+
+    :param lnx: linux machine from which we want to get the ipaddr
+    :param name: name of the interface
+    :param ip6: set to true if you want the ipv6 addr
+    :param poll: if != 0 poll n times to get the ip
+    :param sleep: sleep in seconds between polls
+    """
+    i = 0
+    while i <= poll:
+        try:
+            return _lnx_get_ipaddr(lnx, name, ip6)
+        except:
+            if sleep:
+                time.sleep(sleep)
+            i += 1
 
     raise RuntimeError(f"Could not get ip for device {name}")
 
