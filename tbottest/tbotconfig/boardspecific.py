@@ -264,12 +264,9 @@ def set_board_cfg(temp: str = None, filename: str = None):  # noqa: C901
     replace_in_file(filename, "@@KASCONTAINER@@", kascontainer)
     if sshkeypath:
         replace_in_file(filename, "/home/hs/.ssh", sshkeypath)
-    if "tbot.ini" in str(filename):
-        BOARDNAME_get_lab_serverip(filename)
-        BOARDNAME_get_board_ipaddr(filename)
-    else:
-        replace_in_file(filename, "@@TBOTSERVERIP@@", BOARDNAME_get_lab_serverip())
-        replace_in_file(filename, "@@TBOTIPADDR@@", BOARDNAME_get_board_ipaddr())
+
+    replace_in_file(filename, "@@TBOTSERVERIP@@", BOARDNAME_get_lab_serverip(filename))
+    replace_in_file(filename, "@@TBOTIPADDR@@", BOARDNAME_get_board_ipaddr(filename))
 
     # only for creating docs!
     replace_in_file(filename, "@@PICOCOMDELAY@@", "3")
