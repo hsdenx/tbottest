@@ -81,6 +81,20 @@ class boardGpioControl(powercontrol.GpiopmControl):
             gpiopmctl_state = cfgt.config_parser.get(s, "state")
 
 
+class boardPowerShellControl(powercontrol.PowerShellScriptControl):
+    def power_check(self) -> bool:
+        if "poweroffonstart" in tbot.flags:
+            self.poweroff()
+
+        return True
+
+    bn = ini.generic_get_boardname()
+    cfg = f"POWERSHELLSCRIPT_{bn}"
+    for s in cfgt.config_parser.sections():
+        if cfg == s:
+            shell_script = eval(cfgt.config_parser.get(s, "script"))
+
+
 class boardSisControl(powercontrol.SispmControl):
     def power_check(self) -> bool:
         if "poweroffonstart" in tbot.flags:
@@ -110,6 +124,8 @@ if "tinkerforge" in tbot.flags:
     BOARDCTL = boardTFControl
 elif "gpiopower" in tbot.flags:
     BOARDCTL = boardGpioControl
+elif "powershellscript" in tbot.flags:
+    BOARDCTL = boardPowerShellControl
 else:
     BOARDCTL = boardSisControl
 
@@ -497,5 +513,6 @@ FLAGS = {
     "picocom": "use piccom for accessing serial console",
     "tinkerforge": "use tinkerforge for switching power",
     "gpiopower": "use gpio pin for switching power",
+    "powershellscript": "use a shell script for switching power",
     "poweroffonstart": "always power off board on tbot start",
 }

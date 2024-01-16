@@ -439,6 +439,22 @@ Here as example wandboard.
         "pin", "pin number of gpio pin", "17"
         "state", "on state", "1"
 
+[POWERSHELLSCRIPT_BOARDNAME]
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you want to control boards power with a shell script
+
+:py:meth:`tbottest.powercontrol.PowerShellScriptControl`
+
+replace BOARDNAME with the name of your board!
+Here as example wandboard.
+
+.. csv-table:: [POWERSHELLSCRIPT_wandboard]
+        :header: "key", "value", "example"
+
+        "script", "Name of shell script used to control board power", "/tmp/power.sh"
+
+
 
 [SISPMCTRL_BOARDNAME]
 ^^^^^^^^^^^^^^^^^^^^^
@@ -861,6 +877,7 @@ tbot flag                Description
 bootcmd                  format bootcmd:<real bootcmd>, example bootcmd:net_nfs will execute "run net_nfs"
 buildname                format buildname:<name of builder>, select the used buildhost.
 gpiopower                use a gpio pin for boards power control
+powershellscript         use a shellscript for boards power control
 tinkerforge              use tinkerforge for boards power control
 picocom                  use picocom for serial console
 uuuloader                load SPL/U-Boot with uuu tool from NXP

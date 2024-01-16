@@ -6,6 +6,7 @@ from tbot_contrib.gpio import Gpio
 
 __all__ = (
     "GpiopmControl",
+    "PowerShellScriptControl",
     "SispmControl",
     "TinkerforgeControl",
 )
@@ -64,6 +65,54 @@ class GpiopmControl(board.PowerControl):
 
         tbot.log.message("Waiting a bit to let power settle down ...")
         time.sleep(2)
+
+
+class PowerShellScriptControl(board.PowerControl):
+    """
+    control Power On/off with a shell script
+
+    The shell script needs to evaluate the first parameter passed to
+    the script. Values are:
+
+    "on" for powering on the board
+
+    "off" for powering off the board
+
+    **Example**: (board config)
+
+    .. code-block:: python
+
+        from tbot.machine import board
+        from tbottest.powercontrol import PowerShellScriptControl
+
+        class MyControl(PowerShellScriptControl, board.Board):
+            shell_script = "<path to shell script"
+    """
+
+    @property
+    @abc.abstractmethod
+    def shell_script(self) -> str:
+        """
+        shell command executed
+
+        This property is **required**.
+        """
+        raise Exception("abstract method")
+
+    def poweron(self) -> None:
+        self.host.exec0(
+            self.shell_script,
+            "on",
+        )
+
+    def poweroff(self) -> None:
+        if "nopoweroff" in tbot.flags:
+            tbot.log.message("Do not power off ...")
+        else:
+            self.host.exec0(
+                self.shell_script,
+                "off",
+            )
 
 
 class SispmControl(board.PowerControl):
