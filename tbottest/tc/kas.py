@@ -451,6 +451,58 @@ class KAS:
             else:
                 self.kas_call_bitbake(t)
 
+    def kas_shell(
+        self,
+    ) -> None:
+        """
+        enter kas shell
+        """
+        pre = []
+        post = []
+        try:
+            kas_ref_dir = self.bh.kas_ref_dir
+            pre.append(f'KAS_REPO_REF_DIR="{kas_ref_dir._local_str()}"')
+        except:  # noqa: E722
+            pass
+
+        kasarg = []
+        if self.git_credential_store:
+            kasarg.append("--git-credential-store")
+            kasarg.append(self.git_credential_store)
+
+        if self.kas_ssh_dir:
+            kasarg.append("--ssh-dir")
+            kasarg.append(self.kas_ssh_dir)
+
+        path = self.kas_get_basepath()
+        self.bh.exec0("cd", path)
+        self.bh.exec0("pwd")
+
+        if self.bitbakeoptions:
+            bitopt = " ".join(self.bitbakeoptions)
+            post.append(linux.Raw(f"-- {bitopt}"))
+
+        cmd = ""
+        if pre:
+            cmd += " ".join(pre)
+
+        # we always use the container command here, nevertheless what is setup
+        cmd += f" {self.kaspath._local_str()}/kas/kas-container "
+        if kasarg:
+            cmd += " ".join(kasarg)
+
+        cmd += f" shell {self.kasconfigfile}"
+        with tbot.log_event.command("kas-shell", cmd) as ev:
+            with self.bh.ch.with_prompt("build$ "):
+                self.bh.ch.sendline(cmd, read_back=True)
+                with self.bh.ch.with_stream(ev, show_prompt=False):
+                    self.bh.ch.read_until_prompt()
+                    self.bh.ch.sendline(" ")
+                    tbot.log.message(
+                        f"Entering interactive kas shell ({tbot.log.c('CTRL+D to exit').bold}) ..."
+                    )
+                    self.bh.ch.attach_interactive(ctrld_exit=True)
+
     def kas_copy(
         self,
         resultimages=None,
