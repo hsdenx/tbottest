@@ -190,7 +190,7 @@ def set_board_cfg(temp: str = None, filename: str = None):  # noqa: C901
     print("You use example implementation of boardspecific.py")
     print("You really should use your own implementation, as it is example only")
     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print_log(f"TBOT.FLAGS {tbot.flags}")
+    print_log(f"TBOT.FLAGS {sorted(tbot.flags)}")
     replace_in_file(filename, "@@TBOTDATE@@", "20230406")
     replace_in_file(filename, "@@TBOTMACHINE@@", BOARDNAME_get_machinename())
     boardname = generic_get_boardname()
