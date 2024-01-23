@@ -22,6 +22,7 @@ Welcome to *tbot-test*!
 
    tc
    iniconfig
+   iniconfighelper
    machineinit
    connector
    decorators

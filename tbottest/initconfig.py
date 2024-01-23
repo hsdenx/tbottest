@@ -3,6 +3,7 @@ from configparser import ExtendedInterpolation
 import tbot
 import pathlib
 import os
+import tbottest.initconfighelper as inithelper
 
 BOARDNAME = None
 
@@ -151,34 +152,14 @@ class IniTBotConfig:
 
     see: :ref:`boardspecificruntimeadaption`
     """
-
-    # may we pass an ini file path through tbot flags
-    # with for example: -f inifile_/tmp/tbot.ini
-    pathinifile = None
-    for f in tbot.flags:
-        if "inifile" in f:
-            try:
-                pathinifile = f.split(":")[1]
-            except:
-                raise RuntimeError("please use : as seperator inifile flag")
-
-    config_parser = configparser.RawConfigParser(interpolation=ExtendedInterpolation())
     workdir = os.getcwd()
-    if pathinifile:
-        if pathinifile[0] != "\/":  # noqa: W605
-            tbotinifile = workdir + "/" + pathinifile
-        else:
-            tbotinifile = pathinifile
-    else:
-        tbotinifile = (
-            workdir + f"/../tbottest/tbotconfig/{generic_get_boardname()}/tbot.ini"
-        )
-
+    tbotinifile = inithelper.inifile_get_tbotfilename()
     newfilename = tbotinifile + "-modified"
     copy_file(tbotinifile, newfilename)
     if set_board_cfg:
         set_board_cfg("IniTBotConfig", newfilename)
     replace_in_file(newfilename, "@@TBOTBOARD@@", generic_get_boardname())
+    config_parser = configparser.RawConfigParser(interpolation=ExtendedInterpolation())
     config_parser.read(newfilename)
 
     date = config_parser.get("LABHOST", "date")
@@ -289,33 +270,14 @@ class IniConfig:
     # read common tbot config and generate later [default] section
     cfg = IniTBotConfig()
     cfgp = cfg.config_parser
-
-    # may we pass an ini file path through tbot flags
-    # with for example: -f inifile_/tmp/tbot.ini
-    pathinifile = None
-    for f in tbot.flags:
-        if "boardfile" in f:
-            try:
-                pathinifile = f.split(":")[1]
-            except:
-                raise RuntimeError("please use : as seperator boardfile flag")
-
-    config_parser = configparser.RawConfigParser(interpolation=ExtendedInterpolation())
     workdir = os.getcwd()
-    if pathinifile:
-        if pathinifile[0] != "\/":  # noqa: W605
-            filename = workdir + "/" + pathinifile
-        else:
-            filename = pathinifile
-    else:
-        filename = (
-            workdir
-            + f"/../tbottest/tbotconfig/{generic_get_boardname()}/{generic_get_boardname()}.ini"
-        )
 
+    filename = inithelper.inifile_get_tbotboardfilename()
     newfilename = pathlib.Path(filename).parent.resolve()
     newfilename = newfilename / f"{os.path.basename(filename)}-modified"
     copy_file(filename, newfilename)
     if set_board_cfg:
         set_board_cfg("IniConfig", newfilename)
+
+    config_parser = configparser.RawConfigParser(interpolation=ExtendedInterpolation())
     config_parser.read(newfilename)
