@@ -243,6 +243,7 @@ class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
     username = cfgt.config_parser.get("LABHOST", "username")
     tftproot = cfgt.config_parser.get("LABHOST", "tftproot")
     port = cfgt.config_parser.get("LABHOST", "port", fallback=22)
+    nfs_base_path = cfgt.config_parser.get("LABHOST", "nfs_base_path")
 
     bootmodecfg = cfgt.bootmodecfg
     ubcfg = cfgt.ubcfg

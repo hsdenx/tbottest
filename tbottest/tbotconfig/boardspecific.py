@@ -7,6 +7,7 @@ from tbottest.initconfig import generic_get_boardname
 from tbottest.initconfig import replace_in_file
 from tbottest.initconfig import find_in_file_and_delete
 
+TBOTFILE = None
 SERVERIP = None
 
 
@@ -191,6 +192,12 @@ def set_board_cfg(temp: str = None, filename: str = None):  # noqa: C901
     print("You really should use your own implementation, as it is example only")
     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     print_log(f"TBOT.FLAGS {sorted(tbot.flags)}")
+
+    if "tbot.ini" in str(filename):
+        global TBOTFILE
+
+        TBOTFILE = filename
+
     replace_in_file(filename, "@@TBOTDATE@@", "20230406")
     replace_in_file(filename, "@@TBOTMACHINE@@", BOARDNAME_get_machinename())
     boardname = generic_get_boardname()
@@ -270,6 +277,22 @@ def set_board_cfg(temp: str = None, filename: str = None):  # noqa: C901
 
     # only for creating docs!
     replace_in_file(filename, "@@PICOCOMDELAY@@", "3")
+
+    # replace in board file setttings from tbot.ini
+    if "tbot.ini" not in str(filename):
+        config_parser = configparser.RawConfigParser(
+            interpolation=ExtendedInterpolation()
+        )
+        config_parser.read(TBOTFILE)
+        for s in config_parser.sections():
+            if "LABHOST" in s:
+                try:
+                    basepath = config_parser.get(s, "nfs_base_path")
+                except:
+                    raise RuntimeError(
+                        f"Could not find 'nfs_base_path' key in section 'default' in {filename}"
+                    )
+        replace_in_file(filename, "@@TBOTLABBASENFSPATH@@", basepath)
 
 
 FLAGS = {
