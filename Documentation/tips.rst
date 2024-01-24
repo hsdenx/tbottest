@@ -307,6 +307,20 @@ sudo without password
 
 https://linuxconfig.org/configure-sudo-without-password-on-ubuntu-20-04-focal-fossa-linux
 
+gpio
+----
+
+a very good and (at least for me) stable gpio adapter for the raspberry PI is:
+
+https://www.reichelt.de/de/de/raspberry-pi-relais-modul-8-channel-hutschiene-hls8l-dc5v-s-rpi-relais-8ch-p253984.html?PROVID=2788&gclid=EAIaIQobChMIk4qooNbpgwMVM6dmAh1IFAbrEAQYAyABEgImo_D_BwE&&r=1
+
+based on
+
+https://www.waveshare.com/wiki/RPi_Relay_Board_(B)
+
+see the links for the description and for downloading drivers.
+
+
 usb hub power control
 .....................
 
