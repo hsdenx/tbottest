@@ -8,8 +8,7 @@ enable commandline completions with:
 
 .. code-block:: bash
 
-        $ source ../tbot/completions.sh
-        $ complete -F _newbot newtbot_starter.py
+        $ source tbottest/completions.sh
 
 
 fast testcase development

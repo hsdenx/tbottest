@@ -162,8 +162,7 @@ fi
 
 # end print some starter help
 echo "add commandline completions with:
-echo "source tbot/completions.sh"
-echo "complete -F _newbot newtbot_starter.py"
+echo "source tbottest/completions.sh"
 echo
 echo "start tbot with:"
 echo "tbottest/newtbot_starter.py @tbotconfig/$BOARDNAME/args/argsbase"
