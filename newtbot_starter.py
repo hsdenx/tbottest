@@ -35,6 +35,6 @@ sys.path.insert(0, currentdir + "/../tbottest")
 from tbot.newbot import main  # noqa: E402
 
 if __name__ == "__main__":
-    sys.argv[0] = re.sub(r"(-script\.pyw?|\.exe)?$", "", sys.argv[0])
     args = sys.argv[1:]
+    sys.argv = args
     sys.exit(main(args))
