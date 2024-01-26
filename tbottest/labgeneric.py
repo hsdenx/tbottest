@@ -14,7 +14,17 @@ cfgt = ini.IniTBotConfig()
 
 _INIT_CACHE: typing.Dict[str, bool] = {}
 
-LABNAME = cfgt.config_parser.get("LABHOST", "labname")
+def lab_get_sectionname() -> str:
+    for f in tbot.flags:
+        if "labname" in f:
+            sn = f.split(":")[1]
+            sn = f"LABHOST_{sn}"
+            return sn
+    return "LABHOST"
+
+LABSECTIONNAME = lab_get_sectionname()
+
+LABNAME = cfgt.config_parser.get(LABSECTIONNAME, "labname")
 
 # for ssh machine
 IP_BOARD_SSH_INTERFACE = "eth0"
@@ -237,13 +247,14 @@ BH = typing.TypeVar("BH", bound=linux.Builder)
 
 
 class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
+    sectionname = LABSECTIONNAME
     tmpdir_exists = False
-    name = cfgt.config_parser.get("LABHOST", "labname")
-    hostname = cfgt.config_parser.get("LABHOST", "hostname")
-    username = cfgt.config_parser.get("LABHOST", "username")
-    tftproot = cfgt.config_parser.get("LABHOST", "tftproot")
-    port = cfgt.config_parser.get("LABHOST", "port", fallback=22)
-    nfs_base_path = cfgt.config_parser.get("LABHOST", "nfs_base_path")
+    name = cfgt.config_parser.get(LABSECTIONNAME, "labname")
+    hostname = cfgt.config_parser.get(LABSECTIONNAME, "hostname")
+    username = cfgt.config_parser.get(LABSECTIONNAME, "username")
+    tftproot = cfgt.config_parser.get(LABSECTIONNAME, "tftproot")
+    port = cfgt.config_parser.get(LABSECTIONNAME, "port", fallback=22)
+    nfs_base_path = cfgt.config_parser.get(LABSECTIONNAME, "nfs_base_path")
 
     bootmodecfg = cfgt.bootmodecfg
     ubcfg = cfgt.ubcfg
@@ -263,7 +274,7 @@ class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
         args = []
         if "outside" in tbot.flags:
             try:
-                tmp = cfgt.config_parser.get("LABHOST", "proxyjump")
+                tmp = cfgt.config_parser.get(LABSECTIONNAME, "proxyjump")
                 args.append(f"ProxyJump={tmp}")
             except:  # noqa: E722
                 pass
@@ -272,7 +283,7 @@ class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
 
     @property
     def authenticator(self) -> linux.auth.Authenticator:
-        tmp = cfgt.config_parser.get("LABHOST", "sshkeyfile")
+        tmp = cfgt.config_parser.get(LABSECTIONNAME, "sshkeyfile")
         return linux.auth.PrivateKeyAuthenticator(tmp)
 
     def tftp_dir(self) -> "linux.path.Path[GenericLab]":
@@ -292,11 +303,11 @@ class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
         returns tftp path for u-boot tftp command
         """
         if "kas" in tbot.flags:
-            tmp = cfgt.config_parser.get("LABHOST", "tftpsubdirkas")
+            tmp = cfgt.config_parser.get(LABSECTIONNAME, "tftpsubdirkas")
         elif "uuuloader" in tbot.flags:
-            tmp = cfgt.config_parser.get("LABHOST", "tftpsubdiruuu")
+            tmp = cfgt.config_parser.get(LABSECTIONNAME, "tftpsubdiruuu")
         else:
-            tmp = cfgt.config_parser.get("LABHOST", "tftpsubdir")
+            tmp = cfgt.config_parser.get(LABSECTIONNAME, "tftpsubdir")
 
         return linux.Path(self, tmp)
 
@@ -304,14 +315,14 @@ class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
         """
         returns tbot workdir for this lab
         """
-        tmp = cfgt.config_parser.get("LABHOST", "workdir")
+        tmp = cfgt.config_parser.get(LABSECTIONNAME, "workdir")
         return linux.Workdir.static(self, tmp)
 
     def tmpdir(self) -> "linux.path.Path[GenericLab]":
         """
         returns tbot tmpdir for this lab
         """
-        tmp = cfgt.config_parser.get("LABHOST", "tmpdir")
+        tmp = cfgt.config_parser.get(LABSECTIONNAME, "tmpdir")
         if self.tmpdir_exists is False:
             ret, log = self.exec("ls", tmp)
             if ret != 0:
@@ -331,7 +342,7 @@ class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
         """
         returns directory where tbot finds tools
         """
-        tmp = cfgt.config_parser.get("LABHOST", "toolsdir")
+        tmp = cfgt.config_parser.get(LABSECTIONNAME, "toolsdir")
         return linux.Path(self, tmp)
 
     def yocto_result_dir(self) -> "linux.Path[GenericLab]":
@@ -450,7 +461,7 @@ class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
 
             labinit = []
             try:
-                labinit = eval(cfgt.config_parser.get("LABHOST", "labinit"))
+                labinit = eval(cfgt.config_parser.get(LABSECTIONNAME, "labinit"))
             except:  # noqa: E722
                 pass
             for i in labinit:
@@ -516,4 +527,5 @@ FLAGS = {
     "gpiopower": "use gpio pin for switching power",
     "powershellscript": "use a shell script for switching power",
     "poweroffonstart": "always power off board on tbot start",
+    "labname" : "select which labhost we use",
 }

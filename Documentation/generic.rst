@@ -331,6 +331,23 @@ here you configure common lab host setting. Mandatory.
         "labinit", "array of strings which contains commands, executed when you init the lab", "['sudo systemctl --all --no-pager restart tftpd-hpa']"
         "nfs_base_path", "base path to nfs share on lab host. !! May you have board specific subdir, so use placeholder @@TBOTLABBASENFSPATH@@ in board ini file and replace it in set_board_cfg", "/srv/nfs"
 
+The above labhost defintion is the default one, You can add more than
+one labhost, simply add them with the following section naming
+
+.. code-block:: ini
+
+   [LABHOST_<NAME_OF_LAB>]
+
+
+You can now select this lab by adding tbot flag
+
+.. code-block:: bash
+
+   -f labname:<NAME_OF_LAB>
+
+on start of tbot.
+
+
 [BUILDHOST]
 ^^^^^^^^^^^
 
@@ -876,6 +893,7 @@ tbot flag                Description
 ======================== ====================================================
 bootcmd                  format bootcmd:<real bootcmd>, example bootcmd:net_nfs will execute "run net_nfs"
 buildname                format buildname:<name of builder>, select the used buildhost.
+labname                  format labname:<name of lab host>, select the used lab host (configure in tbot.ini with LABHOST_<name>] section)
 gpiopower                use a gpio pin for boards power control
 powershellscript         use a shellscript for boards power control
 tinkerforge              use tinkerforge for boards power control
