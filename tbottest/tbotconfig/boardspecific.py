@@ -125,6 +125,12 @@ def BOARDNAME_get_machinename():
 
 
 def print_log(msg):
+    try:
+        if tbot.selectable.printed:
+            return
+    except:
+        pass
+
     tbot.log.message(tbot.log.c(msg).yellow)
 
 
