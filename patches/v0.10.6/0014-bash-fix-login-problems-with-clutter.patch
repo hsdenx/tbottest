@@ -1,4 +1,4 @@
-From 3afaf1f3c49703ca7488e246adede15bff7c4b3d Mon Sep 17 00:00:00 2001
+From 384508c48558cbe7fb00cfbf81efc7a627537c38 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Fri, 7 Jul 2023 09:35:50 +0200
 Subject: [PATCH 14/18] bash: fix login problems with clutter
@@ -12,7 +12,7 @@ Signed-off-by: Heiko Schocher <hs@denx.de>
  1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/tbot/machine/linux/bash.py b/tbot/machine/linux/bash.py
-index ffa61bac..0f9e9939 100644
+index ffa61ba..0f9e993 100644
 --- a/tbot/machine/linux/bash.py
 +++ b/tbot/machine/linux/bash.py
 @@ -69,19 +69,19 @@ class Bash(linux_shell.LinuxShell):
@@ -21,22 +21,22 @@ index ffa61bac..0f9e9939 100644
              self.ch.prompt = TBOT_PROMPT
 -            self.ch.read_until_prompt()
 +            self.ch.read_until_prompt_save()
-
+ 
              # Disable history
              self.ch.sendline("unset HISTFILE")
 -            self.ch.read_until_prompt()
 +            self.ch.read_until_prompt_save()
-
+ 
              # Disable line editing
              self.ch.sendline("set +o emacs; set +o vi")
 -            self.ch.read_until_prompt()
 +            self.ch.read_until_prompt_save()
-
+ 
              # Set secondary prompt to ""
              self.ch.sendline("PS2=''")
 -            self.ch.read_until_prompt()
 +            self.ch.read_until_prompt_save()
-
+ 
              # Disable history expansion because it is not always affected by
              # quoting rules and thus can mess with parameter values.  For
 @@ -90,14 +90,14 @@ class Bash(linux_shell.LinuxShell):
@@ -45,7 +45,7 @@ index ffa61bac..0f9e9939 100644
              self.ch.sendline("histchars=''")
 -            self.ch.read_until_prompt()
 +            self.ch.read_until_prompt_save()
-
+ 
              # Set terminal size
              termsize = shutil.get_terminal_size()
              self.ch.sendline(f"stty cols {max(80, termsize.columns - 48)}")
@@ -54,8 +54,9 @@ index ffa61bac..0f9e9939 100644
              self.ch.sendline(f"stty rows {termsize.lines}")
 -            self.ch.read_until_prompt()
 +            self.ch.read_until_prompt_save()
-
+ 
              yield None
          finally:
---
+-- 
 2.30.2
+

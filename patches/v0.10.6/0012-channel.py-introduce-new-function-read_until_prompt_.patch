@@ -1,4 +1,4 @@
-From c2ad416f7d702b0d2098ad5c689b8eb2e20543ef Mon Sep 17 00:00:00 2001
+From 24b7d23d6a00c25ac82409c6371015d27e29c1d6 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Fri, 7 Jul 2023 09:33:59 +0200
 Subject: [PATCH 12/18] channel.py: introduce new function
@@ -14,13 +14,13 @@ Signed-off-by: Heiko Schocher <hs@denx.de>
  1 file changed, 40 insertions(+)
 
 diff --git a/tbot/machine/channel/channel.py b/tbot/machine/channel/channel.py
-index b6d41ce9..64cad99a 100644
+index b6d41ce..64cad99 100644
 --- a/tbot/machine/channel/channel.py
 +++ b/tbot/machine/channel/channel.py
 @@ -872,6 +872,46 @@ class Channel(typing.ContextManager):
          finally:
              self.prompt = previous
-
+ 
 +    _prompt_timeout: float = None
 +    prompt_poll_timeout: float = 0.5
 +    _prompt_start: float
@@ -64,5 +64,6 @@ index b6d41ce9..64cad99a 100644
      def read_until_prompt(
          self,
          prompt: typing.Optional[ConvenientSearchString] = None,
---
+-- 
 2.30.2
+

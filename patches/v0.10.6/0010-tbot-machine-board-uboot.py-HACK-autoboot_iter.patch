@@ -1,4 +1,4 @@
-From 28bfff64e7af83c85ec8232d73e8fe79bd6266dd Mon Sep 17 00:00:00 2001
+From f2c6bbe1a82c2872addd90948bb4300a5319ab77 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Sat, 25 Feb 2023 17:02:56 +0100
 Subject: [PATCH 10/18] tbot/machine/board/uboot.py: HACK autoboot_iter
@@ -17,7 +17,7 @@ Signed-off-by: Heiko Schocher <hs@denx.de>
  1 file changed, 22 insertions(+), 16 deletions(-)
 
 diff --git a/tbot/machine/board/uboot.py b/tbot/machine/board/uboot.py
-index 19cfd076..e79e4cd4 100644
+index 19cfd07..e79e4cd 100644
 --- a/tbot/machine/board/uboot.py
 +++ b/tbot/machine/board/uboot.py
 @@ -98,6 +98,7 @@ class UBootAutobootIntercept(machine.Initializer, UbootStartup):
@@ -25,12 +25,12 @@ index 19cfd076..e79e4cd4 100644
      Keys to press as soon as autoboot prompt is detected.
      """
 +    autoboot_iter: typing.Union[int] = 1
-
+ 
      @property
      @abc.abstractmethod
 @@ -115,23 +116,28 @@ class UBootAutobootIntercept(machine.Initializer, UbootStartup):
              self.ch.add_death_string(d)
-
+ 
          if self.autoboot_prompt is not None:
 -            with self.ch.with_stream(self._uboot_startup_event()):
 -                timeout = None
@@ -60,7 +60,7 @@ index 19cfd076..e79e4cd4 100644
 +                    i += 1
 +                    if i == self.autoboot_iter:
 +                        self.ch.send(self.autoboot_keys, _ignore_blacklist=True)
-
+ 
 -                try:
 -                    self.ch.read_until_prompt(
 -                        prompt=self.autoboot_prompt, timeout=timeout
@@ -70,8 +70,9 @@ index 19cfd076..e79e4cd4 100644
 -                        "U-Boot autoboot prompt did not show up in time"
 -                    ) from None
 -                self.ch.send(self.autoboot_keys, _ignore_blacklist=True)
-
+ 
          yield None
-
---
+ 
+-- 
 2.30.2
+

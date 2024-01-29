@@ -1,4 +1,4 @@
-From c50509b54f29b157e550f1a1f43ff74a8581ceab Mon Sep 17 00:00:00 2001
+From 4d767b2ea89072fbf8b3925929c9a28effa7b714 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Tue, 29 Aug 2023 06:10:28 +0200
 Subject: [PATCH 01/18] tbot/machine/board/uboot.py: add death strings
@@ -17,26 +17,26 @@ Signed-off-by: Heiko Schocher <hs@denx.de>
  1 file changed, 15 insertions(+)
 
 diff --git a/tbot/machine/board/uboot.py b/tbot/machine/board/uboot.py
-index 15620cc3..e8a60bf8 100644
+index 15620cc..e8a60bf 100644
 --- a/tbot/machine/board/uboot.py
 +++ b/tbot/machine/board/uboot.py
 @@ -14,10 +14,12 @@
  # You should have received a copy of the GNU General Public License
  # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+ 
 +import abc
  import contextlib
  import re
  import time
  import typing
 +from typing import List
-
+ 
  import tbot
  from .. import shell, machine, channel
 @@ -97,8 +99,21 @@ class UBootAutobootIntercept(machine.Initializer, UbootStartup):
      Keys to press as soon as autoboot prompt is detected.
      """
-
+ 
 +    @property
 +    @abc.abstractmethod
 +    def get_death_strings(self) -> List[str]:
@@ -55,5 +55,6 @@ index 15620cc3..e8a60bf8 100644
          if self.autoboot_prompt is not None:
              with self.ch.with_stream(self._uboot_startup_event()):
                  timeout = None
---
+-- 
 2.30.2
+

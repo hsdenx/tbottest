@@ -1,4 +1,4 @@
-From 00a5fdbd096f1a039145c65f82a8387bdc614d6c Mon Sep 17 00:00:00 2001
+From 95b26dbd7ed4f50a76472761c54ee84d7157b26a Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Sun, 20 Aug 2023 06:16:50 +0200
 Subject: [PATCH 15/18] board.uboot: add simple UBootAutobootIntercept
@@ -22,13 +22,13 @@ Signed-off-by: Heiko Schocher <hs@denx.de>
  2 files changed, 91 insertions(+), 1 deletion(-)
 
 diff --git a/tbot/machine/board/__init__.py b/tbot/machine/board/__init__.py
-index 9fbc2b4c..a6710438 100644
+index 9fbc2b4..a671043 100644
 --- a/tbot/machine/board/__init__.py
 +++ b/tbot/machine/board/__init__.py
 @@ -2,7 +2,7 @@ import typing
-
+ 
  import tbot
-
+ 
 -from .uboot import UBootShell, UBootAutobootIntercept  # isort: skip
 +from .uboot import UBootShell, UBootAutobootIntercept, UBootAutobootInterceptSimple  # isort: skip
  from .board import PowerControl, Board, BoardMachineBase, Connector  # isort: skip
@@ -43,13 +43,13 @@ index 9fbc2b4c..a6710438 100644
      "UBootShell",
  )
 diff --git a/tbot/machine/board/uboot.py b/tbot/machine/board/uboot.py
-index e79e4cd4..edd051fd 100644
+index e79e4cd..edd051f 100644
 --- a/tbot/machine/board/uboot.py
 +++ b/tbot/machine/board/uboot.py
 @@ -141,6 +141,95 @@ class UBootAutobootIntercept(machine.Initializer, UbootStartup):
-
+ 
          yield None
-
+ 
 +class UBootAutobootInterceptSimple(machine.Initializer, UbootStartup):
 +    """
 +    Machine-initializer to intercept U-Boot autobooting.
@@ -139,8 +139,9 @@ index e79e4cd4..edd051fd 100644
 +                    self.ch.sendintr()
 +
 +        yield None
-
+ 
  _hush_find_unsafe = re.compile(r"[^\w@%+=:,./-]", re.ASCII).search
-
---
+ 
+-- 
 2.30.2
+

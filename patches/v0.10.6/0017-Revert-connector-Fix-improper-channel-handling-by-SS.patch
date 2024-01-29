@@ -1,4 +1,4 @@
-From ee591b86e83e821841d82c68aca150e5ed79a3d7 Mon Sep 17 00:00:00 2001
+From 6c37477deb7f1995b4aab107fb746781a7382093 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Thu, 21 Sep 2023 16:34:37 +0200
 Subject: [PATCH 17/18] Revert "connector: Fix improper channel handling by
@@ -10,13 +10,13 @@ This reverts commit b253a7fc4ebfdffdd1bf88d4248029dedf517420.
  1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/tbot/machine/connector/ssh.py b/tbot/machine/connector/ssh.py
-index 7273c14f..58e32f84 100644
+index 7273c14..58e32f8 100644
 --- a/tbot/machine/connector/ssh.py
 +++ b/tbot/machine/connector/ssh.py
 @@ -203,15 +203,19 @@ class SSHConnector(connector.Connector):
                      f"ControlPath={multiplexing_dir.at_host(self.host)}/%C",
                  ]
-
+ 
 -            with h.open_channel(
 +            cmd_str = h.escape(
                  *cmd,
@@ -33,8 +33,9 @@ index 7273c14f..58e32f84 100644
 +                h.ch.sendline(cmd_str + "; exit", read_back=True)
 +
 +            yield h.ch.take()
-
+ 
      def clone(self) -> "SSHConnector":
          """Clone this machine."""
---
+-- 
 2.30.2
+

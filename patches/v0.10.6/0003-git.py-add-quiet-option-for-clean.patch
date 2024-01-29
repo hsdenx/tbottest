@@ -1,4 +1,4 @@
-From 17714b0928798c2de5250a633eca67366c179d8d Mon Sep 17 00:00:00 2001
+From 866a650539684cd142e9a1d4e2fe8830489bfea2 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Tue, 12 May 2020 15:06:00 +0200
 Subject: [PATCH 03/18] git.py: add quiet option for clean
@@ -11,12 +11,12 @@ Signed-off-by: Heiko Schocher <hs@denx.de>
  1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/tbot/tc/git.py b/tbot/tc/git.py
-index 210b549c..4de4e8a0 100644
+index 210b549..4de4e8a 100644
 --- a/tbot/tc/git.py
 +++ b/tbot/tc/git.py
 @@ -169,7 +169,11 @@ class GitRepository(linux.Path[H]):
          self.git0("reset", mode.value, rev)
-
+ 
      def clean(
 -        self, force: bool = True, untracked: bool = False, noignore: bool = False
 +        self,
@@ -32,7 +32,7 @@ index 210b549c..4de4e8a0 100644
          :param bool untracked: ``-d``
          :param bool noignore: ``-x``
 +        :param bool quiet: ``-q``
-
+ 
          Refer to the ``git-clean`` man-page for more info.
          """
 @@ -188,6 +193,8 @@ class GitRepository(linux.Path[H]):
@@ -41,8 +41,9 @@ index 210b549c..4de4e8a0 100644
              options += "x"
 +        if quiet:
 +            options += "q"
-
+ 
          self.git0("clean", options if options != "-" else "")
-
---
+ 
+-- 
 2.30.2
+

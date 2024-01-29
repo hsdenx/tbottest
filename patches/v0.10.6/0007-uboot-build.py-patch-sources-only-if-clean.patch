@@ -1,4 +1,4 @@
-From a4c7685959d92933c48d6af18458e34b50fbbfd4 Mon Sep 17 00:00:00 2001
+From 7673e29b02b35f498463bec5473822e3e4720b53 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Mon, 11 May 2020 12:30:03 +0200
 Subject: [PATCH 07/18] uboot/build.py: patch sources only if clean
@@ -11,18 +11,19 @@ Signed-off-by: Heiko Schocher <hs@denx.de>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/tbot/tc/uboot/build.py b/tbot/tc/uboot/build.py
-index eb7630d7..b439cf68 100644
+index eb7630d..b439cf6 100644
 --- a/tbot/tc/uboot/build.py
 +++ b/tbot/tc/uboot/build.py
 @@ -231,7 +231,8 @@ class UBootBuilder(abc.ABC):
                  path = builder.do_repo_path(host)
-
+ 
              repo = builder.do_checkout(path, clean=clean, rev=rev or builder.revision)
 -            builder.do_patch(repo)
 +            if clean:
 +                builder.do_patch(repo)
-
+ 
          return repo
-
---
+ 
+-- 
 2.30.2
+

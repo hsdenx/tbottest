@@ -1,4 +1,4 @@
-From bdd19dd5982267ab64dd2b3b2a4193d41a056a06 Mon Sep 17 00:00:00 2001
+From e63c40eda1be0783c73a95fd08e4ebc56dd0a025 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Thu, 25 Jun 2020 06:59:17 +0200
 Subject: [PATCH 04/18] uboot: add run()
@@ -10,7 +10,7 @@ Signed-off-by: Heiko Schocher <hs@denx.de>
  2 files changed, 57 insertions(+), 1 deletion(-)
 
 diff --git a/tbot/decorators.py b/tbot/decorators.py
-index 992b89f9..accbf5b9 100644
+index 992b89f..accbf5b 100644
 --- a/tbot/decorators.py
 +++ b/tbot/decorators.py
 @@ -366,6 +366,8 @@ def with_linux(tc: F_lnx) -> F_linux:
@@ -19,42 +19,42 @@ index 992b89f9..accbf5b9 100644
                  )
 +            else:
 +                lh = tbot.selectable.labhost
-
+ 
              # Acquire Linux
              if arg is None or isinstance(arg, linux.Lab):
 @@ -374,6 +376,7 @@ def with_linux(tc: F_lnx) -> F_linux:
              else:
                  lnx = cx.enter_context(arg)
-
+ 
 +            tbot.selectable.labhost = lh
              return tc(lnx, *args, **kwargs)
-
+ 
      # Adjust annotation
 diff --git a/tbot/machine/board/uboot.py b/tbot/machine/board/uboot.py
-index e8a60bf8..f19447a9 100644
+index e8a60bf..f19447a 100644
 --- a/tbot/machine/board/uboot.py
 +++ b/tbot/machine/board/uboot.py
 @@ -23,7 +23,7 @@ from typing import List
-
+ 
  import tbot
  from .. import shell, machine, channel
 -from ..linux import special
 +from ..linux import special, util
-
-
+ 
+ 
  class UBootStartupEvent(tbot.log.EventIO):
 @@ -155,6 +155,7 @@ def _hush_quote(s: str) -> str:
-
+ 
  ArgTypes = typing.Union[str, special.Special]
-
+ 
 +Self = typing.TypeVar("Self", bound="UBootShell")
-
+ 
  class UBootShell(shell.Shell, UbootStartup):
      """
 @@ -415,6 +416,58 @@ class UBootShell(shell.Shell, UbootStartup):
-
+ 
          tbot.log.message("Exiting interactive shell ...")
-
+ 
 +    @contextlib.contextmanager
 +    def run(
 +        self: Self, *args: typing.Union[str, special.Special[Self]]
@@ -109,6 +109,7 @@ index e8a60bf8..f19447a9 100644
 +
      # Utilities ----- {{{
      _ram_base: int
-
---
+ 
+-- 
 2.30.2
+

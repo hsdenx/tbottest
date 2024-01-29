@@ -1,4 +1,4 @@
-From e4b887393e4c746204cd1dea34a8f1c8158a05b2 Mon Sep 17 00:00:00 2001
+From 86e16034c774f3101940f2ec4315b7d53d72ae4a Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Thu, 22 Apr 2021 07:45:49 +0200
 Subject: [PATCH 02/18] shell.py: allow copy between two ssh host
@@ -11,12 +11,12 @@ from ssh build host and ssh lab host.
 
 Signed-off-by: Heiko Schocher <hs@denx.de>
 ---
- tbot/machine/linux/copy.py | 33 +++++++++++++++++++++++++++++++--
+ tbot/machine/linux/copy.py | 35 ++++++++++++++++++++++++++++++++---
  tbot/tc/shell.py           |  4 ++--
- 2 files changed, 33 insertions(+), 4 deletions(-)
+ 2 files changed, 34 insertions(+), 5 deletions(-)
 
 diff --git a/tbot/machine/linux/copy.py b/tbot/machine/linux/copy.py
-index 229e0eb2..4490bf20 100644
+index 229e0eb..45613c2 100644
 --- a/tbot/machine/linux/copy.py
 +++ b/tbot/machine/linux/copy.py
 @@ -19,6 +19,7 @@ def _scp_copy(
@@ -26,11 +26,11 @@ index 229e0eb2..4490bf20 100644
 +    remote_copy=False,
  ) -> None:
      local_host = local_path.host
-
+ 
 @@ -56,6 +57,16 @@ def _scp_copy(
              authenticator._undefined_marker
          raise ValueError("Unknown authenticator {authenticator!r}")
-
+ 
 +    if remote_copy:
 +        rh = remote_path.host
 +        local_host.exec0(
@@ -46,13 +46,13 @@ index 229e0eb2..4490bf20 100644
              *scp_command,
 @@ -70,7 +81,7 @@ def _scp_copy(
          )
-
-
+ 
+ 
 -def copy(p1: linux.Path[H1], p2: linux.Path[H2]) -> None:
 +def copy(p1: linux.Path[H1], p2: linux.Path[H2], remote_copy=False) -> None:
      """
      Copy a file, possibly from one host to another.
-
+ 
 @@ -88,6 +99,10 @@ def copy(p1: linux.Path[H1], p2: linux.Path[H2]) -> None:
      * **ssh-machine** 🢥 **ssh-machine** (There is no guarantee that two remote hosts can
        connect to each other.  If you need this, transfer to the lab-host first
@@ -63,7 +63,16 @@ index 229e0eb2..4490bf20 100644
 +
      * **lab-host** 🢥 **board-machine** (Transfers over serial are not (yet) implemented.
        To 'upload' files, connect to your target via ssh or use a tftp download)
-
+ 
+@@ -116,7 +131,7 @@ def copy(p1: linux.Path[H1], p2: linux.Path[H2]) -> None:
+         p2_w1 = linux.Path(p1.host, p2)
+         p1.host.exec0("cp", p1, p2_w1)
+         return
+-    elif isinstance(p1.host, connector.SSHConnector) and p1.host.host is p2.host:
++    elif isinstance(p1.host, connector.SSHConnector) and p1.host.host is p2.host and (remote_copy == False):
+         # Copy from an SSH machine
+         _scp_copy(
+             local_path=p2,
 @@ -178,5 +193,19 @@ def copy(p1: linux.Path[H1], p2: linux.Path[H2]) -> None:
              authenticator=p1.host.authenticator,
              use_multiplexing=p1.host.use_multiplexing,
@@ -86,26 +95,27 @@ index 229e0eb2..4490bf20 100644
 +   else:
          raise NotImplementedError(f"Can't copy from {p1.host} to {p2.host}!")
 diff --git a/tbot/tc/shell.py b/tbot/tc/shell.py
-index 8eb85d83..c8d65e33 100644
+index 8eb85d8..c8d65e3 100644
 --- a/tbot/tc/shell.py
 +++ b/tbot/tc/shell.py
 @@ -26,7 +26,7 @@ H2 = typing.TypeVar("H2", bound=linux.LinuxShell)
-
-
+ 
+ 
  @tbot.testcase
 -def copy(p1: linux.Path[H1], p2: linux.Path[H2]) -> None:
 +def copy(p1: linux.Path[H1], p2: linux.Path[H2], remote_copy=False) -> None:
      """
      Copy a file, possibly from one host to another.
-
+ 
 @@ -36,7 +36,7 @@ def copy(p1: linux.Path[H1], p2: linux.Path[H2]) -> None:
          Please read its documentation for more details.  The old name here is a
          compatibility alias.
      """
 -    return linux.copy(p1, p2)
 +    return linux.copy(p1, p2, remote_copy)
-
-
+ 
+ 
  _TOOL_CACHE: typing.Dict[linux.LinuxShell, typing.Dict[str, bool]] = {}
---
+-- 
 2.30.2
+
