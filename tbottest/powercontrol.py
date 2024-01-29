@@ -2,6 +2,8 @@ import abc
 import tbot
 import time
 from tbot.machine import board
+from tbot.machine import linux
+
 from tbot_contrib.gpio import Gpio
 
 __all__ = (
@@ -101,7 +103,7 @@ class PowerShellScriptControl(board.PowerControl):
 
     def poweron(self) -> None:
         self.host.exec0(
-            self.shell_script,
+            linux.Raw(self.shell_script),
             "on",
         )
 
@@ -110,7 +112,7 @@ class PowerShellScriptControl(board.PowerControl):
             tbot.log.message("Do not power off ...")
         else:
             self.host.exec0(
-                self.shell_script,
+                linux.Raw(self.shell_script),
                 "off",
             )
 
