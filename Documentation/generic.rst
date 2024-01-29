@@ -323,8 +323,6 @@ here you configure common lab host setting. Mandatory.
         "toolsdir", "where does tbot find tools installed on lab host", "/home/USERNAME/source"
         "tftproot", "rootpath to tftp directory on lab host. tbot stores there build results.", "/srv/tftpboot"
         "tftpsubdir", "boards subdir in tftproot", "BOARD/DATE"
-        "tftpsubdirkas", "boards subdir in tftproot, where kas build results are stored if flag 'kas' is set", "BOARD/DATE/kas"
-        "tftpsubdiruuu", "path, where uuu tool looks for binaries", "BOARD/DATE"
         "workdir", "tbots workdirectory on lab host", "/work/USERNAME/tbot-workdir/BOARD"
         "tmpdir", "path to where tbot stores temporary data", "/tmp/tbot/USERNAME/BOARD"
         "proxyjump", "if set, proxyjump settings for ssh login on lab host", "pi@xeidos.ddns.net"

@@ -302,12 +302,7 @@ class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
         """
         returns tftp path for u-boot tftp command
         """
-        if "kas" in tbot.flags:
-            tmp = cfgt.config_parser.get(LABSECTIONNAME, "tftpsubdirkas")
-        elif "uuuloader" in tbot.flags:
-            tmp = cfgt.config_parser.get(LABSECTIONNAME, "tftpsubdiruuu")
-        else:
-            tmp = cfgt.config_parser.get(LABSECTIONNAME, "tftpsubdir")
+        tmp = cfgt.config_parser.get(LABSECTIONNAME, "tftpsubdir")
 
         return linux.Path(self, tmp)
 
