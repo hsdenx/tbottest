@@ -5,6 +5,15 @@ import os
 import sys
 from tbot.newbot import build_parser
 
+def get_lab_sectionname() -> str:
+    for f in tbot.flags:
+        if "labname" in f:
+            sn = f.split(":")[1]
+            sn = f"LABHOST_{sn}"
+            return sn
+    return "LABHOST"
+
+
 def get_tbot_arguments():
     """
     get the arguments with which tbot is called

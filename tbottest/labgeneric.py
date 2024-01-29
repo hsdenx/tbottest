@@ -9,20 +9,13 @@ from tbottest.connector import PicocomConnector
 from tbottest import builders
 from tbottest import powercontrol
 from tbottest import machineinit
+import tbottest.initconfighelper as inithelper
 
 cfgt = ini.IniTBotConfig()
 
 _INIT_CACHE: typing.Dict[str, bool] = {}
 
-def lab_get_sectionname() -> str:
-    for f in tbot.flags:
-        if "labname" in f:
-            sn = f.split(":")[1]
-            sn = f"LABHOST_{sn}"
-            return sn
-    return "LABHOST"
-
-LABSECTIONNAME = lab_get_sectionname()
+LABSECTIONNAME = inithelper.get_lab_sectionname()
 
 LABNAME = cfgt.config_parser.get(LABSECTIONNAME, "labname")
 
