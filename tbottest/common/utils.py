@@ -16,7 +16,8 @@ def string_to_dict(string: str, pattern: str) -> dict:
     from:
     https://stackoverflow.com/questions/11844986/convert-or-unformat-a-string-to-variables-like-format-but-in-reverse-in-p
     """
-    regex = re.sub(r"{(.+?)}", r"(?P<_\1>.+)", pattern)
+    # do not allow spaces in key names!
+    regex = re.sub(r'{(.+?)}', r'(?P<_\1>[^\\s]+)', pattern)
     match = re.search(regex, string)
     assert match is not None, f"The pattern {regex!r} was not found!"
     values = list(match.groups())
