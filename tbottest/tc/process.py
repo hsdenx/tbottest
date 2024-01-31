@@ -103,6 +103,12 @@ def ps_create_measurement_png(
 
         results/measurements/process/{loops}_{intervall}_{pname}.dat
 
+    call gnuplot with the config file
+
+    .. code-block:: bash
+
+        results/measurements/process/gnuplot-bar.gp
+
     The output png is stored in ```process-usage.png```. Example for
     viewing it:
 
