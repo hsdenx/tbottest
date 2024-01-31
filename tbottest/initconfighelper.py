@@ -1,9 +1,9 @@
 import argparse
 import tbot
-import pathlib
 import os
 import sys
 from tbot.newbot import build_parser
+
 
 def get_lab_sectionname() -> str:
     for f in tbot.flags:
@@ -18,6 +18,9 @@ def get_tbot_arguments():
     """
     get the arguments with which tbot is called
     """
+    if "sphinx-build" in sys.argv[0]:
+        sys.argv = sys.argv[:1]
+
     parser = build_parser()
     parser.add_argument("--complete-module", help=argparse.SUPPRESS)
     parser.add_argument("--complete-testcase", help=argparse.SUPPRESS)
@@ -27,9 +30,9 @@ def get_tbot_arguments():
         print("get_tbot_arguments error parsing arguments: ", error)
 
     # in case we do autocompletion, supress output
-    if args.complete_testcase != None:
+    if args.complete_testcase is not None:
         tbot.selectable.printed = True
-    if args.complete_module != None:
+    if args.complete_module is not None:
         tbot.selectable.printed = True
     return args
 
@@ -61,9 +64,7 @@ def inifile_get_tbotfilename():
         else:
             tbotinifile = pathinifile
     else:
-        tbotinifile = (
-             workdir + f"/../tbottest/tbotconfig/BOARDNAME/tbot.ini"
-        )
+        tbotinifile = workdir + "/../tbottest/tbotconfig/BOARDNAME/tbot.ini"
 
     return tbotinifile
 
@@ -90,12 +91,6 @@ def inifile_get_tbotboardfilename():
         else:
             filename = pathinifile
     else:
-        filename = (
-             workdir
-             + f"/../tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini"
-         )
+        filename = workdir + "/../tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini"
 
     return filename
-
-
-
