@@ -24,7 +24,6 @@ add newtbot_starter.py
 
 import inspect
 import os
-import re
 import sys
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
