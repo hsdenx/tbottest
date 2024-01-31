@@ -44,8 +44,9 @@ def lnx_measure_process(
     loops: int,
 ) -> None:  # noqa: D107
     """
-    measure for a process with name pname the cpu usage
-    with intervall and loops. 
+    measure for a process with name ```pname``` the cpu usage
+    with ```intervall``` and ```loops```. If ```pname``` is
+    empty, measure all processes.
 
     .. warning::
 
@@ -70,7 +71,10 @@ def lnx_measure_process(
     result = []
     while (i < int(loops)):
         try:
-            log = lnx.exec0("ps", "-o", "pid,tid,pcpu,nice,priority,comm", "H", "-C", pname)
+            if len(pname):
+                log = lnx.exec0("ps", "-o", "pid,tid,pcpu,nice,priority,comm", "H", "-C", pname)
+            else:
+                log = lnx.exec0("ps", "-o", "pid,tid,pcpu,nice,priority,comm", "H")
         except:
             log = ""
 
@@ -210,7 +214,8 @@ def ps_create_measurement_png(
     ).yellow
 
     # create png image
-    local.exec0(f"gnuplot", "-e", f"datafile='{fname}'", "-e", f"outputfile='{outputfilename}'", f"{gnuplotpath}/gnuplot-bar.gp")
+    cmcount = len(pnamelist) + 1
+    local.exec0(f"gnuplot", "-e", f"datafile='{fname}'", "-e", f"outputfile='{outputfilename}'", "-e", f"columcount='{cmcount}'", f"{gnuplotpath}/gnuplot-bar.gp")
     tbot.log.c(
         f"gnuplot created png file {outputfilename} on local host"
     ).yellow

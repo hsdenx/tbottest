@@ -1,6 +1,7 @@
 # variables
 # datafile -> filename of input file
 # outputfile -> filename of output file
+# columcount -> count of columns
 
 set xlabel "Loop"
 set ylabel "CPU usage in %"
@@ -23,4 +24,4 @@ set termoption noenhanced
 set output outputfile
 
 i = 2
-plot datafile using 2:xtic(1), for [i=3:6] '' using i
+plot datafile using 2:xtic(1), for [i=3:columcount] '' using i
