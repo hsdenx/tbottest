@@ -5,12 +5,10 @@ from tbot.machine import linux
 from tbottest.common.utils import string_to_dict
 
 
-def ps_parse_ps(
-    log
-) -> None:  # noqa: D107
+def ps_parse_ps(log) -> None:  # noqa: D107
     """
     parse the log output from ps command
-    called with the options 
+    called with the options
 
     ```pid,tid,pcpu,nice,priority,comm", "H", "-C", pname```
 
@@ -30,12 +28,46 @@ def ps_parse_ps(
             continue
 
         try:
-            res = string_to_dict(line, '{PID}\s+{TID}\s+{CPU}\s+{NI}\s+{PRI}\s+{CMD}')
+            res = string_to_dict(
+                line, "{PID}\s+{TID}\s+{CPU}\s+{NI}\s+{PRI}\s+{CMD}"  # noqa: W605
+            )  # noqa: W605
             result.append(res)
         except:
             continue
-    
+
     return result
+
+
+def lnx_get_process_cpu_usage(
+    lab: linux.LinuxShell,
+    lnx: linux.LinuxShell,
+    pname: str,
+) -> None:  # noqa: D107
+    """
+    get the current cpu usage of process with name ```pname```
+
+    you get back a dict of the following format:
+
+    .. code-block:: python
+
+        {'PID': '172', 'USER': 'root', 'PR': '20', 'NI': '0', 'VIRT': '14720', 'RES': '4340', 'SHR': '3748', 'S': 'S', 'CPU': '0.0', 'MEM': '0.9', 'TIME': '3:31.29', 'CMD': 'rngd'}
+    """
+    with tbot.ctx() as cx:
+        if lab is None:
+            lab = cx.request(tbot.role.LabHost)
+        if lnx is None:
+            lnx = cx.request(tbot.role.BoardLinux)
+
+        log = lnx.exec0(linux.Raw(f"top -b -d 1 -n 1 | grep {pname}"))
+        # output of top command is
+        # PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+        # 172 root      20   0   14588   2344   1912 S  62.5   0.5   0:37.31 rngd
+        res = string_to_dict(
+            log,
+            "{PID}\s+{USER}\s+{PR}\s+{NI}\s+{VIRT}\s+{RES}\s+{SHR}\s+{S}\s+{CPU}\s+{MEM}\s+{TIME}\s+{CMD}",  # noqa: W605
+        )
+        return res
+
 
 def lnx_measure_process(
     lnx: linux.LinuxShell,
@@ -69,17 +101,19 @@ def lnx_measure_process(
     """
     i = 0
     result = []
-    while (i < int(loops)):
+    while i < int(loops):
         try:
             if len(pname):
-                log = lnx.exec0("ps", "-o", "pid,tid,pcpu,nice,priority,comm", "H", "-C", pname)
+                log = lnx.exec0(
+                    "ps", "-o", "pid,tid,pcpu,nice,priority,comm", "H", "-C", pname
+                )
             else:
                 log = lnx.exec0("ps", "-o", "pid,tid,pcpu,nice,priority,comm", "H")
         except:
             log = ""
 
         resultnew = ps_parse_ps(log)
-        new = {"loop":i, "values":resultnew}
+        new = {"loop": i, "values": resultnew}
         result.append(new)
 
         time.sleep(intervall)
@@ -164,12 +198,12 @@ def ps_create_measurement_png(
             if len(curdict):
                 cpuval = c["val"]
                 cpuval += float(val["CPU"])
-                c.update({"val":cpuval})
+                c.update({"val": cpuval})
             else:
-                newcpu = {"name":val["CMD"], "val":float(val["CPU"])}
+                newcpu = {"name": val["CMD"], "val": float(val["CPU"])}
                 cpu.append(newcpu)
 
-        newentry = {"loop":loopval,"cpuvalues":cpu}
+        newentry = {"loop": loopval, "cpuvalues": cpu}
         cpuvalues.append(newentry)
 
     gnuplotpath = "results/measurements/process"
@@ -185,7 +219,7 @@ def ps_create_measurement_png(
             ).yellow
         )
         return
-        
+
     headline = "loop "
     for pname in pnamelist:
         headline += pname + " "
@@ -203,22 +237,25 @@ def ps_create_measurement_png(
                 if pname == c["name"]:
                     found = True
                     line += str(c["val"]) + " "
-            if found == False:
-                line +=  "0.0 "
+            if not found:
+                line += "0.0 "
 
         fd.write(line + "\n")
 
     fd.close()
-    tbot.log.c(
-        f"gnuplot dat file created in {fname}"
-    ).yellow
+    tbot.log.c(f"gnuplot dat file created in {fname}").yellow
 
     # create png image
     cmcount = len(pnamelist) + 1
-    local.exec0(f"gnuplot", "-e", f"datafile='{fname}'", "-e", f"outputfile='{outputfilename}'", "-e", f"columcount='{cmcount}'", f"{gnuplotpath}/gnuplot-bar.gp")
-    tbot.log.c(
-        f"gnuplot created png file {outputfilename} on local host"
-    ).yellow
-    tbot.log.c(
-        f"type there\n gwenview {outputfilename}\nto show the image"
-    ).yellow
+    local.exec0(
+        "gnuplot",
+        "-e",
+        f"datafile='{fname}'",
+        "-e",
+        f"outputfile='{outputfilename}'",
+        "-e",
+        f"columcount='{cmcount}'",
+        f"{gnuplotpath}/gnuplot-bar.gp",
+    )
+    tbot.log.c(f"gnuplot created png file {outputfilename} on local host").yellow
+    tbot.log.c(f"type there\n gwenview {outputfilename}\nto show the image").yellow
