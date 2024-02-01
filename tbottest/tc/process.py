@@ -69,6 +69,44 @@ def lnx_get_process_cpu_usage(
         return res
 
 
+def lnx_get_cpu_stats(
+    lnx: linux.LinuxShell,
+) -> None:  # noqa: D107
+    """
+    get cpu stats from top command
+
+    you get back a dict of the following format:
+
+    .. code-block:: python
+
+        {'CPU': '0.0', 'SYS': '20.0', 'NI': '0.0', 'IDLE': '75.0', 'WA': '0.0', 'HI': '0.0', 'SI': '5.0', 'ST': '0.0'}
+    """
+    with tbot.ctx() as cx:
+        if lnx is None:
+            lnx = cx.request(tbot.role.BoardLinux)
+
+        # call top twice, as first has big cpu time from top itself
+        log = lnx.exec0(linux.Raw('top -b -d 0.5 -n 2 | grep "%Cpu(s)"'))
+        # output of top command is
+        # %Cpu(s): 82.1 us, 17.9 sy,  0.0 ni,  0.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+        i = 1
+        for line in log.split("\n"):
+            # ignore first line
+            if i:
+                i = 0
+                continue
+
+            if "Cpu" not in line:
+                continue
+
+            res = string_to_dict(
+                line,
+                "\%Cpu\(s\)\:\s+{CPU} us,\s+{SYS} sy,\s+{NI} ni,\s+{IDLE} id,\s+{WA} wa,\s+{HI} hi,\s+{SI} si,\s+{ST} st",  # noqa: W605
+            )
+
+        return res
+
+
 def lnx_measure_process(
     lnx: linux.LinuxShell,
     pname: str,
