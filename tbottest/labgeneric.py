@@ -242,6 +242,8 @@ BH = typing.TypeVar("BH", bound=linux.Builder)
 class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
     sectionname = LABSECTIONNAME
     tmpdir_exists = False
+    nfsbasedir = True
+    nfsboardbasedir = True
     name = cfgt.config_parser.get(LABSECTIONNAME, "labname")
     hostname = cfgt.config_parser.get(LABSECTIONNAME, "hostname")
     username = cfgt.config_parser.get(LABSECTIONNAME, "username")
@@ -325,6 +327,40 @@ class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
         """
         tmp = self.tmpdir()
         return linux.Workdir.static(self, tmp / f"mnt{name}")
+
+    def nfsbasedir(self) -> "linux.path.Path[GenericLab]":
+        """
+        returns nfs base directory, configured in section [LABHOST]
+        in ```tbot.ini```, key value ```nfs_base_path```
+        """
+        tmp = linux.Path(self, self.nfs_base_path)
+        if self.nfsbasedir is False:
+            ret, log = self.exec("ls", tmp)
+            if ret != 0:
+                self.exec0("mkdir", "-p", tmp)
+                self.nfsbasedir_exists = True
+
+        return linux.Workdir.static(self, tmp)
+
+    def nfsboardbasedir(self) -> "linux.path.Path[GenericLab]":
+        """
+        returns nfs base directory for the specific board,
+        configured in section [default] in ```BOARDNAME.ini```,
+        key value ```nfs_path```
+        """
+        # we need board config here, but we cannot import
+        # this global
+        from tbottest.boardgeneric import cfggeneric
+
+        cfg = cfggeneric
+        tmp = cfg.cfgp.get("default", "nfs_path")
+        if self.nfsboardbasedir is False:
+            ret, log = self.exec("ls", tmp)
+            if ret != 0:
+                self.exec0("mkdir", "-p", tmp)
+                self.nfsboardbasedir = True
+
+        return linux.Workdir.static(self, tmp)
 
     def toolsdir(self) -> "linux.path.Path[GenericLab]":
         """
@@ -515,5 +551,5 @@ FLAGS = {
     "gpiopower": "use gpio pin for switching power",
     "powershellscript": "use a shell script for switching power",
     "poweroffonstart": "always power off board on tbot start",
-    "labname" : "select which labhost we use",
+    "labname": "select which labhost we use",
 }
