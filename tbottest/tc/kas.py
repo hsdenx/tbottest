@@ -24,7 +24,7 @@ class KAS:
             "kascontainer" : True,
             "git_credential_store" : "/home/<username>/.git-credentials",
             "ssh_dir" : "/home/<username>/.ssh",
-            "kaslayer" : "192.168.1.107:<path_to_meta_layer>",
+            "kaslayer" : "192.168.1.107:<path_to_kasconfig_layer>",
             "kaslayername" : "name_of_repo",
             "kaslayerbranch" : "dunfell",
             "kasconfigfile" : "<pathto>/kas-machinename-denx.yml",
@@ -88,6 +88,7 @@ class KAS:
     kaslayer
 
     sources which contain your kas config file(s). This class downloads them
+    into kas_get_basepath / "kasconfig"
 
     kaslayername
 
@@ -168,6 +169,7 @@ class KAS:
         self.kas_ssh_dir = None
         self.container_engine = None
         self.container = False
+        self.kasconfigpath = None
 
         try:
             self.lab = self.cfg["labhost"]
@@ -288,6 +290,8 @@ class KAS:
         except:
             self.envinit = None
 
+        self.kasconfigpath = self.kas_get_basepath() / "kasconfig"
+
     @tbot.testcase
     def kas_get_basepath(self) -> linux.Path:
         """
@@ -351,11 +355,10 @@ class KAS:
         call "kas checkout" so kas checksout all the needed sources
         for your ow build, and setup conf directory.
         """
-        path = self.kas_get_basepath()
         post = []
         if self.kaslayername is not None:
             post = [linux.Raw(f" {self.kaslayername}")]
-        self.bh.exec0("cd", path)
+        self.bh.exec0("cd", self.kasconfigpath)
         self.bh.exec0(
             "git",
             "-C",
@@ -376,9 +379,12 @@ class KAS:
         except:  # noqa: E722
             pass
 
+        self.bh.exec0("cd", self.kas_get_basepath())
         # do not execute in case we use docker
         if self.container is False:
-            self.bh.exec0(*pre, self.kascmd, "checkout", self.kasconfigfile)
+            self.bh.exec0(
+                *pre, self.kascmd, "checkout", self.kasconfigpath / self.kasconfigfile
+            )
 
     def kas_call_container(self, t: str) -> None:
         pre = []
@@ -430,7 +436,14 @@ class KAS:
             bitopt = " ".join(self.bitbakeoptions)
             post.append(linux.Raw(f"-- {bitopt}"))
 
-        self.bh.exec0(*pre, self.kascmd, *kasarg, "build", self.kasconfigfile, *post)
+        self.bh.exec0(
+            *pre,
+            self.kascmd,
+            *kasarg,
+            "build",
+            self.kasconfigpath / self.kasconfigfile,
+            *post,
+        )
 
         if self.container_engine:
             kasarg.append("KAS_CONTAINER_ENGINE={self.container_engine}")
@@ -517,7 +530,7 @@ class KAS:
         if kasarg:
             cmd += " ".join(kasarg)
 
-        cmd += f" shell {self.kasconfigfile}"
+        cmd += f" shell {self.kasconfigpath._local_str()}/{self.kasconfigfile}"
         with tbot.log_event.command("kas-shell", cmd) as ev:
             with self.bh.ch.with_prompt("build$ "):
                 self.bh.ch.sendline(cmd, read_back=True)
