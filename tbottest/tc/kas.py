@@ -73,6 +73,18 @@ class KAS:
 
        kascontainerengine
 
+    You may want to add "--runtime-args" to kas-container, so set
+
+        kas_runtime_args
+
+    example:
+
+    .. code-block:: python
+
+        "kas_runtime_args" : '\"-v /work/hs/yocto/download:/workdownload\"',
+
+    You need the ```"``` so escape them!
+
     kaslayer
 
     sources which contain your kas config file(s). This class downloads them
@@ -152,6 +164,7 @@ class KAS:
         self.kascmd = "kas"
         self.kaspath = None
         self.git_credential_store = None
+        self.kas_runtime_args = None
         self.kas_ssh_dir = None
         self.container_engine = None
         self.container = False
@@ -178,6 +191,11 @@ class KAS:
 
         try:
             self.git_credential_store = self.cfg["git_credential_store"]
+        except:  # noqa: E722
+            pass
+
+        try:
+            self.kas_runtime_args = self.cfg["kas_runtime_args"]
         except:  # noqa: E722
             pass
 
@@ -376,6 +394,10 @@ class KAS:
             kasarg.append("--git-credential-store")
             kasarg.append(self.git_credential_store)
 
+        if self.kas_runtime_args:
+            kasarg.append("--runtime-args")
+            kasarg.append(self.kas_runtime_args)
+
         if self.kas_ssh_dir:
             kasarg.append("--ssh-dir")
             kasarg.append(self.kas_ssh_dir)
@@ -469,6 +491,10 @@ class KAS:
         if self.git_credential_store:
             kasarg.append("--git-credential-store")
             kasarg.append(self.git_credential_store)
+
+        if self.kas_runtime_args:
+            kasarg.append("--runtime-args")
+            kasarg.append(str(self.kas_runtime_args))
 
         if self.kas_ssh_dir:
             kasarg.append("--ssh-dir")
