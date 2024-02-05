@@ -58,14 +58,18 @@ def lnx_get_process_cpu_usage(
         if lnx is None:
             lnx = cx.request(tbot.role.BoardLinux)
 
-        log = lnx.exec0(linux.Raw(f"top -b -d 1 -n 1 | grep {pname}"))
-        # output of top command is
-        # PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
-        # 172 root      20   0   14588   2344   1912 S  62.5   0.5   0:37.31 rngd
-        res = string_to_dict(
-            log,
-            "{PID}\s+{USER}\s+{PR}\s+{NI}\s+{VIRT}\s+{RES}\s+{SHR}\s+{S}\s+{CPU}\s+{MEM}\s+{TIME}\s+{CMD}",  # noqa: W605
-        )
+        try:
+            log = lnx.exec0(linux.Raw(f"top -b -d 1 -n 1 | grep {pname}"))
+            # output of top command is
+            # PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+            # 172 root      20   0   14588   2344   1912 S  62.5   0.5   0:37.31 rngd
+            res = string_to_dict(
+                log,
+                "{PID}\s+{USER}\s+{PR}\s+{NI}\s+{VIRT}\s+{RES}\s+{SHR}\s+{S}\s+{CPU}\s+{MEM}\s+{TIME}\s+{CMD}",  # noqa: W605
+            )
+        except:
+            res = {}
+
         return res
 
 
