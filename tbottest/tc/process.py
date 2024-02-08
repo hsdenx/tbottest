@@ -432,7 +432,7 @@ def top_create_measurement_png(
 
     .. code-block:: bash
 
-        results/measurements/process/gnuplot-bar.gp
+        results/measurements/process/gnuplot-bar-cpustat.gp
 
     The output png is stored in ```process-usage.png```. Example for
     viewing it:
