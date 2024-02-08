@@ -61,7 +61,7 @@ def ps_parse_top(log) -> None:  # noqa: D107
 
     .. code-block:: python
 
-        {"loop":<loop>, "cpu":<cpu dictionary>, "values",<array of values>}
+        {"loop":<loop>, "cpu_system":<cpu dictionary>, "values",<array of values>}
 
     cpu dictionary contains a dictionary of the form:
 
@@ -87,7 +87,7 @@ def ps_parse_top(log) -> None:  # noqa: D107
         try:
             if "Cpu(s)" in line:
                 if len(loopresult):
-                    new = {"loop": i, "cpu": cpu, "values": loopresult}
+                    new = {"loop": i, "cpu_system": cpu, "values": loopresult}
                     result.append(new)
                 i += 1
                 loopresult = []
@@ -465,6 +465,7 @@ def top_create_measurement_png(
     pnamelist = []
     for loop in result:
         loopval = loop["loop"]
+        cpusysval = loop["cpu_system"]
 
         # values maybe empty, happens if ps command does not find the process!
         values = loop["values"]
@@ -489,8 +490,21 @@ def top_create_measurement_png(
                 newcpu = {"name": val["CMD"], "val": float(val["CPU"])}
                 cpu.append(newcpu)
 
+        # add cpu and system time
+        cputime = float(cpusysval["USER"]) + float(cpusysval["SYSTEM"])
+        newcpu = {"name": "cpu_user", "val": cpusysval["USER"]}
+        cpu.append(newcpu)
+        newcpu = {"name": "cpu_system", "val": cpusysval["SYSTEM"]}
+        cpu.append(newcpu)
+        newcpu = {"name": "cpu_complete", "val": cputime}
+        cpu.append(newcpu)
+
         newentry = {"loop": loopval, "cpuvalues": cpu}
         cpuvalues.append(newentry)
+
+    pnamelist.append("cpu_user")
+    pnamelist.append("cpu_system")
+    pnamelist.append("cpu_complete")
 
     gnuplotpath = "results/measurements/process"
     filename = f"{loops}_{intervall}_top.dat"
@@ -541,7 +555,7 @@ def top_create_measurement_png(
         f"outputfile='{outputfilename}'",
         "-e",
         f"columcount='{cmcount}'",
-        f"{gnuplotpath}/gnuplot-bar.gp",
+        f"{gnuplotpath}/gnuplot-bar-cpustat.gp",
     )
     tbot.log.c(f"gnuplot created png file {outputfilename} on local host").yellow
     tbot.log.c(f"type there\n gwenview {outputfilename}\nto show the image").yellow
