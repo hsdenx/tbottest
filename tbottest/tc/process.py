@@ -460,6 +460,10 @@ def top_create_measurement_png(
             local = cx.request(tbot.role.LocalHost)
             top_create_measurement_png(local, intervall, loops, result)
 
+    example png:
+
+    .. image:: ../results/measurements/process/process-usage.png
+
     """
     cpuvalues = []
     pnamelist = []
