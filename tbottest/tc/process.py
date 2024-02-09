@@ -355,7 +355,7 @@ def ps_create_measurement_png(
         newentry = {"loop": loopval, "cpuvalues": cpu}
         cpuvalues.append(newentry)
 
-    gnuplotpath = "results/measurements/process"
+    gnuplotpath = "tbottest/results/measurements/process"
     filename = f"{loops}_{intervall}_{pname}.dat"
     fname = gnuplotpath + "/" + filename
     outputfilename = "process-usage.png"
@@ -510,7 +510,7 @@ def top_create_measurement_png(
     pnamelist.append("cpu_system")
     pnamelist.append("cpu_complete")
 
-    gnuplotpath = "results/measurements/process"
+    gnuplotpath = "tbottest/results/measurements/process"
     filename = f"{loops}_{intervall}_top.dat"
     fname = gnuplotpath + "/" + filename
     outputfilename = "process-usage.png"
