@@ -22,6 +22,7 @@ class KAS:
             "build_machine" : "machinename",
             "subdir" : "temp/customer",
             "kascontainer" : True,
+            "netrc_file" : "path to .netrc file, sets NETRC_FILE",
             "git_credential_store" : "/home/<username>/.git-credentials",
             "ssh_dir" : "/home/<username>/.ssh",
             "kaslayer" : "192.168.1.107:<path_to_kasconfig_layer>",
@@ -67,6 +68,13 @@ class KAS:
     Set this through:
 
         ssh_dir
+
+    You may need to pass a .netrc file, so set the kas environment varaible
+    NETRC_FILE.
+
+    Set this through:
+
+        netrc_file
 
     You may want to set the used container engine through **KAS_CONTAINER_ENGINE**
     Set this through:
@@ -164,6 +172,7 @@ class KAS:
         self.bitbakeoptions = []
         self.kascmd = "kas"
         self.kaspath = None
+        self.netrc_file = None
         self.git_credential_store = None
         self.kas_runtime_args = None
         self.kas_ssh_dir = None
@@ -193,6 +202,11 @@ class KAS:
 
         try:
             self.git_credential_store = self.cfg["git_credential_store"]
+        except:  # noqa: E722
+            pass
+
+        try:
+            self.netrc_file = self.cfg["netrc_file"]
         except:  # noqa: E722
             pass
 
@@ -379,6 +393,9 @@ class KAS:
         except:  # noqa: E722
             pass
 
+        if self.netrc_file:
+            pre.append(f"NETRC_FILE={self.netrc_file}")
+
         self.bh.exec0("cd", self.kas_get_basepath())
         # do not execute in case we use docker
         if self.container is False:
@@ -428,6 +445,9 @@ class KAS:
         else:
             target = t
 
+        # set NETRC_FILE
+        if self.netrc_file:
+            pre.append(f"NETRC_FILE={self.netrc_file}")
         # set KAS_TARGET
         pre.append(f"KAS_TARGET={target}")
         # set KAS_TASK
@@ -499,6 +519,9 @@ class KAS:
             pre.append(f'KAS_REPO_REF_DIR="{kas_ref_dir._local_str()}"')
         except:  # noqa: E722
             pass
+
+        if self.netrc_file:
+            pre.append(f"NETRC_FILE={self.netrc_file}")
 
         kasarg = []
         if self.git_credential_store:
