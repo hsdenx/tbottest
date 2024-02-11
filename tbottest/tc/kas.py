@@ -419,7 +419,7 @@ class KAS:
 
         if self.kas_runtime_args:
             kasarg.append("--runtime-args")
-            kasarg.append(str(self.kas_runtime_args))
+            kasarg.append(linux.Raw(self.kas_runtime_args))
 
         if self.kas_ssh_dir:
             kasarg.append("--ssh-dir")
