@@ -60,6 +60,10 @@ class boardSSHConnector(connector.SSHConnector):
     cfgp = cfgl.config_parser
     tmpdir = cfgp.get("TC", "tmpdir", fallback="/tmp")
 
+    ign_hostkey = cfgp.getboolean("TC", "ignore_hostkey", fallback=True)
+    if ign_hostkey:
+        ignore_hostkey = True
+
     username = "root"
     if IP_BOARD is None:
         RuntimeError(
