@@ -256,6 +256,9 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	# for github CI we need sispmctl for board we use for testing
 	sed -i "s|@@SISPMCTRLMAC@@|01:01:4f:09:5b|g" ./tbotconfig/$BOARDNAME/tbot.ini
 	sed -i "s|@@SISPMCTRLPORT@@|1|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	delete_line ./tbotconfig/$BOARDNAME/tbot.ini "GPIOPMCTRL_$BOARDNAME" 2
+	delete_line ./tbotconfig/$BOARDNAME/tbot.ini "POWERSHELLSCRIPT_$BOARDNAME" 1
+	delete_line ./tbotconfig/$BOARDNAME/tbot.ini "TF_$BOARDNAME" 2
 
 	#sed -i "s|@@@@|$|g" ./tbotconfig/$BOARDNAME/tbot.ini
 fi
