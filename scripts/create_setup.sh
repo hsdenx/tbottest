@@ -193,18 +193,20 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 
 		echo -n "Name of the board in your lab: "
 		read -r BOARDNAME
+	fi
 
-		mkdir $BOARDNAME
-		cd $BOARDNAME
-		mkdir -p files/dumpfiles
-		mkdir args
-		cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/args/args* args/
+	mkdir $BOARDNAME
+	cd $BOARDNAME
+	mkdir -p files/dumpfiles
+	mkdir args
+	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/args/args* args/
 
-		cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/README.BOARDNAME README.$BOARDNAME
-		cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/tbot.ini tbot.ini
-		cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini $BOARDNAME.ini
-		cd ../..
+	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/README.BOARDNAME README.$BOARDNAME
+	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/tbot.ini tbot.ini
+	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini $BOARDNAME.ini
+	cd ../..
 
+	if [ "${INTER}" == "yes" ];then
 		create_tbot_ini tbotconfig/$BOARDNAME/tbot.ini
 	fi
 
@@ -250,6 +252,10 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	sed -i "s|@@IPSETUPETH@@|$IPSETUPETH|g" ./tbotconfig/$BOARDNAME/tbot.ini
 	sed -i "s|@@IPSETUPIP@@|$IPSETUPIP|g" ./tbotconfig/$BOARDNAME/tbot.ini
 	sed -i "s|@@IPSETUPSERVERIP@@|$IPSETUPSERVERIP|g" ./tbotconfig/$BOARDNAME/tbot.ini
+
+	# for github CI we need sispmctl for board we use for testing
+	sed -i "s|@@SISPMCTRLMAC@@|01:01:4f:09:5b|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@SISPMCTRLPORT@@|1|g" ./tbotconfig/$BOARDNAME/tbot.ini
 
 	#sed -i "s|@@@@|$|g" ./tbotconfig/$BOARDNAME/tbot.ini
 fi
