@@ -29,11 +29,10 @@ IPSETUPETH=00:30:D6:2C:A6:3D
 IPSETUPIP=192.168.3.40
 IPSETUPSERVERIP=192.168.3.1
 
-INTER=no
-if [ "$1" = "--inter" ]; then
-	INTER=yes
-fi
-if [ "${INTER}" == "yes" ];then
+
+
+create_tbot_ini()
+{
 	echo -n "Name of the lab: "
 	read -r LABNAME
 	echo -n "Hostname of the lab: "
@@ -49,6 +48,15 @@ if [ "${INTER}" == "yes" ];then
 
 	echo -n "Sispmctl Port: "
 	read -r SISPMCTLPORT
+
+}
+
+INTER=no
+if [ "$1" = "--inter" ]; then
+	INTER=yes
+fi
+if [ "${INTER}" == "yes" ];then
+	create_tbot_ini
 fi
 
 ## clone and create repos
