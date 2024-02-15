@@ -38,7 +38,7 @@ def ps_parse_ps(log) -> None:  # noqa: D107
     return result
 
 
-def ps_parse_top(log) -> None:  # noqa: D107
+def ps_parse_top(log, busybox) -> None:  # noqa: D107
     """
     parse the log output from top command
     called with the options
@@ -53,9 +53,12 @@ def ps_parse_top(log) -> None:  # noqa: D107
           267 weston    20   0  243672  85304  13792 R  93.8  17.0  32:32.89 /usr/bin/weston --modules=systemd-notify.so
          2119 root      20   0    4128   1944   1496 R   5.4   0.4   0:00.26 top -b -n 3 -d 1 -c -H
 
-    .. warning::
+    if busybox is True, we get log from busybox output, which is
 
-        This works not with the busybox version
+    .. bash:
+
+        CPU:   2% usr   2% sys   0% nic  95% idle   0% io   0% irq   0% sirq
+          PID  PPID USER     STAT   VSZ %VSZ %CPU COMMAND
 
     You get back an arrray containing dictionary
 
@@ -106,12 +109,34 @@ def ps_parse_top(log) -> None:  # noqa: D107
                 # ignore
                 # print("Found MiB Swap")
                 continue
+            if "CPU:" in line:
+                if len(loopresult):
+                    new = {"loop": i, "cpu_system": cpu, "values": loopresult}
+                    result.append(new)
+                i += 1
+                loopresult = []
+                # example top output
+                # CPU:   2% usr   2% sys   0% nic  95% idle   0% io   0% irq   0% sirq
+                cpu = string_to_dict(
+                    line,
+                    "CPU:\s+{USER}\%\s+usr\s+{SYSTEM}\%\s+sys\s+{NIC}\%\s+nic\s+{IDLE}\%\s+idle\s+{IO}\%\s+io\s+{IRQ}\%\s+irq\s+{SI}\%",  # noqa: W605
+                )  # noqa: W605
+                continue
 
-            #   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
-            res = string_to_dict(
-                line,
-                "{PID}\s+{USER}\s+{PR}\s+{NI}\s+{VIRT}\s+{RES}\s+{SHR}\s+{S}\s+{CPU}\s+{MEM}\s+{TIME}\s+{CMD}",  # noqa: W605
-            )  # noqa: W605
+            if busybox:
+                #   PID  PPID USER     STAT   VSZ %VSZ %CPU COMMAND
+                res = string_to_dict(
+                    line,
+                    "{PID}\s+{PIDD}\s+{USER}\s+{STAT}\s+{VSZ}\s+{VSZP}\%\s+{CPU}\%\s+{CMD}",  # noqa: W605
+                )  # noqa: W605
+
+            else:
+                #   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+                res = string_to_dict(
+                    line,
+                    "{PID}\s+{USER}\s+{PR}\s+{NI}\s+{VIRT}\s+{RES}\s+{SHR}\s+{S}\s+{CPU}\s+{MEM}\s+{TIME}\s+{CMD}",  # noqa: W605
+                )  # noqa: W605
+
             loopresult.append(res)
         except:
             continue
@@ -245,6 +270,20 @@ def lnx_measure_process(
     return result
 
 
+def is_busybox(
+    lnx: linux.LinuxShell,
+    cmd: str,
+) -> bool:  # noqa: D107
+    """
+    detect if we have a busybox version of command ```cmd```
+    """
+    ret, log = lnx.exec(linux.Raw(f"ls -al {cmd} | grep busybox"))
+    if ret == 0:
+        return True
+
+    return False
+
+
 def lnx_measure_top(
     lnx: linux.LinuxShell,
     intervall: float,
@@ -254,21 +293,30 @@ def lnx_measure_top(
     call top with intervall ```intervall`` and ```loops``` and
     analyse it
 
-    .. warning::
-
-        This works not with the busybox version
-
     you get back an array which contains a dictionary described
     in testcase
 
     :py:func:`tbottest.tc.process.ps_parse_top`
     """
-    log = lnx.exec0(
-        linux.Raw(
-            f'top -b -n {loops} -d {intervall} -c -H | awk \'($1=="%Cpu(s):")||($8=="R")||($1=="MiB") {{print}}\''
+
+    # busybox
+    # CPU:   2% usr   2% sys   0% nic  95% idle   0% io   0% irq   0% sirq
+    #   PID  PPID USER     STAT   VSZ %VSZ %CPU COMMAND
+    busybox = is_busybox(lnx, "/usr/bin/top")
+    if busybox:
+        log = lnx.exec0(
+            linux.Raw(
+                f'top -b -n {loops} -d {intervall} | awk \'($1=="CPU:")||($4=="R") {{print}}\''
+            )
         )
-    )
-    return ps_parse_top(log)
+    else:
+        log = lnx.exec0(
+            linux.Raw(
+                f'top -b -n {loops} -d {intervall} -c -H | awk \'($1=="%Cpu(s):")||($8=="R")||($1=="MiB") {{print}}\''
+            )
+        )
+
+    return ps_parse_top(log, busybox)
 
 
 def ps_create_measurement_png(
