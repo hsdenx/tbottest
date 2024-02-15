@@ -15,9 +15,7 @@ LABNAME=lab8
 LABHOSTNAME=192.168.1.113
 LABUSER=pi
 TERMPROG=picocom
-
-SISPMCTRLMAC=01:01:4f:09:5b
-SISPMCTRLPORT=1
+SELECTPOWERCTRL="none"
 
 PICOCOMBAUDRATE=115200
 PICOCOMDEV=/dev/serial/by-id/usb-FTDI_C232HM-EDHSL-0_FT57MR3U-if00-port0
@@ -29,34 +27,109 @@ IPSETUPETH=00:30:D6:2C:A6:3D
 IPSETUPIP=192.168.3.40
 IPSETUPSERVERIP=192.168.3.1
 
+# $1 input_file
+# $2 search_string
+# $3 lines_to_delete
+delete_line()
+{
+	input_file=$1
+	search_string=$2
+	lines_to_delete=$3
+	temp_file=/tmp/initworktbot
+	line_number=$(grep -n "$search_string" "$input_file" | cut -d: -f1)
 
+	echo "delete line " $1 $2 $3
+	echo "delete line " $line_number
+	if [ -n "$line_number" ]; then
+		# Use sed to delete the matched line and the next n lines
+		sed -e "${line_number},$((line_number + lines_to_delete))d" "$input_file" > "$temp_file"
 
+		# Replace the original file with the temporary file
+		mv "$temp_file" "$input_file"
+
+		#echo "Lines containing '$search_string' and the next $lines_to_delete lines deleted."
+	else
+		echo "Search string not found in the file."
+	fi
+}
+
+# $1 path to tbot ini file
 create_tbot_ini()
 {
-	echo -n "Name of the lab: "
-	read -r LABNAME
-	echo -n "Hostname of the lab: "
-	read -r LABHOSTNAME
-	echo -n "Username for login into lab: "
-	read -r LABUSER
+	filename=$1
+	powerctrlstrings=("gpio" "sispmctrl" "shell" "tinkerforge")
+	powerctrlstringall=""
+	for substring in "${powerctrlstrings[@]}"; do
+		powerctrlstringall+="$substring|"
+	done
+	FOUND="False"
 
-	echo -n "Name of the board in your lab: "
-	read -r BOARDNAME
+	while [ "${FOUND}" == "False" ];do
+		echo -n "Select power switch method for the board (${powerctrlstringall}) : "
+		read -r SELECTPOWERCTRL
+		for substring in "${powerctrlstrings[@]}"; do
+			if [[ "${substring}" =~ "${SELECTPOWERCTRL}" ]]; then
+				FOUND="True"
+				SELECTPOWERCTRL="${substring}"
+			fi
+		done
 
-	echo -n "Sispmctl MAC: "
-	read -r SISPMCTLMAC
+		if [ "${FOUND}" == "False" ];then
+			echo "Input ${SELECTPOWERCTRL} not supported, please enter one of ${powerctrlstringall}"
+		fi
+	done
 
-	echo -n "Sispmctl Port: "
-	read -r SISPMCTLPORT
+	if [ ${SELECTPOWERCTRL} == "gpio" ]; then
+		echo -n "gpio pin nr: "
+		read -r VALUE
+		sed -i "s|@@POWERGPIOPIN@@|$VALUE|g" $filename
+		echo -n "gpio pin state: "
+		read -r VALUE
+		sed -i "s|@@POWERGPIOSTATE@@|$VALUE|g" $filename
+	elif [ ${SELECTPOWERCTRL} == "shell" ]; then
+		echo -n "shell name of shell script: "
+		read -r VALUE
+		sed -i "s|@@POWERSHELLSCRIPTNAME@@|$VALUE|g" $filename
+	elif [ ${SELECTPOWERCTRL} == "sispmctrl" ]; then
+		echo -n "Sispmctl MAC: "
+		read -r VALUE
+		sed -i "s|@@SISPMCTRLMAC@@|$VALUE|g" $filename
+		echo -n "Sispmctl Port: "
+		read -r VALUE
+		sed -i "s|@@SISPMCTRLPORT@@|$VALUE|g" $filename
+	elif [ ${SELECTPOWERCTRL} == "tinkerforge" ]; then
+		echo -n "uid: "
+		read -r VALUE
+		sed -i "s|@@POWERTFUID@@|$VALUE|g" $filename
+		echo -n "channel: "
+		read -r VALUE
+		sed -i "s|@@POWERTFCHANNEL@@|$VALUE|g" $filename
+	fi
 
+	for substring in "${powerctrlstrings[@]}"; do
+		if [ ${SELECTPOWERCTRL} != $substring ]; then
+			echo "Delete ${substring} example"
+			if [[ ${substring} == "gpio" ]]; then
+				delete_line $filename "GPIOPMCTRL_BOARDNAME" 2
+			fi
+			if [[ ${substring} == "shell" ]]; then
+				delete_line $filename "POWERSHELLSCRIPT_BOARDNAME" 1
+			fi
+			if [[ ${substring} == "sispmctrl" ]]; then
+				delete_line $filename "SISPMCTRL_BOARDNAME" 2
+			fi
+			if [[ ${substring} == "tinkerforge" ]]; then
+				delete_line $filename "TF_BOARDNAME" 2
+			fi
+		fi
+	done
+
+	echo "Created ${SELECTPOWERCTRL} powerctrl setup"
 }
 
 INTER=no
 if [ "$1" = "--inter" ]; then
 	INTER=yes
-fi
-if [ "${INTER}" == "yes" ];then
-	create_tbot_ini
 fi
 
 ## clone and create repos
@@ -108,16 +181,32 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	mkdir ci
 	cp ../tbottest/tbottest/tbotconfig/ci/* ci
 
-	mkdir $BOARDNAME
-	cd $BOARDNAME
-	mkdir -p files/dumpfiles
-	mkdir args
-	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/args/args* args/
+	if [ "${INTER}" == "yes" ];then
+		echo "Check that ssh login without password works!"
 
-	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/README.BOARDNAME README.$BOARDNAME
-	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/tbot.ini tbot.ini
-	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini $BOARDNAME.ini
-	cd ../..
+		echo -n "Name of the lab: "
+		read -r LABNAME
+		echo -n "Hostname of the lab: "
+		read -r LABHOSTNAME
+		echo -n "Username for login into lab: "
+		read -r LABUSER
+
+		echo -n "Name of the board in your lab: "
+		read -r BOARDNAME
+
+		mkdir $BOARDNAME
+		cd $BOARDNAME
+		mkdir -p files/dumpfiles
+		mkdir args
+		cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/args/args* args/
+
+		cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/README.BOARDNAME README.$BOARDNAME
+		cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/tbot.ini tbot.ini
+		cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini $BOARDNAME.ini
+		cd ../..
+
+		create_tbot_ini tbotconfig/$BOARDNAME/tbot.ini
+	fi
 
 	# prepare some argumentfiles
 	sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/args/argsbase
@@ -151,9 +240,6 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	sed -i "s|@@LABNAME@@|$LABNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
 	sed -i "s|@@LABHOSTNAME@@|$LABHOSTNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
 	sed -i "s|@@LABUSER@@|$LABUSER|g" ./tbotconfig/$BOARDNAME/tbot.ini
-
-	sed -i "s|@@SISPMCTRLMAC@@|$SISPMCTRLMAC|g" ./tbotconfig/$BOARDNAME/tbot.ini
-	sed -i "s|@@SISPMCTRLPORT@@|$SISPMCTRLPORT|g" ./tbotconfig/$BOARDNAME/tbot.ini
 
 	sed -i "s|@@PICOCOMBAUDRATE@@|$PICOCOMBAUDRATE|g" ./tbotconfig/$BOARDNAME/tbot.ini
 	sed -i "s|@@PICOCOMDEV@@|$PICOCOMDEV|g" ./tbotconfig/$BOARDNAME/tbot.ini
