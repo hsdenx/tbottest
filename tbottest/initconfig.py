@@ -4,8 +4,11 @@ import tbot
 import pathlib
 import os
 import tbottest.initconfighelper as inithelper
+import uuid
 
 BOARDNAME = None
+
+unique_filename_extension = str(uuid.uuid4())
 
 
 def init_get_config(
@@ -180,7 +183,8 @@ class IniTBotConfig:
     workdir = os.getcwd()
     tbotinifile = inithelper.inifile_get_tbotfilename()
     labsectionname = inithelper.get_lab_sectionname()
-    newfilename = tbotinifile + "-modified"
+    newfilename = tbotinifile + f"-{unique_filename_extension}"
+    tbot.log.message(tbot.log.c(f"IniTBotConfig: use {newfilename}").yellow)
     copy_file(tbotinifile, newfilename)
     if set_board_cfg:
         set_board_cfg("IniTBotConfig", newfilename)
@@ -301,7 +305,10 @@ class IniConfig:
 
     filename = inithelper.inifile_get_tbotboardfilename()
     newfilename = pathlib.Path(filename).parent.resolve()
-    newfilename = newfilename / f"{os.path.basename(filename)}-modified"
+    newfilename = (
+        newfilename / f"{os.path.basename(filename)}-{unique_filename_extension}"
+    )
+    tbot.log.message(tbot.log.c(f"IniConfig: use {newfilename}").yellow)
     copy_file(filename, newfilename)
     if set_board_cfg:
         set_board_cfg("IniConfig", newfilename)
