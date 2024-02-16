@@ -38,6 +38,30 @@ def init_get_config(
     return value
 
 
+def init_lab_get_config(
+    cfgp: configparser.RawConfigParser,
+    name: str,
+    default: str,
+) -> str:
+    """
+    returns value of key name from configparser
+    from section LABHOST or LABHOST_labname
+
+    :param cfgp: current config parser
+    :param name: name of key
+    :param default: default value if key is not found
+    """
+    sectionname = inithelper.get_lab_sectionname()
+    # first try boardname specific config
+    try:
+        value = cfgp.get(sectionname, name)
+        return value
+    except:
+        pass
+
+    return default
+
+
 def generic_get_boardname():
     """
     return the boards name in your lab setup
@@ -165,7 +189,7 @@ class IniTBotConfig:
     config_parser.read(newfilename)
 
     date = config_parser.get(labsectionname, "date")
-    shelltype = config_parser.get(labsectionname, "shelltype")
+    shelltype = init_lab_get_config(config_parser, "shelltype", "ash")
     ethdevices = {}
     for s in config_parser.sections():
         if "IPSETUP" in s:
