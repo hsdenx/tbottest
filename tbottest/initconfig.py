@@ -152,8 +152,10 @@ class IniTBotConfig:
 
     see: :ref:`boardspecificruntimeadaption`
     """
+
     workdir = os.getcwd()
     tbotinifile = inithelper.inifile_get_tbotfilename()
+    labsectionname = inithelper.get_lab_sectionname()
     newfilename = tbotinifile + "-modified"
     copy_file(tbotinifile, newfilename)
     if set_board_cfg:
@@ -162,7 +164,7 @@ class IniTBotConfig:
     config_parser = configparser.RawConfigParser(interpolation=ExtendedInterpolation())
     config_parser.read(newfilename)
 
-    date = config_parser.get("LABHOST", "date")
+    date = config_parser.get(labsectionname, "date")
     ethdevices = {}
     for s in config_parser.sections():
         if "IPSETUP" in s:
