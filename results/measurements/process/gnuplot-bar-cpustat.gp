@@ -25,6 +25,6 @@ set output outputfile
 
 i = 2
 plot datafile using 2:xtic(1), for [i=3:columcount-3] '' using i, \
-     datafile using "cpu_user":xtic(1) w lp, \
-     datafile using "cpu_system":xtic(1) w lp, \
-     datafile using "cpu_complete":xtic(1) w lp, \
+     datafile using "cpu_user":xtic(1) w lp title "CPU user", \
+     datafile using "cpu_system":xtic(1) w lp title "CPU system", \
+     datafile using "cpu_complete":xtic(1) w lp title "CPU overall", \
