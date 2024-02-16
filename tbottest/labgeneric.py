@@ -19,6 +19,11 @@ LABSECTIONNAME = inithelper.get_lab_sectionname()
 
 LABNAME = cfgt.config_parser.get(LABSECTIONNAME, "labname")
 
+if cfgt.shelltype == "bash":
+    LAB_LINUX_SHELL = linux.Bash
+else:
+    LAB_LINUX_SHELL = linux.Ash
+
 # for ssh machine
 IP_BOARD_SSH_INTERFACE = "eth0"
 try:
@@ -243,7 +248,7 @@ else:
 BH = typing.TypeVar("BH", bound=linux.Builder)
 
 
-class GenericLab(CON, linux.Bash, linux.Lab, linux.Builder):
+class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
     sectionname = LABSECTIONNAME
     tmpdir_exists = False
     nfsbasedir = True

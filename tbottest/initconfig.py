@@ -165,6 +165,7 @@ class IniTBotConfig:
     config_parser.read(newfilename)
 
     date = config_parser.get(labsectionname, "date")
+    shelltype = config_parser.get(labsectionname, "shelltype")
     ethdevices = {}
     for s in config_parser.sections():
         if "IPSETUP" in s:

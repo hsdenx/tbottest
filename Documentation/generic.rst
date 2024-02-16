@@ -320,6 +320,7 @@ here you configure common lab host setting. Mandatory.
         "port", "ssh port number", "22"
         "sshkeyfile", "path to the ssh keyfile, tbot uses", "/home/USERNAME/.ssh/id_rsa"
         "date", "subdirectory in boards tftp path", "20210803-ml"
+        "shelltype", "type of the linux shell (bash|ash)"
         "toolsdir", "where does tbot find tools installed on lab host", "/home/USERNAME/source"
         "tftproot", "rootpath to tftp directory on lab host. tbot stores there build results.", "/srv/tftpboot"
         "tftpsubdir", "boards subdir in tftproot", "BOARD/DATE"
