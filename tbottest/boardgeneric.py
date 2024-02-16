@@ -31,6 +31,8 @@ class GenericBoardConfig:
     cfgp = cfg.config_parser
     tmpdir = ini.init_get_config(cfgp, "tmpdir", "/tmp")
 
+    shelltype = ini.init_get_config(cfgp, "shelltype", "ash")
+
     ##############################################
     # Imagenames
     ##############################################
@@ -104,8 +106,10 @@ class GenericBoardConfig:
 
 cfggeneric = GenericBoardConfig()
 
-BOARD_LINUX_SHELL = linux.Ash
-# BOARD_LINUX_SHELL = linux.Bash
+if cfggeneric.shelltype == "bash":
+    BOARD_LINUX_SHELL = linux.Bash
+else:
+    BOARD_LINUX_SHELL = linux.Ash
 
 
 class GenericUBoot(

@@ -658,6 +658,7 @@ settings needed for linux testcases.
         "linux_boot_timeout", "Maximum time for Linux to reach the login prompt.", "None", "30"
         "linux_init_timeout", "If not None, timeout in seconds after ethernetconfig", "None", "2.0"
         "linux_init", "list of commands send after login. mode = exec or exec0", "[]", "[{'"mode'":'"exec0'", '"cmd'":'"echo Hallo'"}]"
+        "shelltype", "linux login shell type (bash|ash)", "ash", "bash"
         "beep", "list of dictionary of commands for beep command", "[]", "[{'"freq'": '"440'", '"length'":'"1000'"}]"
         "cyclictestmaxvalue", "maximum allowed value from stress-ng 'Max' colum", "100", "cyclictestmaxvalue = 100"
         "dmesg", "list of strings, which should be in dmesg output", "[]", "dmesg = ['"OF: fdt: Machine model:'", '"gpio-193 (eeprom-wc): hogged as output/low'",]"
