@@ -372,6 +372,8 @@ class KAS:
         post = []
         if self.kaslayername is not None:
             post = [linux.Raw(f" {self.kaslayername}")]
+
+        self.bh.exec0("mkdir", "-p", self.kasconfigpath)
         self.bh.exec0("cd", self.kasconfigpath)
         self.bh.exec0(
             "git",
@@ -512,6 +514,7 @@ class KAS:
         """
         enter kas shell
         """
+        self.kas_checkout()
         pre = []
         post = []
         try:
