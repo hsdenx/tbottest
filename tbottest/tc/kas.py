@@ -432,7 +432,9 @@ class KAS:
         self.bh.exec0("pwd")
         # setup task and target
         task = "build"
-        if " " in t:
+        if "bitbake" in t:
+            target = t
+        elif " " in t:
             cmds = t.split(" ")
             target = cmds[-1]
             foundtask = False
@@ -447,11 +449,13 @@ class KAS:
         else:
             target = t
 
+        print("TARGET ", t)
         # set NETRC_FILE
         if self.netrc_file:
             pre.append(f"NETRC_FILE={self.netrc_file}")
+
         # set KAS_TARGET
-        pre.append(f"KAS_TARGET={target}")
+        pre.append(linux.Raw(f"KAS_TARGET='{target}'"))
         # set KAS_TASK
         pre.append(f"KAS_TASK={task}")
         if self.bitbakeoptions:
