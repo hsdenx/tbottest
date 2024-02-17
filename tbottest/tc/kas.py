@@ -484,7 +484,6 @@ class KAS:
         else:
             target = t
 
-        print("TARGET ", t)
         # set NETRC_FILE
         if self.netrc_file:
             pre.append(f"NETRC_FILE={self.netrc_file}")
