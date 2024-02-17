@@ -110,6 +110,18 @@ class KAS:
 
     kas config file which is used
 
+    auto.conf
+
+    You can define here an auto.conf file, if you need to add
+    special settings. The file is created after kas_checkout
+    ends.
+
+    .. code-block:: python
+
+       "auto.conf" : ['DL_DIR="/workdownload"',
+                     'SSTATE_DIR="/worksstate-cache"',
+           ],
+
     bitbakeenvinit
 
     if you are not using a kas container you need to source the oe environment
@@ -179,6 +191,7 @@ class KAS:
         self.container_engine = None
         self.container = False
         self.kasconfigpath = None
+        self.autoconf = None
 
         try:
             self.lab = self.cfg["labhost"]
@@ -304,6 +317,11 @@ class KAS:
         except:
             self.envinit = None
 
+        try:
+            self.autoconf = self.cfg["auto.conf"]
+        except:
+            self.autoconf = None
+
         self.kasconfigpath = self.kas_get_basepath() / "kasconfig"
 
     @tbot.testcase
@@ -364,6 +382,21 @@ class KAS:
                 for env in self.envinit:
                     self.bh.exec0(linux.Raw(env))
 
+    def kas_create_autoconf(self) -> None:
+        if self.autoconf:
+            bp = self.kas_get_buildpath()
+            cfgp = bp / "conf"
+            ret, log = self.bh.exec("ls", "-al", cfgp / "auto.conf")
+            if ret == 0:
+                tbot.log.message("auto.conf exists, do not create it")
+                return 0
+
+            op = linux.Raw(">")
+            self.bh.exec0("mkdir", "-p", cfgp)
+            for line in self.autoconf:
+                self.bh.exec0("echo", line, op, cfgp / "auto.conf")
+                op = linux.Raw(">>")
+
     def kas_checkout(self) -> None:
         """
         call "kas checkout" so kas checksout all the needed sources
@@ -404,6 +437,8 @@ class KAS:
             self.bh.exec0(
                 *pre, self.kascmd, "checkout", self.kasconfigpath / self.kasconfigfile
             )
+
+        self.kas_create_autoconf()
 
     def kas_call_container(self, t: str) -> None:
         pre = []
