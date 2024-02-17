@@ -184,7 +184,6 @@ class IniTBotConfig:
     tbotinifile = inithelper.inifile_get_tbotfilename()
     labsectionname = inithelper.get_lab_sectionname()
     newfilename = tbotinifile + f"-{unique_filename_extension}"
-    tbot.log.message(tbot.log.c(f"IniTBotConfig: use {newfilename}").yellow)
     copy_file(tbotinifile, newfilename)
     if set_board_cfg:
         set_board_cfg("IniTBotConfig", newfilename)
@@ -308,7 +307,6 @@ class IniConfig:
     newfilename = (
         newfilename / f"{os.path.basename(filename)}-{unique_filename_extension}"
     )
-    tbot.log.message(tbot.log.c(f"IniConfig: use {newfilename}").yellow)
     copy_file(filename, newfilename)
     if set_board_cfg:
         set_board_cfg("IniConfig", newfilename)
