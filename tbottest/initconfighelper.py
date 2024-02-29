@@ -59,7 +59,7 @@ def inifile_get_tbotfilename():
 
     workdir = os.getcwd()
     if pathinifile:
-        if pathinifile[0] != "\/":  # noqa: W605
+        if pathinifile[0] != r"\/":  # noqa: W605
             tbotinifile = workdir + "/" + pathinifile
         else:
             tbotinifile = pathinifile
@@ -86,7 +86,7 @@ def inifile_get_tbotboardfilename():
 
     workdir = os.getcwd()
     if pathinifile:
-        if pathinifile[0] != "\/":  # noqa: W605
+        if pathinifile[0] != r"\/":  # noqa: W605
             filename = workdir + "/" + pathinifile
         else:
             filename = pathinifile
