@@ -287,8 +287,19 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
 
     @property
     def authenticator(self) -> linux.auth.Authenticator:
-        tmp = cfgt.config_parser.get(LABSECTIONNAME, "sshkeyfile")
-        return linux.auth.PrivateKeyAuthenticator(tmp)
+        try:
+            tmp = cfgt.config_parser.get(LABSECTIONNAME, "sshkeyfile")
+            return linux.auth.PrivateKeyAuthenticator(tmp)
+        except:
+            pass
+
+        try:
+            password = cfgt.config_parser.get(LABSECTIONNAME, "password")
+            return linux.auth.PasswordAuthenticator(password)
+        except:
+            raise RuntimeError(
+                f"you need to setup Authenticator for {self.name}. Set 'sshkeyfile' or 'password' in section [{LABSECTIONNAME}] in tbot.ini"
+            )
 
     def tftp_dir(self) -> "linux.path.Path[GenericLab]":
         tmp = linux.Path(self, self.tftp_root_path() / self.tftp_dir_board())

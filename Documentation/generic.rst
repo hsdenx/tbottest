@@ -311,6 +311,11 @@ tbot.ini sections
 
 here you configure common lab host setting. Mandatory.
 
+You can select between ssh key login or password login
+into the lab host.
+
+For login with ssh key set key 'sshkeyfile', for password login set key 'password'.
+
 .. csv-table:: [LABHOST]
         :header: "key", "value", "example"
 
@@ -319,6 +324,7 @@ here you configure common lab host setting. Mandatory.
         "username", "username on lab host", "pi"
         "port", "ssh port number", "22"
         "sshkeyfile", "path to the ssh keyfile, tbot uses", "/home/USERNAME/.ssh/id_rsa"
+        "password", "set password to login into lab host", "FooBar"
         "date", "subdirectory in boards tftp path", "20210803-ml"
         "shelltype", "type of the linux shell (bash|ash)"
         "toolsdir", "where does tbot find tools installed on lab host", "/home/USERNAME/source"
