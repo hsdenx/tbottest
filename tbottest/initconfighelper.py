@@ -24,8 +24,8 @@ def get_tbot_arguments():
     parser = build_parser()
     parser.add_argument("--complete-module", help=argparse.SUPPRESS)
     parser.add_argument("--complete-testcase", help=argparse.SUPPRESS)
+    arguments = sys.argv.copy()
     if "pytest" in sys.argv[0]:
-        arguments = sys.argv.copy()
         arguments = arguments[1:]
         i = 0
         while i < len(arguments):
