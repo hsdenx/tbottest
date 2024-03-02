@@ -25,13 +25,18 @@ def get_tbot_arguments():
     parser.add_argument("--complete-module", help=argparse.SUPPRESS)
     parser.add_argument("--complete-testcase", help=argparse.SUPPRESS)
     if "pytest" in sys.argv[0]:
-        sys.argv = sys.argv[1:]
-        for argv in sys.argv:
+        arguments = sys.argv.copy()
+        arguments = arguments[1:]
+        i = 0
+        while i < len(arguments):
+            argv = arguments[i]
             if "@" not in argv:
-                sys.argv.remove(argv)
+                arguments.remove(argv)
+            else:
+                i += 1
 
     try:
-        args = parser.parse_args(sys.argv)
+        args = parser.parse_args(arguments)
     except Exception as error:
         print("get_tbot_arguments error parsing arguments: ", error)
 
