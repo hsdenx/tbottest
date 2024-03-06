@@ -3,6 +3,8 @@ import tbot
 import os
 import sys
 from tbot.newbot import build_parser
+import tbottest.initconfig as initconfig
+import uuid
 
 
 def get_lab_sectionname() -> str:
@@ -53,7 +55,21 @@ def get_tbot_flags():
     return args.flags
 
 
-TBOTINIFILE=None
+UUID_FILENAME = None
+
+
+def get_unique_filename_extension():
+    global UUID_FILENAME
+    if UUID_FILENAME is not None:
+        return UUID_FILENAME
+
+    UUID_FILENAME = str(uuid.uuid4())
+    return UUID_FILENAME
+
+
+TBOTINIFILE = None
+
+
 def inifile_get_tbotfilename():
     """
     helper function for setting up tbot.ini filename
@@ -82,11 +98,16 @@ def inifile_get_tbotfilename():
     else:
         tbotinifile = workdir + "/../tbottest/tbotconfig/BOARDNAME/tbot.ini"
 
-    TBOTINIFILE=tbotinifile
-    return tbotinifile
+    uidfile = get_unique_filename_extension()
+    newfilename = f"{tbotinifile}-{uidfile}"
+    initconfig.copy_file(tbotinifile, newfilename)
+    TBOTINIFILE = newfilename
+    return TBOTINIFILE
 
 
-TBOTBOARDNAME=None
+TBOTBOARDNAME = None
+
+
 def inifile_get_tbotboardfilename():
     """
     helper function for setting up boardname.ini filename
@@ -115,5 +136,8 @@ def inifile_get_tbotboardfilename():
     else:
         filename = workdir + "/../tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini"
 
-    TBOTBOARDNAME=filename
-    return filename
+    uidfile = get_unique_filename_extension()
+    newfilename = f"{filename}-{uidfile}"
+    initconfig.copy_file(filename, newfilename)
+    TBOTBOARDNAME = newfilename
+    return TBOTBOARDNAME

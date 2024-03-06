@@ -1,14 +1,10 @@
 import configparser
 from configparser import ExtendedInterpolation
 import tbot
-import pathlib
 import os
 import tbottest.initconfighelper as inithelper
-import uuid
 
 BOARDNAME = None
-
-unique_filename_extension = str(uuid.uuid4())
 
 
 def init_get_config(
@@ -183,13 +179,11 @@ class IniTBotConfig:
     workdir = os.getcwd()
     tbotinifile = inithelper.inifile_get_tbotfilename()
     labsectionname = inithelper.get_lab_sectionname()
-    newfilename = tbotinifile + f"-{unique_filename_extension}"
-    copy_file(tbotinifile, newfilename)
     if set_board_cfg:
-        set_board_cfg("IniTBotConfig", newfilename)
-    replace_in_file(newfilename, "@@TBOTBOARD@@", generic_get_boardname())
+        set_board_cfg("IniTBotConfig", tbotinifile)
+    replace_in_file(tbotinifile, "@@TBOTBOARD@@", generic_get_boardname())
     config_parser = configparser.RawConfigParser(interpolation=ExtendedInterpolation())
-    config_parser.read(newfilename)
+    config_parser.read(tbotinifile)
 
     date = config_parser.get(labsectionname, "date")
     shelltype = init_lab_get_config(config_parser, "shelltype", "ash")
@@ -303,13 +297,8 @@ class IniConfig:
     workdir = os.getcwd()
 
     filename = inithelper.inifile_get_tbotboardfilename()
-    newfilename = pathlib.Path(filename).parent.resolve()
-    newfilename = (
-        newfilename / f"{os.path.basename(filename)}-{unique_filename_extension}"
-    )
-    copy_file(filename, newfilename)
     if set_board_cfg:
-        set_board_cfg("IniConfig", newfilename)
+        set_board_cfg("IniConfig", filename)
 
     config_parser = configparser.RawConfigParser(interpolation=ExtendedInterpolation())
-    config_parser.read(newfilename)
+    config_parser.read(filename)
