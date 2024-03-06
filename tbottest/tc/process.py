@@ -302,17 +302,18 @@ def lnx_measure_top(
     # busybox
     # CPU:   2% usr   2% sys   0% nic  95% idle   0% io   0% irq   0% sirq
     #   PID  PPID USER     STAT   VSZ %VSZ %CPU COMMAND
+    loop = loops + 1
     busybox = is_busybox(lnx, "/usr/bin/top")
     if busybox:
         log = lnx.exec0(
             linux.Raw(
-                f'top -b -n {loops} -d {intervall} | awk \'($1=="CPU:")||($4=="R") {{print}}\''
+                f'top -b -n {loop} -d {intervall} | awk \'($1=="CPU:")||($4=="R") {{print}}\''
             )
         )
     else:
         log = lnx.exec0(
             linux.Raw(
-                f'top -b -n {loops} -d {intervall} -c -H | awk \'($1=="%Cpu(s):")||($8=="R")||($1=="MiB") {{print}}\''
+                f'top -b -n {loop} -d {intervall} -c -H | awk \'($1=="%Cpu(s):")||($8=="R")||($1=="MiB") {{print}}\''
             )
         )
 
