@@ -176,112 +176,121 @@ class IniTBotConfig:
     see: :ref:`boardspecificruntimeadaption`
     """
 
-    workdir = os.getcwd()
+    # must be done before init
     tbotinifile = inithelper.inifile_get_tbotfilename()
-    labsectionname = inithelper.get_lab_sectionname()
     if set_board_cfg:
         set_board_cfg("IniTBotConfig", tbotinifile)
     replace_in_file(tbotinifile, "@@TBOTBOARD@@", generic_get_boardname())
-    config_parser = configparser.RawConfigParser(interpolation=ExtendedInterpolation())
-    config_parser.read(tbotinifile)
 
-    date = config_parser.get(labsectionname, "date")
-    shelltype = init_lab_get_config(config_parser, "shelltype", "ash")
-    ethdevices = {}
-    for s in config_parser.sections():
-        if "IPSETUP" in s:
-            nm = s.split("_")[1]
-            dev = s.split("_")[2]
+    def __init__(self):
+        self.tbotinifile = inithelper.inifile_get_tbotfilename()
+        self.labsectionname = inithelper.get_lab_sectionname()
+        self.workdir = os.getcwd()
+        self.config_parser = configparser.RawConfigParser(
+            interpolation=ExtendedInterpolation()
+        )
+        self.config_parser.read(self.tbotinifile)
+        self.date = self.config_parser.get(self.labsectionname, "date")
+        self.shelltype = init_lab_get_config(self.config_parser, "shelltype", "ash")
+        self.ethdevices = {}
+        for s in self.config_parser.sections():
+            if "IPSETUP" in s:
+                nm = s.split("_")[1]
+                dev = s.split("_")[2]
 
-            ethaddr = config_parser.get(s, "ethaddr")
-            labdevice = config_parser.get(s, "labdevice")
-            ipaddr = config_parser.get(s, "ipaddr")
-            serverip = config_parser.get(s, "serverip")
-            netmask = config_parser.get(s, "netmask")
+                ethaddr = self.config_parser.get(s, "ethaddr")
+                labdevice = self.config_parser.get(s, "labdevice")
+                ipaddr = self.config_parser.get(s, "ipaddr")
+                serverip = self.config_parser.get(s, "serverip")
+                netmask = self.config_parser.get(s, "netmask")
 
-            cfg = {
-                "labdevice": labdevice,
-                "ethaddr": ethaddr,
-                "serverip": serverip,
-                "ipaddr": ipaddr,
-                "netmask": netmask,
-            }
+                cfg = {
+                    "labdevice": labdevice,
+                    "ethaddr": ethaddr,
+                    "serverip": serverip,
+                    "ipaddr": ipaddr,
+                    "netmask": netmask,
+                }
 
-            devtmp = {dev: cfg}
-            try:
-                tmpdict = ethdevices[nm]
-                tmpdict.update({dev: cfg})
-            except:  # noqa: E722
-                ethdevices[nm] = devtmp
+                devtmp = {dev: cfg}
+                try:
+                    tmpdict = self.ethdevices[nm]
+                    tmpdict.update({dev: cfg})
+                except:  # noqa: E722
+                    self.ethdevices[nm] = devtmp
 
-    bootmodecfg = {}
-    for s in config_parser.sections():
-        if "BOOTMODE" in s:
-            nm = s.split("_")[1]
-            modes = eval(config_parser.get(s, "modes"))
-            bootmodecfg[nm] = modes
+        self.bootmodecfg = {}
+        for s in self.config_parser.sections():
+            if "BOOTMODE" in s:
+                nm = s.split("_")[1]
+                modes = eval(self.config_parser.get(s, "modes"))
+                self.bootmodecfg[nm] = modes
 
-    ubcfg = {}
-    for s in config_parser.sections():
-        if "UBCFG" in s:
-            nm = s.split("_")[1]
-            cfg = {
-                "ethintf": config_parser.get(s, "ethintf"),
-            }
+        self.ubcfg = {}
+        for s in self.config_parser.sections():
+            if "UBCFG" in s:
+                nm = s.split("_")[1]
+                cfg = {
+                    "ethintf": self.config_parser.get(s, "ethintf"),
+                }
 
-            ubcfg[nm] = cfg
+                self.ubcfg[nm] = cfg
 
-    uuucfg = {}
-    for s in config_parser.sections():
-        if "UUU_CONFIG" in s:
-            nm = s.split("_")[2]
-            cmd = config_parser.get(s, "cmd")
+        self.uuucfg = {}
+        for s in self.config_parser.sections():
+            if "UUU_CONFIG" in s:
+                nm = s.split("_")[2]
+                cmd = self.config_parser.get(s, "cmd")
 
-            uuucmd = []
-            for c in cmd.split(","):
-                uuucmd.append(c)
+                uuucmd = []
+                for c in cmd.split(","):
+                    uuucmd.append(c)
 
-            uuucfg[nm] = uuucmd
+                self.uuucfg[nm] = uuucmd
 
-    lauterbachcfg = {}
-    for s in config_parser.sections():
-        if "LAUTERBACH_CONFIG" in s:
-            nm = s.split("_")[2]
+        self.lauterbachcfg = {}
+        for s in self.config_parser.sections():
+            if "LAUTERBACH_CONFIG" in s:
+                nm = s.split("_")[2]
 
-            try:
-                verbose = config_parser.get(s, "verbose")
-            except:
-                verbose = 1
+                try:
+                    verbose = self.config_parser.get(s, "verbose")
+                except:
+                    verbose = 1
 
-            try:
-                ipath = config_parser.get(s, "install_path")
-            except:
-                ipath = "/opt/t32"
+                try:
+                    ipath = self.config_parser.get(s, "install_path")
+                except:
+                    ipath = "/opt/t32"
 
-            cmd = config_parser.get(s, "cmd")
-            conf = config_parser.get(s, "config")
-            script = config_parser.get(s, "script")
-            cfg = {
-                "verbose": verbose,
-                "install_path": ipath,
-                "cmd": cmd,
-                "config": conf,
-                "script": script,
-            }
+                cmd = self.config_parser.get(s, "cmd")
+                conf = self.config_parser.get(s, "config")
+                script = self.config_parser.get(s, "script")
+                cfg = {
+                    "verbose": verbose,
+                    "install_path": ipath,
+                    "cmd": cmd,
+                    "config": conf,
+                    "script": script,
+                }
 
-            lauterbachcfg[nm] = cfg
+                self.lauterbachcfg[nm] = cfg
 
-    seggercfg = {}
-    for s in config_parser.sections():
-        if "SEGGER_CONFIG" in s:
-            nm = s.split("_")[2]
+        self.seggercfg = {}
+        for s in self.config_parser.sections():
+            if "SEGGER_CONFIG" in s:
+                nm = s.split("_")[2]
 
-            cmds = eval(config_parser.get(s, "cmds"))
-            cfg = {
-                "cmds": cmds,
-            }
+                cmds = eval(self.config_parser.get(s, "cmds"))
+                cfg = {
+                    "cmds": cmds,
+                }
 
-            seggercfg[nm] = cfg
+                self.seggercfg[nm] = cfg
+
+    def __del__(self):
+        if os.path.exists(self.tbotinifile):
+            os.remove(self.tbotinifile)
 
 
 class IniConfig:
@@ -292,13 +301,20 @@ class IniConfig:
     """
 
     # read common tbot config and generate later [default] section
-    cfg = IniTBotConfig()
-    cfgp = cfg.config_parser
-    workdir = os.getcwd()
+    # cfg = IniTBotConfig()
+    # cfgp = cfg.config_parser
 
-    filename = inithelper.inifile_get_tbotboardfilename()
     if set_board_cfg:
-        set_board_cfg("IniConfig", filename)
+        set_board_cfg("IniConfig", inithelper.inifile_get_tbotboardfilename())
 
-    config_parser = configparser.RawConfigParser(interpolation=ExtendedInterpolation())
-    config_parser.read(filename)
+    def __init__(self):
+        self.workdir = os.getcwd()
+        self.config_parser = configparser.RawConfigParser(
+            interpolation=ExtendedInterpolation()
+        )
+        self.filename = inithelper.inifile_get_tbotboardfilename()
+        self.config_parser.read(self.filename)
+
+    def __del__(self):
+        if os.path.exists(self.filename):
+            os.remove(self.filename)
