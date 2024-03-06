@@ -53,10 +53,15 @@ def get_tbot_flags():
     return args.flags
 
 
+TBOTINIFILE=None
 def inifile_get_tbotfilename():
     """
     helper function for setting up tbot.ini filename
     """
+    global TBOTINIFILE
+    if TBOTINIFILE is not None:
+        return TBOTINIFILE
+
     # may we pass an ini file path through tbot flags
     # with for example: -f inifile_/tmp/tbot.ini
     flags = get_tbot_flags()
@@ -77,13 +82,19 @@ def inifile_get_tbotfilename():
     else:
         tbotinifile = workdir + "/../tbottest/tbotconfig/BOARDNAME/tbot.ini"
 
+    TBOTINIFILE=tbotinifile
     return tbotinifile
 
 
+TBOTBOARDNAME=None
 def inifile_get_tbotboardfilename():
     """
     helper function for setting up boardname.ini filename
     """
+    global TBOTBOARDNAME
+    if TBOTBOARDNAME is not None:
+        return TBOTBOARDNAME
+
     # may we pass an ini file path through tbot flags
     # with for example: -f inifile_/tmp/boardname.ini
     flags = get_tbot_flags()
@@ -104,4 +115,5 @@ def inifile_get_tbotboardfilename():
     else:
         filename = workdir + "/../tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini"
 
+    TBOTBOARDNAME=filename
     return filename
