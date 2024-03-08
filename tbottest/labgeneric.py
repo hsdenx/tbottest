@@ -69,7 +69,7 @@ class boardSSHConnector(connector.SSHConnector):
     if ign_hostkey:
         ignore_hostkey = True
 
-    username = "root"
+    username = ini.init_get_config(cfgp, "linux_user", "root")
     if IP_BOARD is None:
         RuntimeError(
             f"Please set ipaddr for ssh machine. Expect section {ssh_ip_section} with key ipaddr"
