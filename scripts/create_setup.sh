@@ -28,9 +28,23 @@ IPSETUPIP=192.168.3.40
 IPSETUPSERVERIP=192.168.3.1
 
 INTER=no
-if [ "$1" = "--inter" ]; then
-	INTER=yes
-fi
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -i|--inter)
+    shift # past argument
+    INTER=yes
+    ;;
+
+    *)    # unknown option
+    POSITIONAL+=("$1") # save it in an array may used later
+    shift # past argument
+    ;;
+esac
+done
 
 # $1 input_file
 # $2 search_string
