@@ -77,6 +77,21 @@ class boardSSHConnector(connector.SSHConnector):
 
     hostname = IP_BOARD
 
+    @property
+    def authenticator(self) -> linux.auth.Authenticator:
+        cfgb = ini.IniConfig()
+        cfgp = cfgb.config_parser
+        ssh_keyfile = ini.init_get_config(cfgp, "ssh_keyfile", "None")
+        if ssh_keyfile:
+            return linux.auth.PrivateKeyAuthenticator(ssh_keyfile)
+
+        ssh_password = ini.init_get_config(cfgp, "ssh_password", "None")
+        if ssh_password:
+            return linux.auth.PasswordAuthenticator(ssh_password)
+
+        # default, hopefully ssh config has all needed settings
+        return linux.auth.NoneAuthenticator()
+
 
 class boardGpioControl(powercontrol.GpiopmControl):
     def power_check(self) -> bool:

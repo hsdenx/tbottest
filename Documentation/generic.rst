@@ -685,6 +685,8 @@ settings needed for linux testcases.
         "sensors", "list of dictionary for checking temperature sensors", "[]", "sensors = [{'path':''/sys/class/hwmon/hwmon0, "name":"tmp102", "tmpvalues":[{"valname" : "temp1_input", "min":"0", "max" : "100000" }]},]"
         "mtd_parts", "list of dictionary for MTD parts definition", "[]", "leds = [{'name':'SPL', 'size':'10000'},]"
         "ub_mtd_delete", "list of strings with MTD names which are allowed to delete", "[]", "ub_mtd_delete = ['SPL", "uboot"]"
+        "ssh_keyfile"; "ssh setup: authentication using private key file ssh_keyfile", "None", "/home/{user}/.ssh/id_rsa"
+        "ssh_password"; "ssh setup: set password for password ssh login", "None", "foobar"
 
 
 swupdate settings
