@@ -372,7 +372,13 @@ here you configure common build host setting. Only used, if you use a buildhost.
         "kas_ref_dir", "when using kas, path where kas finds git trees for reference cloning", "/work/hs/src"
         "workdir", "path to directory where tbot can work on", "/work/big/hs/tbot2go"
         "authenticator", "path to ssh id key file", "/home/hs/.ssh/id_rsa"
+        "password", "password for ssh login. Unsure!", "CrazyPassword"
         "initcmd", "list of commands executed after login", "['"uname -a'", '"cat /etc/os-release'"]"
+
+
+If you do not add **authenticator** or **password**, tbot uses
+**NoneAuthenticator** for ssh login. Hopefully than your ssh config
+is correct.
 
 The above buidlhost defintion is the default one, You can add more than
 one buildhost, simply add them with the following section naming

@@ -83,8 +83,15 @@ class genericbuilder(connector.SSHConnector, linux.Bash, linux.Builder):
 
     @property
     def authenticator(self) -> linux.auth.Authenticator:
-        auth = cfgt.config_parser.get(self.sn, "authenticator")
-        return linux.auth.PrivateKeyAuthenticator(pathlib.PurePosixPath(auth))
+        auth = cfgt.config_parser.get(self.sn, "authenticator", fallback=None)
+        if auth:
+            return linux.auth.PrivateKeyAuthenticator(pathlib.PurePosixPath(auth))
+
+        password = cfgt.config_parser.get(self.sn, "password", fallback=None)
+        if password:
+            return linux.auth.PasswordAuthenticator(password)
+
+        return linux.auth.NoneAuthenticator()
 
     def toolchains(self) -> typing.Dict[str, linux.build.Toolchain]:
         raise RuntimeError("toolchains not implemented yet, please add support!")
