@@ -39,6 +39,21 @@ case $key in
     INTER=yes
     ;;
 
+    # checkout specific tbottest branch
+    -b|--branch)
+    shift # past argument
+    tbottestbranch=$1
+    shift # past argument
+    ;;
+
+    # checkout specific tbottest commitid
+    -c|--commitid)
+    shift # past argument
+    tbottestbranch=$1
+    shift # past argument
+    ;;
+
+
     *)    # unknown option
     POSITIONAL+=("$1") # save it in an array may used later
     shift # past argument
