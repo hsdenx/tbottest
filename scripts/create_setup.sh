@@ -27,6 +27,11 @@ IPSETUPETH=00:30:D6:2C:A6:3D
 IPSETUPIP=192.168.3.40
 IPSETUPSERVERIP=192.168.3.1
 
+INTER=no
+if [ "$1" = "--inter" ]; then
+	INTER=yes
+fi
+
 # $1 input_file
 # $2 search_string
 # $3 lines_to_delete
@@ -126,11 +131,6 @@ create_tbot_ini()
 
 	echo "Created ${SELECTPOWERCTRL} powerctrl setup"
 }
-
-INTER=no
-if [ "$1" = "--inter" ]; then
-	INTER=yes
-fi
 
 ## clone and create repos
 TBOTEXISTS=no
