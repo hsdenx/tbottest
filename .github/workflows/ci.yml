@@ -37,8 +37,6 @@ jobs:
               User $SSH_USER
               IdentityFile ~/.ssh/staging.key
               StrictHostKeyChecking no
-              HostkeyAlgorithms +ssh-rsa
-              PubkeyAcceptedAlgorithms +ssh-rsa
 
             Host 192.168.1.113
               HostName 192.168.1.113
@@ -46,8 +44,6 @@ jobs:
               ProxyJump $SSH_HOST
               IdentityFile ~/.ssh/staging.key
               StrictHostKeyChecking no
-              HostkeyAlgorithms +ssh-rsa
-              PubkeyAcceptedAlgorithms +ssh-rsa
           END
       - name: Run tbottest selftests
         run: |
