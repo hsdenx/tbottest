@@ -246,6 +246,7 @@ class IniTBotConfig:
         self.config_parser.read(self.tbotinifile)
         self.date = self.config_parser.get(self.labsectionname, "date")
         self.shelltype = init_lab_get_config(self.config_parser, "shelltype", "ash")
+        self.shelltype = self.shelltype.lower()
         self.ethdevices = {}
         for s in self.config_parser.sections():
             if "IPSETUP" in s:
