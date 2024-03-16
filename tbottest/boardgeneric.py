@@ -31,6 +31,7 @@ class GenericBoardConfig:
     cfgp = cfg
     tmpdir = cfg.get_config("tmpdir", "/tmp")
     shelltype = cfg.get_config("shelltype", "ash")
+    shelltype = shelltype.lower()
 
     ##############################################
     # Imagenames
