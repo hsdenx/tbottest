@@ -26,61 +26,54 @@ cfg = ini.IniConfig()
 class GenericBoardConfig:
     currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     workdir = os.path.dirname(currentdir)
-
     boardname = ini.generic_get_boardname()
-    cfgp = cfg.config_parser
-    tmpdir = ini.init_get_config(cfgp, "tmpdir", "/tmp")
 
-    shelltype = ini.init_get_config(cfgp, "shelltype", "ash")
+    cfgp = cfg
+    tmpdir = cfg.get_config("tmpdir", "/tmp")
+    shelltype = cfg.get_config("shelltype", "ash")
 
     ##############################################
     # Imagenames
     ##############################################
-    rescueimage = cfgp.get("TC", "rescueimage", fallback=None)
-    qspiheader = cfgp.get("TC", "qspiheader", fallback=None)
-    splimage = cfgp.get("TC", "splimage", fallback=None)
+    rescueimage = cfg.get_config("rescueimage", "None")
+    qspiheader = cfg.get_config("qspiheader", "None")
+    splimage = cfg.get_config("splimage", "None")
 
-    mtd_parts = eval(ini.init_get_config(cfgp, "mtd_parts", "[]"))
-    ub_mtd_delete = eval(ini.init_get_config(cfgp, "ub_mtd_delete", "[]"))
+    mtd_parts = eval(cfg.get_config("mtd_parts", "[]"))
+    ub_mtd_delete = eval(cfg.get_config("ub_mtd_delete", "[]"))
 
     ##############################################
     # U-Boot testcases
     ##############################################
-    fb_res_setup = ini.init_get_config(cfgp, "fb_res_setup", "None")
-    fb_res_boot = ini.init_get_config(cfgp, "fb_res_boot", "None")
-    fb_cmd = ini.init_get_config(cfgp, "fb_cmd", "None")
+    fb_res_setup = cfg.get_config("fb_res_setup", "None")
+    fb_res_boot = cfg.get_config("fb_res_boot", "None")
+    fb_cmd = cfg.get_config("fb_cmd", "None")
 
     ##############################################
     # Linux testcases
     ##############################################
-    beep = eval(ini.init_get_config(cfgp, "beep", "[]"))
-    cyclictestmaxvalue = eval(ini.init_get_config(cfgp, "cyclictestmaxvalue", "100"))
-    dmesg = eval(ini.init_get_config(cfgp, "dmesg", "[]"))
-    dmesg_false = eval(ini.init_get_config(cfgp, "dmesg_false", "[]"))
-    leds = eval(ini.init_get_config(cfgp, "leds", "[]"))
-    lnx_commands = eval(ini.init_get_config(cfgp, "lnx_commands", "[]"))
-    network_iperf_intervall = eval(
-        ini.init_get_config(cfgp, "network_iperf_intervall", "1")
-    )
-    network_iperf_minval = eval(
-        ini.init_get_config(cfgp, "network_iperf_minval", "90000000")
-    )
-    network_iperf_cycles = eval(ini.init_get_config(cfgp, "network_iperf_cycles", "30"))
+    beep = eval(cfg.get_config("beep", "[]"))
+    cyclictestmaxvalue = eval(cfg.get_config("cyclictestmaxvalue", "100"))
+    dmesg = eval(cfg.get_config("dmesg", "[]"))
+    dmesg_false = eval(cfg.get_config("dmesg_false", "[]"))
+    leds = eval(cfg.get_config("leds", "[]"))
+    lnx_commands = eval(cfg.get_config("lnx_commands", "[]"))
+    network_iperf_intervall = eval(cfg.get_config("network_iperf_intervall", "1"))
+    network_iperf_minval = eval(cfg.get_config("network_iperf_minval", "90000000"))
+    network_iperf_cycles = eval(cfg.get_config("network_iperf_cycles", "30"))
 
-    nvramdev = ini.init_get_config(cfgp, "nvramdev", "None")
-    nvramcomp = ini.init_get_config(cfgp, "nvramcomp", "None")
-    nvramsz = ini.init_get_config(cfgp, "nvramsz", "None")
+    nvramdev = cfg.get_config("nvramdev", "None")
+    nvramcomp = cfg.get_config("nvramcomp", "None")
+    nvramsz = cfg.get_config("nvramsz", "None")
 
-    rs485labdev = ini.init_get_config(cfgp, "rs485labdev", "None")
-    rs485baud = ini.init_get_config(cfgp, "rs485baud", "None")
-    rs485boarddev = eval(ini.init_get_config(cfgp, "rs495boarddev", '["/dev/ttymxc2"]'))
-    rs485lengths = eval(
-        ini.init_get_config(cfgp, "rs485lengths", '["20", "100", "1024"]')
-    )
+    rs485labdev = cfg.get_config("rs485labdev", "None")
+    rs485baud = cfg.get_config("rs485baud", "None")
+    rs485boarddev = eval(cfg.get_config("rs495boarddev", '["/dev/ttymxc2"]'))
+    rs485lengths = eval(cfg.get_config("rs485lengths", '["20", "100", "1024"]'))
 
-    sensors = eval(ini.init_get_config(cfgp, "sensors", "[]"))
+    sensors = eval(cfg.get_config("sensors", "[]"))
 
-    lnx_dump_files = eval(ini.init_get_config(cfgp, "lnx_dump_files", "[]"))
+    lnx_dump_files = eval(cfg.get_config("lnx_dump_files", "[]"))
     for entry in lnx_dump_files:
         entry[
             "revfile"
@@ -93,15 +86,24 @@ class GenericBoardConfig:
     ##############################################
     # swupdate testcases
     ##############################################
-    swuethdevice = ini.init_get_config(cfgp, "swuethdevice", "eth0")
-    swuimage = ini.init_get_config(cfgp, "swuimage", "None")
+    swuethdevice = cfg.get_config("swuethdevice", "eth0")
+    swuimage = cfg.get_config("swuimage", "None")
 
     ##############################################
     # kas testcases
     ##############################################
-    kas = eval(ini.init_get_config(cfgp, "kas", "[]"))
-    kas_check_files = eval(ini.init_get_config(cfgp, "kas_check_files", "[]"))
-    kas_results = eval(ini.init_get_config(cfgp, "kas_results", "[]"))
+    kas = eval(cfg.get_config("kas", "[]"))
+    kas_check_files = eval(cfg.get_config("kas_check_files", "[]"))
+    kas_results = eval(cfg.get_config("kas_results", "[]"))
+
+    def get_config(self, name: str, default: str):
+        return cfg.get_config(name, default)
+
+    def get_config_int(self, name: str, default: str):
+        return cfg.get_config_int(name, default)
+
+    def get_default_config(self, name: str, default: str):
+        return cfg.get_default_config(name, default)
 
 
 cfggeneric = GenericBoardConfig()
@@ -115,52 +117,47 @@ else:
 class GenericUBoot(
     board.Connector, board.UBootAutobootInterceptSimple, board.UBootShell
 ):  # noqa: E501
-    cfgp = cfg.config_parser
     name = f"{ini.generic_get_boardname()}-uboot"
-    prompt = cfgp.get("TC", "uboot_prompt", fallback="=> ")
+    cfgp = cfg
+    prompt = cfgp.get_config("uboot_prompt", "=> ")
     # remove ""
     prompt = prompt.strip('"')
 
     # If U-Boot is not up after 90 seconds, something is seriously wrong
     # we must use here 90 seconds as wdt timeout is 90 seconds.
-    bt = cfgp.get("TC", "uboot_boot_timeout", fallback=90)
-    if bt == "None":
-        boot_timeout = None
-    else:
-        boot_timeout = int(bt)
+    boot_timeout = cfgp.get_config_int("uboot_boot_timeout", "90")
 
-    ap = cfgp.get(
-        "TC",
+    ap = cfgp.get_config(
         "uboot_autoboot_prompt",
-        fallback=b"autoboot:\s{0,5}\d{0,3}\s{0,3}.{0,80}",  # noqa: W605
+        b"autoboot:\s{0,5}\d{0,3}\s{0,3}.{0,80}",  # noqa: W605
     )
-    if ap == "None":
+    if ap is None:
         autoboot_prompt = None
     else:
         autoboot_prompt = tbot.Re(ap, re.DOTALL)
 
-    ap = cfgp.get("TC", "uboot_autoboot_timeout", fallback="0.1")
-    if ap == "None":
+    ap = cfgp.get_config("uboot_autoboot_timeout", "0.1")
+    if ap is None:
         autoboot_timeout = 0.1
     else:
         autoboot_timeout = float(ap)
 
-    ap = cfgp.get("TC", "uboot_autoboot_keys", fallback="None")
-    if ap == "None":
+    ap = cfgp.get_config("uboot_autoboot_keys", "None")
+    if ap is None:
         autoboot_keys = None
     elif ap == "SPACE":
         autoboot_keys = " "
     else:
         autoboot_keys = str(ap)
 
-    ap = cfgp.get("TC", "uboot_autoboot_iter", fallback="None")
-    if ap == "None":
+    ap = cfgp.get_config("uboot_autoboot_iter", "None")
+    if ap is None:
         pass
     else:
         autoboot_iter = int(ap)
 
     def get_death_strings(self) -> List[str]:
-        return eval(cfg.config_parser.get("TC", "uboot_death_strings", fallback="[]"))
+        return eval(self.cfgp.get_config("uboot_death_strings", "[]"))
 
     def init(self) -> None:
         if "uboot_no_env_set" in tbot.flags:
@@ -191,7 +188,7 @@ class GenericUBoot(
         if "nobootcon" in tbot.flags:
             self.env("console", "silent")
 
-        env = self.cfgp.get("TC", "ub_env", fallback="[]")
+        env = self.cfgp.get_config("ub_env", "[]")
         envvalues = eval(env)
         for ev in envvalues:
             self.env(ev["name"], ev["val"])
@@ -201,7 +198,7 @@ class GenericUBoot(
 
 
 def add_death_strings(ch):
-    dstr = eval(cfg.config_parser.get("TC", "death_strings", fallback="[]"))
+    dstr = eval(cfg.get_config("death_strings", "[]"))
     for m in dstr:
         ch.add_death_string(m)
 
@@ -213,25 +210,12 @@ class GenericLinuxBoot(
 
     uboot = GenericUBoot
 
-    cfgp = cfg.config_parser
-    username = cfgp.get("TC", "linux_user", fallback="root")
-    pwd = cfgp.get("TC", "linux_password", fallback="None")
-    if pwd == "None":
-        password = None
-    else:
-        password = pwd
+    cfgp = cfg
+    username = cfgp.get_config("linux_user", "root")
+    password = cfgp.get_config("linux_password", "None")
 
-    bt = cfgp.get("TC", "linux_login_delay", fallback=None)
-    if bt is None:
-        login_delay = None
-    else:
-        login_delay = int(bt)
-
-    bt = cfgp.get("TC", "linux_boot_timeout", fallback=None)
-    if bt is None:
-        boot_timeout = None
-    else:
-        boot_timeout = int(bt)
+    login_delay = cfgp.get_config_int("linux_login_delay", "None")
+    boot_timeout = cfgp.get_config_int("linux_boot_timeout", "None")
 
     def get_channel(self, ub: board.UBootShell) -> channel.Channel:
         """
@@ -353,13 +337,11 @@ class GenericLinuxBoot(
                         "up",
                     )
 
-            lx_init_timeout = eval(
-                self.cfgp.get("TC", "linux_init_timeout", fallback="None")
-            )
+            lx_init_timeout = eval(self.cfg.get_config("linux_init_timeout", "None"))
             if lx_init_timeout != "None":
                 time.sleep(float(lx_init_timeout))
 
-        lx_init = eval(self.cfgp.get("TC", "linux_init", fallback="[]"))
+        lx_init = eval(self.cfgp.get_config("linux_init", "[]"))
         for cmd in lx_init:
             try:
                 mode = cmd["mode"]
@@ -380,8 +362,8 @@ class GenericLinuxBootwithoutUBootwithoutLogin(board.Connector, BOARD_LINUX_SHEL
 
     name = f"{ini.generic_get_boardname()}-linux"
 
-    cfgp = cfg.config_parser
-    username = cfgp.get("TC", "linux_user", fallback="root")
+    cfgp = cfg
+    username = cfgp.get_config("linux_user", "root")
     pwd = None
 
     @property
@@ -400,25 +382,12 @@ class GenericLinuxBootwithoutUBoot(
 ):
     name = f"{ini.generic_get_boardname()}-linux"
 
-    cfgp = cfg.config_parser
-    username = cfgp.get("TC", "linux_user", fallback="root")
-    pwd = cfgp.get("TC", "linux_password", fallback="None")
-    if pwd == "None":
-        password = None
-    else:
-        password = pwd
+    cfgp = cfg
+    username = cfgp.get_config("linux_user", "root")
+    password = cfgp.get_config("linux_password", "None")
 
-    bt = cfgp.get("TC", "linux_login_delay", fallback=None)
-    if bt is None:
-        login_delay = None
-    else:
-        login_delay = int(bt)
-
-    bt = cfgp.get("TC", "linux_boot_timeout", fallback=None)
-    if bt is None:
-        boot_timeout = None
-    else:
-        boot_timeout = int(bt)
+    login_delay = cfgp.get_config_int("linux_login_delay", "None")
+    boot_timeout = cfgp.get_config_int("linux_boot_timeout", "None")
 
     @property
     def workdir(self) -> "linux.Path[GenericLinux]":
@@ -453,6 +422,8 @@ class GenericLinuxBootwithoutUBoot(
 
 class GenericLinuxAlwaysOn(board.Connector, BOARD_LINUX_SHELL):
     name = f"{ini.generic_get_boardname()}-linux-on"
+
+    cfgp = cfg
 
     def init(self) -> None:
         # Disable all clutter on the console
