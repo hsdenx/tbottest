@@ -7,6 +7,26 @@ import tbottest.initconfighelper as inithelper
 BOARDNAME = None
 
 
+def init_get_default_config(
+    cfgp: configparser.RawConfigParser,
+    name: str,
+    default: str,
+) -> str:
+    """
+    returns value of key name from configparser.
+
+    Searches key name in "default" sectio
+
+    :param cfgp: current config parser
+    :param name: name of key
+    :param default: default value if key is not found
+    """
+    value = cfgp.get("default", name, fallback=default)
+    if value == "None":
+        return None
+    return value
+
+
 def init_get_config(
     cfgp: configparser.RawConfigParser,
     name: str,
@@ -27,6 +47,8 @@ def init_get_config(
     # first try boardname specific config
     try:
         value = cfgp.get(f"TC_{boardname}", name)
+        if value == "None":
+            return None
         return value
     except:
         pass
@@ -35,6 +57,38 @@ def init_get_config(
     if value == "None":
         return None
     return value
+
+
+def init_get_config_int(
+    cfgp: configparser.RawConfigParser,
+    name: str,
+    default: str,
+) -> int:
+    """
+    returns value of key name from configparser.
+
+    Searches first for a "TC_BOARDNAME" section and if it there
+    is not the key, search in section "TC". If not found, return
+    default value. If default value is "None" return None
+
+    :param cfgp: current config parser
+    :param name: name of key
+    :param default: default value if key is not found
+    """
+    boardname = generic_get_boardname()
+    # first try boardname specific config
+    try:
+        value = cfgp.get(f"TC_{boardname}", name)
+        if value == "None":
+            return None
+        return int(value)
+    except:
+        pass
+    # next common config
+    value = cfgp.get("TC", name, fallback=default)
+    if value == "None":
+        return None
+    return int(value)
 
 
 def init_lab_get_config(
@@ -318,3 +372,36 @@ class IniConfig:
     def __del__(self):
         if os.path.exists(self.filename):
             os.remove(self.filename)
+
+    def get_config(self, name: str, default: str):
+        """
+        returns value of key name from configparser.
+
+        use internal function init_get_config
+
+        :param name: name of key
+        :param default: default value if key is not found
+        """
+
+        return init_get_config(self.config_parser, name, default)
+
+    def get_config_int(self, name: str, default: str):
+        """
+        returns int value of key name from configparser.
+
+        use internal function init_get_config_int
+
+        :param name: name of key
+        :param default: default value if key is not found
+        """
+
+        return init_get_config_int(self.config_parser, name, default)
+
+    def get_default_config(self, name: str, default: str):
+        """
+        return value of key from "default" section with name "name"
+
+        :param name: name of key
+        :param default: default value if key is not found
+        """
+        return init_get_default_config(self.config_parser, name, default)
