@@ -64,6 +64,19 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i '~/.ssh/staging.key' pi@192.168.1.113 /home/pi/hello.sh
           # correct path to keyfile
           sed -i "s|/home/\${username}/.ssh/id_rsa|~/.ssh/staging.key|g" tbotconfig/foo/tbot.ini
+          echo "----- Test commandline completion ------------------------------------"
+          RET=$(tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth --complete-module tbotco)
+          if [ "${RET}" != "tbotconfig" ];then
+            echo "Commandline completion module failed"
+          fi
+          tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth --complete-module tbotconfig.in
+          if [ "${RET}" != "tbotconfig.interactive" ];then
+            echo "Commandline completion module second level failed"
+          fi
+          tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth --complete-testcase tbotconfig.interactive.la
+          if [ "${RET}" != "tbotconfig.interactive.lab" ];then
+            echo "Commandline completion testcase failed"
+          fi
           echo "----- now try to login into lab with tbot setup and do all tests -----"
           tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth -q -q tbotconfig.ci.tests.all
           # and test second build host
