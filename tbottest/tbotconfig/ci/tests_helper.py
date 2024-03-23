@@ -4,8 +4,8 @@ import importlib
 from typing import List
 
 
-FAILED = True
-SUCCESS = False
+FAILED = False
+SUCCESS = True
 
 
 def run_all_tests(tests: List, modname: str, name: str) -> bool:  # noqa: D107
@@ -25,7 +25,7 @@ def run_all_tests(tests: List, modname: str, name: str) -> bool:  # noqa: D107
             failedtest.append(test)
 
     if failedtest:
-        tbot.log.message(tbot.log.c(f"Failed {name} tests {test}").red)
+        tbot.log.message(tbot.log.c(f"Failed {failedtest}").red)
         return FAILED
 
     return SUCCESS
