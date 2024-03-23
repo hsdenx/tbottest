@@ -1,9 +1,13 @@
 import tbot
+import importlib
 
-from tbotconfig.ci.testlab import laball
-from tbotconfig.ci.testub import uball
-from tbotconfig.ci.testlnx import lnxall
-from tbotconfig.ci.testbh import bhall
+
+tests = [
+    {"module": "tbotconfig.ci.testlab", "func": "laball"},
+    {"module": "tbotconfig.ci.testub", "func": "uball"},
+    {"module": "tbotconfig.ci.testlnx", "func": "lnxall"},
+    {"module": "tbotconfig.ci.testbh", "func": "bhall"},
+]
 
 
 @tbot.testcase
@@ -11,7 +15,24 @@ def all() -> str:  # noqa: D107
     """
     start all tests
     """
-    laball()
-    uball()
-    lnxall()
-    bhall()
+    failedtest = []
+    for test in tests:
+        module = importlib.import_module(test["module"])
+        try:
+            func = getattr(module, test["func"])
+            ret = func()
+            if ret is not True:
+                failedtest.append("laball")
+        except:
+            tbot.log.message(
+                tbot.log.c(
+                    f'exception when calling function {test["func"]} from module {test["module"]}'
+                ).red
+            )
+            failedtest.append(test["func"])
+
+    if failedtest:
+        tbot.log.message(tbot.log.c(f"Failed {failedtest}").red)
+        return False
+
+    return True
