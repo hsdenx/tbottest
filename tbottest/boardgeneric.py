@@ -338,7 +338,7 @@ class GenericLinuxBoot(
                         "up",
                     )
 
-            lx_init_timeout = eval(self.cfg.get_config("linux_init_timeout", "None"))
+            lx_init_timeout = eval(self.cfgp.get_config("linux_init_timeout", "None"))
             if lx_init_timeout != "None":
                 time.sleep(float(lx_init_timeout))
 
