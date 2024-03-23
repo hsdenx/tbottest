@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - testing-ci
   pull_request:
 
 jobs:
@@ -66,6 +67,7 @@ jobs:
           sed -i "s|/home/\${username}/.ssh/id_rsa|~/.ssh/staging.key|g" tbotconfig/foo/tbot.ini
           echo "----- Test commandline completion ------------------------------------"
           RET=$(tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth --complete-module tbotco)
+          echo "RET M${RET}M"
           if [ "${RET}" != "tbotconfig" ];then
             echo "Commandline completion module failed"
           fi
