@@ -6,7 +6,7 @@ tbottag="v0.10.6"
 
 # tbottestsetup
 tbottesturl=https://github.com/hsdenx/tbottest.git
-tbottestbranch="master"
+tbottestbranch="testing-ci"
 
 # tbotconfig setup
 # default values, valid only for CI
