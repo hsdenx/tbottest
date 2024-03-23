@@ -17,7 +17,7 @@ def check_environment_settings() -> bool:  # noqa: D107
         ub = cx.request(tbot.role.BoardUBoot)
 
         error = SUCCESS
-        ubenvcfg = eval(cfggeneric.cfgp.get("TC", "ub_env"))
+        ubenvcfg = eval(cfggeneric.cfgp.get_config("ub_env", "[]"))
         for entry in ubenvcfg:
             val = ub.env(entry["name"])
             if val not in entry["val"]:
