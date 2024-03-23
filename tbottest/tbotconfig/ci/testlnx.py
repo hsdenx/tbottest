@@ -15,7 +15,7 @@ def lnx_test_linux_init_cfg() -> bool:  # noqa: D107
         lnx = cx.request(tbot.role.BoardLinux)
 
         error = SUCCESS
-        linux_init_cfg = eval(cfggeneric.cfgp.get("TC", "linux_init"))
+        linux_init_cfg = eval(cfggeneric.cfgp.get_config("linux_init", "[]"))
         for entry in linux_init_cfg:
             print(f"Entry {entry}")
         lnx.exec0("echo", "donothing")
