@@ -9,6 +9,8 @@ from tbottest.connector import PicocomConnector
 from tbottest import builders
 from tbottest import powercontrol
 from tbottest import machineinit
+from tbottest.common.boardlocking import lab_get_lock
+
 import tbottest.initconfighelper as inithelper
 
 cfgt = ini.IniTBotConfig()
@@ -274,6 +276,11 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
     tftproot = cfgt.config_parser.get(LABSECTIONNAME, "tftproot")
     port = cfgt.config_parser.get(LABSECTIONNAME, "port", fallback=22)
     nfs_base_path = cfgt.config_parser.get(LABSECTIONNAME, "nfs_base_path")
+    try:
+        enablelocking = cfgt.config_parser.get(LABSECTIONNAME, "uselocking")
+        enablelocking = enablelocking.lower()
+    except:
+        enablelocking = "no"
 
     bootmodecfg = cfgt.bootmodecfg
     ubcfg = cfgt.ubcfg
@@ -485,7 +492,13 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
 
         return True
 
+    def check_locking(self) -> None:
+        if self.enablelocking == "yes":
+            lab_get_lock(self)
+
     def init(self) -> None:
+        self.check_locking()
+
         # check if nfs server is running, if not start it
         # utils.ensure_sd_unit(self, ["nfs-server.service", "tftp.socket"])
         # check if we have eth0 connection, link and carrier

@@ -335,6 +335,7 @@ For login with ssh key set key 'sshkeyfile', for password login set key 'passwor
         "proxyjump", "if set, proxyjump settings for ssh login on lab host", "pi@xeidos.ddns.net"
         "labinit", "array of strings which contains commands, executed when you init the lab", "['sudo systemctl --all --no-pager restart tftpd-hpa']"
         "nfs_base_path", "base path to nfs share on lab host. !! May you have board specific subdir, so use placeholder @@TBOTLABBASENFSPATH@@ in board ini file and replace it in set_board_cfg", "/srv/nfs"
+        "uselocking", "use board locking mechanism. You must pass correct locking id for the board with tbot flag lablocking:<lockingid> else tbot will fail.", "yes|no"
 
 The above labhost defintion is the default one, You can add more than
 one labhost, simply add them with the following section naming
@@ -936,4 +937,5 @@ useifconfig              use ifconfig for ip setup, else ip
 poweroffonstart          if set, power off board before powering on
 seggerloader             use segger debugger for breathing life into board
 outside                  if lab host is only reachable with proxyjump
+lablockid                pass lab lockid with lockid:<yourlockid>
 ======================== ====================================================

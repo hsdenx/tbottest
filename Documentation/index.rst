@@ -13,6 +13,7 @@ Welcome to *tbot-test*!
    :caption: generic approach
 
    generic
+   boardlocking
    tips
 
 
