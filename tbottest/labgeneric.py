@@ -104,8 +104,8 @@ class boardGpioControl(powercontrol.GpiopmControl):
     cfg = f"GPIOPMCTRL_{bn}"
     for s in cfgt.config_parser.sections():
         if cfg == s:
-            gpiopmctl_pin = cfgt.config_parser.get(s, "pin")
-            gpiopmctl_state = cfgt.config_parser.get(s, "state")
+            gpiopmctl_pin = cfgt.config_parser.get(s, "gpiopmctl_pin")
+            gpiopmctl_state = cfgt.config_parser.get(s, "gpiopmctl_state")
 
 
 class boardPowerShellControl(powercontrol.PowerShellScriptControl):
