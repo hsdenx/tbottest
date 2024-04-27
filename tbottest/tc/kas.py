@@ -467,9 +467,10 @@ class KAS:
         self.bh.exec0("pwd")
         # setup task and target
         task = "build"
-        if "bitbake" in t:
-            target = t
-        elif " " in t:
+        if "bitbake" in t and "-c" not in t:
+            cmds = t.split(" ")
+            target = cmds[-1]
+        elif "-c" in t:
             cmds = t.split(" ")
             target = cmds[-1]
             foundtask = False
