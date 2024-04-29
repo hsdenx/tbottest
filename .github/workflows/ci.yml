@@ -101,4 +101,12 @@ jobs:
             echo "doing all sisyphus build host tests failed"
             returncode=1
           fi
+          # now check board locking
+          cp ../scripts/ci/check_lab_locking.sh .
+          ./check_lab_locking.sh
+          exitcode="$?"
+          if [[ "${exitcode}" != "0" ]];then
+            echo "checking lab locking mechanism failed"
+            returncode=1
+          fi
           exit "${returncode}"
