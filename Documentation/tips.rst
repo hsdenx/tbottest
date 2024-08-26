@@ -344,7 +344,6 @@ usb hub power control
     $ ./hubpower 1:2 power 1 oon
     $ ./hubpower 1:2 bind
 
-
 add static IP
 .............
 
@@ -404,7 +403,11 @@ sdmux
 
     $ git clone git://git.tizen.org/tools/testlab/sd-mux
 
-install as described in readme
+install as described in readme, may you need to install some packages
+
+.. code-block:: bash
+
+    $ sudo apt-get install cmake libpopt-dev libftdi1-dev
 
 
 .. warning::
