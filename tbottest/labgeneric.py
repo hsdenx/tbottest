@@ -467,9 +467,13 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
             gpios: string with list of gpionumbers and state which are needed to set the bootmode
                    26:1 -> set gpionumber 26 to value 1
 
-        example config:
+        example config for gpio setup:
         [BOOTMODE_testboard]
         modes = [{"name":"usb_sdp", "gpios":"26:1 19:0"}, {"name":"spinor", "gpios":"26:0 19:0"} ]
+
+        example config for sd mux:
+        [BOOTMODE_testboard]
+        modes = [{"name":"bootmode:sd", "sdwire":"dut"}, {"name":"bootmode:emmc", "sdwire":"lab"} ]
         """
         try:
             bootmodes = self.bootmodecfg[ini.generic_get_boardname()]
@@ -479,18 +483,28 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
         for bm in bootmodes:
             if bm["name"] in tbot.flags:
                 tbot.log.message(tbot.log.c(f"set bootmode {bm['name']}").yellow)
-                gpios = bm["gpios"]
-                for s in gpios.split(" "):
-                    gpionr = s.split(":")[0]
-                    state = s.split(":")[1]
-                    gpio = Gpio(self, gpionr)
-                    gpio.set_direction("out")
-                    if int(state) == 0:
-                        gpio.set_value(False)
-                    else:
-                        gpio.set_value(True)
+                try:
+                    gpios = bm["gpios"]
+                    for s in gpios.split(" "):
+                        gpionr = s.split(":")[0]
+                        state = s.split(":")[1]
+                        gpio = Gpio(self, gpionr)
+                        gpio.set_direction("out")
+                        if int(state) == 0:
+                            gpio.set_value(False)
+                        else:
+                            gpio.set_value(True)
+                    return True
+                except:
+                    pass
+                try:
+                    self.lab_set_sd_mux_mode(bm["sdwire"])
+                    return True
+                except:
+                    pass
 
-        return True
+                tbot.log.message(tbot.log.c(f"set bootmode {bm['name']} failed").red)
+        return False
 
     def check_locking(self) -> None:
         if self.enablelocking == "yes":
