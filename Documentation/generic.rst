@@ -453,6 +453,23 @@ Here as example wandboard.
         "cfgfile", "path to kermit config file, which is passed to kermit when starting", "/home/pi/kermrc_wandboard"
         "delay", "delay for poweroff", "3"
 
+[SCRIPTCOM_BOARDNAME]
+^^^^^^^^^^^^^^^^^^^^^
+
+if you want to use a script for connecting to your boards console.
+
+:py:meth:`tbottest.connector.ScriptConnector`
+
+replace BOARDNAME with the name of your board!
+Here as example wandboard.
+
+.. csv-table:: [SCRIPTCOM_wandboard]
+        :header: "key", "value", "example"
+
+        "scriptname", "Name of the script", "connect"
+        "exitstring", "string send to exit", "~~."
+
+
 [GPIOPMCTRL_BOARDNAME]
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -913,6 +930,7 @@ gpiopower                use a gpio pin for boards power control
 powershellscript         use a shellscript for boards power control
 tinkerforge              use tinkerforge for boards power control
 picocom                  use picocom for serial console
+scriptcom                use a script for serial console
 uuuloader                load SPL/U-Boot with uuu tool from NXP
 ignore_loglevel          add ignore_level to miscargs (deprecated, use set_ub_board_specific)
 enterinitramfs           enter initramfs, add enterinitramfs to miscargs(deprecated, use set_ub_board_specific)

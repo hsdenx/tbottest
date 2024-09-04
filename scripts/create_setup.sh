@@ -17,6 +17,9 @@ LABUSER=pi
 TERMPROG=picocom
 SELECTPOWERCTRL="none"
 
+SCRIPTCOMSCRIPTNAME=./connect.sh
+SCRIPTCOMEXITSTRING=~~.
+
 PICOCOMBAUDRATE=115200
 PICOCOMDEV=/dev/serial/by-id/usb-FTDI_C232HM-EDHSL-0_FT57MR3U-if00-port0
 PICOCOMDELAY=3
@@ -271,6 +274,9 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	sed -i "s|@@LABNAME@@|$LABNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
 	sed -i "s|@@LABHOSTNAME@@|$LABHOSTNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
 	sed -i "s|@@LABUSER@@|$LABUSER|g" ./tbotconfig/$BOARDNAME/tbot.ini
+
+	sed -i "s|@@SCRIPTCOMSCRIPTNAME@@|$SCRIPTCOMSCRIPTNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@SCRIPTCOMEXITSTRING@@|$SCRIPTCOMEXITSTRING|g" ./tbotconfig/$BOARDNAME/tbot.ini
 
 	sed -i "s|@@PICOCOMBAUDRATE@@|$PICOCOMBAUDRATE|g" ./tbotconfig/$BOARDNAME/tbot.ini
 	sed -i "s|@@PICOCOMDEV@@|$PICOCOMDEV|g" ./tbotconfig/$BOARDNAME/tbot.ini

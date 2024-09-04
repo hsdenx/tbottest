@@ -6,6 +6,7 @@ import tbottest.initconfig as ini
 from tbot_contrib.gpio import Gpio
 from tbottest.connector import KermitConnector
 from tbottest.connector import PicocomConnector
+from tbottest.connector import ScriptConnector
 from tbottest import builders
 from tbottest import powercontrol
 from tbottest import machineinit
@@ -50,6 +51,14 @@ class boardPicocomConnector(PicocomConnector):
             except:  # noqa: E722
                 pass
 
+class boardScriptConnector(ScriptConnector):
+    bn = ini.generic_get_boardname()
+    cfg = f"SCRIPTCOM_{bn}"
+    for s in cfgt.config_parser.sections():
+        if cfg == s:
+            scriptname = cfgt.config_parser.get(s, "scriptname")
+            exitstring = cfgt.config_parser.get(s, "exitstring")
+            boardname = bn
 
 class boardKermitConnector(KermitConnector):
     bn = ini.generic_get_boardname()
@@ -245,6 +254,8 @@ if "ssh" in tbot.flags:
 else:
     if "picocom" in tbot.flags:
         BOARDCON = boardPicocomConnector
+    elif "scriptcom" in tbot.flags:
+        BOARDCON = boardScriptConnector
     else:
         BOARDCON = boardKermitConnector
 
@@ -609,6 +620,7 @@ FLAGS = {
     "withscript": "also load a script with uuu tool into ram",
     "uuuloader": "load SPL/U-Boot with uuu tool into RAM",
     "picocom": "use piccom for accessing serial console",
+    "scriptcom": "use a script for accessing serial console",
     "tinkerforge": "use tinkerforge for switching power",
     "gpiopower": "use gpio pin for switching power",
     "powershellscript": "use a shell script for switching power",

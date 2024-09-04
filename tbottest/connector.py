@@ -174,3 +174,65 @@ class PicocomConnector(connector.ConsoleConnector):
 
     def connect(self, mach: linux.LinuxShell) -> channel.Channel:
         return self.picocomconnect(mach)
+
+class ScriptConnector(connector.ConsoleConnector):
+    """
+    Connect to a serial console using a script
+
+    **Example**: (board config)
+
+    .. code-block:: python
+
+        from tbot.machine import board
+        from tbottest.connector import PicocomConnector
+
+        class MyBoard(ScriptConnector, board.Board):
+            scriptname = "connect"
+            exitstring = ~~.
+            boardname = wandboard
+
+        BOARD = MyBoard
+    """
+
+    @property
+    @abc.abstractmethod
+    def boardname(self) -> str:
+        """
+        Name of the board
+
+        This property is **required**.
+        """
+        raise Exception("abstract method")
+
+    @property
+    @abc.abstractmethod
+    def exitstring(self) -> str:
+        """
+        string send to exit
+
+        This property is **required**.
+        """
+        raise Exception("abstract method")
+
+    @property
+    @abc.abstractmethod
+    def scriptname(self) -> str:
+        """
+        Name of the script
+
+        This property is **required**.
+        """
+        raise Exception("abstract method")
+
+    @contextlib.contextmanager
+    def scriptconnect(self, mach: linux.LinuxShell, boardname) -> channel.Channel:
+        try:
+            ch = mach.open_channel(self.scriptname, boardname)
+            yield ch
+        except  Exception as ex:
+            print("Exception ", ex)
+        finally:
+            ch.send(self.exitstring)
+
+    def connect(self, mach: linux.LinuxShell) -> channel.Channel:
+        return self.scriptconnect(mach, self.boardname)
