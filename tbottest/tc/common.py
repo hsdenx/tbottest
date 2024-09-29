@@ -230,6 +230,116 @@ def lnx_create_revfile(
     fd.close()
     return True
 
+def generic_machine_dump(
+    typ,
+    machine,
+    startaddr,
+    endaddr,
+    inc,
+    gaps,
+    filename,
+) -> None:
+    """
+    generate a generic register dump from a linux or U-Boot machine.
+    starting from startaddr until endaddr. Increment in each step
+    the current address with the value in inc.
+
+    machine contains a linux or U-Boot machine, simply the machine
+    from which you want to create the registerdump.
+
+    On Linux machine the value is read with devmem2 tool, in U-Boot
+    with the md command.
+
+    The testcase writes the address and the value into the file with
+    filename filename.
+
+    It is possible to define gaps (to prevent accessing registers which
+    create a core dump, or simply to not dump registers you are not
+    interested in!
+
+    With this approach you can dump register in linux and U-Boot and
+    simply compare the 2 resulting txt files. Or with testcase
+    generic_machine_dump_write write for example a register dump,
+    created on a linux machine to an U-Boot machine.
+
+    example:
+
+    .. code-block:: python
+
+    lcdif2_gaps = [
+        {"iaddr":"0x32e9002c", "naddr":"0x32e90030"},
+        {"iaddr":"0x32e90038", "naddr":"0x32e90200"},
+        {"iaddr":"0x32e90204", "naddr":"0x32e90208"},
+        {"iaddr":"0x32e90218", "naddr":"0x32e9021c"},
+    ]
+
+    So if new address is equal to "iaddr", it gets replaced
+    with the value in naddr.
+
+    :param type: values "linux" or "u-boot", we should detect this from machine parameter
+    :param machine: machine we run on
+    :param startaddr: address from which the testcase starts dumping
+    :param endaddr: address on which the testcase stops dumping
+    :param inc: address increment for the next step
+    :param gaps: array if dictionary, see above example
+    :param filename: file to where register values get stored
+    """
+    fd = open(filename, "w")
+
+    intval = int(startaddr, 16)
+    endval = int(endaddr, 16)
+    while (intval < endval):
+        newval = intval
+        newvalhex = hex(newval)
+        # fix gaps
+        for g in gaps:
+            if newvalhex == g["iaddr"]:
+                newvalhex = g["naddr"]
+
+        if typ == "linux":
+            val = lx_devmem2_get(machine, newvalhex, "w")
+        elif typ == "u-boot":
+            log = machine.exec0("md", newvalhex, "1")
+            rval = log.split(":")[1]
+            rval = rval.split(" ")[1]
+            val = f"0x{rval}"
+        else:
+            raise RuntimeError(f"type {typ} not supported.")
+
+        fd.write("%-10s %10s\n" % (newvalhex, val))
+
+        intval = int(newvalhex, 16) + inc
+
+    fd.close()
+
+def generic_machine_dump_write(
+    typ,
+    machine,
+    filename,
+) -> None:
+    """
+    Write a created register dump in file filename, created with testcase
+
+    generic_machine_dump
+
+    to the machine machine.
+    """
+    fd = open(filename, "r")
+    for line in fd.readlines():
+        cols = line.split()
+        print(f"a: {cols[0]} v: {cols[1]}")
+        if cols[0] == "#":
+            tbot.log.message(tbot.log.c(f"ignoring {cols[1]}").yellow)
+            continue
+
+        if typ == "linux":
+            raise RuntimeError(f"type {typ} not supported.")
+        elif typ == "u-boot":
+            machine.exec0("mw", cols[0], cols[1], "1")
+        else:
+            raise RuntimeError(f"type {typ} not supported.")
+
+    fd.close()
 
 @tbot.testcase
 def lnx_check_cmd(
