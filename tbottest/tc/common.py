@@ -230,6 +230,7 @@ def lnx_create_revfile(
     fd.close()
     return True
 
+
 def generic_machine_dump(
     typ,
     machine,
@@ -266,12 +267,12 @@ def generic_machine_dump(
 
     .. code-block:: python
 
-    lcdif2_gaps = [
-        {"iaddr":"0x32e9002c", "naddr":"0x32e90030"},
-        {"iaddr":"0x32e90038", "naddr":"0x32e90200"},
-        {"iaddr":"0x32e90204", "naddr":"0x32e90208"},
-        {"iaddr":"0x32e90218", "naddr":"0x32e9021c"},
-    ]
+        lcdif2_gaps = [
+            {"iaddr":"0x32e9002c", "naddr":"0x32e90030"},
+            {"iaddr":"0x32e90038", "naddr":"0x32e90200"},
+            {"iaddr":"0x32e90204", "naddr":"0x32e90208"},
+            {"iaddr":"0x32e90218", "naddr":"0x32e9021c"},
+        ]
 
     So if new address is equal to "iaddr", it gets replaced
     with the value in naddr.
@@ -288,7 +289,7 @@ def generic_machine_dump(
 
     intval = int(startaddr, 16)
     endval = int(endaddr, 16)
-    while (intval < endval):
+    while intval < endval:
         newval = intval
         newvalhex = hex(newval)
         # fix gaps
@@ -311,6 +312,7 @@ def generic_machine_dump(
         intval = int(newvalhex, 16) + inc
 
     fd.close()
+
 
 def generic_machine_dump_write(
     typ,
@@ -340,6 +342,7 @@ def generic_machine_dump_write(
             raise RuntimeError(f"type {typ} not supported.")
 
     fd.close()
+
 
 @tbot.testcase
 def lnx_check_cmd(
