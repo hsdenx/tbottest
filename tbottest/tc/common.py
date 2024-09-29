@@ -57,7 +57,7 @@ def search_multistring_in_multiline(searches, lines) -> bool:
         loop = False
 
     if found is False:
-        msg = "Not found all output in crypto"
+        msg = "Not found all strings in log"
         tbot.log.message(tbot.log.c(msg).red)
 
     return found
