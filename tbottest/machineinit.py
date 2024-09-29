@@ -446,7 +446,7 @@ class UUULoad(machine.Initializer):
         https://github.com/NXPmicro/mfgtools
         """
         uuu = self.get_uuu_tool()  # type: ignore
-        ret, out = self.host.exec("sudo", "ls", uuu / "mfgtools/uuu/uuu")
+        ret, out = self.host.exec("sudo", "ls", uuu / "mfgtools/build/uuu/uuu")
         if ret != 0:
             # uuu tool not installed try to install
             tbot.log.message(
@@ -456,7 +456,9 @@ class UUULoad(machine.Initializer):
             self.host.exec0("cd", uuu)
             self.host.exec0("git", "clone", "https://github.com/NXPmicro/mfgtools")
             self.host.exec0("cd", "mfgtools")
-            self.host.exec0("cmake", ".")
+            self.host.exec0("mkdir", "-p", "build")
+            self.host.exec0("cd", "build")
+            self.host.exec0("cmake", "..")
             self.host.exec0("make")
             self.host.exec0("cd", curdir)
 
@@ -475,7 +477,7 @@ class UUULoad(machine.Initializer):
         uuu = self.get_uuu_tool()  # type: ignore
         steps = self.uuu_loader_steps()  # type: List[str]
         for st in steps:
-            self.host.exec0("sudo", uuu / "mfgtools/uuu/uuu", st)  # type: ignore
+            self.host.exec0("sudo", uuu / "mfgtools/build/uuu/uuu", st)  # type: ignore
 
         yield None
 
