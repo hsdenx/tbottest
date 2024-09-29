@@ -236,6 +236,8 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/README.BOARDNAME README.$BOARDNAME
 	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/tbot.ini tbot.ini
 	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini $BOARDNAME.ini
+	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/BOARDNAME.py ../tc_$BOARDNAME.py
+	sed -i "s|BOARDNAME|$BOARDNAME|g" ../tc_$BOARDNAME.py
 	cd ../..
 
 	if [ "${INTER}" == "yes" ];then
