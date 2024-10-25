@@ -69,7 +69,7 @@ class GenericBoardConfig:
 
     rs485labdev = cfg.get_config("rs485labdev", "None")
     rs485baud = cfg.get_config("rs485baud", "None")
-    rs485boarddev = eval(cfg.get_config("rs495boarddev", '["/dev/ttymxc2"]'))
+    rs485boarddev = eval(cfg.get_config("rs485boarddev", '["/dev/ttymxc2"]'))
     rs485lengths = eval(cfg.get_config("rs485lengths", '["20", "100", "1024"]'))
 
     sensors = eval(cfg.get_config("sensors", "[]"))
