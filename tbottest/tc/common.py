@@ -53,6 +53,7 @@ def search_multistring_in_multiline(searches, lines) -> bool:
             found = search_string_in_multiline(findstr, lines)
             if found is False:
                 loop = False
+                break
 
         loop = False
 
