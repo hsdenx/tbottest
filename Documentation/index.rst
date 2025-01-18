@@ -33,6 +33,7 @@ Welcome to *tbot-test*!
    connector
    decorators
    powercontrol
+   labgeneric
 
 .. toctree::
    :maxdepth: 3

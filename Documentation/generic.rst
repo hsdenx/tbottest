@@ -338,13 +338,9 @@ to tbot with the "-f" flag, the lab approach first
 sets all gpios you have defined for this bootmode to the
 respective states, before it powers on the board.
 
-.. csv-table:: [BOOTMODE_testboard]
-        :header: "key", "description", "default", "example"
+Find more information in
 
-        "modes", "list of dictionary with 'name' and 'gpios' keys", "[]", "modes = [{'name':'usb_sdp', 'gpios':'26:1 19:0'}, {'name':'spinor', 'gpios':'26:0 19:0'} ]"
-
-which defines 2 bootmodes "usb_sdp" and "spinor" and sets
-the gpios number 26 and 19 to the state 0 or 1
+:py:meth:`tbottest.labgeneric.GenericLab.set_bootmode`
 
 [PICOCOM_BOARDNAME]
 ^^^^^^^^^^^^^^^^^^^

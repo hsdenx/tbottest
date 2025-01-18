@@ -471,20 +471,66 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
 
     def set_bootmode(self) -> bool:
         """
-        set the bootmode if defined in config file section [BOOTMODE_<boardname>]
-
-        modes is an array of dictionary with:
-            name: string, name of the bootmode. This string must be passed through tbots "-f" flag
-            gpios: string with list of gpionumbers and state which are needed to set the bootmode
-                   26:1 -> set gpionumber 26 to value 1
+        set the bootmode defined in config file section [BOOTMODE_<boardname>]
 
         example config for gpio setup:
-        [BOOTMODE_testboard]
-        modes = [{"name":"usb_sdp", "gpios":"26:1 19:0"}, {"name":"spinor", "gpios":"26:0 19:0"} ]
+
+        .. code-block:: ini
+
+            [BOOTMODE_testboard]
+            modes = [{"name":"bootmode:uart0", "gpios":"26:1 19:0"}, {"name":"bootmode:spinor", "gpios":"26:0 19:0"} ]
+
+        .. code-block:: bash
+
+            -f bootmode:uart0
+            -f bootmode:spinor
 
         example config for sd mux:
-        [BOOTMODE_testboard]
-        modes = [{"name":"bootmode:sd", "sdwire":"dut"}, {"name":"bootmode:emmc", "sdwire":"lab"} ]
+
+        .. code-block:: ini
+
+            [BOOTMODE_testboard]
+            modes = [{"name":"bootmode:sd", "sdwire":"dut"}, {"name":"bootmode:emmc", "sdwire":"lab"} ]
+
+        .. code-block:: bash
+
+            -f bootmode:sd
+            -f bootmode:emmc
+
+        example config for calling function in tbotconfig/labcallbacks.py:
+
+        .. code-block:: ini
+
+            [BOOTMODE_testboard]
+            modes = [{"name":"bootmode:usb", "func":"board_setbootmode_usb"}, {"name":"bootmode:emmc", "func":"board_setbootmode_emmc"} ]
+
+        .. code-block:: bash
+
+            -f bootmode:usb
+            -f bootmode:emmc
+
+        .. warning::
+
+            This is a hack !
+
+            You need to add the new file tbotconfig/labcallbacks.py and
+            implement there the files you define in "modes"
+
+            Only use it, for fast testing, then implement it in a class!
+
+        Currently there is only one argument passed:
+
+        Example code
+
+        .. code-block:: python
+
+            def board_setbootmode_usb(
+                lab: linux.LinuxShell = None,
+            ) -> None:  # noqa: D107
+                # call commands on lab with
+                # lab.exec0("....")
+                return True
+
         """
         try:
             bootmodes = self.bootmodecfg[ini.generic_get_boardname()]
@@ -508,13 +554,28 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
                     return True
                 except:
                     pass
+
                 try:
                     self.lab_set_sd_mux_mode(bm["sdwire"])
                     return True
                 except:
                     pass
 
+                try:
+                    from tbotconfig import labcallbacks
+
+                    funcname = bm['func']
+                    func = getattr(labcallbacks, funcname)
+                    ret = func(self)
+                    return ret
+                except:
+                    pass
+
                 tbot.log.message(tbot.log.c(f"set bootmode {bm['name']} failed").red)
+                raise RuntimeError(
+                    f"Exit until callbacks work"
+                )
+
         return False
 
     def check_locking(self) -> None:
