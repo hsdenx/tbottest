@@ -148,6 +148,9 @@ class GenericUBoot(
         autoboot_keys = None
     elif ap == "SPACE":
         autoboot_keys = " "
+    elif 'bytearray:' in ap:
+        ap = ap.replace("bytearray:", "")
+        autoboot_keys = bytearray.fromhex(ap)
     else:
         autoboot_keys = str(ap)
 

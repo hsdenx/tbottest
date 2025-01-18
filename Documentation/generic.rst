@@ -664,6 +664,7 @@ settings needed for U-Boot testcases.
         :header: "key", "description", "default", "example"
 
         "uboot_boot_timeout", "config boot_timeout, set None if None", "90", "None"
+        "uboot_autoboot_keys", "string with which U-Boot boot is interrupted. It is possible to set also a bytearray", "SPACE", "None"
         "autoboot_prompt", "set autoboot_prompt, None if None", b'"autoboot:\\s{0,5}\\d{0,3}\\s{0,3}.{0,80}'", "None"
         "autoboot_timeout", "UBootAutobootInterceptSimple timeout for waiting for U-Boot prompt", '0.05', "0.1"
         "rescueimage", "name of rescueimage", "None", "rescueimage-fit.itb"
@@ -673,6 +674,14 @@ settings needed for U-Boot testcases.
         "fb_res_boot", "u-boot command for booting rescue image with fastboot and uuu tool", "None", "bootm 94000000"
         "fb_cmd", "fastboot init command", "None", "fastboot usb 0"
         "ub_env", "list dict of u-boot environment variables which get set after login into u-boot", "[]", "[{'"name'":'"optargs'", '"val'":'"earlycon clk_ignore_unused'"}]"
+
+.. csv-table:: uboot_autoboot_keys example
+        :escape: '
+        :header: "configuration string", "sended bytes to console"
+
+        "K", "\x4b"
+        "SPACE", "\x03"
+        "bytearray:1b1b", "\x1b\x1b"
 
 linux settings
 ^^^^^^^^^^^^^^
