@@ -118,6 +118,7 @@ If you need to test the linux **reboot** command use this:
     if failure:
         raise RuntimeError("lnx_check_reboot failed")
 
+.. _labsetup:
 
 lab setup
 ---------

@@ -7,6 +7,11 @@ tbot-test Documentation
 =======================
 Welcome to *tbot-test*!
 
+.. toctree::
+   :maxdepth: 1
+   :caption: quick start
+
+   quickstart.rst
 
 .. toctree::
    :maxdepth: 1
