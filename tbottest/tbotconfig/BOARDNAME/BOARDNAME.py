@@ -24,8 +24,8 @@ nfspath = f"{cfg.tmpdir}/nfs"
 ################################################
 @tbot.testcase
 def BOARDNAME_ub_dummy(
-    lab: Optional[linux.LinuxShell]=None,
-    ub: Optional[board.UBootShell]=None,
+    lab: Optional[linux.LinuxShell] = None,
+    ub: Optional[board.UBootShell] = None,
 ) -> bool:  # noqa: D107
     """
     Dummy U-Boot example
@@ -39,15 +39,17 @@ def BOARDNAME_ub_dummy(
 
         ub.exec0("echo", "Hello World!")
 
-from tbotconfig import tc_BOARDNAME.py
+
+from tbotconfig import tc_BOARDNAME
 
 ub_testcases = ["BOARDNAME_ub_dummy"]
 
+
 @tbot.testcase
 def BOARDNAME_ub_all(
-    lab: Optional[linux.LinuxShell]=None,
-    ub: Optional[board.UBootShell]=None,
-    interactive = False,
+    lab: Optional[linux.LinuxShell] = None,
+    ub: Optional[board.UBootShell] = None,
+    interactive=False,
 ) -> None:  # noqa: D107
     """
     call all U-Boot tests
@@ -66,7 +68,11 @@ def BOARDNAME_ub_all(
 
         for t in ub_testcases:
             count += 1
-            tbot.log.message(tbot.log.c(f"---- start test {t} {count} / {tests} suc: {success} fail: {failed} ----").yellow)
+            tbot.log.message(
+                tbot.log.c(
+                    f"---- start test {t} {count} / {tests} suc: {success} fail: {failed} ----"
+                ).yellow
+            )
             try:
                 func = getattr(tc_abb, t)
                 ret = func()
@@ -75,12 +81,21 @@ def BOARDNAME_ub_all(
                 continue
 
         if failed == 0:
-            tbot.log.message(tbot.log.c(f"---- tests {t} {count} / {tests} suc: {success} fail: {failed} ----").green)
+            tbot.log.message(
+                tbot.log.c(
+                    f"---- tests {t} {count} / {tests} suc: {success} fail: {failed} ----"
+                ).green
+            )
         else:
-            tbot.log.message(tbot.log.c(f"---- tests {t} {count} / {tests} suc: {success} fail: {failed} ----").red)
+            tbot.log.message(
+                tbot.log.c(
+                    f"---- tests {t} {count} / {tests} suc: {success} fail: {failed} ----"
+                ).red
+            )
 
         if interactive:
             ub.interactive()
+
 
 ################################################
 # Linux
@@ -89,10 +104,9 @@ def BOARDNAME_ub_all(
 def BOARDNAME_lx_dummy(
     lab: linux.LinuxShell = None,
     lnx: linux.LinuxShell = None,
-    interactive = False,
+    interactive=False,
 ) -> None:  # noqa: D107
-    """
-    """
+    """ """
     with tbot.ctx() as cx:
         if lab is None:
             lab = cx.request(tbot.role.LabHost)
