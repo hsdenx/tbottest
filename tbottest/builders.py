@@ -97,6 +97,41 @@ class genericbuilder(connector.SSHConnector, linux.Bash, linux.Builder):
         raise RuntimeError("toolchains not implemented yet, please add support!")
 
 
+class genericbuilderlocal(connector.SubprocessConnector, linux.Bash, linux.Builder):
+    sn = "BUILDHOST_local"
+    name = cfgt.config_parser.get(sn, "name")
+    dl_dir = cfgt.config_parser.get(sn, "dl_dir")
+    sstate_dir = cfgt.config_parser.get(sn, "sstate_dir")
+
+    @property
+    def kas_ref_dir(self) -> "linux.Path[genericbuilder]":
+        kas_ref_dir = cfgt.config_parser.get(self.sn, "kas_ref_dir")
+        return linux.Workdir.static(self, kas_ref_dir)
+
+    @property
+    def workdir(self) -> "linux.Path[genericbuilder]":
+        workdir = cfgt.config_parser.get(self.sn, "workdir")
+        return linux.Workdir.static(self, workdir)
+
+    def init(self) -> None:
+        if "BHINIT" not in _INIT_CACHE:
+            _INIT_CACHE["BHINIT"] = True
+            try:
+                initcmd = eval(cfgt.config_parser.get(self.sn, "initcmd"))
+            except:
+                initcmd = []
+
+            for cmd in initcmd:
+                c = []
+                for t in cmd.split(" "):
+                    c.append(t)
+
+                self.exec0(*c)
+
+    def toolchains(self) -> typing.Dict[str, linux.build.Toolchain]:
+        raise RuntimeError("toolchains not implemented yet, please add support!")
+
+
 FLAGS = {
-    "buildername": "buildername:<name of builder> searches for BUILDHOST_<name of builder> section if passed to tbot. If not searches for BUILDHOST section",
+    "buildername": "buildername:<name of builder> searches for BUILDHOST_<name of builder> section if passed to tbot. If not searches for BUILDHOST section. use name local to build on the machine, on which tbot is started",
 }

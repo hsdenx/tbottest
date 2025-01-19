@@ -669,8 +669,17 @@ class SSHMachine(connector.SSHConnector, linux.Bash):
 def register_machines(ctx):
     ctx.register(GenericLab, tbot.role.LabHost)
     for s in cfgt.config_parser.sections():
+        localfound = False
         if "BUILDHOST" in s:
-            ctx.register(builders.genericbuilder, tbot.role.BuildHost)
+            for f in tbot.flags:
+                if "buildername:local" in f:
+                    # build on machine, on which tbot is startet!
+                    ctx.register(builders.genericbuilderlocal, tbot.role.BuildHost)
+                    localfound = True
+
+            if not localfound:
+                ctx.register(builders.genericbuilder, tbot.role.BuildHost)
+
             return
 
 
