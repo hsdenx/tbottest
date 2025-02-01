@@ -99,6 +99,13 @@ TPM
 .. automodule:: tbottest.tc.tpm
    :members:
 
+U-Boot
+------
+
+.. automodule:: tbottest.common.ubootbuild
+   :members:
+
+
 Yocto
 -----
 
