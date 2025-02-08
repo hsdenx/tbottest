@@ -23,6 +23,7 @@ class UBBUILDMAN:
 
     :param lab: lab host machine. must be valid
     :param bh: build host machine, must be valid
+    :param ubootpatchsubpath: str subdir on labhosts tftp directory with downstream U-Boot patches
     :param defconfig: defconfig name of the board
     :param binarieslist: list of strings of binary names which get copied to builddir
     :param binariesdir: str of pathname where binaries are found
@@ -34,6 +35,7 @@ class UBBUILDMAN:
         B = [
         {
             'defconfig': 'foo',
+            'ubootpatchsubpath': uboot-patches',
             'binaries': ['bl31.bin', 'mx8qx-mek-scfw-tcm.bin', 'mx8qxc0-ahab-container.img'],
             'binpath': 'tbottesting/tbotconfig/foo/binaries/',
             'resultbinaries': ['flash.bin'],
@@ -42,7 +44,7 @@ class UBBUILDMAN:
         ]
 
         for b in B:
-            bmcfg = UBBUILDMAN(lab, bh, b["defconfig"], b["binaries"], b["binpath"], b["resultbinaries"])
+            bmcfg = UBBUILDMAN(lab, bh, b["ubootpatchsubpath"], b["defconfig"], b["binaries"], b["binpath"], b["resultbinaries"])
             bmcfg.bm_build_board()
             bmcfg.bm_copy_results2lab()
 
@@ -51,6 +53,7 @@ class UBBUILDMAN:
             self,
             lab:linux.LinuxShell,
             bh: linux.LinuxShell,
+            ubootpatchsubpath: str = None,
             defconfig: str = None,
             binarieslist: list = [],
             binariesdir: list = [],
@@ -64,17 +67,60 @@ class UBBUILDMAN:
 
         self.lab = lab
         self.bh = bh
+        self.ubootpatchsubpath = ubootpatchsubpath
         self.basedir = linux.Path(self.bh, self.bh.exec0("pwd").strip())
         # we call it from u-boot subdir tbottest, so U-Boot source base is one level back
         self.basedir = self.basedir / ".."
 
+        self.tbotbranchname = "tbot-build"
         self.defconfig = defconfig
+        self.ubootpatchpath = self.basedir / self.ubootpatchsubpath
         self.binarieslist = binarieslist
         self.binariesdir = self.basedir / binariesdir
         self.builddir = self.basedir / f"build-{self.defconfig}"
         self.builddirbuildman = self.builddir  / ".bm-work/00/build/"
         self.resultbins = resultbins
         self.makelist = makelist
+
+    @tbot.testcase
+    def bm_get_uboot_patches(
+        self,
+    ) -> None:  # noqa: D107
+        """
+        copy boardspecfic downstream patches found on lab
+        host in current tftp path for the board in subdir
+        "uboot-patches" to the build host
+        """
+        self.bh.exec0("rm", "-rf", self.ubootpatchpath)
+        self.bh.exec0("mkdir", "-p", self.ubootpatchpath)
+        pf = "0*"
+        shell.copy(self.lab.tftp_dir() / f"uboot-patches/{pf}", self.ubootpatchpath, remote_copy=True)
+
+    @tbot.testcase
+    def bm_apply_uboot_patches(
+        self,
+    ) -> None:  # noqa: D107
+        """
+        apply the patches which are in self.ubootpatchpath
+        """
+        # check if we are on self.tbotbranchname
+        # if so, do nothing
+        # check if branchname exists
+        ret, commitidtbotbranch = self.bh.exec("git", "rev-parse", "--verify", self.tbotbranchname)
+        if ret == 0:
+            # branch exists, check if we are currently on it
+            # if so, do nothing
+            ret, log = self.bh.exec("git", "rev-parse", "--verify", "HEAD")
+            if commitidtbotbranch == log:
+                tbot.log.message(tbot.log.c(f"{self.tbotbranchname} currently checked out").yellow)
+                return
+
+
+        self.bh.exec("git", "branch", "-D", self.tbotbranchname)
+        self.bh.exec0("git", "checkout", "-b", self.tbotbranchname)
+        self.bh.exec0("pwd")
+        pp = f"{self.ubootpatchpath._local_str()}/*.patch"
+        self.bh.exec0("git", "am", "-3", linux.Raw(pp))
 
     @tbot.testcase
     def bm_build_prepare(
@@ -127,6 +173,9 @@ class UBBUILDMAN:
         self.bh.exec0("mkdir", "-p", self.builddirbuildman)
         for f in self.binarieslist:
             self.bh.exec0("cp", self.binariesdir / f, self.builddirbuildman)
+
+        self.bm_get_uboot_patches()
+        self.bm_apply_uboot_patches()
 
         return arch, gcc, toolchainpath
 
