@@ -11,13 +11,13 @@ class UBBUILDMAN:
     simple class for some useful buildman tool abstractions
     for building U-Boot. You can define a subdirname
     "binsubpath" which is a subdir on lab hosts tftp directory
-    in which needed binaries for U-Boot build are found.
-    tbot copies all files found in this file to U-Boot
-    build directory on build host.
+    in which needed binaries for complete and working U-Boot
+    build are found. tbot copies all files found in this file
+    to U-Boot build directory on build host.
 
     Same for downsream patches. You can define a name for
     a subdirectory found on labhosts tftp directory for the
-    board with "ubootpatchsubpath". All patches found in
+    board with name "ubootpatchsubpath". All patches found in
     this directory, are copied to U-Boot source directory
     on build host and applied to the current U-Boot source
     code.
@@ -34,7 +34,7 @@ class UBBUILDMAN:
     :param bh: build host machine, must be valid
     :param ubootpatchsubpath: str subdir on labhosts tftp directory with downstream U-Boot patches
     :param defconfig: defconfig name of the board
-    :param binariessubpath: str subidr on labhosts tftp directory where needed binaries are found
+    :param binariessubpath: str subdir on labhosts tftp directory where needed binaries are found
     :param resultbins: list of strings of resulting binarienames
     :param makelist: list of strings of make targets
 
@@ -43,7 +43,7 @@ class UBBUILDMAN:
         B = [
         {
             'defconfig': 'foo',
-            'ubootpatchsubpath': uboot-patches',
+            'ubootpatchsubpath': 'uboot-patches',
             'binsubpath': 'binaries',
             'resultbinaries': ['flash.bin'],
             'makelist': ['flash.bin'],
