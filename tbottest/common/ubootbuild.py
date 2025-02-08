@@ -12,8 +12,8 @@ class UBBUILDMAN:
     for building U-Boot. You can define a subdirname
     "binsubpath" which is a subdir on lab hosts tftp directory
     in which needed binaries for complete and working U-Boot
-    build are found. tbot copies all files found in this file
-    to U-Boot build directory on build host.
+    build are found. tbot copies all files found in this subdirectory
+    to U-Boots build directory on build host.
 
     Same for downsream patches. You can define a name for
     a subdirectory found on labhosts tftp directory for the
