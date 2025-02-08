@@ -9,9 +9,18 @@ from tbot.tc import shell
 class UBBUILDMAN:
     """
     simple class for some useful buildman tool abstractions
-    for building U-Boot. You can define a list of binaries,
-    which are copied from binariesdir to U-Boots build dir
-    before U-Boot gets builded (for example atf binary).
+    for building U-Boot. You can define a subdirname
+    "binsubpath" which is a subdir on lab hosts tftp directory
+    in which needed binaries for U-Boot build are found.
+    tbot copies all files found in this file to U-Boot
+    build directory on build host.
+
+    Same for downsream patches. You can define a name for
+    a subdirectory found on labhosts tftp directory for the
+    board with "ubootpatchsubpath". All patches found in
+    this directory, are copied to U-Boot source directory
+    on build host and applied to the current U-Boot source
+    code.
 
     The list of resulting binaries in resultbins you can
     copy to lab hosts tftp path with
@@ -25,8 +34,7 @@ class UBBUILDMAN:
     :param bh: build host machine, must be valid
     :param ubootpatchsubpath: str subdir on labhosts tftp directory with downstream U-Boot patches
     :param defconfig: defconfig name of the board
-    :param binarieslist: list of strings of binary names which get copied to builddir
-    :param binariesdir: str of pathname where binaries are found
+    :param binariessubpath: str subidr on labhosts tftp directory where needed binaries are found
     :param resultbins: list of strings of resulting binarienames
     :param makelist: list of strings of make targets
 
@@ -36,15 +44,14 @@ class UBBUILDMAN:
         {
             'defconfig': 'foo',
             'ubootpatchsubpath': uboot-patches',
-            'binaries': ['bl31.bin', 'mx8qx-mek-scfw-tcm.bin', 'mx8qxc0-ahab-container.img'],
-            'binpath': 'tbottesting/tbotconfig/foo/binaries/',
+            'binsubpath': 'binaries',
             'resultbinaries': ['flash.bin'],
             'makelist': ['flash.bin'],
         },
         ]
 
         for b in B:
-            bmcfg = UBBUILDMAN(lab, bh, b["ubootpatchsubpath"], b["defconfig"], b["binaries"], b["binpath"], b["resultbinaries"])
+            bmcfg = UBBUILDMAN(lab, bh, b["ubootpatchsubpath"], b["binsubath"], b["defconfig"], b["resultbinaries"])
             bmcfg.bm_build_board()
             bmcfg.bm_copy_results2lab()
 
@@ -54,9 +61,8 @@ class UBBUILDMAN:
             lab:linux.LinuxShell,
             bh: linux.LinuxShell,
             ubootpatchsubpath: str = None,
+            ubootbinariessubpath: str = None,
             defconfig: str = None,
-            binarieslist: list = [],
-            binariesdir: list = [],
             resultbins: list = [],
             makelist: list = []):
         if lab == None:
@@ -68,6 +74,7 @@ class UBBUILDMAN:
         self.lab = lab
         self.bh = bh
         self.ubootpatchsubpath = ubootpatchsubpath
+        self.ubootbinariessubpath = ubootbinariessubpath
         self.basedir = linux.Path(self.bh, self.bh.exec0("pwd").strip())
         # we call it from u-boot subdir tbottest, so U-Boot source base is one level back
         self.basedir = self.basedir / ".."
@@ -75,8 +82,6 @@ class UBBUILDMAN:
         self.tbotbranchname = "tbot-build"
         self.defconfig = defconfig
         self.ubootpatchpath = self.basedir / self.ubootpatchsubpath
-        self.binarieslist = binarieslist
-        self.binariesdir = self.basedir / binariesdir
         self.builddir = self.basedir / f"build-{self.defconfig}"
         self.builddirbuildman = self.builddir  / ".bm-work/00/build/"
         self.resultbins = resultbins
@@ -171,8 +176,10 @@ class UBBUILDMAN:
             raise RuntimeError(f"Could not fetch toolchain for arch {arch}")
 
         self.bh.exec0("mkdir", "-p", self.builddirbuildman)
-        for f in self.binarieslist:
-            self.bh.exec0("cp", self.binariesdir / f, self.builddirbuildman)
+        ret, log = self.lab.exec("ls", "-1", self.lab.tftp_dir() / self.ubootbinariessubpath)
+        log = log.strip("\n")
+        for f in log.split("\n"):
+            shell.copy(self.lab.tftp_dir() / self.ubootbinariessubpath / f, self.builddirbuildman, remote_copy=True)
 
         self.bm_get_uboot_patches()
         self.bm_apply_uboot_patches()
