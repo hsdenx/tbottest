@@ -248,6 +248,9 @@ class IniTBotConfig:
         self.shelltype = init_lab_get_config(self.config_parser, "shelltype", "ash")
         self.shelltype = self.shelltype.lower()
         self.ethdevices = {}
+        self.picocom = False
+        self.kermit = False
+        self.scriptcom = False
         for s in self.config_parser.sections():
             if "IPSETUP" in s:
                 nm = s.split("_")[1]
@@ -342,6 +345,15 @@ class IniTBotConfig:
                 }
 
                 self.seggercfg[nm] = cfg
+
+        bn = generic_get_boardname()
+        for s in self.config_parser.sections():
+            if f"PICOCOM_{bn}" in s:
+                self.picocom = True
+            if f"KERMIT_{bn}" in s:
+                self.kermit = True
+            if f"SCRIPTCOM_{bn}" in s:
+                self.scriptcom = True
 
     def __del__(self):
         if os.path.exists(self.tbotinifile):

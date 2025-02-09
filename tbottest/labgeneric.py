@@ -251,13 +251,20 @@ else:
 
 if "ssh" in tbot.flags:
     BOARDCON = boardSSHConnector
+elif "picocom" in tbot.flags:
+    BOARDCON = boardPicocomConnector
+elif "scriptcom" in tbot.flags:
+    BOARDCON = boardScriptConnector
 else:
-    if "picocom" in tbot.flags:
+    # try to autodetect setup (config from tbot.ini file)
+    if cfgt.kermit:
+        BOARDCON = boardKermitConnector
+    elif cfgt.picocom:
         BOARDCON = boardPicocomConnector
-    elif "scriptcom" in tbot.flags:
+    elif cfgt.scriptcom:
         BOARDCON = boardScriptConnector
     else:
-        BOARDCON = boardKermitConnector
+        raise RuntimeError("Please setup console connector")
 
 
 class boardControlFull(BOARDCON, BOARDCTRL, board.Board):
