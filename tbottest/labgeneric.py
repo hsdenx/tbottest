@@ -487,7 +487,7 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
             tbot.log.message(tbot.log.c("no sd wire on this labhost").yellow)
             pass
 
-    def set_bootmode(self) -> bool:
+    def set_bootmode(self, wantbootmode: str = None) -> bool:
         """
         set the bootmode defined in config file section [BOOTMODE_<boardname>]
 
@@ -549,50 +549,64 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
                 # lab.exec0("....")
                 return True
 
+        :param wantbootmode: str, bootmode string, use this, when you call the function from within python function
         """
         try:
             bootmodes = self.bootmodecfg[ini.generic_get_boardname()]
         except:
             return True
 
-        for bm in bootmodes:
-            if bm["name"] in tbot.flags:
-                tbot.log.message(tbot.log.c(f"set bootmode {bm['name']}").yellow)
-                try:
-                    gpios = bm["gpios"]
-                    for s in gpios.split(" "):
-                        gpionr = s.split(":")[0]
-                        state = s.split(":")[1]
-                        gpio = Gpio(self, gpionr)
-                        gpio.set_direction("out")
-                        if int(state) == 0:
-                            gpio.set_value(False)
-                        else:
-                            gpio.set_value(True)
-                    return True
-                except:
-                    pass
+        bms = None
+        bmtype = None
+        if wantbootmode:
+            for bm in bootmodes:
+                if bm["name"] in wantbootmode:
+                    bms = bm
+                    bmtype = "function"
 
-                try:
-                    self.lab_set_sd_mux_mode(bm["sdwire"])
-                    return True
-                except:
-                    pass
+        if bms == None:
+            for bm in bootmodes:
+                if bm["name"] in tbot.flags:
+                    bms = bm
+                    bmtype = "tbot.flag"
 
-                try:
-                    from tbotconfig import labcallbacks
+        if bms != None:
+            tbot.log.message(tbot.log.c(f"set bootmode {bms['name']} from {bmtype}").yellow)
+            try:
+                gpios = bms["gpios"]
+                for s in gpios.split(" "):
+                    gpionr = s.split(":")[0]
+                    state = s.split(":")[1]
+                    gpio = Gpio(self, gpionr)
+                    gpio.set_direction("out")
+                    if int(state) == 0:
+                        gpio.set_value(False)
+                    else:
+                        gpio.set_value(True)
+                return True
+            except:
+                pass
 
-                    funcname = bm['func']
-                    func = getattr(labcallbacks, funcname)
-                    ret = func(self)
-                    return ret
-                except:
-                    pass
+            try:
+                self.lab_set_sd_mux_mode(bms["sdwire"])
+                return True
+            except:
+                pass
 
-                tbot.log.message(tbot.log.c(f"set bootmode {bm['name']} failed").red)
-                raise RuntimeError(
-                    f"Exit until callbacks work"
-                )
+            try:
+                from tbotconfig import labcallbacks
+
+                funcname = bms['func']
+                func = getattr(labcallbacks, funcname)
+                ret = func(self)
+                return ret
+            except:
+                pass
+
+            tbot.log.message(tbot.log.c(f"set bootmode {bms['name']} failed").red)
+            raise RuntimeError(
+                f"Exit until callbacks work"
+            )
 
         return False
 
