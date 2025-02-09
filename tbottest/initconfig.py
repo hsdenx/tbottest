@@ -306,7 +306,7 @@ class IniTBotConfig:
 
                 uuucmd = []
                 for c in cmd.split(","):
-                    uuucmd.append(c)
+                    uuucmd.append(c.strip())
 
                 self.uuucfg[nm] = uuucmd
 
