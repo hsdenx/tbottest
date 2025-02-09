@@ -165,7 +165,18 @@ elif "gpiopower" in tbot.flags:
 elif "powershellscript" in tbot.flags:
     BOARDCTL = boardPowerShellControl
 else:
-    BOARDCTL = boardSisControl
+    # try to autodetect from tbot.ini file
+    if cfgt.sispmctrl:
+        BOARDCTL = boardSisControl
+    elif cfgt.powershellscript:
+        BOARDCTL = boardPowerShellControl
+    elif cfgt.gpiopowerctrl:
+        BOARDCTL = boardGpioControl
+    elif cfgt.tinkerforce:
+        BOARDCTL = boardTFControl
+    else:
+        bn = ini.generic_get_boardname()
+        raise RuntimeError(f"please configure powerctrl for board {bn}")
 
 
 # if we want to download bootloader with uuu tool

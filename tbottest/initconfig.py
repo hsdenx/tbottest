@@ -251,6 +251,10 @@ class IniTBotConfig:
         self.picocom = False
         self.kermit = False
         self.scriptcom = False
+        self.sispmctrl = False
+        self.powershellscript = False
+        self.gpiopowerctrl = False
+        self.tinkerforce = False
         for s in self.config_parser.sections():
             if "IPSETUP" in s:
                 nm = s.split("_")[1]
@@ -354,6 +358,14 @@ class IniTBotConfig:
                 self.kermit = True
             if f"SCRIPTCOM_{bn}" in s:
                 self.scriptcom = True
+            if f"SISPMCTRL_{bn}" in s:
+                self.sispmctrl = True
+            if f"POWERSHELLSCRIPT_{bn}" in s:
+                self.powershellscript = True
+            if f"GPIOPMCTRL_{bn}" in s:
+                self.gpiopowerctrl = True
+            if f"TF_{bn}" in s:
+                self.tinkerforce = True
 
     def __del__(self):
         if os.path.exists(self.tbotinifile):
