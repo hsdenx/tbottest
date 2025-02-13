@@ -105,6 +105,8 @@ U-Boot
 .. automodule:: tbottest.common.ubootbuild
    :members:
 
+.. automodule:: tbottest.tc.uboot
+   :members:
 
 Yocto
 -----
