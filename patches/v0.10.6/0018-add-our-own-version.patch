@@ -1,7 +1,7 @@
-From 91029117ddd324815693a1a96b63b205f2328539 Mon Sep 17 00:00:00 2001
+From e13be2050fbfc79b3ab722ebe46a765cd88d19b6 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Mon, 3 Oct 2022 07:37:51 +0200
-Subject: [PATCH 18/18] add our own version
+Subject: [PATCH 18/19] add our own version
 
 add file tbot/_version.py to have our own version string
 
@@ -21,5 +21,5 @@ index 0000000..86b0e97
 @@ -0,0 +1 @@
 +version = "0.10.6-patched"
 -- 
-2.30.2
+2.31.1
 

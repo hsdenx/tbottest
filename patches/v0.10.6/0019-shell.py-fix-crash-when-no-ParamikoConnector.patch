@@ -1,7 +1,7 @@
-From 12e1ebb121168e0c00e65e728e9619e5ce6a3ec6 Mon Sep 17 00:00:00 2001
+From 0512a24c5d7b2e207bb12a024efc0c428e79eb88 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Sat, 1 Feb 2025 09:40:10 +0100
-Subject: [PATCH] shell.py: fix crash when no ParamikoConnector
+Subject: [PATCH 19/19] shell.py: fix crash when no ParamikoConnector
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -88,5 +88,5 @@ index 9892e0d..51a189c 100644
          _scp_copy(
              local_path=p2,
 -- 
-2.30.2
+2.31.1
 

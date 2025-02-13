@@ -1,7 +1,7 @@
-From 48b6b499046e20b733dff71c53a6962d2cc918cf Mon Sep 17 00:00:00 2001
+From 0cec126d1ef97508e29e692f9010907b7e86bcf9 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Fri, 27 Mar 2020 07:35:29 +0100
-Subject: [PATCH 05/18] board.linux: make linux login more robust
+Subject: [PATCH 05/19] board.linux: make linux login more robust
 
 There is already the login_delay parameter, which
 helps to make login more robust if console is
@@ -57,5 +57,5 @@ index 5e6e2a5..aa8694e 100644
  
  
 -- 
-2.30.2
+2.31.1
 

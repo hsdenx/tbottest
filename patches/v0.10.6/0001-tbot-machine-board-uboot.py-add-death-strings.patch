@@ -1,7 +1,7 @@
-From 4d767b2ea89072fbf8b3925929c9a28effa7b714 Mon Sep 17 00:00:00 2001
+From 26efb0d23c832f2bd632aee2a9038bc7bed9ca81 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Tue, 29 Aug 2023 06:10:28 +0200
-Subject: [PATCH 01/18] tbot/machine/board/uboot.py: add death strings
+Subject: [PATCH 01/19] tbot/machine/board/uboot.py: add death strings
 
 add possibility to add death strings in UBootAutobootIntercept
 
@@ -56,5 +56,5 @@ index 15620cc..e8a60bf 100644
              with self.ch.with_stream(self._uboot_startup_event()):
                  timeout = None
 -- 
-2.30.2
+2.31.1
 

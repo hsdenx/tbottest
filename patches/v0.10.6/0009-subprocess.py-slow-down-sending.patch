@@ -1,7 +1,7 @@
-From 536ffcb8856d67508a9d517024b4764c3b31f40e Mon Sep 17 00:00:00 2001
+From 242e16d9863ebe82b96e2c13c195b91238decc25 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Wed, 28 Apr 2021 17:43:16 +0200
-Subject: [PATCH 09/18] subprocess.py: slow down sending
+Subject: [PATCH 09/19] subprocess.py: slow down sending
 
 slow down sending bytes to DUT ... fixes some
 problems with USB serial adapters.
@@ -37,5 +37,5 @@ index 8052ab0..d4b1c28 100644
              raise tbot.error.ChannelClosedError
          return bytes_written
 -- 
-2.30.2
+2.31.1
 

@@ -1,7 +1,7 @@
-From 95b26dbd7ed4f50a76472761c54ee84d7157b26a Mon Sep 17 00:00:00 2001
+From bd8cff64528579e76a7b18b2188d4346cd03dda8 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Sun, 20 Aug 2023 06:16:50 +0200
-Subject: [PATCH 15/18] board.uboot: add simple UBootAutobootIntercept
+Subject: [PATCH 15/19] board.uboot: add simple UBootAutobootIntercept
 
 Add UBootAutobootInterceptSimple, which is similiar to
 UBootAutobootIntercept but UBootAutobootIntercept has problems
@@ -17,9 +17,9 @@ starts receiving when this class sends already second byte...
 
 Signed-off-by: Heiko Schocher <hs@denx.de>
 ---
- tbot/machine/board/__init__.py |  3 +-
- tbot/machine/board/uboot.py    | 89 ++++++++++++++++++++++++++++++++++
- 2 files changed, 91 insertions(+), 1 deletion(-)
+ tbot/machine/board/__init__.py |   3 +-
+ tbot/machine/board/uboot.py    | 100 +++++++++++++++++++++++++++++----
+ 2 files changed, 90 insertions(+), 13 deletions(-)
 
 diff --git a/tbot/machine/board/__init__.py b/tbot/machine/board/__init__.py
 index 9fbc2b4..a671043 100644
@@ -43,10 +43,10 @@ index 9fbc2b4..a671043 100644
      "UBootShell",
  )
 diff --git a/tbot/machine/board/uboot.py b/tbot/machine/board/uboot.py
-index e79e4cd..edd051f 100644
+index e79e4cd..28156a6 100644
 --- a/tbot/machine/board/uboot.py
 +++ b/tbot/machine/board/uboot.py
-@@ -141,6 +141,95 @@ class UBootAutobootIntercept(machine.Initializer, UbootStartup):
+@@ -141,6 +141,94 @@ class UBootAutobootIntercept(machine.Initializer, UbootStartup):
  
          yield None
  
@@ -136,12 +136,30 @@ index e79e4cd..edd051f 100644
 +                            self.ch.sendintr()
 +
 +                    i += 1
-+                    self.ch.sendintr()
 +
 +        yield None
  
  _hush_find_unsafe = re.compile(r"[^\w@%+=:,./-]", re.ASCII).search
  
+@@ -244,18 +332,6 @@ class UBootShell(shell.Shell, UbootStartup):
+                 0x7F,  # DEL  | Delete
+             ]
+ 
+-            while True:
+-                if self.boot_timeout is not None:
+-                    assert self._timeout_start is not None
+-                    if (time.monotonic() - self._timeout_start) > self.boot_timeout:
+-                        raise TimeoutError("U-Boot did not reach shell in time")
+-                try:
+-                    self.ch.read_until_prompt(timeout=2)
+-                    break
+-                except TimeoutError:
+-                    self.ch.sendintr()
+-                    time.sleep(0.5)
+-
+         yield None
+ 
+     def escape(self, *args: ArgTypes) -> str:
 -- 
-2.30.2
+2.31.1
 

@@ -1,7 +1,7 @@
-From c4a59fa360426e825f33c21531a959afc5897992 Mon Sep 17 00:00:00 2001
+From dacb43df787b9441000ae873028354ee5cdc6f49 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Mon, 4 Nov 2019 09:13:49 +0100
-Subject: [PATCH 06/18] tbot/machine/linux/build.py: add bootlin and linaro
+Subject: [PATCH 06/19] tbot/machine/linux/build.py: add bootlin and linaro
  toolchains
 
 add bootlin and linaro toolchains for machine v2.
@@ -235,5 +235,5 @@ index 3baa87c..7585cc5 100644
 +        self.typ = typ
 +        self.date = date
 -- 
-2.30.2
+2.31.1
 

@@ -1,7 +1,7 @@
-From e63c40eda1be0783c73a95fd08e4ebc56dd0a025 Mon Sep 17 00:00:00 2001
+From 805f852396ec6718fecca15a71cf0ee1014f4efd Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Thu, 25 Jun 2020 06:59:17 +0200
-Subject: [PATCH 04/18] uboot: add run()
+Subject: [PATCH 04/19] uboot: add run()
 
 Signed-off-by: Heiko Schocher <hs@denx.de>
 ---
@@ -111,5 +111,5 @@ index e8a60bf..f19447a 100644
      _ram_base: int
  
 -- 
-2.30.2
+2.31.1
 

@@ -1,7 +1,7 @@
-From 86e16034c774f3101940f2ec4315b7d53d72ae4a Mon Sep 17 00:00:00 2001
+From 1aa1ed2a5d9fa0fbfd66540593196bfe79726d95 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Thu, 22 Apr 2021 07:45:49 +0200
-Subject: [PATCH 02/18] shell.py: allow copy between two ssh host
+Subject: [PATCH 02/19] shell.py: allow copy between two ssh host
 
 if you know, that you can copy betweenn the two ssh hosts,
 pass remote_copy=True to this testcase.
@@ -117,5 +117,5 @@ index 8eb85d8..c8d65e3 100644
  
  _TOOL_CACHE: typing.Dict[linux.LinuxShell, typing.Dict[str, bool]] = {}
 -- 
-2.30.2
+2.31.1
 

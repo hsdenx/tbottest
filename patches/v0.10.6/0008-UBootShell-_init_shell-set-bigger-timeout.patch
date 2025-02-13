@@ -1,7 +1,7 @@
-From 72380fffc5c7e037d4871d3eeec400ba12fa6ce7 Mon Sep 17 00:00:00 2001
+From ab44b42c17c92a1df8afd48d1bbcc743ad08d249 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Sun, 24 May 2020 07:54:09 +0200
-Subject: [PATCH 08/18] UBootShell, _init_shell: set bigger timeout
+Subject: [PATCH 08/19] UBootShell, _init_shell: set bigger timeout
 
 Git a lot of TimeoutError, and increased the timeout
 when calling read_until_prompt from 0.5 to 2.
@@ -39,5 +39,5 @@ index 45613c2..9892e0d 100644
 +    else:
          raise NotImplementedError(f"Can't copy from {p1.host} to {p2.host}!")
 -- 
-2.30.2
+2.31.1
 

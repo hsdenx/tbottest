@@ -1,7 +1,7 @@
-From f2c6bbe1a82c2872addd90948bb4300a5319ab77 Mon Sep 17 00:00:00 2001
+From 910b48c7dfff1a84924c674ee530a0d7d42e9ee3 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Sat, 25 Feb 2023 17:02:56 +0100
-Subject: [PATCH 10/18] tbot/machine/board/uboot.py: HACK autoboot_iter
+Subject: [PATCH 10/19] tbot/machine/board/uboot.py: HACK autoboot_iter
 
 search autoboot_iter times for autoboot string.
 
@@ -74,5 +74,5 @@ index 19cfd07..e79e4cd 100644
          yield None
  
 -- 
-2.30.2
+2.31.1
 

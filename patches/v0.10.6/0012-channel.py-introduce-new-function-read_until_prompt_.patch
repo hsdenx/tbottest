@@ -1,7 +1,7 @@
-From 24b7d23d6a00c25ac82409c6371015d27e29c1d6 Mon Sep 17 00:00:00 2001
+From fc73bdf852f5cd9809e232da26ed4ab5a9190d28 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Fri, 7 Jul 2023 09:33:59 +0200
-Subject: [PATCH 12/18] channel.py: introduce new function
+Subject: [PATCH 12/19] channel.py: introduce new function
  read_until_prompt_save
 
 especially on linux login it is may hard to get a clean prompt line.
@@ -65,5 +65,5 @@ index b6d41ce..64cad99 100644
          self,
          prompt: typing.Optional[ConvenientSearchString] = None,
 -- 
-2.30.2
+2.31.1
 
