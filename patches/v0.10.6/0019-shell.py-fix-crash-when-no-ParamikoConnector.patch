@@ -1,4 +1,4 @@
-From 0512a24c5d7b2e207bb12a024efc0c428e79eb88 Mon Sep 17 00:00:00 2001
+From f955453f8e5adacf92f53966f8f0f86376b5a122 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Sat, 1 Feb 2025 09:40:10 +0100
 Subject: [PATCH 19/19] shell.py: fix crash when no ParamikoConnector

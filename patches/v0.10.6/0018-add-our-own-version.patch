@@ -1,4 +1,4 @@
-From e13be2050fbfc79b3ab722ebe46a765cd88d19b6 Mon Sep 17 00:00:00 2001
+From 95dceca0a2a7d23e324c2913fb8620541ae16bbd Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Mon, 3 Oct 2022 07:37:51 +0200
 Subject: [PATCH 18/19] add our own version

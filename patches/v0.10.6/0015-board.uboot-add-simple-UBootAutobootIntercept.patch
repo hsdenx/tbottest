@@ -1,4 +1,4 @@
-From bd8cff64528579e76a7b18b2188d4346cd03dda8 Mon Sep 17 00:00:00 2001
+From bcdd26d3e75004d4d7858e29e121013a577458ba Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Sun, 20 Aug 2023 06:16:50 +0200
 Subject: [PATCH 15/19] board.uboot: add simple UBootAutobootIntercept
@@ -18,8 +18,8 @@ starts receiving when this class sends already second byte...
 Signed-off-by: Heiko Schocher <hs@denx.de>
 ---
  tbot/machine/board/__init__.py |   3 +-
- tbot/machine/board/uboot.py    | 100 +++++++++++++++++++++++++++++----
- 2 files changed, 90 insertions(+), 13 deletions(-)
+ tbot/machine/board/uboot.py    | 106 +++++++++++++++++++++++++++++----
+ 2 files changed, 96 insertions(+), 13 deletions(-)
 
 diff --git a/tbot/machine/board/__init__.py b/tbot/machine/board/__init__.py
 index 9fbc2b4..a671043 100644
@@ -43,10 +43,10 @@ index 9fbc2b4..a671043 100644
      "UBootShell",
  )
 diff --git a/tbot/machine/board/uboot.py b/tbot/machine/board/uboot.py
-index e79e4cd..28156a6 100644
+index e79e4cd..24aa0c7 100644
 --- a/tbot/machine/board/uboot.py
 +++ b/tbot/machine/board/uboot.py
-@@ -141,6 +141,94 @@ class UBootAutobootIntercept(machine.Initializer, UbootStartup):
+@@ -141,6 +141,100 @@ class UBootAutobootIntercept(machine.Initializer, UbootStartup):
  
          yield None
  
@@ -137,11 +137,17 @@ index e79e4cd..28156a6 100644
 +
 +                    i += 1
 +
++        try:
++            # wait 2 seconds for may remaining bytes
++            self.ch.read(1000, 2)
++        except:
++            pass
++
 +        yield None
  
  _hush_find_unsafe = re.compile(r"[^\w@%+=:,./-]", re.ASCII).search
  
-@@ -244,18 +332,6 @@ class UBootShell(shell.Shell, UbootStartup):
+@@ -244,18 +338,6 @@ class UBootShell(shell.Shell, UbootStartup):
                  0x7F,  # DEL  | Delete
              ]
  

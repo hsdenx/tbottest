@@ -1,4 +1,4 @@
-From 753e70283b7727d4a5e4b2282c160b121dc82c69 Mon Sep 17 00:00:00 2001
+From 02eb3533ce90e57922b1ecf0bdd4a4f8f4a91dda Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Thu, 21 Sep 2023 16:34:37 +0200
 Subject: [PATCH 17/19] Revert "connector: Fix improper channel handling by
