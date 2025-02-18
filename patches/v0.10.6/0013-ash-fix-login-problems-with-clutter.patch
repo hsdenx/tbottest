@@ -1,7 +1,7 @@
 From 81624af1945b823b429b297df93e9154a73f3103 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Fri, 7 Jul 2023 09:34:59 +0200
-Subject: [PATCH 13/19] ash: fix login problems with clutter
+Subject: [PATCH 13/20] ash: fix login problems with clutter
 
 use for login the new function read_until_prompt_save
 for the first commands tbot sets when entering linux shell

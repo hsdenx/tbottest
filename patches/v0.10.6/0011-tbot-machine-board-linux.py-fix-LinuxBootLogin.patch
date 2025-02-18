@@ -1,7 +1,7 @@
 From ff0a5814e9345e5578a0330c6039204e83c264f2 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Tue, 25 Apr 2023 06:27:13 +0200
-Subject: [PATCH 11/19] tbot/machine/board/linux.py fix LinuxBootLogin
+Subject: [PATCH 11/20] tbot/machine/board/linux.py fix LinuxBootLogin
 
 fix LinuxBootLogin nth time...
 

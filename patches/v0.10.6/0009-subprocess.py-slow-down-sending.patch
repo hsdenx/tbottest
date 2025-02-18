@@ -1,7 +1,7 @@
 From 242e16d9863ebe82b96e2c13c195b91238decc25 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Wed, 28 Apr 2021 17:43:16 +0200
-Subject: [PATCH 09/19] subprocess.py: slow down sending
+Subject: [PATCH 09/20] subprocess.py: slow down sending
 
 slow down sending bytes to DUT ... fixes some
 problems with USB serial adapters.
