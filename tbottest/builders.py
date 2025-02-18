@@ -1,3 +1,4 @@
+import os
 import tbottest.initconfig as ini
 import typing
 import pathlib
@@ -33,6 +34,8 @@ class genericbuilder(connector.SSHConnector, linux.Bash, linux.Builder):
     @property
     def workdir(self) -> "linux.Path[genericbuilder]":
         workdir = cfgt.config_parser.get(self.sn, "workdir")
+        if workdir[0] is not "/":
+            workdir = os.getcwd() + "/" + workdir
         return linux.Workdir.static(self, workdir)
 
     @property
@@ -111,6 +114,8 @@ class genericbuilderlocal(connector.SubprocessConnector, linux.Bash, linux.Build
     @property
     def workdir(self) -> "linux.Path[genericbuilder]":
         workdir = cfgt.config_parser.get(self.sn, "workdir")
+        if workdir[0] is not "/":
+            workdir = os.getcwd() + "/" + workdir
         return linux.Workdir.static(self, workdir)
 
     def init(self) -> None:
