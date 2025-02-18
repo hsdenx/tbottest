@@ -51,6 +51,9 @@ def get_tbot_arguments():
 
 
 def get_tbot_flags():
+    if "--usetbotflags" in sys.argv:
+        return tbot.flags
+
     args = get_tbot_arguments()
     return args.flags
 
