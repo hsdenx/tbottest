@@ -1,4 +1,4 @@
-From 36833dda7ffa410c8bbedc95e9708cd3f2458c6f Mon Sep 17 00:00:00 2001
+From 1e630af29bbd8db841023f10c4a574d28bc6a7fe Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Tue, 18 Feb 2025 13:55:21 +0100
 Subject: [PATCH 20/20] uboot: rework uboot_testpy
@@ -7,16 +7,27 @@ handle a board reset with tbot not with test/py
 u-boot hook scripts, as tbot knows how to reset
 the board.
 
+And use lab_mode which is in U-Boot since
+
+commit 8308a5eed6e6. 8"test: Introduce lab mode")
+
 Signed-off-by: Heiko Schocher <hs@denx.de>
 ---
- tbot_contrib/uboot/_testpy.py | 152 +++++++++++++++++++---------------
- 1 file changed, 84 insertions(+), 68 deletions(-)
+ tbot_contrib/uboot/_testpy.py | 165 ++++++++++++++++++++--------------
+ 1 file changed, 97 insertions(+), 68 deletions(-)
 
 diff --git a/tbot_contrib/uboot/_testpy.py b/tbot_contrib/uboot/_testpy.py
-index c9003bc..2aefa70 100644
+index c9003bc..207e19e 100644
 --- a/tbot_contrib/uboot/_testpy.py
 +++ b/tbot_contrib/uboot/_testpy.py
-@@ -46,6 +46,13 @@ sleep infinity
+@@ -1,5 +1,6 @@
+ import hashlib
+ import os
++import re
+ import select
+ import time
+ from typing import List, Optional, Tuple, TypeVar
+@@ -46,6 +47,12 @@ sleep infinity
  #!/usr/bin/env bash
  
  echo "RESET" >{fifo_commands}
@@ -26,11 +37,10 @@ index c9003bc..2aefa70 100644
 +#!/usr/bin/env bash
 +
 +echo "RELEASE" >{fifo_commands}
-+exit 0
  """,
      # Hook which test/py calls to flash U-Boot (unused here)
      "u-boot-test-flash": """\
-@@ -137,15 +144,82 @@ def setup_testhooks(
+@@ -137,15 +144,95 @@ def setup_testhooks(
  
      return (chan_console, chan_command)
  
@@ -50,6 +60,21 @@ index c9003bc..2aefa70 100644
 +    with tbot.ctx.request(tbot.role.BoardUBoot, reset=True) as ub:
 +        chan_uboot = ub.ch
 +
++        if ret == "start":
++            # test/py needs here to pass the readden U-Boot version :-(
++            ubversion = None
++            p = re.compile('(U-Boot \\d{4}\\.\\d{2}[^\r\n]*\\))')
++            for l in ub.bootlog.split("\n"):
++                m = p.match(l)
++                if m:
++                    ubversion = m.group().strip()
++
++            if ubversion == None:
++                raise RuntimerError("Could not detect U-Boot version")
++
++            os.write(chan_console.fileno(), bytes("{lab mode on}\n", 'utf-8'))
++            os.write(chan_console.fileno(), bytes(f"{{lab ready in 0s: {ubversion}}}\n", 'utf-8'))
++
 +        # We have to deal with incoming data on any of the following channels.
 +        # The comments denote what needs to be done for each channel:
 +        readfds = [
@@ -60,21 +85,9 @@ index c9003bc..2aefa70 100644
 +        ]
 +
 +        try:
-+            if ret == "reset":
-+                # write U-Boot bootlog into fifo to test/py
-+                os.write(chan_console.fileno(), bytes(ub.bootlog, 'utf-8'))
-+
 +            while True:
 +                r, _, _ = select.select(readfds, [], [])
 +
-+                if chan_console in r:
-+                    # Send data to U-Boot
-+                    data = os.read(chan_console.fileno(), 4096)
-+                    os.write(chan_uboot.fileno(), data)
-+                if chan_uboot in r:
-+                    # Send data to chan_console (test/py)
-+                    data = os.read(chan_uboot.fileno(), 4096)
-+                    os.write(chan_console.fileno(), data)
 +                if chan_command in r:
 +                    # Powercycle the board
 +                    msg = chan_command.read()
@@ -85,6 +98,16 @@ index c9003bc..2aefa70 100644
 +                        return "release"
 +                    else:
 +                        raise Exception(f"Got unknown command {msg!r}!")
++                if chan_console in r:
++                    # Send data to U-Boot
++                    data = os.read(chan_console.fileno(), 4096)
++                    os.write(chan_uboot.fileno(), data)
++                    #print("-> console ", data)
++                if chan_uboot in r:
++                    # Send data to chan_console (test/py)
++                    data = os.read(chan_uboot.fileno(), 4096)
++                    os.write(chan_console.fileno(), data)
++                    #print("-> testpy ", data)
 +                if chan_testpy in r:
 +                    # Read data so the log-event picks it up.  If a
 +                    # DeathStringException occurs here, test/py finished and we
@@ -114,7 +137,7 @@ index c9003bc..2aefa70 100644
  ) -> None:
      """
      Run U-Boot's test/py test-framework against a tbot-machine.
-@@ -241,8 +315,8 @@ def testpy(
+@@ -241,8 +328,8 @@ def testpy(
  
      .. versionadded:: 0.9.5
      """
@@ -125,7 +148,7 @@ index c9003bc..2aefa70 100644
  
      with tbot.ctx() as cx:
          bh = uboot_sources.host
-@@ -264,29 +338,12 @@ def testpy(
+@@ -264,29 +351,12 @@ def testpy(
          chan_console, chan_command = setup_testhooks(bh, m_console, m_command)
  
          assert (
@@ -157,7 +180,7 @@ index c9003bc..2aefa70 100644
          boardtype = "unknown"
          if boardenv is not None:
              boardtype = f"tbot-{b.name}"
-@@ -304,56 +361,15 @@ def testpy(
+@@ -304,56 +374,15 @@ def testpy(
              bh.run(
                  "./test/py/test.py",
                  "--build-dir",
@@ -181,10 +204,7 @@ index c9003bc..2aefa70 100644
 -        try:
 -            while True:
 -                r, _, _ = select.select(readfds, [], [])
-+        ret = "loop"
-+        while ret == "loop" or ret == "reset":
-+            ret = testpy_loop(cx, lh, bh, chan_testpy, chan_console, chan_command, uboot_sources, uboot_builddir, ret)
- 
+-
 -                if chan_console in r:
 -                    # Send data to U-Boot
 -                    data = os.read(chan_console.fileno(), 4096)
@@ -196,7 +216,10 @@ index c9003bc..2aefa70 100644
 -                if chan_command in r:
 -                    # Powercycle the board
 -                    msg = chan_command.read()
--
++        ret = "start"
++        while ret == "start" or ret == "loop" or ret == "reset":
++            ret = testpy_loop(cx, lh, bh, chan_testpy, chan_console, chan_command, uboot_sources, uboot_builddir, ret)
+ 
 -                    if msg[:2] == b"RE":
 -                        b.poweroff()
 -                        if b.powercycle_delay > 0:
