@@ -1,0 +1,41 @@
+From 28c3c522286775987c78547cc5ff7d02c3bbaaa6 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@denx.de>
+Date: Mon, 24 Feb 2025 10:19:44 +0100
+Subject: [PATCH 21/21] tbot/newbot.py: fix sys.exit calls
+
+it is not good to use sys.exit() calls in code,
+as we may call tbot as an module. use sys.exit()
+in __main__ case.
+
+Signed-off-by: Heiko Schocher <hs@denx.de>
+---
+ tbot/newbot.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tbot/newbot.py b/tbot/newbot.py
+index 3ba4a76..c3e0456 100644
+--- a/tbot/newbot.py
++++ b/tbot/newbot.py
+@@ -266,11 +266,11 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
+         trace = traceback.format_exc(limit=-6)
+         tbot.log_event.exception(e.__class__.__name__, trace)
+         tbot.log_event.tbot_end(False)
+-        sys.exit(1)
++        raise 1
+     except KeyboardInterrupt:
+         tbot.log_event.exception("KeyboardInterrupt", "Test run manually aborted.")
+         tbot.log_event.tbot_end(False)
+-        sys.exit(130)
++        raise 130
+     except SystemExit as e:
+         tbot.log.message("SystemExit triggered.")
+         tbot.log_event.tbot_end(e.code in (None, 0))
+@@ -280,4 +280,4 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
+ 
+ 
+ if __name__ == "__main__":
+-    main(sys.argv)
++    sys.exit(main(sys.argv))
+-- 
+2.31.1
+

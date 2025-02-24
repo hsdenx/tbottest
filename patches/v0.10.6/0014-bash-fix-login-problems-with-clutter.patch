@@ -1,7 +1,7 @@
 From e6ddbf8adf0d66001d542de37215773c3ff19aeb Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Fri, 7 Jul 2023 09:35:50 +0200
-Subject: [PATCH 14/20] bash: fix login problems with clutter
+Subject: [PATCH 14/21] bash: fix login problems with clutter
 
 use for login the new function read_until_prompt_save
 for the first commands tbot sets when entering linux shell

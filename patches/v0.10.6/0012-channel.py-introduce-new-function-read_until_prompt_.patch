@@ -1,7 +1,7 @@
 From fc73bdf852f5cd9809e232da26ed4ab5a9190d28 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Fri, 7 Jul 2023 09:33:59 +0200
-Subject: [PATCH 12/20] channel.py: introduce new function
+Subject: [PATCH 12/21] channel.py: introduce new function
  read_until_prompt_save
 
 especially on linux login it is may hard to get a clean prompt line.

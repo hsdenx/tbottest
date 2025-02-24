@@ -1,7 +1,7 @@
 From 0cec126d1ef97508e29e692f9010907b7e86bcf9 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Fri, 27 Mar 2020 07:35:29 +0100
-Subject: [PATCH 05/20] board.linux: make linux login more robust
+Subject: [PATCH 05/21] board.linux: make linux login more robust
 
 There is already the login_delay parameter, which
 helps to make login more robust if console is

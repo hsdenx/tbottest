@@ -1,7 +1,7 @@
 From 1aa1ed2a5d9fa0fbfd66540593196bfe79726d95 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Thu, 22 Apr 2021 07:45:49 +0200
-Subject: [PATCH 02/20] shell.py: allow copy between two ssh host
+Subject: [PATCH 02/21] shell.py: allow copy between two ssh host
 
 if you know, that you can copy betweenn the two ssh hosts,
 pass remote_copy=True to this testcase.

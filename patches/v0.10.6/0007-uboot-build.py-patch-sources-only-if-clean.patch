@@ -1,7 +1,7 @@
 From 183d077429a22a70a7b4206e23752e5145d9c1a6 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Mon, 11 May 2020 12:30:03 +0200
-Subject: [PATCH 07/20] uboot/build.py: patch sources only if clean
+Subject: [PATCH 07/21] uboot/build.py: patch sources only if clean
 
 patch the sources in uboot_checkout only if clean is True.
 

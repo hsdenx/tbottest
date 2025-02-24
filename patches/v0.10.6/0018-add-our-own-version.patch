@@ -1,7 +1,7 @@
 From 95dceca0a2a7d23e324c2913fb8620541ae16bbd Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Mon, 3 Oct 2022 07:37:51 +0200
-Subject: [PATCH 18/20] add our own version
+Subject: [PATCH 18/21] add our own version
 
 add file tbot/_version.py to have our own version string
 
