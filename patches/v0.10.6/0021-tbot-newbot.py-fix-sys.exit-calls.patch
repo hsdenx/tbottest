@@ -1,4 +1,4 @@
-From 28c3c522286775987c78547cc5ff7d02c3bbaaa6 Mon Sep 17 00:00:00 2001
+From 90315a04f750d6c6d8699e94dde410ae71395e9c Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@denx.de>
 Date: Mon, 24 Feb 2025 10:19:44 +0100
 Subject: [PATCH 21/21] tbot/newbot.py: fix sys.exit calls
@@ -13,7 +13,7 @@ Signed-off-by: Heiko Schocher <hs@denx.de>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tbot/newbot.py b/tbot/newbot.py
-index 3ba4a76..c3e0456 100644
+index 3ba4a76..6da4812 100644
 --- a/tbot/newbot.py
 +++ b/tbot/newbot.py
 @@ -266,11 +266,11 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
@@ -21,7 +21,7 @@ index 3ba4a76..c3e0456 100644
          tbot.log_event.exception(e.__class__.__name__, trace)
          tbot.log_event.tbot_end(False)
 -        sys.exit(1)
-+        raise 1
++        raise e
      except KeyboardInterrupt:
          tbot.log_event.exception("KeyboardInterrupt", "Test run manually aborted.")
          tbot.log_event.tbot_end(False)
