@@ -199,8 +199,9 @@ class UBBUILDMAN:
                                 "-c", "1", "-o", self.builddir, "--boards",
                                 self.defconfig)
         if ret != 0:
-            ret, log = self.bh.exec(self.basedir / "tools/buildman/buildman",
+            ret2, log = self.bh.exec(self.basedir / "tools/buildman/buildman",
                                     "-o", self.builddir, "-seP")
+            raise RuntimeError(f"Build {self.defconfig} failed with ret {ret}")
 
         # get shell variable values
         if self.makelist:
@@ -215,6 +216,8 @@ class UBBUILDMAN:
         # call make targets
         for t in self.makelist:
             self.bh.exec("make", "V=1", f"O={self.builddirbuildman._local_str()}", t)
+            if ret != 0:
+                raise RuntimeError(f"Build {self.defconfig} failed with ret {ret} for Makefile target {t}")
 
         for f in self.resultbins:
             self.bh.exec0("pwd")
