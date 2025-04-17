@@ -1,0 +1,47 @@
+From 9a8363aadb7a33cf77dfd9067d165e3ad59fa714 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@denx.de>
+Date: Thu, 17 Apr 2025 10:23:57 +0200
+Subject: [PATCH] tbot/newbot.py: import tbot flags earlier
+
+import tbot flags before parsing commandline arguments,
+so they are availiable for loading dynamic modules
+paths.
+
+Signed-off-by: Heiko Schocher <hs@denx.de>
+---
+ tbot/newbot.py | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/tbot/newbot.py b/tbot/newbot.py
+index 6da4812..1bfd505 100644
+--- a/tbot/newbot.py
++++ b/tbot/newbot.py
+@@ -216,6 +216,11 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
+     # Make sure the directory we're running from is available
+     sys.path.insert(1, os.getcwd())
+ 
++    import tbot
++
++    for flag in args.flags:
++        tbot.flags.add(flag)
++
+     try:
+         if args.complete_module is not None:
+             for compl in complete_module(args.complete_module):
+@@ -230,13 +235,9 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
+         # Silently drop these exceptions to not disturb commandline completion
+         sys.exit(1)
+ 
+-    import tbot
+     import tbot.log
+     import tbot.log_event
+ 
+-    for flag in args.flags:
+-        tbot.flags.add(flag)
+-
+     if args.json_log_stream:
+         tbot.log.LOGFILE = open(args.json_log_stream, "w")
+ 
+-- 
+2.31.1
+
