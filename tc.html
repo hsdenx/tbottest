@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.tc - Testcases &mdash; tbottest 0.0.1-190-gd0172df documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tbottest.initconfig" href="iniconfig.html" />
+    <link rel="prev" title="Tips" href="tips.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-190-gd0172df
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#common-testcases">Common Testcases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#can-tests">CAN Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tbottest.tc.cpu">CPU Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.cpu.board_lnx_cpufreq"><code class="docutils literal notranslate"><span class="pre">board_lnx_cpufreq()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#generic-board-test">generic board test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tbottest.tc.hab">HAB (imx specific)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.hab.ub_check_hab_state"><code class="docutils literal notranslate"><span class="pre">ub_check_hab_state()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tbottest.tc.kas">KAS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.kas.KAS"><code class="docutils literal notranslate"><span class="pre">KAS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.tc.kas.KAS.kas_get_basepath"><code class="docutils literal notranslate"><span class="pre">KAS.kas_get_basepath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.tc.kas.KAS.kas_get_buildpath"><code class="docutils literal notranslate"><span class="pre">KAS.kas_get_buildpath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.tc.kas.KAS.kas_get_deploypath"><code class="docutils literal notranslate"><span class="pre">KAS.kas_get_deploypath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.tc.kas.KAS.kas_checkout"><code class="docutils literal notranslate"><span class="pre">KAS.kas_checkout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.tc.kas.KAS.kas_build"><code class="docutils literal notranslate"><span class="pre">KAS.kas_build()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.tc.kas.KAS.kas_shell"><code class="docutils literal notranslate"><span class="pre">KAS.kas_shell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.tc.kas.KAS.kas_copy"><code class="docutils literal notranslate"><span class="pre">KAS.kas_copy()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tbottest.tc.leds">LED</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.leds.lnx_test_led_simple"><code class="docutils literal notranslate"><span class="pre">lnx_test_led_simple()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#mtd">MTD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#network">network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tbottest.tc.process">process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.process.ps_parse_ps"><code class="docutils literal notranslate"><span class="pre">ps_parse_ps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.process.ps_parse_top"><code class="docutils literal notranslate"><span class="pre">ps_parse_top()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.process.lnx_get_process_cpu_usage"><code class="docutils literal notranslate"><span class="pre">lnx_get_process_cpu_usage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.process.lnx_get_cpu_stats"><code class="docutils literal notranslate"><span class="pre">lnx_get_cpu_stats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.process.lnx_measure_process"><code class="docutils literal notranslate"><span class="pre">lnx_measure_process()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.process.is_busybox"><code class="docutils literal notranslate"><span class="pre">is_busybox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.process.lnx_measure_top"><code class="docutils literal notranslate"><span class="pre">lnx_measure_top()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.process.ps_create_measurement_png"><code class="docutils literal notranslate"><span class="pre">ps_create_measurement_png()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.process.top_create_measurement_png"><code class="docutils literal notranslate"><span class="pre">top_create_measurement_png()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#rs485">RS485</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tbottest.tc.sensors">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.sensors.board_lnx_tempsensors"><code class="docutils literal notranslate"><span class="pre">board_lnx_tempsensors()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#swupdate">SWUpdate</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.swu.board_lnx_check_swu"><code class="docutils literal notranslate"><span class="pre">board_lnx_check_swu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.swu.board_lnx_swu"><code class="docutils literal notranslate"><span class="pre">board_lnx_swu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.swu.swu_swupdate_from_file"><code class="docutils literal notranslate"><span class="pre">swu_swupdate_from_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tbottest.tc.systemd">SystemD</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.systemd.systemd_stop_service"><code class="docutils literal notranslate"><span class="pre">systemd_stop_service()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.systemd.systemd_get_log_from_service"><code class="docutils literal notranslate"><span class="pre">systemd_get_log_from_service()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.systemd.systemd_active"><code class="docutils literal notranslate"><span class="pre">systemd_active()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tbottest.tc.tpm">TPM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.tpm.board_lnx_tpm2"><code class="docutils literal notranslate"><span class="pre">board_lnx_tpm2()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tbottest.common.ubootbuild">U-Boot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.common.ubootbuild.UBBUILDMAN"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.common.ubootbuild.UBBUILDMAN.bm_get_uboot_patches"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN.bm_get_uboot_patches()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.common.ubootbuild.UBBUILDMAN.bm_apply_uboot_patches"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN.bm_apply_uboot_patches()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.common.ubootbuild.UBBUILDMAN.bm_build_prepare"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN.bm_build_prepare()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.common.ubootbuild.UBBUILDMAN.bm_build_board"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN.bm_build_board()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.common.ubootbuild.UBBUILDMAN.bm_copy_results2lab"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN.bm_copy_results2lab()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.uboot.board_ub_unit_test"><code class="docutils literal notranslate"><span class="pre">board_ub_unit_test()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tbottest.tc.yocto">Yocto</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.yocto.check_yocto_build_install_sdk"><code class="docutils literal notranslate"><span class="pre">check_yocto_build_install_sdk()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.tc.yocto.check_yocto_sdk_get_scriptname"><code class="docutils literal notranslate"><span class="pre">check_yocto_sdk_get_scriptname()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tc.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tbottest-tc-testcases">
+<h1><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases<a class="headerlink" href="#tbottest-tc-testcases" title="Permalink to this heading">¶</a></h1>
+<p>tbot-test come bundled with a bunch of testcases.  Here is an overview:</p>
+<section id="common-testcases">
+<h2>Common Testcases<a class="headerlink" href="#common-testcases" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="can-tests">
+<h2>CAN Tests<a class="headerlink" href="#can-tests" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-tbottest.tc.cpu">
+<span id="cpu-tests"></span><h2>CPU Tests<a class="headerlink" href="#module-tbottest.tc.cpu" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.cpu.board_lnx_cpufreq">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.cpu.</span></span><span class="sig-name descname"><span class="pre">board_lnx_cpufreq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpufreq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/cpu.html#board_lnx_cpufreq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.cpu.board_lnx_cpufreq" title="Permalink to this definition">¶</a></dt>
+<dd><p>simple cpufreq setup tests.</p>
+<p>look for all elements in cpufreq, if
+the file in “file” contains the value “val”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lnx</strong> – linux machine we work on</p></li>
+<li><p><strong>cpufreq</strong> – List of dictionary see below</p></li>
+</ul>
+</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cpufreq</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;file&quot;</span> <span class="p">:</span> <span class="s2">&quot;/sys/devices/system/cpu/cpufreq/policy0/scaling_governor&quot;</span><span class="p">,</span> <span class="s2">&quot;val&quot;</span> <span class="p">:</span> <span class="s2">&quot;performance&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;file&quot;</span> <span class="p">:</span> <span class="s2">&quot;/sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq&quot;</span><span class="p">,</span> <span class="s2">&quot;val&quot;</span> <span class="p">:</span> <span class="s2">&quot;1600000&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;file&quot;</span> <span class="p">:</span> <span class="s2">&quot;/sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state&quot;</span><span class="p">,</span> <span class="s2">&quot;val&quot;</span> <span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">},</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="generic-board-test">
+<h2>generic board test<a class="headerlink" href="#generic-board-test" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-tbottest.tc.hab">
+<span id="hab-imx-specific"></span><h2>HAB (imx specific)<a class="headerlink" href="#module-tbottest.tc.hab" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.hab.ub_check_hab_state">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.hab.</span></span><span class="sig-name descname"><span class="pre">ub_check_hab_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">UBootShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/hab.html#ub_check_hab_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.hab.ub_check_hab_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>prerequisite: Board boots into U-Boot</p>
+<p>check output of U-Boot hab_status command
+if it does not report errors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ub</strong> – U-Boot machine</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>output of hab_status command</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-tbottest.tc.kas">
+<span id="kas"></span><h2>KAS<a class="headerlink" href="#module-tbottest.tc.kas" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.tc.kas.KAS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.tc.kas.</span></span><span class="sig-name descname"><span class="pre">KAS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/tc/kas.html#KAS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.kas.KAS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>helper class for building yocto projects with kas</p>
+<div class="line-block">
+<div class="line">url: <a class="reference external" href="https://github.com/siemens/kas">https://github.com/siemens/kas</a></div>
+<div class="line">doc: <a class="reference external" href="https://kas.readthedocs.io/en/latest/">https://kas.readthedocs.io/en/latest/</a></div>
+</div>
+<p>example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">kas</span> <span class="kn">import</span> <span class="n">KAS</span>
+
+<span class="n">cfgkas</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;kasurl&quot;</span> <span class="p">:</span> <span class="s2">&quot;url from where kas sources get downloaded&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kasversion&quot;</span> <span class="p">:</span> <span class="s2">&quot;kas version&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;build_machine&quot;</span> <span class="p">:</span> <span class="s2">&quot;machinename&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;subdir&quot;</span> <span class="p">:</span> <span class="s2">&quot;temp/customer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kascontainer&quot;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;netrc_file&quot;</span> <span class="p">:</span> <span class="s2">&quot;path to .netrc file, sets NETRC_FILE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;git_credential_store&quot;</span> <span class="p">:</span> <span class="s2">&quot;/home/&lt;username&gt;/.git-credentials&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ssh_dir&quot;</span> <span class="p">:</span> <span class="s2">&quot;/home/&lt;username&gt;/.ssh&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kaslayer&quot;</span> <span class="p">:</span> <span class="s2">&quot;192.168.1.107:&lt;path_to_kasconfig_layer&gt;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kaslayername&quot;</span> <span class="p">:</span> <span class="s2">&quot;name_of_repo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kaslayerbranch&quot;</span> <span class="p">:</span> <span class="s2">&quot;dunfell&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kasconfigfile&quot;</span> <span class="p">:</span> <span class="s2">&quot;&lt;pathto&gt;/kas-machinename-denx.yml&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bitbakeenvinit&quot;</span> <span class="p">:</span> <span class="s2">&quot;sources/poky/oe-init-build-env&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;envinit&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;buildtargets&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;core-image&quot;</span><span class="p">,</span> <span class="s2">&quot;rescueimage-fit&quot;</span><span class="p">,</span> <span class="s2">&quot;swu-image&quot;</span><span class="p">]</span>
+    <span class="s2">&quot;bitbakeoptions&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-q -q&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>kasurl</p>
+<p>if you need (or want) to download kas sources from an url, set this.</p>
+<p>You do not need to install kas from this sources, as this class simply
+use <strong>run-kas</strong> script from within the kas sources.</p>
+<p>kasversion</p>
+<p>kas version which get checkedout, when you download kas</p>
+<p>build_machine</p>
+<p>machine name which is used for the build</p>
+<p>subdir</p>
+<p>based on the build machines workdir, kas sources get checkout into
+<strong>subdir</strong></p>
+<p>kas-container</p>
+<p>to build with kas-container script set kascontainer to True
+You may need to pass <strong>–git-credential-store</strong> to the kas-container script.
+Set this through:</p>
+<blockquote>
+<div><p>git_credential_store</p>
+</div></blockquote>
+<p>You may need to pass <strong>–ssh-dir</strong> to the kas-container script. Set this
+Set this through:</p>
+<blockquote>
+<div><p>ssh_dir</p>
+</div></blockquote>
+<p>You may need to pass a .netrc file, so set the kas environment varaible
+NETRC_FILE.</p>
+<p>Set this through:</p>
+<blockquote>
+<div><p>netrc_file</p>
+</div></blockquote>
+<p>You may want to set the used container engine through <strong>KAS_CONTAINER_ENGINE</strong>
+Set this through:</p>
+<blockquote>
+<div><p>kascontainerengine</p>
+</div></blockquote>
+<p>You may want to add “–runtime-args” to kas-container, so set</p>
+<blockquote>
+<div><p>kas_runtime_args</p>
+</div></blockquote>
+<p>example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;kas_runtime_args&quot;</span> <span class="p">:</span> <span class="s1">&#39;&quot;-v /work/hs/yocto/download:/workdownload&quot;&#39;</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>You need the <code class="docutils literal notranslate"><span class="pre">`&quot;`</span></code> so escape them!</p>
+<p>kaslayer</p>
+<p>sources which contain your kas config file(s). This class downloads them
+into kas_get_basepath / “kasconfig”</p>
+<p>kaslayername</p>
+<p>you can give them an unique name</p>
+<p>kaslayerbranch</p>
+<p>branch which is used</p>
+<p>kasconfigfile</p>
+<p>kas config file which is used</p>
+<p>auto.conf</p>
+<p>You can define here an auto.conf file, if you need to add
+special settings. The file is created after kas_checkout
+ends.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;auto.conf&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;DL_DIR=&quot;/workdownload&quot;&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;SSTATE_DIR=&quot;/worksstate-cache&quot;&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+</pre></div>
+</div>
+<p>bitbakeenvinit</p>
+<p>if you are not using a kas container you need to source the oe environment
+script (and may have to setup more stuff) before you can call bitbake. This
+entry contains a list of commandstrings, which are executed when kas
+has checkout the source code. Default is “sources/poky/oe-init-build-env”</p>
+<p>envinit</p>
+<p>Here you can add additional commands you need, when you build in kas-container</p>
+<p><span class="target" id="buildtargets">buildtargets</span></p>
+<p>array of strings containing the names of the build targets with which bitbake
+is called.</p>
+<p>If string “bitbake” is in buildtargets, bitbake command is not added
+to command.</p>
+<p>For example you can write</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;buildtargets&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;core-image&quot;</span><span class="p">,</span> <span class="s2">&quot;DISTRO=poky-rescue bitbake rescueimage-fit&quot;</span><span class="p">,</span> <span class="s2">&quot;swu-image&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>which will result in the following bitbake calls</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>bitbake<span class="w"> </span>core-image
+$<span class="w"> </span><span class="nv">DISTRO</span><span class="o">=</span>poky-rescue<span class="w"> </span>bitbake<span class="w"> </span>rescueimage-fit
+$<span class="w"> </span>bitbake<span class="w"> </span>rescueimage-fit
+$<span class="w"> </span>bitbake<span class="w"> </span>swu-image
+</pre></div>
+</div>
+<p>bitbakeoptions</p>
+<p>options with which bitbake is called (for example you may want to pass -q)
+So with above setting:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;bitbakeoptions&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-q -q&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>you get the bitbake calls:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>bitbake<span class="w"> </span>-q<span class="w"> </span>-q<span class="w"> </span>core-image
+$<span class="w"> </span><span class="nv">DISTRO</span><span class="o">=</span>poky-rescue<span class="w"> </span>bitbake<span class="w"> </span>rescueimage-fit
+$<span class="w"> </span>bitbake<span class="w"> </span>-q<span class="w"> </span>-q<span class="w"> </span>rescueimage-fit
+$<span class="w"> </span>bitbake<span class="w"> </span>-q<span class="w"> </span>-q<span class="w"> </span>swu-image
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.tc.kas.KAS.kas_get_basepath">
+<span class="sig-name descname"><span class="pre">kas_get_basepath</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference internal" href="_modules/tbottest/tc/kas.html#KAS.kas_get_basepath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.kas.KAS.kas_get_basepath" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the basepath where kas works in at your build host</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">try_kas_getbasepath</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">bh</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bh</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BuildHost</span><span class="p">)</span>
+
+        <span class="n">cfgkas</span><span class="p">[</span><span class="s2">&quot;labhost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lab</span>
+        <span class="n">cfgkas</span><span class="p">[</span><span class="s2">&quot;buildhost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bh</span>
+
+        <span class="n">kas</span> <span class="o">=</span> <span class="n">KAS</span><span class="p">(</span><span class="n">cfgkas</span><span class="p">)</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">kas</span><span class="o">.</span><span class="n">kas_get_basepath</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.tc.kas.KAS.kas_get_buildpath">
+<span class="sig-name descname"><span class="pre">kas_get_buildpath</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference internal" href="_modules/tbottest/tc/kas.html#KAS.kas_get_buildpath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.kas.KAS.kas_get_buildpath" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the build path kas uses</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.tc.kas.KAS.kas_get_deploypath">
+<span class="sig-name descname"><span class="pre">kas_get_deploypath</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference internal" href="_modules/tbottest/tc/kas.html#KAS.kas_get_deploypath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.kas.KAS.kas_get_deploypath" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the deploypath kas uses</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.tc.kas.KAS.kas_checkout">
+<span class="sig-name descname"><span class="pre">kas_checkout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/kas.html#KAS.kas_checkout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.kas.KAS.kas_checkout" title="Permalink to this definition">¶</a></dt>
+<dd><p>call “kas checkout” so kas checksout all the needed sources
+for your ow build, and setup conf directory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.tc.kas.KAS.kas_build">
+<span class="sig-name descname"><span class="pre">kas_build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buildtargets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/kas.html#KAS.kas_build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.kas.KAS.kas_build" title="Permalink to this definition">¶</a></dt>
+<dd><p>build all <a class="reference internal" href="#buildtargets">buildtargets</a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.tc.kas.KAS.kas_shell">
+<span class="sig-name descname"><span class="pre">kas_shell</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/kas.html#KAS.kas_shell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.kas.KAS.kas_shell" title="Permalink to this definition">¶</a></dt>
+<dd><p>enter kas shell</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.tc.kas.KAS.kas_copy">
+<span class="sig-name descname"><span class="pre">kas_copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resultimages</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;module</span> <span class="pre">'tbot.machine.linux.path'</span> <span class="pre">from</span> <span class="pre">'/home/runner/work/tbottest/tbottest/temp/tbot/tbot/machine/linux/path.py'&gt;</span></span></span><a class="reference internal" href="_modules/tbottest/tc/kas.html#KAS.kas_copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.kas.KAS.kas_copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>copy all results to tftp path on lab host</p>
+<p>resultimages is a list of image names, which should be created
+from the oe build.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-tbottest.tc.leds">
+<span id="led"></span><h2>LED<a class="headerlink" href="#module-tbottest.tc.leds" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.leds.lnx_test_led_simple">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.leds.</span></span><span class="sig-name descname"><span class="pre">lnx_test_led_simple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/leds.html#lnx_test_led_simple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.leds.lnx_test_led_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>simple linux led test. Looks if led file ‘brightness’ has after boot the
+‘bootval’ value, than sets the ‘onval’ value, checks if ‘brightness’
+file has now this value, and set it back to ‘bootval’.</p>
+<p>simple … may we can check gpio register, or i2c gpio expander value…
+perfect would be to recognize the led through a webcam…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lab</strong> – linux machine we work on</p></li>
+<li><p><strong>lnx</strong> – board linux machine</p></li>
+<li><p><strong>leds</strong> – List of dictionary, see below</p></li>
+</ul>
+</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">leds</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span><span class="s2">&quot;/sys/class/leds/led_blue&quot;</span><span class="p">,</span> <span class="s2">&quot;bootval&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;onval&quot;</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">},</span>
+    <span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="mtd">
+<h2>MTD<a class="headerlink" href="#mtd" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="network">
+<h2>network<a class="headerlink" href="#network" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-tbottest.tc.process">
+<span id="process"></span><h2>process<a class="headerlink" href="#module-tbottest.tc.process" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.process.ps_parse_ps">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.process.</span></span><span class="sig-name descname"><span class="pre">ps_parse_ps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/process.html#ps_parse_ps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.process.ps_parse_ps" title="Permalink to this definition">¶</a></dt>
+<dd><p>parse the log output from ps command
+called with the options</p>
+<p><code class="docutils literal notranslate"><span class="pre">`pid,tid,pcpu,nice,priority,comm&quot;,</span> <span class="pre">&quot;H&quot;,</span> <span class="pre">&quot;-C&quot;,</span> <span class="pre">pname`</span></code></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This works not with the busybox version</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.process.ps_parse_top">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.process.</span></span><span class="sig-name descname"><span class="pre">ps_parse_top</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">busybox</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/process.html#ps_parse_top"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.process.ps_parse_top" title="Permalink to this definition">¶</a></dt>
+<dd><p>parse the log output from top command
+called with the options</p>
+<p>top -b -n X -d X -c -H | awk ‘($1==”%Cpu(s):”)||($8==”R”)||($1==”MiB”) {print}’</p>
+<p>if busybox is True, we get log from busybox output, which is</p>
+<p>You get back an arrray containing dictionary</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;loop&quot;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">loop</span><span class="o">&gt;</span><span class="p">,</span> <span class="s2">&quot;cpu_system&quot;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">cpu</span> <span class="n">dictionary</span><span class="o">&gt;</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">,</span><span class="o">&lt;</span><span class="n">array</span> <span class="n">of</span> <span class="n">values</span><span class="o">&gt;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>cpu dictionary contains a dictionary of the form:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;USER&#39;</span><span class="p">:</span> <span class="s1">&#39;93.8&#39;</span><span class="p">,</span> <span class="s1">&#39;SYSTEM&#39;</span><span class="p">:</span> <span class="s1">&#39;4.4&#39;</span><span class="p">,</span> <span class="s1">&#39;NICE&#39;</span><span class="p">:</span> <span class="s1">&#39;0.0&#39;</span><span class="p">,</span> <span class="s1">&#39;IDLE&#39;</span><span class="p">:</span> <span class="s1">&#39;1.8&#39;</span><span class="p">,</span> <span class="s1">&#39;WA&#39;</span><span class="p">:</span> <span class="s1">&#39;0.0&#39;</span><span class="p">,</span> <span class="s1">&#39;HI&#39;</span><span class="p">:</span> <span class="s1">&#39;0.0&#39;</span><span class="p">,</span> <span class="s1">&#39;SI&#39;</span><span class="p">:</span> <span class="s1">&#39;0.0&#39;</span><span class="p">,</span> <span class="s1">&#39;ST&#39;</span><span class="p">:</span> <span class="s1">&#39;0.0&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>array of values contain dictionaries of the form:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;PID&#39;</span><span class="p">:</span> <span class="s1">&#39;267&#39;</span><span class="p">,</span> <span class="s1">&#39;USER&#39;</span><span class="p">:</span> <span class="s1">&#39;weston&#39;</span><span class="p">,</span> <span class="s1">&#39;PR&#39;</span><span class="p">:</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span> <span class="s1">&#39;NI&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;VIRT&#39;</span><span class="p">:</span> <span class="s1">&#39;243672&#39;</span><span class="p">,</span> <span class="s1">&#39;RES&#39;</span><span class="p">:</span> <span class="s1">&#39;85304&#39;</span><span class="p">,</span> <span class="s1">&#39;SHR&#39;</span><span class="p">:</span> <span class="s1">&#39;13792&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="s1">&#39;CPU&#39;</span><span class="p">:</span> <span class="s1">&#39;62.5&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM&#39;</span><span class="p">:</span> <span class="s1">&#39;17.0&#39;</span><span class="p">,</span> <span class="s1">&#39;TIME&#39;</span><span class="p">:</span> <span class="s1">&#39;93:29.61&#39;</span><span class="p">,</span> <span class="s1">&#39;CMD&#39;</span><span class="p">:</span> <span class="s1">&#39;/usr/bin/weston&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.process.lnx_get_process_cpu_usage">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.process.</span></span><span class="sig-name descname"><span class="pre">lnx_get_process_cpu_usage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/process.html#lnx_get_process_cpu_usage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.process.lnx_get_process_cpu_usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the current cpu usage of process with name <code class="docutils literal notranslate"><span class="pre">`pname`</span></code></p>
+<p>you get back a dict of the following format:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;PID&#39;</span><span class="p">:</span> <span class="s1">&#39;172&#39;</span><span class="p">,</span> <span class="s1">&#39;USER&#39;</span><span class="p">:</span> <span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="s1">&#39;PR&#39;</span><span class="p">:</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span> <span class="s1">&#39;NI&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;VIRT&#39;</span><span class="p">:</span> <span class="s1">&#39;14720&#39;</span><span class="p">,</span> <span class="s1">&#39;RES&#39;</span><span class="p">:</span> <span class="s1">&#39;4340&#39;</span><span class="p">,</span> <span class="s1">&#39;SHR&#39;</span><span class="p">:</span> <span class="s1">&#39;3748&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s1">&#39;CPU&#39;</span><span class="p">:</span> <span class="s1">&#39;0.0&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM&#39;</span><span class="p">:</span> <span class="s1">&#39;0.9&#39;</span><span class="p">,</span> <span class="s1">&#39;TIME&#39;</span><span class="p">:</span> <span class="s1">&#39;3:31.29&#39;</span><span class="p">,</span> <span class="s1">&#39;CMD&#39;</span><span class="p">:</span> <span class="s1">&#39;rngd&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.process.lnx_get_cpu_stats">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.process.</span></span><span class="sig-name descname"><span class="pre">lnx_get_cpu_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/process.html#lnx_get_cpu_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.process.lnx_get_cpu_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>get cpu stats from top command</p>
+<p>you get back a dict of the following format:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;CPU&#39;</span><span class="p">:</span> <span class="s1">&#39;0.0&#39;</span><span class="p">,</span> <span class="s1">&#39;SYS&#39;</span><span class="p">:</span> <span class="s1">&#39;20.0&#39;</span><span class="p">,</span> <span class="s1">&#39;NI&#39;</span><span class="p">:</span> <span class="s1">&#39;0.0&#39;</span><span class="p">,</span> <span class="s1">&#39;IDLE&#39;</span><span class="p">:</span> <span class="s1">&#39;75.0&#39;</span><span class="p">,</span> <span class="s1">&#39;WA&#39;</span><span class="p">:</span> <span class="s1">&#39;0.0&#39;</span><span class="p">,</span> <span class="s1">&#39;HI&#39;</span><span class="p">:</span> <span class="s1">&#39;0.0&#39;</span><span class="p">,</span> <span class="s1">&#39;SI&#39;</span><span class="p">:</span> <span class="s1">&#39;5.0&#39;</span><span class="p">,</span> <span class="s1">&#39;ST&#39;</span><span class="p">:</span> <span class="s1">&#39;0.0&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.process.lnx_measure_process">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.process.</span></span><span class="sig-name descname"><span class="pre">lnx_measure_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">intervall</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">loops</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/process.html#lnx_measure_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.process.lnx_measure_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>measure for a process with name <code class="docutils literal notranslate"><span class="pre">`pname`</span></code> the cpu usage
+with <code class="docutils literal notranslate"><span class="pre">`intervall`</span></code> and <code class="docutils literal notranslate"><span class="pre">`loops`</span></code>. If <code class="docutils literal notranslate"><span class="pre">`pname`</span></code> is
+empty, measure all processes.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This works not with the busybox version</p>
+</div>
+<p>you get back an array which contains a dictionary with
+entry</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;loop&quot;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">loop</span><span class="o">&gt;</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">,</span><span class="o">&lt;</span><span class="n">array</span> <span class="n">of</span> <span class="n">values</span><span class="o">&gt;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Array of values contains a dictionary with, see</p>
+<p><a class="reference internal" href="#tbottest.tc.process.ps_parse_ps" title="tbottest.tc.process.ps_parse_ps"><code class="xref py py-func docutils literal notranslate"><span class="pre">tbottest.tc.process.ps_parse_ps()</span></code></a></p>
+<p>If there is no such process <code class="docutils literal notranslate"><span class="pre">`values`</span></code> entry is empty</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.process.is_busybox">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.process.</span></span><span class="sig-name descname"><span class="pre">is_busybox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/process.html#is_busybox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.process.is_busybox" title="Permalink to this definition">¶</a></dt>
+<dd><p>detect if we have a busybox version of command <code class="docutils literal notranslate"><span class="pre">`cmd`</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.process.lnx_measure_top">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.process.</span></span><span class="sig-name descname"><span class="pre">lnx_measure_top</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intervall</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">loops</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/process.html#lnx_measure_top"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.process.lnx_measure_top" title="Permalink to this definition">¶</a></dt>
+<dd><p>call top with intervall <code class="docutils literal notranslate"><span class="pre">`intervall</span></code> and <code class="docutils literal notranslate"><span class="pre">`loops`</span></code> and
+analyse it</p>
+<p>you get back an array which contains a dictionary described
+in testcase</p>
+<p><a class="reference internal" href="#tbottest.tc.process.ps_parse_top" title="tbottest.tc.process.ps_parse_top"><code class="xref py py-func docutils literal notranslate"><span class="pre">tbottest.tc.process.ps_parse_top()</span></code></a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.process.ps_create_measurement_png">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.process.</span></span><span class="sig-name descname"><span class="pre">ps_create_measurement_png</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intervall</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/process.html#ps_create_measurement_png"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.process.ps_create_measurement_png" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a png on local host based on the results result
+from testcase:</p>
+<p><a class="reference internal" href="#tbottest.tc.process.lnx_measure_process" title="tbottest.tc.process.lnx_measure_process"><code class="xref py py-func docutils literal notranslate"><span class="pre">tbottest.tc.process.lnx_measure_process()</span></code></a></p>
+<p>store the gnuplot data in</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>results/measurements/process/<span class="o">{</span>loops<span class="o">}</span>_<span class="o">{</span>intervall<span class="o">}</span>_<span class="o">{</span>pname<span class="o">}</span>.dat
+</pre></div>
+</div>
+<p>call gnuplot with the config file</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>results/measurements/process/gnuplot-bar.gp
+</pre></div>
+</div>
+<p>The output png is stored in <code class="docutils literal notranslate"><span class="pre">`process-usage.png`</span></code>. Example for
+viewing it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gwenview<span class="w"> </span>process-usage.png
+</pre></div>
+</div>
+<p>example usage of this testcase:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loops</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">intervall</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">pname</span> <span class="o">=</span> <span class="s2">&quot;QtWebEngineProc&quot;</span>
+
+<span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">lnx_measure_process</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">pname</span><span class="p">,</span> <span class="n">intervall</span><span class="p">,</span> <span class="n">loops</span><span class="p">)</span>
+
+    <span class="n">local</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LocalHost</span><span class="p">)</span>
+    <span class="n">ps_create_measurement_png</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">pname</span><span class="p">,</span> <span class="n">intervall</span><span class="p">,</span> <span class="n">loops</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.process.top_create_measurement_png">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.process.</span></span><span class="sig-name descname"><span class="pre">top_create_measurement_png</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intervall</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loops</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/process.html#top_create_measurement_png"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.process.top_create_measurement_png" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a png on local host based on the results result
+from testcase:</p>
+<p><a class="reference internal" href="#tbottest.tc.process.lnx_measure_top" title="tbottest.tc.process.lnx_measure_top"><code class="xref py py-func docutils literal notranslate"><span class="pre">tbottest.tc.process.lnx_measure_top()</span></code></a></p>
+<p>store the gnuplot data in</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>results/measurements/process/<span class="o">{</span>loops<span class="o">}</span>_<span class="o">{</span>intervall<span class="o">}</span>_top.dat
+</pre></div>
+</div>
+<p>call gnuplot with the config file</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>results/measurements/process/gnuplot-bar-cpustat.gp
+</pre></div>
+</div>
+<p>The output png is stored in <code class="docutils literal notranslate"><span class="pre">`process-usage.png`</span></code>. Example for
+viewing it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gwenview<span class="w"> </span>process-usage.png
+</pre></div>
+</div>
+<p>example usage of this testcase:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loops</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">intervall</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+<span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">lnx_measure_top</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">intervall</span><span class="p">,</span> <span class="n">loops</span><span class="p">)</span>
+
+    <span class="n">local</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LocalHost</span><span class="p">)</span>
+    <span class="n">top_create_measurement_png</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">intervall</span><span class="p">,</span> <span class="n">loops</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>example png:</p>
+<img alt="_images/process-usage.png" src="_images/process-usage.png" />
+</dd></dl>
+
+</section>
+<section id="rs485">
+<h2>RS485<a class="headerlink" href="#rs485" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-tbottest.tc.sensors">
+<span id="sensors"></span><h2>Sensors<a class="headerlink" href="#module-tbottest.tc.sensors" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.sensors.board_lnx_tempsensors">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.sensors.</span></span><span class="sig-name descname"><span class="pre">board_lnx_tempsensors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/sensors.html#board_lnx_tempsensors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.sensors.board_lnx_tempsensors" title="Permalink to this definition">¶</a></dt>
+<dd><p>prerequisite: Board boots into linux</p>
+<p>test temp sensors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lnx</strong> – linux machine where we work on</p></li>
+<li><p><strong>sensors</strong> – List of dictionary, see below</p></li>
+</ul>
+</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sensors</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span><span class="s2">&quot;full path to sensor&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;name of the sensor&quot;</span><span class="p">,</span> <span class="s2">&quot;tmpvalues&quot;</span><span class="p">:[{</span><span class="s2">&quot;valname&quot;</span><span class="p">:</span><span class="s2">&quot;name of the sensor value&quot;</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span><span class="s2">&quot;minimal allowed value&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span><span class="s2">&quot;maximal allowed value&quot;</span><span class="p">}]}]</span>
+
+<span class="n">sensors</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;path&quot;</span> <span class="p">:</span> <span class="s2">&quot;/sys/bus/i2c/drivers/tmp102/0-0048/hwmon/hwmon0&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;tmp102&quot;</span><span class="p">,</span> <span class="s2">&quot;tmpvalues&quot;</span> <span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;valname&quot;</span> <span class="p">:</span> <span class="s2">&quot;temp1_input&quot;</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span> <span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span> <span class="p">:</span> <span class="s2">&quot;100000&quot;</span><span class="p">}]},</span>
+    <span class="p">{</span><span class="s2">&quot;path&quot;</span> <span class="p">:</span> <span class="s2">&quot;/sys/bus/i2c/drivers/tmp102/0-0049/hwmon/hwmon1&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;tmp102&quot;</span><span class="p">,</span> <span class="s2">&quot;tmpvalues&quot;</span> <span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;valname&quot;</span> <span class="p">:</span> <span class="s2">&quot;temp1_input&quot;</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span> <span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span> <span class="p">:</span> <span class="s2">&quot;100000&quot;</span><span class="p">}]},</span>
+    <span class="p">{</span><span class="s2">&quot;path&quot;</span> <span class="p">:</span> <span class="s2">&quot;/sys/bus/i2c/drivers/tmp102/0-004a/hwmon/hwmon2&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;tmp102&quot;</span><span class="p">,</span> <span class="s2">&quot;tmpvalues&quot;</span> <span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;valname&quot;</span> <span class="p">:</span> <span class="s2">&quot;temp1_input&quot;</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span> <span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span> <span class="p">:</span> <span class="s2">&quot;100000&quot;</span><span class="p">}]},</span>
+    <span class="p">{</span><span class="s2">&quot;path&quot;</span> <span class="p">:</span> <span class="s2">&quot;/sys/bus/i2c/drivers/tmp102/0-004b/hwmon/hwmon3&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;tmp102&quot;</span><span class="p">,</span> <span class="s2">&quot;tmpvalues&quot;</span> <span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;valname&quot;</span> <span class="p">:</span> <span class="s2">&quot;temp1_input&quot;</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span> <span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span> <span class="p">:</span> <span class="s2">&quot;100000&quot;</span><span class="p">}]},</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="swupdate">
+<h2>SWUpdate<a class="headerlink" href="#swupdate" title="Permalink to this heading">¶</a></h2>
+<p>Testcases for testing devices which use <a class="reference external" href="https://sbabic.github.io/swupdate/">swupdate</a>.</p>
+<span class="target" id="module-tbottest.tc.swu"></span><dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.swu.board_lnx_check_swu">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.swu.</span></span><span class="sig-name descname"><span class="pre">board_lnx_check_swu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usesshmachine</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/swu.html#board_lnx_check_swu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.swu.board_lnx_check_swu" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if swupdate-client.py is installed on lab host
+if not, try  install into lab.toolsdir</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lab</strong> – lab machine where we work on</p></li>
+<li><p><strong>usesshmachine</strong> – set to True if you want to use labs sshmachine instead of lab</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.swu.board_lnx_swu">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.swu.</span></span><span class="sig-name descname"><span class="pre">board_lnx_swu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swuimage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ipaddr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usesshmachine</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/tc/swu.html#board_lnx_swu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.swu.board_lnx_swu" title="Permalink to this definition">¶</a></dt>
+<dd><p>install swuimage with swupdate_client.py on lab_host to
+board with ipaddr.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lab</strong> – lab linux machine</p></li>
+<li><p><strong>lnx</strong> – board linux machine</p></li>
+<li><p><strong>swuimage</strong> – path to swuimage</p></li>
+<li><p><strong>ipaddr</strong> – address of board to where swuimage gets installed</p></li>
+<li><p><strong>usesshmachine</strong> – set to True if you want to use labs sshmachine instead of lab</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.swu.swu_swupdate_from_file">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.swu.</span></span><span class="sig-name descname"><span class="pre">swu_swupdate_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swuimage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/swu.html#swu_swupdate_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.swu.swu_swupdate_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>update the software with swupdate on the lnx machine.</p>
+<p>Use swupdate-image binary on lnx machine with swupdate image
+swuimage (full path to swuimage)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lab</strong> – lab linux machine</p></li>
+<li><p><strong>lnx</strong> – board linux machine</p></li>
+<li><p><strong>swuimage</strong> – path to swuimage</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-tbottest.tc.systemd">
+<span id="systemd"></span><h2>SystemD<a class="headerlink" href="#module-tbottest.tc.systemd" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.systemd.systemd_stop_service">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.systemd.</span></span><span class="sig-name descname"><span class="pre">systemd_stop_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/systemd.html#systemd_stop_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.systemd.systemd_stop_service" title="Permalink to this definition">¶</a></dt>
+<dd><p>stops a service on linux machine lnx</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lnx</strong> – board linux machine</p></li>
+<li><p><strong>name</strong> – name of the systemd service</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.systemd.systemd_get_log_from_service">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.systemd.</span></span><span class="sig-name descname"><span class="pre">systemd_get_log_from_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/systemd.html#systemd_get_log_from_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.systemd.systemd_get_log_from_service" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the log of a systemd service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lnx</strong> – board linux machine</p></li>
+<li><p><strong>name</strong> – name of the systemd service</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>log of “journalctl –all –no-pager -u name”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.systemd.systemd_active">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.systemd.</span></span><span class="sig-name descname"><span class="pre">systemd_active</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/systemd.html#systemd_active"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.systemd.systemd_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if systemd is installed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>lnx</strong> – board linux machine</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-tbottest.tc.tpm">
+<span id="tpm"></span><h2>TPM<a class="headerlink" href="#module-tbottest.tc.tpm" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.tpm.board_lnx_tpm2">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.tpm.</span></span><span class="sig-name descname"><span class="pre">board_lnx_tpm2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/tpm.html#board_lnx_tpm2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.tpm.board_lnx_tpm2" title="Permalink to this definition">¶</a></dt>
+<dd><p>simply check if we find some strings from tpm start
+check, if tpm has correct major version. And check
+if eltt2 tool detects correct vendor</p>
+<p>TODO: Make this testcase more generic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lab</strong> – lab linux machine</p></li>
+<li><p><strong>lnx</strong> – board linux machine</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-tbottest.common.ubootbuild">
+<span id="u-boot"></span><h2>U-Boot<a class="headerlink" href="#module-tbottest.common.ubootbuild" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.common.ubootbuild.UBBUILDMAN">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.common.ubootbuild.</span></span><span class="sig-name descname"><span class="pre">UBBUILDMAN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ubootpatchsubpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ubootbinariessubpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defconfig</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resultbins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">makelist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/common/ubootbuild.html#UBBUILDMAN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.common.ubootbuild.UBBUILDMAN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>simple class for some useful buildman tool abstractions
+for building U-Boot. You can define a subdirname
+“binsubpath” which is a subdir on lab hosts tftp directory
+in which needed binaries for complete and working U-Boot
+build are found. tbot copies all files found in this subdirectory
+to U-Boots build directory on build host.</p>
+<p>Same for downsream patches. You can define a name for
+a subdirectory found on labhosts tftp directory for the
+board with name “ubootpatchsubpath”. All patches found in
+this directory, are copied to U-Boot source directory
+on build host and applied to the current U-Boot source
+code.</p>
+<p>The list of resulting binaries in resultbins you can
+copy to lab hosts tftp path with</p>
+<p><a class="reference internal" href="#tbottest.common.ubootbuild.UBBUILDMAN.bm_copy_results2lab" title="tbottest.common.ubootbuild.UBBUILDMAN.bm_copy_results2lab"><code class="xref py py-func docutils literal notranslate"><span class="pre">bm_copy_results2lab()</span></code></a></p>
+<p>You may need to call also some make targets you can add
+through list of strings in makelist</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lab</strong> – lab host machine. must be valid</p></li>
+<li><p><strong>bh</strong> – build host machine, must be valid</p></li>
+<li><p><strong>ubootpatchsubpath</strong> – str subdir on labhosts tftp directory with downstream U-Boot patches</p></li>
+<li><p><strong>defconfig</strong> – defconfig name of the board</p></li>
+<li><p><strong>binariessubpath</strong> – str subdir on labhosts tftp directory where needed binaries are found</p></li>
+<li><p><strong>resultbins</strong> – list of strings of resulting binarienames</p></li>
+<li><p><strong>makelist</strong> – list of strings of make targets</p></li>
+</ul>
+</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">B</span> <span class="o">=</span> <span class="p">[</span>
+<span class="p">{</span>
+    <span class="s1">&#39;defconfig&#39;</span><span class="p">:</span> <span class="s1">&#39;foo&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ubootpatchsubpath&#39;</span><span class="p">:</span> <span class="s1">&#39;uboot-patches&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;binsubpath&#39;</span><span class="p">:</span> <span class="s1">&#39;binaries&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;resultbinaries&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;flash.bin&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;makelist&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;flash.bin&#39;</span><span class="p">],</span>
+<span class="p">},</span>
+<span class="p">]</span>
+
+<span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">B</span><span class="p">:</span>
+    <span class="n">bmcfg</span> <span class="o">=</span> <span class="n">UBBUILDMAN</span><span class="p">(</span><span class="n">lab</span><span class="p">,</span> <span class="n">bh</span><span class="p">,</span> <span class="n">b</span><span class="p">[</span><span class="s2">&quot;ubootpatchsubpath&quot;</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="s2">&quot;binsubath&quot;</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="s2">&quot;defconfig&quot;</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="s2">&quot;resultbinaries&quot;</span><span class="p">])</span>
+    <span class="n">bmcfg</span><span class="o">.</span><span class="n">bm_build_board</span><span class="p">()</span>
+    <span class="n">bmcfg</span><span class="o">.</span><span class="n">bm_copy_results2lab</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.common.ubootbuild.UBBUILDMAN.bm_get_uboot_patches">
+<span class="sig-name descname"><span class="pre">bm_get_uboot_patches</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/common/ubootbuild.html#UBBUILDMAN.bm_get_uboot_patches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.common.ubootbuild.UBBUILDMAN.bm_get_uboot_patches" title="Permalink to this definition">¶</a></dt>
+<dd><p>copy boardspecfic downstream patches found on lab
+host in current tftp path for the board in subdir
+“uboot-patches” to the build host</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.common.ubootbuild.UBBUILDMAN.bm_apply_uboot_patches">
+<span class="sig-name descname"><span class="pre">bm_apply_uboot_patches</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/common/ubootbuild.html#UBBUILDMAN.bm_apply_uboot_patches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.common.ubootbuild.UBBUILDMAN.bm_apply_uboot_patches" title="Permalink to this definition">¶</a></dt>
+<dd><p>apply the patches which are in self.ubootpatchpath</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.common.ubootbuild.UBBUILDMAN.bm_build_prepare">
+<span class="sig-name descname"><span class="pre">bm_build_prepare</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">[&lt;class</span> <span class="pre">'str'&gt;]</span></span></span><a class="reference internal" href="_modules/tbottest/common/ubootbuild.html#UBBUILDMAN.bm_build_prepare"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.common.ubootbuild.UBBUILDMAN.bm_build_prepare" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup all stuff we need for building U-Boot</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.common.ubootbuild.UBBUILDMAN.bm_build_board">
+<span class="sig-name descname"><span class="pre">bm_build_board</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/common/ubootbuild.html#UBBUILDMAN.bm_build_board"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.common.ubootbuild.UBBUILDMAN.bm_build_board" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup all stuff we need for building U-Boot</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.common.ubootbuild.UBBUILDMAN.bm_copy_results2lab">
+<span class="sig-name descname"><span class="pre">bm_copy_results2lab</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/common/ubootbuild.html#UBBUILDMAN.bm_copy_results2lab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.common.ubootbuild.UBBUILDMAN.bm_copy_results2lab" title="Permalink to this definition">¶</a></dt>
+<dd><p>copy results to lab</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-tbottest.tc.uboot"></span><dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.uboot.board_ub_unit_test">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.uboot.</span></span><span class="sig-name descname"><span class="pre">board_ub_unit_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">UBootShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/uboot.html#board_ub_unit_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.uboot.board_ub_unit_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if unit test command ut in U-Boot is activated
+and call it.</p>
+</dd></dl>
+
+</section>
+<section id="module-tbottest.tc.yocto">
+<span id="yocto"></span><h2>Yocto<a class="headerlink" href="#module-tbottest.tc.yocto" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.yocto.check_yocto_build_install_sdk">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.yocto.</span></span><span class="sig-name descname"><span class="pre">check_yocto_build_install_sdk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sdk_install_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sdk_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sdk_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/yocto.html#check_yocto_build_install_sdk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.yocto.check_yocto_build_install_sdk" title="Permalink to this definition">¶</a></dt>
+<dd><p>install SDK.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lnx</strong> – board linux machine</p></li>
+<li><p><strong>sdk_install_path</strong> – path to where the SDK gets installed</p></li>
+<li><p><strong>sdk_path</strong> – path where to find the SDK installation scirpt</p></li>
+<li><p><strong>sdk_name</strong> – SDK installation scripts name</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.tc.yocto.check_yocto_sdk_get_scriptname">
+<span class="sig-prename descclassname"><span class="pre">tbottest.tc.yocto.</span></span><span class="sig-name descname"><span class="pre">check_yocto_sdk_get_scriptname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lnx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/tc/yocto.html#check_yocto_sdk_get_scriptname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.tc.yocto.check_yocto_sdk_get_scriptname" title="Permalink to this definition">¶</a></dt>
+<dd><p>return scriptname of installed SDK</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>lnx</strong> – board linux machine</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tips.html" class="btn btn-neutral float-left" title="Tips" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="iniconfig.html" class="btn btn-neutral float-right" title="tbottest.initconfig" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
