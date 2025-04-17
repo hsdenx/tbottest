@@ -64,12 +64,12 @@ Create for your tbot configuration and own testcases your own repo
         $ tree -I log*
         newtbot_starter.py
         tbotconfig
-        ├── boardspecific.py
         └── BOARDNAME
             ├── args
             │   ├── argsbase (from tbottest/tbotconfig/BOARDNAME/args/argsbase, replace BOARDNAME with real name)
             │   ├── argsBOARDNAME
             │   └── [...]
+            ├── boardspecific.py
             ├── README.BOARDNAME
             ├── tbot.ini
             ├── BOARDNAME.ini

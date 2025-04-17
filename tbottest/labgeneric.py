@@ -11,6 +11,7 @@ from tbottest import builders
 from tbottest import powercontrol
 from tbottest import machineinit
 from tbottest.common.boardlocking import lab_get_lock
+from tbottest.dynamicimport import get_boardcallback_import
 
 import tbottest.initconfighelper as inithelper
 
@@ -594,10 +595,8 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
                 pass
 
             try:
-                from tbotconfig import labcallbacks
-
                 funcname = bms['func']
-                func = getattr(labcallbacks, funcname)
+                func = getattr(get_boardcallback_import(), funcname)
                 ret = func(self)
                 return ret
             except:

@@ -2,10 +2,11 @@ import configparser
 from configparser import ExtendedInterpolation
 import tbot
 import os
+from tbottest.dynamicimport import get_boardmodule_import
+from tbottest.dynamicimport import get_boardmodulepath_import
 import tbottest.initconfighelper as inithelper
 
 BOARDNAME = None
-
 
 def init_get_default_config(
     cfgp: configparser.RawConfigParser,
@@ -209,16 +210,16 @@ def find_in_file_and_delete(filename, substring):
 
 
 try:
-    from tbotconfig.boardspecific import set_board_cfg
+    set_board_cfg = getattr(get_boardmodule_import(), "set_board_cfg")
 except:
     raise RuntimeError(
-        "Please define at least a dummy set_board_config in tbotconfig.boardspecific"
+        f"Please define at least a dummy set_board_config in {get_boardmodulepath_import()}"
     )
     set_board_cfg = None
 
 
 try:
-    from tbotconfig.boardspecific import board_set_boardname
+    board_set_boardname = getattr(get_boardmodule_import(), "board_set_boardname")
 except:
     board_set_boardname = None
 

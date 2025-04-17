@@ -11,12 +11,14 @@ import os
 from tbottest import labgeneric as lab
 import tbottest.initconfig as ini
 from tbottest.labgeneric import cfgt as cfglab
+from tbottest.dynamicimport import get_boardmodule_import
+from tbottest.dynamicimport import get_boardmodulepath_import
 
 try:
-    from tbotconfig.boardspecific import set_ub_board_specific
+    set_ub_board_specific = getattr(get_boardmodule_import(), "set_ub_board_specific")
 except:
     raise RuntimeError(
-        "Please define at least a dummy set_ub_board_specific in tbotconfig.boardspecific"
+        "Please define at least a dummy set_ub_board_specific in {get_boardmodulepath_import()}"
     )
     set_ub_board_specific = None
 

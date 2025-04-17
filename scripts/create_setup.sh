@@ -207,7 +207,6 @@ fi
 if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	cd tbotconfig
 
-	cp ../tbottest/tbottest/tbotconfig/boardspecific.py .
 	cp ../tbottest/tbottest/tbotconfig/interactive.py .
 	# and only for github CI from interest
 	mkdir ci
@@ -235,6 +234,7 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 
 	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/README.BOARDNAME README.$BOARDNAME
 	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/tbot.ini tbot.ini
+	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/boardspecific.py boardspecific.py
 	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini $BOARDNAME.ini
 	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/BOARDNAME.py ../tc_$BOARDNAME.py
 	sed -i "s|BOARDNAME|$BOARDNAME|g" ../tc_$BOARDNAME.py
@@ -264,13 +264,13 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
 	sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/$BOARDNAME.ini
 
-	sed -i "/SET BOARDNAME to BOARDNAME/d" ./tbotconfig/boardspecific.py
-	sed -i "/!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!/d" ./tbotconfig/boardspecific.py
-	sed -i "/You use example implementation of boardspecific.py/d" ./tbotconfig/boardspecific.py
-	sed -i "/You really should use your own implementation/d" ./tbotconfig/boardspecific.py
-	sed -i "s|BOARDNAME_|$BOARDNAME\_|g" ./tbotconfig/boardspecific.py
-	sed -i "s|\"BOARDNAME\"|\"$BOARDNAME\"|g" ./tbotconfig/boardspecific.py
-	sed -i "s|\"BOARDNAME8g\"|\""$BOARDNAME"8g\"|g" ./tbotconfig/boardspecific.py
+	sed -i "/SET BOARDNAME to BOARDNAME/d" ./tbotconfig/$BOARDNAME/boardspecific.py
+	sed -i "/!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!/d" ./tbotconfig/$BOARDNAME/boardspecific.py
+	sed -i "/You use example implementation of boardspecific.py/d" ./tbotconfig/$BOARDNAME/boardspecific.py
+	sed -i "/You really should use your own implementation/d" ./tbotconfig/$BOARDNAME/boardspecific.py
+	sed -i "s|BOARDNAME_|$BOARDNAME\_|g" ./tbotconfig/$BOARDNAME/boardspecific.py
+	sed -i "s|\"BOARDNAME\"|\"$BOARDNAME\"|g" ./tbotconfig/$BOARDNAME/boardspecific.py
+	sed -i "s|\"BOARDNAME8g\"|\""$BOARDNAME"8g\"|g" ./tbotconfig/$BOARDNAME/boardspecific.py
 
 	# insert LAB config in ./tbotconfig/$BOARDNAME/tbot.ini
 	sed -i "s|@@LABNAME@@|$LABNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
