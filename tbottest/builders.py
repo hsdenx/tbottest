@@ -102,9 +102,21 @@ class genericbuilder(connector.SSHConnector, linux.Bash, linux.Builder):
 
 class genericbuilderlocal(connector.SubprocessConnector, linux.Bash, linux.Builder):
     sn = "BUILDHOST_local"
-    name = cfgt.config_parser.get(sn, "name")
-    dl_dir = cfgt.config_parser.get(sn, "dl_dir")
-    sstate_dir = cfgt.config_parser.get(sn, "sstate_dir")
+    try:
+        name = cfgt.config_parser.get(sn, "name")
+    except:
+        name = "NOTDEFINED please add BUILDHOST_local in tbot.ini"
+        pass
+    try:
+        dl_dir = cfgt.config_parser.get(sn, "dl_dir")
+    except:
+        dl_dir = "NOTDEFINED please add BUILDHOST_local in tbot.ini"
+        pass
+    try:
+        sstate_dir = cfgt.config_parser.get(sn, "sstate_dir")
+    except:
+        sstate_dir = "NOTDEFINED please add BUILDHOST_local in tbot.ini"
+        pass
 
     @property
     def kas_ref_dir(self) -> "linux.Path[genericbuilder]":
