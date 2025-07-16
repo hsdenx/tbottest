@@ -1,4 +1,5 @@
 import tbot
+import time
 from tbot.machine import linux
 from tbot.context import Optional
 
@@ -14,6 +15,7 @@ def board_lnx_rs485(
     rs485baud=None,
     rs485boarddev=None,
     rs485lengths=None,
+    debug = 0,
 ):
     """
     prerequisite: Board boots into linux
@@ -84,6 +86,7 @@ def board_lnx_rs485(
             "-echoke",
             "raw",
         )
+        lab.exec0("stty", "-F", linux.Raw("$SERIAL_DEV"))
 
         for boarddev in rs485boarddev:
             lnx.exec0("export", f"SERIAL_DEV={boarddev}")
@@ -110,6 +113,8 @@ def board_lnx_rs485(
                 "raw",
             )
 
+            lnx.exec0("stty", "-F", linux.Raw("$SERIAL_DEV"))
+
             sendfilebase = "rs485send"
             sendfilehexbase = sendfilebase + "hex"
             rcvfile = "rs485rcv"
@@ -124,6 +129,7 @@ def board_lnx_rs485(
             tbot.log.message(tbot.log.c("Testing RS485 from lab to board").green)
             for length in rs485lengths:
                 # enable receiver
+                #time.sleep(5)
                 tar.exec(
                     "cat",
                     linux.Raw("$SERIAL_DEV"),
@@ -147,11 +153,22 @@ def board_lnx_rs485(
                     linux.Raw(">"),
                     linux.Raw("$SERIAL_DEV"),
                 )
+                if debug:
+                    src.exec0("cat", sendfilehex._local_str())
+
+                #time.sleep(2)
                 tar.exec("kill", pid, linux.Then, "wait", pid)
+                if debug:
+                    tar.exec0("cat", rcvtmpfile._local_str())
 
                 # compare send and received file
                 tbot_copy_file_to_board(lab, lnx, ethdevice, sendfilehexbase)
-                tar.exec0("cmp", tar.tmpdir() / sendfilehexbase, rcvtmpfile._local_str())
+                try:
+                    tar.exec0("cmp", tar.tmpdir() / sendfilehexbase, rcvtmpfile._local_str())
+                except:
+                    tar.exec0("cat", tar.tmpdir() / sendfilehexbase)
+                    tar.exec0("cat", rcvtmpfile._local_str())
+                    raise RuntimeError("RS485 receive error")
 
             tbot.log.message(tbot.log.c("Testing RS485 from board to lab").green)
             src = lnx
@@ -185,8 +202,19 @@ def board_lnx_rs485(
                     linux.Raw(">"),
                     linux.Raw("$SERIAL_DEV"),
                 )
+                if debug:
+                    src.exec0("cat", sendfilehex._local_str())
+
+                #time.sleep(2)
                 tar.exec("kill", pid, linux.Then, "wait", pid)
+                if debug:
+                    tar.exec0("cat", rcvtmpfile._local_str())
 
                 # compare send and received file
                 tbot_copy_file_to_board(lab, lnx, ethdevice, rcvfile)
-                lnx.exec0("cmp", sendfilehex, lnx.tmpdir() / rcvfile)
+                try:
+                    lnx.exec0("cmp", sendfilehex, lnx.tmpdir() / rcvfile)
+                except:
+                    src.exec0("cat", sendfilehex._local_str())
+                    src.exec0("cat", lnx.tmpdir() / rcvfile)
+                    raise RuntimeError("RS485 send error")
