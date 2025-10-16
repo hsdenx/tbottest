@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # tbot setup
 tboturl=https://github.com/Rahix/tbot.git
 tbottag="v0.10.6"
