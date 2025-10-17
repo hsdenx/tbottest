@@ -23,6 +23,9 @@ def get_tbot_arguments():
     if "sphinx-build" in sys.argv[0]:
         sys.argv = sys.argv[:1]
 
+    if "newbot" in sys.argv[0]:
+        sys.argv = sys.argv[1:]
+
     parser = build_parser()
     parser.add_argument("--complete-module", help=argparse.SUPPRESS)
     parser.add_argument("--complete-testcase", help=argparse.SUPPRESS)
