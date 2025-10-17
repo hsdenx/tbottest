@@ -148,6 +148,24 @@ class boardSisControl(powercontrol.SispmControl):
             sispmctl_device = cfgt.config_parser.get(s, "device")
             sispmctl_port = cfgt.config_parser.get(s, "port")
 
+class boardTMControl(powercontrol.TM021Control):
+    def power_check(self) -> bool:
+        if "poweroffonstart" in tbot.flags:
+            self.poweroff()
+
+        return True
+
+    bn = ini.generic_get_boardname()
+    cfg = f"TM021_{bn}"
+    for s in cfgt.config_parser.sections():
+        if cfg == s:
+            tm021_device = cfgt.config_parser.get(s, "device")
+            tm021_baudrate = cfgt.config_parser.get(s, "baudrate")
+            tm021_timeout = cfgt.config_parser.get(s, "timeout")
+            tm021_address = cfgt.config_parser.get(s, "address")
+            tm021_port = cfgt.config_parser.get(s, "port")
+            tm021_debug = cfgt.config_parser.get(s, "debug")
+
 
 class boardTFControl(powercontrol.TinkerforgeControl):
     bn = ini.generic_get_boardname()
@@ -175,6 +193,8 @@ else:
         BOARDCTL = boardGpioControl
     elif cfgt.tinkerforce:
         BOARDCTL = boardTFControl
+    elif cfgt.tm021:
+        BOARDCTL = boardTMControl
     else:
         bn = ini.generic_get_boardname()
         raise RuntimeError(f"please configure powerctrl for board {bn}")

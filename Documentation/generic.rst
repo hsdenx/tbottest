@@ -442,6 +442,27 @@ Here as example wandboard.
         "device", "id of sispmctl device", "01:01:4f:d4:b1"
         "port", "sispmctl port used for the boards power", "3"
 
+[TM021_BOARDNAME]
+^^^^^^^^^^^^^^^^^
+
+Set this section, If you want to control boards power with DH electronics
+"TM-021 4-fach Relaismodul".
+
+:py:meth:`tbottest.powercontrol.TM021Control`
+
+replace BOARDNAME with the name of your board!
+Here as example wandboard.
+
+.. csv-table:: [TM021_wandboard]
+        :header: "key", "value", "example"
+
+        "device", "device node of used linux device", "/dev/relais"
+        "baudrate", "baudrate for the linux device", "500000"
+        "timeout", "timeout in seconds for one command", "5"
+        "address", "address of the relais", "0"
+        "port", "port of the relais", "1"
+        "debug", "if you want to have debug traces set this to True", "False"
+
 
 [TF_BOARDNAME]
 ^^^^^^^^^^^^^^

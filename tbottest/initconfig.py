@@ -256,6 +256,7 @@ class IniTBotConfig:
         self.powershellscript = False
         self.gpiopowerctrl = False
         self.tinkerforce = False
+        self.tm021 = False
         for s in self.config_parser.sections():
             if "IPSETUP" in s:
                 nm = s.split("_")[1]
@@ -367,6 +368,8 @@ class IniTBotConfig:
                 self.gpiopowerctrl = True
             if f"TF_{bn}" in s:
                 self.tinkerforce = True
+            if f"TM021_{bn}" in s:
+                self.tm021 = True
 
     def __del__(self):
         if os.path.exists(self.tbotinifile):
