@@ -132,7 +132,7 @@ class GenericUBoot(
 
     ap = cfgp.get_config(
         "uboot_autoboot_prompt",
-        b"autoboot:\s{0,5}\d{0,3}\s{0,3}.{0,80}",  # noqa: W605
+        b"autoboot:\\s{0,5}\\d{0,3}\\s{0,3}.{0,80}",  # noqa: W605
     )
     if ap is None:
         autoboot_prompt = None
