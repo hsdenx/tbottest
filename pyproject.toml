@@ -1,0 +1,25 @@
+[project]
+name = "tbottest"
+description = "Tools to use with tbot"
+version = "0.1"
+authors = [
+    { name = "Heiko Schocher", email = "hs@nabladev.com" }
+]
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+license = {file = "LICENSE"}
+
+[tool.setuptools]
+packages = ["tbottest", "tbottest.common", "tbottest.tc"]
+
+
+[project.urls]
+Homepage = "https://github.com/hsdenx/tbottest.git"
+
+[build-system]
+requires = ["setuptools>=45.0"]
+build-backend = "setuptools.build_meta"
