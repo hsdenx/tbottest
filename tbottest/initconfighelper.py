@@ -72,6 +72,20 @@ def get_unique_filename_extension():
     UUID_FILENAME = str(uuid.uuid4())
     return UUID_FILENAME
 
+TBOTCONFIGPATH = None
+
+def get_tbotconfig_path():
+    global TBOTCONFIGPATH
+    if TBOTCONFIGPATH is not None:
+        return TBOTCONFIGPATH
+
+    for p in os.environ['PYTHONPATH'].split(":"):
+        if "tbotconfig" in p:
+            TBOTCONFIGPATH = p.replace("tbotconfig", "")
+            return TBOTCONFIGPATH
+
+    TBOTCONFIGPATH = os.getcwd()
+    return TBOTCONFIGPATH
 
 TBOTINIFILE = None
 
@@ -95,14 +109,15 @@ def inifile_get_tbotfilename():
             except:
                 raise RuntimeError("please use : as seperator inifile flag")
 
-    workdir = os.getcwd()
+    cfgpath = get_tbotconfig_path()
+
     if pathinifile:
         if pathinifile[0] != r"\/":  # noqa: W605
-            tbotinifile = workdir + "/" + pathinifile
+            tbotinifile = cfgpath + "/" + pathinifile
         else:
             tbotinifile = pathinifile
     else:
-        tbotinifile = workdir + "/../tbottest/tbotconfig/BOARDNAME/tbot.ini"
+        tbotinifile = cfgpath + "/../tbottest/tbotconfig/BOARDNAME/tbot.ini"
 
     uidfile = get_unique_filename_extension()
     newfilename = f"{tbotinifile}-{uidfile}"
@@ -133,14 +148,15 @@ def inifile_get_tbotboardfilename():
             except:
                 raise RuntimeError("please use : as seperator boardfile flag")
 
-    workdir = os.getcwd()
+    cfgpath = get_tbotconfig_path()
+
     if pathinifile:
         if pathinifile[0] != r"\/":  # noqa: W605
-            filename = workdir + "/" + pathinifile
+            filename = cfgpath + "/" + pathinifile
         else:
             filename = pathinifile
     else:
-        filename = workdir + "/../tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini"
+        filename = cfgpath + "/../tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini"
 
     uidfile = get_unique_filename_extension()
     newfilename = f"{filename}-{uidfile}"
