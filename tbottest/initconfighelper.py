@@ -79,6 +79,12 @@ def get_tbotconfig_path():
     if TBOTCONFIGPATH is not None:
         return TBOTCONFIGPATH
 
+    try:
+        TBOTCONFIGPATH = os.environ['TBOTCONFIGPATH']
+        return TBOTCONFIGPATH
+    except:
+        pass
+
     for p in os.environ['PYTHONPATH'].split(":"):
         if "tbotconfig" in p:
             TBOTCONFIGPATH = p.replace("tbotconfig", "")
