@@ -85,10 +85,13 @@ def get_tbotconfig_path():
     except:
         pass
 
-    for p in os.environ['PYTHONPATH'].split(":"):
-        if "tbotconfig" in p:
-            TBOTCONFIGPATH = p.replace("tbotconfig", "")
-            return TBOTCONFIGPATH
+    try:
+        for p in os.environ['PYTHONPATH'].split(":"):
+            if "tbotconfig" in p:
+                TBOTCONFIGPATH = p.replace("tbotconfig", "")
+                return TBOTCONFIGPATH
+    except:
+        pass
 
     TBOTCONFIGPATH = os.getcwd()
     return TBOTCONFIGPATH
