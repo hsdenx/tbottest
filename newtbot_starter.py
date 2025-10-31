@@ -27,7 +27,12 @@ import os
 import sys
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-sys.path.insert(0, currentdir + "/tbotconfig")
+try:
+    TBOTCONFIGPATH = os.environ['TBOTCONFIGPATH']
+    sys.path.insert(0, TBOTCONFIGPATH)
+except:
+    sys.path.insert(0, currentdir + "/tbotconfig")
+
 sys.path.insert(0, currentdir + "/../tbot")
 sys.path.insert(0, currentdir + "/../tbottest")
 
