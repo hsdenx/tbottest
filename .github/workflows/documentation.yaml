@@ -38,6 +38,8 @@ jobs:
           CP=$(pwd)
           export PYTHONPATH=${CP}/temp/tbot:/home/runner/.local/lib/python3.7/site-packages
           cd temp/tbottest
+          cp tbottest/tbotconfig/BOARDNAME/boardspecific.py tbottest/tbotconfig/
+          touch tbottest/tbotconfig/__init__.py
           ./Documentation/build-docs.sh
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
