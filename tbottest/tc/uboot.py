@@ -5,6 +5,29 @@ import tbot
 from tbot.machine import board
 from tbot.context import Optional
 
+def ub_read_register(ub: typing.Optional[board.UBootShell], address: str, bytesize: int = 4) ->str:
+    """
+    read a register in u-boot with md command
+    return the value as a hex string
+    """
+    if bytesize == 1:
+        bl = ".b"
+    elif bytesize == 2:
+        bl = ".w"
+    elif bytesize == 4:
+        bl = ".l"
+    elif bytesize == 8:
+        bl = ".q"
+    else:
+        raise RuntimeError(f"bytesize {bytesize} not allowed, [1,2,4,8]")
+
+    log = ub.exec0(f"md{bl}", address, "1")
+    rval = log.split(":")[1]
+    rval = rval.split(" ")[1]
+    val = f"0x{rval}"
+    return val
+
+
 @tbot.testcase
 def board_ub_unit_test(
     ub: typing.Optional[board.UBootShell] = None,
