@@ -89,7 +89,7 @@ class REGISTERMAP:
         │   ├─--------
 
 
-    There are also helper script in `scripts/registermap <https://github.com/hsdenx/tbottest/scripts/registermap>`_
+    There are also helper script in `scripts/registermap <https://github.com/hsdenx/tbottest/tree/master/scripts/registermap>`_
     with which you can generate such a mapping from a reference manual.
 
     """
