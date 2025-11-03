@@ -56,7 +56,7 @@ class REGISTERMAP:
         │   ├─[helios-uboot] md.l 0x30330070 1
         │   │    ## 30330070: 00000000                             ....
         │   ├─-------------------------------
-        │   ├─register name: IOMUXC_SW_MUX_CTL_PAD_ENET_TXC val: 0x00000000
+        │   ├─register name: IOMUXC_SW_MUX_CTL_PAD_ENET_TXC val: 0x00000000 RM page 1438
         │   ├─31-5   -                              val 000000000000000000000000000
         │   ├─desc This field is reserved.
         │   │ Reserved
@@ -138,7 +138,11 @@ class REGISTERMAP:
             tbot.log.message(tbot.log.c(f"regitermapping for {address} not found").red)
             return False
 
-        tbot.log.message(tbot.log.c(f"register name: {reg['register']} val: {val}").blue)
+        tbot.log.message(
+            tbot.log.c(
+                f"register name: {reg['register']} val: {val} RM page {reg['page']}"
+            ).blue
+        )
         for bit in reg["bits"]:
             if "NXP bug not documented" in bit["range"]:
                 tbot.log.message(
