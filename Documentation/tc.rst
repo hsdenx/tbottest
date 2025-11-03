@@ -62,6 +62,11 @@ process
 .. automodule:: tbottest.tc.process
    :members:
 
+register map
+------------
+
+.. automodule:: tbottest.tc.registermap
+   :members:
 
 RS485
 -----
