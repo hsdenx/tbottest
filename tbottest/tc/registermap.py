@@ -1,7 +1,7 @@
 import json
 import tbot
 
-from tbottest.tc.common import get_bit_range
+from tbottest.tc.common_generic import get_bit_range
 
 
 class REGISTERMAP:

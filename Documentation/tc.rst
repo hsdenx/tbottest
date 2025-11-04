@@ -8,6 +8,14 @@ Common Testcases
 .. automodule:: tbottest.tc.common
    :members:
 
+Common generic Testcases
+-------------------------
+
+This testcases work without tbot imports
+
+.. automodule:: tbottest.tc.common_generic
+   :members:
+
 CAN Tests
 ---------
 
