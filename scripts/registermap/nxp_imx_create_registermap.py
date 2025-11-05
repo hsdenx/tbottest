@@ -50,6 +50,16 @@ class pdf2json:
             self.pdfname = "IMX8MPRM.pdf"
             self.url = "https://www.nxp.com/webapp/Download?colCode=IMX8MPRM"
             self.ranges = [
+                # ccm
+                # {"start_page": 442, "end_page": 566},
+                # gpc
+                # {"start_page": 598, "end_page": 718},
+                # otp
+                # {"start_page": 833, "end_page": 868},
+                # snvs
+                # {"start_page": 877, "end_page": 897},
+                # src
+                # {"start_page": 909, "end_page": 968},
                 # iomuxc
                 {"start_page": 1361, "end_page": 1388},
                 {"start_page": 1408, "end_page": 1982},
@@ -68,7 +78,9 @@ class pdf2json:
     def is_field_name(self, line):
         line = line.replace("\n", "")
 
-        if re.search(r"[A-Z_]", line) and not re.search(r"[a-z0-9\-]", line):
+        self.debug(f"is_field_name {line}")
+        if re.search(r"[A-Z_]", line) and not re.search(r"[a-z\-]", line):
+            self.debug("is_field_name True")
             return True
 
         return False
@@ -79,6 +91,9 @@ class pdf2json:
         and no Lowercase letters are in. The rest goes into the description
         """
         line = line.strip()
+        # see problem5, some field names have "\n"
+        line = line.replace("\n", "")
+        self.debug(f"extract_field_and_description line {line}")
         if not line:
             return "", ""
 
@@ -94,6 +109,9 @@ class pdf2json:
             field_name = ""
             description = line
 
+        self.debug(
+            f"extract_field_and_description return field_name {field_name} description {description}"
+        )
         return field_name, description
 
     def is_bitfield_line(self, line):
@@ -198,20 +216,33 @@ class pdf2json:
         # ['Table continues on the next page...', None]
         #
         # problem lines
+        # problem1
         # ['31–2\n-', 'This field is reserved.']
         # -> no field name, we replace "-" with reserved
         #
+        # problem2
         # ['GPR_\nCORESIGHT_\nGPR_CTM_SEL', 'Select for Coresight master']
         # -> missing bitfields ! Grrrr, it should be 1-0
         #
+        # problem3
         # ['-', 'This field is reserved.']
         # -> no field name, no bitfield
         #
+        # problem4
         # ['', '011 ALT3_ISP_FL_TRIG_0 — Select mux mode: ALT3 mux port: ISP_FL_TRIG_0 of instance: isp\n101 ALT5_REF_CLK_32K — Select mux mode: ALT5 mux port: REF_CLK_32K of instance: anamix\n110 ALT6_CCM_EXT_CLK1 — Select mux mode: ALT6 mux port: CCM_EXT_CLK1 of instance: ccm']
         # -> field is ''
         #
+        # problem5
+        # ['GPC_IMR2_CORE0_A53 field descriptions', None]
+        # ['Field', 'Description']
+        # ['IMR2_CORE0_A\n53', 'A53 core0 IRQ[63:32] masking bits:']
+        # [None, '0 IRQ not masked\n1 IRQ masked']
+        # -> bitfiled has a "\n"
+        #
+        #
         if table:
             foundtable = False
+            wascontinued = False
             for row in table:
                 self.debug(
                     f"row {row} 0: {row[0]} 1: {row[1]} current_register {self.current_register}"
@@ -232,6 +263,7 @@ class pdf2json:
                                 if self.table_cont_next_page:
                                     foundtable = True
                                     self.table_cont_next_page = False
+                                    wascontinued = True
                             else:
                                 self.debug(
                                     f"Found table new? table {row[0]} current_register {self.current_register}"
@@ -257,32 +289,60 @@ class pdf2json:
                         return
 
                     # debug(f"LINE {row[0]}")
-                    # field_name, description = extract_field_and_description(row[0])
-                    # debug(f"field: {field_name} desc: {description}")
-                    range = self.is_bitfield_line(row[0])
-                    self.debug(f"range: {range}")
+                    bitrange = self.is_bitfield_line(row[0])
+                    self.debug(f"bitrange: {bitrange}")
                     # NXP doc is buggy, some Field entries miss bitfield ...
                     # so try if we have a FIELD DESCRIPTION
                     field_name = ""
                     if self.is_field_name(row[0]):
+                        self.debug(
+                            f"bitrange {bitrange} wascontinued {wascontinued} row[1] {row[1]}"
+                        )
+                        if bitrange:
+                            # replace the bitrange with "" so we get additional field name
+                            row[0] = row[0].replace(bitrange, "", 1)
+                            self.debug(f"fix row {row[0]}")
+                        else:
+                            if wascontinued and row[1] == "":
+                                bitrange = False
+                                self.debug(
+                                    f"field_name empty, but continued current_bit {self.current_bit}"
+                                )
+                                if self.current_bit:
+                                    self.current_bit["field"] = (
+                                        self.current_bit["field"] + row[0]
+                                    )
+                                    self.current_bit["description"] = (
+                                        self.current_bit["description"]
+                                        + "\n"
+                                        + row[1]
+                                        + "\n"
+                                    )
+                            else:
+                                self.debug(f"BUG not documented field_name {field_name}")
+                                bitrange = "NXP bug not documented"
+
                         field_name = row[0].replace("\n", "")
-                        self.debug(f"BUG not documented field_name {field_name}")
-                        range = "NXP bug not documented"
                         if field_name == "MUX_MODE":
-                            range = "2-0"
-                    if row[0] == "-":
-                        range = "-"
+                            bitrange = "2-0"
+                    elif row[0] == "-":
+                        bitrange = "-"
                         field_name = "NXP bug -"
                         self.debug(f"BUG field_name {field_name}")
-                    if row[0] == "" and row[1] is not None:
-                        range = False
+                    elif row[0] == "" and row[1] is not None:
+                        bitrange = False
                         self.debug(f"field_name empty current_bit {self.current_bit}")
                         if self.current_bit:
                             self.current_bit["description"] = (
                                 self.current_bit["description"] + "\n" + row[1] + "\n"
                             )
-                    if range:
+
+                    if bitrange:
                         if self.current_bit:
+                            # if we have "\n"in field name, we safely can remove it
+                            self.current_bit["field"] = self.current_bit["field"].replace(
+                                "\n", ""
+                            )
                             self.current_bits.append(self.current_bit)
 
                         if field_name == "":
@@ -294,7 +354,7 @@ class pdf2json:
 
                         description = row[1] + "\n"
                         self.current_bit = {
-                            "range": range.replace("–", "-"),
+                            "range": bitrange.replace("–", "-"),
                             "field": field_name,
                             "description": description,
                         }

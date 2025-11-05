@@ -663,6 +663,11 @@
         "range": "31-16",
         "field": "GPR_GPUMIX_GPR_AXI_LIMIT_BEAT_LIMIT_GPU2D",
         "description": "GPU2D AXI OTR limit beat limit\n"
+      },
+      {
+        "range": "NXP bug not documented",
+        "field": "GPR_GPUMIX_GPR_AXI_LIMIT_BEAT_LIMIT_GPU3D",
+        "description": "GPU3D AXI OTR limit beat limit\n"
       }
     ]
   },
@@ -821,8 +826,8 @@
       },
       {
         "range": "13",
-        "field": "GPR_RAWNAND_M_",
-        "description": "AXI write address bit 32 of RAWNAND\n"
+        "field": "GPR_RAWNAND_M_D_5_AWADDR32",
+        "description": "AXI write address bit 32 of RAWNAND\n\n\n"
       },
       {
         "range": "12",
