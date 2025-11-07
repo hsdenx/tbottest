@@ -452,22 +452,22 @@ class pdf2json:
 
         # detect Address
         pattern = re.compile(
-            r"Address:\s*(?P<base>[0-9A-Fa-f_]+)h\s*base\s*\+\s*(?P<offset>[0-9A-Fa-f_]+)h\s*offset\s*\+\s*(?P<intervall>\([^)]*\)),\s*where\s*i=(?P<range>\d+d\s*to\s*\d+d)",
+            r"Address:\s*(?P<base>[0-9A-Fa-f_]+)h\s*base\s*\+\s*(?P<offset>[0-9A-Fa-f_]+)h\s*offset\s*\+\s*\((?P<step>\d+)d\s*[×x]\s*i\),\s*where\s*i=(?P<start>\d+)d\s*to\s*(?P<end>\d+)d"
         )
         match = pattern.search(line)
         if match:
             # we have cyclic address definiton
-            base_val = "0x" + match.group("base")
-            base_val = base_val.replace("_", "")
-            offset_val = "0x" + match.group("offset")
-            offset_val = offset_val.replace("_", "")
-            intervall_expr = match.group("intervall")
-            range_expr = match.group("range")
+            base = "0x" + match.group("base").replace("_", "")
+            offset = "0x" + match.group("offset").replace("_", "")
+            step = int(match.group("step"))
+            start = int(match.group("start"))
+            end = int(match.group("end"))
             self.current_address_cyclic = {
-                "base": base_val,
-                "offset": offset_val,
-                "intervall": intervall_expr,
-                "range": range_expr,
+                "base": base,
+                "offset": offset,
+                "step": step,
+                "start": start,
+                "end": end,
             }
             self.debug(
                 f"[Page {self.page_nr} Line {self.line_nr}] found cyclic address: {self.current_address_cyclic}"
