@@ -122,8 +122,26 @@ class REGISTERMAP:
         :param address: hex string of address
         """
         for reg in self.registermap:
-            if reg["address"] == address:
-                return reg
+            if reg["address"]:
+                if reg["address"] == address:
+                    return reg
+            elif reg["address_cyclic"]:
+                tmp = reg["address_cyclic"]
+                base = tmp["base"]
+                off = tmp["offset"]
+                step = tmp["step"]
+                start = tmp["start"]
+                end = tmp["end"]
+
+                addr = int(base, 16)
+                offset = int(off, 16)
+                valid_addresses = [
+                    addr + offset + step * i for i in range(start, end + 1)
+                ]
+
+                tmp = int(address, 16)
+                if tmp in valid_addresses:
+                    return reg
 
         return None
 

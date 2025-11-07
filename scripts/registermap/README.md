@@ -72,3 +72,89 @@ Example output from
 	usdhc3
 
 	...........................................
+
+Now cyclic addresses in documentation are also supported, example output:
+
+	$ ./scripts/registermap/regdump.py -s imx8mp '[{"address":"0x30380800", "value":"0x00003210"}]'
+	$ cat scripts/registermap/imx8mp_result.txt
+	------------------------------------------------------------------------------
+	register name: CCM_PLL_CTRLn val: 0x00003210 RM page 443
+	------------------------------------------------------------------------------
+	31-16  -                              val 0000000000000000
+	desc This field is reserved.
+	Reserved
+
+	...........................................
+	15     -                              val 0     
+	desc This field is reserved.
+	Reserved
+
+	...........................................
+	14     -                              val 0     
+	desc This field is reserved.
+	Reserved
+
+	...........................................
+	13-12  SETTING3                       val 11    
+	desc Clock gate control setting for domain 3.
+	This field can only be written by domain 3
+	00 Domain clocks not needed
+	01 Domain clocks needed when in RUN
+	10 Domain clocks needed when in RUN and WAIT
+	11 Domain clocks needed all the time
+
+	...........................................
+	11     -                              val 0     
+	desc This field is reserved.
+	Reserved
+
+	...........................................
+	10     -                              val 0     
+	desc This field is reserved.
+	Reserved
+
+	...........................................
+	9-8    SETTING2                       val 10    
+	desc Clock gate control setting for domain 2.
+	This field can only be written by domain 2
+	00 Domain clocks not needed
+	01 Domain clocks needed when in RUN
+	10 Domain clocks needed when in RUN and WAIT
+	11 Domain clocks needed all the time
+	...........................................
+	7      -                              val 0     
+	desc This field is reserved.
+	Reserved
+
+	...........................................
+	6      -                              val 0     
+	desc This field is reserved.
+	Reserved
+
+	...........................................
+	5-4    SETTING1                       val 01    
+	desc Clock gate control setting for domain 1.
+	This field can only be written by domain 1.
+	00 Domain clocks not needed
+	01 Domain clocks needed when in RUN
+	10 Domain clocks needed when in RUN and WAIT
+	11 Domain clocks needed all the time
+	...........................................
+	3      -                              val 0     
+	desc This field is reserved.
+	Reserved
+
+	...........................................
+	2      -                              val 0     
+	desc This field is reserved.
+	Reserved
+
+	...........................................
+	NXPbug in doc name of field SETTING0 desc Clock gate control setting for domain 0.
+	This field can only be written by domain 0.
+	00 Domain clocks not needed
+	01 Domain clocks needed when in RUN
+	10 Domain clocks needed when in RUN and WAIT
+	11 Domain clocks needed all the time
+	...........................................
+
