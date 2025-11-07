@@ -53,15 +53,15 @@ class pdf2json:
             self.url = "https://www.nxp.com/webapp/Download?colCode=IMX8MPRM"
             self.ranges = [
                 # ccm
-                # {"start_page": 442, "end_page": 566},
+                {"start_page": 442, "end_page": 566},
                 # gpc
-                # {"start_page": 598, "end_page": 718},
+                {"start_page": 598, "end_page": 718},
                 # otp
-                # {"start_page": 833, "end_page": 868},
+                {"start_page": 833, "end_page": 868},
                 # snvs
-                # {"start_page": 877, "end_page": 897},
+                {"start_page": 877, "end_page": 897},
                 # src
-                # {"start_page": 909, "end_page": 968},
+                {"start_page": 909, "end_page": 968},
                 # iomuxc
                 {"start_page": 1361, "end_page": 1388},
                 {"start_page": 1408, "end_page": 1982},
