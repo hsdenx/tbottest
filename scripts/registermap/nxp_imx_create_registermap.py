@@ -37,11 +37,13 @@ class pdf2json:
         self.regmap = []
         self.current_register = None
         self.current_address = None
+        self.current_address_cyclic = None
         self.current_bits = []
         self.current_bit = None
         self.current_page = None
         self.line_nr = None
         self.page_nr = None
+        self.cyclicreg = False
         self.page = None
         self.found_new_register = False
         self.table_cont_next_page = False
@@ -85,6 +87,12 @@ class pdf2json:
 
         return False
 
+    def converthex(self, val):
+        if val[-1] == "h":
+            val = "0x" + val[:-1]
+
+        return val
+
     def detect_registername(self, line):
         self.debug(f"detect_registername {line}")
         if "field descriptions" not in line:
@@ -96,7 +104,12 @@ class pdf2json:
         reg_match = re.search(r"([A-Zn0-9_]+)", tmp)
         # reg_match = re.search(r"([A-Z0-9_]+)\s+field descriptions", line)
         if reg_match:
-            self.debug(f"detect_registername found {reg_match}")
+            if "n" in tmp:
+                self.cyclicreg = True
+
+            self.debug(
+                f"detect_registername found {reg_match} cyclic reg {self.cyclicreg}"
+            )
             return reg_match
 
         return None
@@ -166,6 +179,7 @@ class pdf2json:
                 {
                     "register": self.current_register,
                     "address": self.current_address,
+                    "address_cyclic": self.current_address_cyclic,
                     "page": self.current_page,
                     "bits": self.current_bits,
                 }
@@ -437,18 +451,43 @@ class pdf2json:
                 return
 
         # detect Address
-        addr_match = re.search(r"Address: (\S+)", line)
+        pattern = re.compile(
+            r"Address:\s*(?P<base>[0-9A-Fa-f_]+)h\s*base\s*\+\s*(?P<offset>[0-9A-Fa-f_]+)h\s*offset\s*\+\s*(?P<intervall>\([^)]*\)),\s*where\s*i=(?P<range>\d+d\s*to\s*\d+d)",
+        )
+        match = pattern.search(line)
+        if match:
+            # we have cyclic address definiton
+            base_val = "0x" + match.group("base")
+            base_val = base_val.replace("_", "")
+            offset_val = "0x" + match.group("offset")
+            offset_val = offset_val.replace("_", "")
+            intervall_expr = match.group("intervall")
+            range_expr = match.group("range")
+            self.current_address_cyclic = {
+                "base": base_val,
+                "offset": offset_val,
+                "intervall": intervall_expr,
+                "range": range_expr,
+            }
+            self.debug(
+                f"[Page {self.page_nr} Line {self.line_nr}] found cyclic address: {self.current_address_cyclic}"
+            )
+            self.current_address = None
+            return
+
+        addr_match = re.search(r"Address: (\S+) base", line)
         if addr_match:
+            # one dedicated register address
             addr = line.split("=")
             addr = addr[1].strip()
             addr = addr.replace("_", "")
-            if addr[-1] == "h":
-                addr = "0x" + addr[:-1]
+            addr = self.converthex(addr)
 
             self.current_address = addr.replace("_", "")
             self.debug(
                 f"[Page {self.page_nr} Line {self.line_nr}] found address: {self.current_address}"
             )
+            self.current_address_cyclic = None
             return
 
         # table handling
@@ -492,11 +531,14 @@ class pdf2json:
                     f"[Page {self.current_page}] save last register bitfiled: {self.current_bit}"
                 )
 
-            self.debug(f"last Commit Address {self.current_address}")
+            self.debug(
+                f"last Commit Address {self.current_address} cyclic {self.current_address_cyclic}"
+            )
             self.regmap.append(
                 {
                     "register": self.current_register,
                     "address": self.current_address,
+                    "address_cyclic": self.current_address_cyclic,
                     "page": self.current_page,
                     "bits": self.current_bits,
                 }

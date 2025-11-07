@@ -2,6 +2,7 @@
   {
     "register": "IOMUXC_GPR_GPR0",
     "address": "0x30340000",
+    "address_cyclic": null,
     "page": 1361,
     "bits": [
       {
@@ -14,6 +15,7 @@
   {
     "register": "IOMUXC_GPR_GPR1",
     "address": "0x30340004",
+    "address_cyclic": null,
     "page": 1362,
     "bits": [
       {
@@ -116,6 +118,7 @@
   {
     "register": "IOMUXC_GPR_GPR2",
     "address": "0x30340008",
+    "address_cyclic": null,
     "page": 1364,
     "bits": [
       {
@@ -133,6 +136,7 @@
   {
     "register": "IOMUXC_GPR_GPR3",
     "address": "0x3034000C",
+    "address_cyclic": null,
     "page": 1364,
     "bits": [
       {
@@ -145,6 +149,7 @@
   {
     "register": "IOMUXC_GPR_GPR4",
     "address": "0x30340010",
+    "address_cyclic": null,
     "page": 1366,
     "bits": [
       {
@@ -232,6 +237,7 @@
   {
     "register": "IOMUXC_GPR_GPR5",
     "address": "0x30340014",
+    "address_cyclic": null,
     "page": 1368,
     "bits": [
       {
@@ -284,6 +290,7 @@
   {
     "register": "IOMUXC_GPR_GPR6",
     "address": "0x30340018",
+    "address_cyclic": null,
     "page": 1369,
     "bits": [
       {
@@ -301,6 +308,7 @@
   {
     "register": "IOMUXC_GPR_GPR7",
     "address": "0x3034001C",
+    "address_cyclic": null,
     "page": 1369,
     "bits": [
       {
@@ -313,6 +321,7 @@
   {
     "register": "IOMUXC_GPR_GPR8",
     "address": "0x30340020",
+    "address_cyclic": null,
     "page": 1370,
     "bits": [
       {
@@ -325,6 +334,7 @@
   {
     "register": "IOMUXC_GPR_GPR9",
     "address": "0x30340024",
+    "address_cyclic": null,
     "page": 1370,
     "bits": [
       {
@@ -337,6 +347,7 @@
   {
     "register": "IOMUXC_GPR_GPR10",
     "address": "0x30340028",
+    "address_cyclic": null,
     "page": 1371,
     "bits": [
       {
@@ -404,6 +415,7 @@
   {
     "register": "IOMUXC_GPR_GPR11",
     "address": "0x3034002C",
+    "address_cyclic": null,
     "page": 1373,
     "bits": [
       {
@@ -471,6 +483,7 @@
   {
     "register": "IOMUXC_GPR_GPR12",
     "address": "0x30340030",
+    "address_cyclic": null,
     "page": 1374,
     "bits": [
       {
@@ -513,6 +526,7 @@
   {
     "register": "IOMUXC_GPR_GPR13",
     "address": "0x30340034",
+    "address_cyclic": null,
     "page": 1375,
     "bits": [
       {
@@ -600,6 +614,7 @@
   {
     "register": "IOMUXC_GPR_GPR14",
     "address": "0x30340038",
+    "address_cyclic": null,
     "page": 1377,
     "bits": [
       {
@@ -657,6 +672,7 @@
   {
     "register": "IOMUXC_GPR_GPR15",
     "address": "0x3034003C",
+    "address_cyclic": null,
     "page": 1378,
     "bits": [
       {
@@ -674,6 +690,7 @@
   {
     "register": "IOMUXC_GPR_GPR16",
     "address": "0x30340040",
+    "address_cyclic": null,
     "page": 1379,
     "bits": [
       {
@@ -696,6 +713,7 @@
   {
     "register": "IOMUXC_GPR_GPR17",
     "address": "0x30340044",
+    "address_cyclic": null,
     "page": 1380,
     "bits": [
       {
@@ -708,6 +726,7 @@
   {
     "register": "IOMUXC_GPR_GPR18",
     "address": "0x30340048",
+    "address_cyclic": null,
     "page": 1380,
     "bits": [
       {
@@ -720,6 +739,7 @@
   {
     "register": "IOMUXC_GPR_GPR19",
     "address": "0x3034004C",
+    "address_cyclic": null,
     "page": 1380,
     "bits": [
       {
@@ -732,6 +752,7 @@
   {
     "register": "IOMUXC_GPR_GPR20",
     "address": "0x30340050",
+    "address_cyclic": null,
     "page": 1381,
     "bits": [
       {
@@ -899,6 +920,7 @@
   {
     "register": "IOMUXC_GPR_GPR21",
     "address": "0x30340054",
+    "address_cyclic": null,
     "page": 1385,
     "bits": [
       {
@@ -941,6 +963,7 @@
   {
     "register": "IOMUXC_GPR_GPR22",
     "address": "0x30340058",
+    "address_cyclic": null,
     "page": 1387,
     "bits": [
       {
@@ -983,6 +1006,7 @@
   {
     "register": "IOMUXC_GPR_GPR23",
     "address": "0x3034005C",
+    "address_cyclic": null,
     "page": 1388,
     "bits": [
       {
@@ -995,6 +1019,7 @@
   {
     "register": "IOMUXC_GPR_GPR24",
     "address": "0x30340060",
+    "address_cyclic": null,
     "page": 1388,
     "bits": [
       {
@@ -1007,6 +1032,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO00",
     "address": "0x30330014",
+    "address_cyclic": null,
     "page": 1408,
     "bits": [
       {
@@ -1034,6 +1060,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO01",
     "address": "0x30330018",
+    "address_cyclic": null,
     "page": 1409,
     "bits": [
       {
@@ -1061,6 +1088,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO02",
     "address": "0x3033001C",
+    "address_cyclic": null,
     "page": 1411,
     "bits": [
       {
@@ -1088,6 +1116,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO03",
     "address": "0x30330020",
+    "address_cyclic": null,
     "page": 1412,
     "bits": [
       {
@@ -1115,6 +1144,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO04",
     "address": "0x30330024",
+    "address_cyclic": null,
     "page": 1413,
     "bits": [
       {
@@ -1142,6 +1172,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO05",
     "address": "0x30330028",
+    "address_cyclic": null,
     "page": 1415,
     "bits": [
       {
@@ -1169,6 +1200,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO06",
     "address": "0x3033002C",
+    "address_cyclic": null,
     "page": 1416,
     "bits": [
       {
@@ -1196,6 +1228,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO07",
     "address": "0x30330030",
+    "address_cyclic": null,
     "page": 1417,
     "bits": [
       {
@@ -1223,6 +1256,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO08",
     "address": "0x30330034",
+    "address_cyclic": null,
     "page": 1419,
     "bits": [
       {
@@ -1250,6 +1284,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO09",
     "address": "0x30330038",
+    "address_cyclic": null,
     "page": 1420,
     "bits": [
       {
@@ -1277,6 +1312,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO10",
     "address": "0x3033003C",
+    "address_cyclic": null,
     "page": 1421,
     "bits": [
       {
@@ -1304,6 +1340,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO11",
     "address": "0x30330040",
+    "address_cyclic": null,
     "page": 1423,
     "bits": [
       {
@@ -1331,6 +1368,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO12",
     "address": "0x30330044",
+    "address_cyclic": null,
     "page": 1424,
     "bits": [
       {
@@ -1358,6 +1396,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO13",
     "address": "0x30330048",
+    "address_cyclic": null,
     "page": 1425,
     "bits": [
       {
@@ -1385,6 +1424,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO14",
     "address": "0x3033004C",
+    "address_cyclic": null,
     "page": 1426,
     "bits": [
       {
@@ -1412,6 +1452,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_GPIO1_IO15",
     "address": "0x30330050",
+    "address_cyclic": null,
     "page": 1427,
     "bits": [
       {
@@ -1439,6 +1480,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ENET_MDC",
     "address": "0x30330054",
+    "address_cyclic": null,
     "page": 1428,
     "bits": [
       {
@@ -1466,6 +1508,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ENET_MDIO",
     "address": "0x30330058",
+    "address_cyclic": null,
     "page": 1430,
     "bits": [
       {
@@ -1493,6 +1536,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ENET_TD3",
     "address": "0x3033005C",
+    "address_cyclic": null,
     "page": 1431,
     "bits": [
       {
@@ -1520,6 +1564,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ENET_TD2",
     "address": "0x30330060",
+    "address_cyclic": null,
     "page": 1433,
     "bits": [
       {
@@ -1547,6 +1592,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ENET_TD1",
     "address": "0x30330064",
+    "address_cyclic": null,
     "page": 1434,
     "bits": [
       {
@@ -1574,6 +1620,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ENET_TD0",
     "address": "0x30330068",
+    "address_cyclic": null,
     "page": 1435,
     "bits": [
       {
@@ -1601,6 +1648,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ENET_TX_CTL",
     "address": "0x3033006C",
+    "address_cyclic": null,
     "page": 1437,
     "bits": [
       {
@@ -1628,6 +1676,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ENET_TXC",
     "address": "0x30330070",
+    "address_cyclic": null,
     "page": 1438,
     "bits": [
       {
@@ -1655,6 +1704,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ENET_RX_CTL",
     "address": "0x30330074",
+    "address_cyclic": null,
     "page": 1439,
     "bits": [
       {
@@ -1682,6 +1732,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ENET_RXC",
     "address": "0x30330078",
+    "address_cyclic": null,
     "page": 1441,
     "bits": [
       {
@@ -1709,6 +1760,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ENET_RD0",
     "address": "0x3033007C",
+    "address_cyclic": null,
     "page": 1442,
     "bits": [
       {
@@ -1736,6 +1788,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ENET_RD1",
     "address": "0x30330080",
+    "address_cyclic": null,
     "page": 1443,
     "bits": [
       {
@@ -1763,6 +1816,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ENET_RD2",
     "address": "0x30330084",
+    "address_cyclic": null,
     "page": 1445,
     "bits": [
       {
@@ -1790,6 +1844,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ENET_RD3",
     "address": "0x30330088",
+    "address_cyclic": null,
     "page": 1446,
     "bits": [
       {
@@ -1817,6 +1872,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD1_CLK",
     "address": "0x3033008C",
+    "address_cyclic": null,
     "page": 1447,
     "bits": [
       {
@@ -1844,6 +1900,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD1_CMD",
     "address": "0x30330090",
+    "address_cyclic": null,
     "page": 1449,
     "bits": [
       {
@@ -1871,6 +1928,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD1_DATA0",
     "address": "0x30330094",
+    "address_cyclic": null,
     "page": 1450,
     "bits": [
       {
@@ -1898,6 +1956,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD1_DATA1",
     "address": "0x30330098",
+    "address_cyclic": null,
     "page": 1451,
     "bits": [
       {
@@ -1925,6 +1984,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD1_DATA2",
     "address": "0x3033009C",
+    "address_cyclic": null,
     "page": 1453,
     "bits": [
       {
@@ -1952,6 +2012,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD1_DATA3",
     "address": "0x303300A0",
+    "address_cyclic": null,
     "page": 1454,
     "bits": [
       {
@@ -1979,6 +2040,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD1_DATA4",
     "address": "0x303300A4",
+    "address_cyclic": null,
     "page": 1455,
     "bits": [
       {
@@ -2006,6 +2068,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD1_DATA5",
     "address": "0x303300A8",
+    "address_cyclic": null,
     "page": 1457,
     "bits": [
       {
@@ -2033,6 +2096,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD1_DATA6",
     "address": "0x303300AC",
+    "address_cyclic": null,
     "page": 1458,
     "bits": [
       {
@@ -2060,6 +2124,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD1_DATA7",
     "address": "0x303300B0",
+    "address_cyclic": null,
     "page": 1459,
     "bits": [
       {
@@ -2087,6 +2152,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD1_RESET_B",
     "address": "0x303300B4",
+    "address_cyclic": null,
     "page": 1461,
     "bits": [
       {
@@ -2114,6 +2180,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD1_STROBE",
     "address": "0x303300B8",
+    "address_cyclic": null,
     "page": 1462,
     "bits": [
       {
@@ -2141,6 +2208,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD2_CD_B",
     "address": "0x303300BC",
+    "address_cyclic": null,
     "page": 1463,
     "bits": [
       {
@@ -2168,6 +2236,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD2_CLK",
     "address": "0x303300C0",
+    "address_cyclic": null,
     "page": 1464,
     "bits": [
       {
@@ -2195,6 +2264,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD2_CMD",
     "address": "0x303300C4",
+    "address_cyclic": null,
     "page": 1466,
     "bits": [
       {
@@ -2222,6 +2292,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD2_DATA0",
     "address": "0x303300C8",
+    "address_cyclic": null,
     "page": 1467,
     "bits": [
       {
@@ -2249,6 +2320,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD2_DATA1",
     "address": "0x303300CC",
+    "address_cyclic": null,
     "page": 1468,
     "bits": [
       {
@@ -2276,6 +2348,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD2_DATA2",
     "address": "0x303300D0",
+    "address_cyclic": null,
     "page": 1470,
     "bits": [
       {
@@ -2303,6 +2376,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD2_DATA3",
     "address": "0x303300D4",
+    "address_cyclic": null,
     "page": 1471,
     "bits": [
       {
@@ -2330,6 +2404,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD2_RESET_B",
     "address": "0x303300D8",
+    "address_cyclic": null,
     "page": 1472,
     "bits": [
       {
@@ -2357,6 +2432,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SD2_WP",
     "address": "0x303300DC",
+    "address_cyclic": null,
     "page": 1473,
     "bits": [
       {
@@ -2384,6 +2460,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_ALE",
     "address": "0x303300E0",
+    "address_cyclic": null,
     "page": 1475,
     "bits": [
       {
@@ -2411,6 +2488,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_CE0_B",
     "address": "0x303300E4",
+    "address_cyclic": null,
     "page": 1476,
     "bits": [
       {
@@ -2438,6 +2516,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_CE1_B",
     "address": "0x303300E8",
+    "address_cyclic": null,
     "page": 1477,
     "bits": [
       {
@@ -2465,6 +2544,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_CE2_B",
     "address": "0x303300EC",
+    "address_cyclic": null,
     "page": 1479,
     "bits": [
       {
@@ -2492,6 +2572,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_CE3_B",
     "address": "0x303300F0",
+    "address_cyclic": null,
     "page": 1480,
     "bits": [
       {
@@ -2519,6 +2600,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_CLE",
     "address": "0x303300F4",
+    "address_cyclic": null,
     "page": 1482,
     "bits": [
       {
@@ -2546,6 +2628,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_DATA00",
     "address": "0x303300F8",
+    "address_cyclic": null,
     "page": 1483,
     "bits": [
       {
@@ -2573,6 +2656,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_DATA01",
     "address": "0x303300FC",
+    "address_cyclic": null,
     "page": 1484,
     "bits": [
       {
@@ -2600,6 +2684,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_DATA02",
     "address": "0x30330100",
+    "address_cyclic": null,
     "page": 1486,
     "bits": [
       {
@@ -2627,6 +2712,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_DATA03",
     "address": "0x30330104",
+    "address_cyclic": null,
     "page": 1487,
     "bits": [
       {
@@ -2654,6 +2740,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_DATA04",
     "address": "0x30330108",
+    "address_cyclic": null,
     "page": 1489,
     "bits": [
       {
@@ -2681,6 +2768,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_DATA05",
     "address": "0x3033010C",
+    "address_cyclic": null,
     "page": 1490,
     "bits": [
       {
@@ -2708,6 +2796,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_DATA06",
     "address": "0x30330110",
+    "address_cyclic": null,
     "page": 1491,
     "bits": [
       {
@@ -2735,6 +2824,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_DATA07",
     "address": "0x30330114",
+    "address_cyclic": null,
     "page": 1493,
     "bits": [
       {
@@ -2762,6 +2852,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_DQS",
     "address": "0x30330118",
+    "address_cyclic": null,
     "page": 1494,
     "bits": [
       {
@@ -2789,6 +2880,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_RE_B",
     "address": "0x3033011C",
+    "address_cyclic": null,
     "page": 1496,
     "bits": [
       {
@@ -2816,6 +2908,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_READY_B",
     "address": "0x30330120",
+    "address_cyclic": null,
     "page": 1497,
     "bits": [
       {
@@ -2843,6 +2936,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_WE_B",
     "address": "0x30330124",
+    "address_cyclic": null,
     "page": 1499,
     "bits": [
       {
@@ -2870,6 +2964,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_NAND_WP_B",
     "address": "0x30330128",
+    "address_cyclic": null,
     "page": 1500,
     "bits": [
       {
@@ -2897,6 +2992,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI5_RXFS",
     "address": "0x3033012C",
+    "address_cyclic": null,
     "page": 1501,
     "bits": [
       {
@@ -2924,6 +3020,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI5_RXC",
     "address": "0x30330130",
+    "address_cyclic": null,
     "page": 1503,
     "bits": [
       {
@@ -2951,6 +3048,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI5_RXD0",
     "address": "0x30330134",
+    "address_cyclic": null,
     "page": 1504,
     "bits": [
       {
@@ -2978,6 +3076,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI5_RXD1",
     "address": "0x30330138",
+    "address_cyclic": null,
     "page": 1505,
     "bits": [
       {
@@ -3005,6 +3104,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI5_RXD2",
     "address": "0x3033013C",
+    "address_cyclic": null,
     "page": 1507,
     "bits": [
       {
@@ -3032,6 +3132,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI5_RXD3",
     "address": "0x30330140",
+    "address_cyclic": null,
     "page": 1508,
     "bits": [
       {
@@ -3059,6 +3160,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI5_MCLK",
     "address": "0x30330144",
+    "address_cyclic": null,
     "page": 1510,
     "bits": [
       {
@@ -3086,6 +3188,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_RXFS",
     "address": "0x30330148",
+    "address_cyclic": null,
     "page": 1511,
     "bits": [
       {
@@ -3113,6 +3216,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_RXC",
     "address": "0x3033014C",
+    "address_cyclic": null,
     "page": 1512,
     "bits": [
       {
@@ -3140,6 +3244,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_RXD0",
     "address": "0x30330150",
+    "address_cyclic": null,
     "page": 1514,
     "bits": [
       {
@@ -3167,6 +3272,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_RXD1",
     "address": "0x30330154",
+    "address_cyclic": null,
     "page": 1515,
     "bits": [
       {
@@ -3194,6 +3300,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_RXD2",
     "address": "0x30330158",
+    "address_cyclic": null,
     "page": 1517,
     "bits": [
       {
@@ -3221,6 +3328,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_RXD3",
     "address": "0x3033015C",
+    "address_cyclic": null,
     "page": 1518,
     "bits": [
       {
@@ -3248,6 +3356,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_RXD4",
     "address": "0x30330160",
+    "address_cyclic": null,
     "page": 1519,
     "bits": [
       {
@@ -3275,6 +3384,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_RXD5",
     "address": "0x30330164",
+    "address_cyclic": null,
     "page": 1521,
     "bits": [
       {
@@ -3302,6 +3412,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_RXD6",
     "address": "0x30330168",
+    "address_cyclic": null,
     "page": 1522,
     "bits": [
       {
@@ -3329,6 +3440,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_RXD7",
     "address": "0x3033016C",
+    "address_cyclic": null,
     "page": 1523,
     "bits": [
       {
@@ -3356,6 +3468,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_TXFS",
     "address": "0x30330170",
+    "address_cyclic": null,
     "page": 1525,
     "bits": [
       {
@@ -3383,6 +3496,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_TXC",
     "address": "0x30330174",
+    "address_cyclic": null,
     "page": 1526,
     "bits": [
       {
@@ -3410,6 +3524,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_TXD0",
     "address": "0x30330178",
+    "address_cyclic": null,
     "page": 1527,
     "bits": [
       {
@@ -3437,6 +3552,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_TXD1",
     "address": "0x3033017C",
+    "address_cyclic": null,
     "page": 1528,
     "bits": [
       {
@@ -3464,6 +3580,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_TXD2",
     "address": "0x30330180",
+    "address_cyclic": null,
     "page": 1530,
     "bits": [
       {
@@ -3491,6 +3608,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_TXD3",
     "address": "0x30330184",
+    "address_cyclic": null,
     "page": 1531,
     "bits": [
       {
@@ -3518,6 +3636,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_TXD4",
     "address": "0x30330188",
+    "address_cyclic": null,
     "page": 1532,
     "bits": [
       {
@@ -3545,6 +3664,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_TXD5",
     "address": "0x3033018C",
+    "address_cyclic": null,
     "page": 1534,
     "bits": [
       {
@@ -3572,6 +3692,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_TXD6",
     "address": "0x30330190",
+    "address_cyclic": null,
     "page": 1535,
     "bits": [
       {
@@ -3599,6 +3720,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_TXD7",
     "address": "0x30330194",
+    "address_cyclic": null,
     "page": 1536,
     "bits": [
       {
@@ -3626,6 +3748,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI1_MCLK",
     "address": "0x30330198",
+    "address_cyclic": null,
     "page": 1538,
     "bits": [
       {
@@ -3653,6 +3776,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI2_RXFS",
     "address": "0x3033019C",
+    "address_cyclic": null,
     "page": 1539,
     "bits": [
       {
@@ -3680,6 +3804,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI2_RXC",
     "address": "0x303301A0",
+    "address_cyclic": null,
     "page": 1540,
     "bits": [
       {
@@ -3707,6 +3832,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI2_RXD0",
     "address": "0x303301A4",
+    "address_cyclic": null,
     "page": 1542,
     "bits": [
       {
@@ -3734,6 +3860,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI2_TXFS",
     "address": "0x303301A8",
+    "address_cyclic": null,
     "page": 1543,
     "bits": [
       {
@@ -3761,6 +3888,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI2_TXC",
     "address": "0x303301AC",
+    "address_cyclic": null,
     "page": 1545,
     "bits": [
       {
@@ -3788,6 +3916,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI2_TXD0",
     "address": "0x303301B0",
+    "address_cyclic": null,
     "page": 1546,
     "bits": [
       {
@@ -3815,6 +3944,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI2_MCLK",
     "address": "0x303301B4",
+    "address_cyclic": null,
     "page": 1548,
     "bits": [
       {
@@ -3842,6 +3972,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI3_RXFS",
     "address": "0x303301B8",
+    "address_cyclic": null,
     "page": 1549,
     "bits": [
       {
@@ -3869,6 +4000,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI3_RXC",
     "address": "0x303301BC",
+    "address_cyclic": null,
     "page": 1550,
     "bits": [
       {
@@ -3896,6 +4028,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI3_RXD",
     "address": "0x303301C0",
+    "address_cyclic": null,
     "page": 1552,
     "bits": [
       {
@@ -3923,6 +4056,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI3_TXFS",
     "address": "0x303301C4",
+    "address_cyclic": null,
     "page": 1553,
     "bits": [
       {
@@ -3950,6 +4084,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI3_TXC",
     "address": "0x303301C8",
+    "address_cyclic": null,
     "page": 1555,
     "bits": [
       {
@@ -3977,6 +4112,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI3_TXD",
     "address": "0x303301CC",
+    "address_cyclic": null,
     "page": 1556,
     "bits": [
       {
@@ -4004,6 +4140,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SAI3_MCLK",
     "address": "0x303301D0",
+    "address_cyclic": null,
     "page": 1558,
     "bits": [
       {
@@ -4031,6 +4168,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SPDIF_TX",
     "address": "0x303301D4",
+    "address_cyclic": null,
     "page": 1559,
     "bits": [
       {
@@ -4058,6 +4196,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SPDIF_RX",
     "address": "0x303301D8",
+    "address_cyclic": null,
     "page": 1561,
     "bits": [
       {
@@ -4085,6 +4224,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_SPDIF_EXT_CLK",
     "address": "0x303301DC",
+    "address_cyclic": null,
     "page": 1562,
     "bits": [
       {
@@ -4112,6 +4252,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ECSPI1_SCLK",
     "address": "0x303301E0",
+    "address_cyclic": null,
     "page": 1563,
     "bits": [
       {
@@ -4139,6 +4280,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ECSPI1_MOSI",
     "address": "0x303301E4",
+    "address_cyclic": null,
     "page": 1565,
     "bits": [
       {
@@ -4166,6 +4308,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ECSPI1_MISO",
     "address": "0x303301E8",
+    "address_cyclic": null,
     "page": 1566,
     "bits": [
       {
@@ -4193,6 +4336,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ECSPI1_SS0",
     "address": "0x303301EC",
+    "address_cyclic": null,
     "page": 1567,
     "bits": [
       {
@@ -4220,6 +4364,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ECSPI2_SCLK",
     "address": "0x303301F0",
+    "address_cyclic": null,
     "page": 1569,
     "bits": [
       {
@@ -4247,6 +4392,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ECSPI2_MOSI",
     "address": "0x303301F4",
+    "address_cyclic": null,
     "page": 1570,
     "bits": [
       {
@@ -4274,6 +4420,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ECSPI2_MISO",
     "address": "0x303301F8",
+    "address_cyclic": null,
     "page": 1571,
     "bits": [
       {
@@ -4301,6 +4448,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_ECSPI2_SS0",
     "address": "0x303301FC",
+    "address_cyclic": null,
     "page": 1573,
     "bits": [
       {
@@ -4328,6 +4476,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_I2C1_SCL",
     "address": "0x30330200",
+    "address_cyclic": null,
     "page": 1574,
     "bits": [
       {
@@ -4355,6 +4504,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_I2C1_SDA",
     "address": "0x30330204",
+    "address_cyclic": null,
     "page": 1575,
     "bits": [
       {
@@ -4382,6 +4532,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_I2C2_SCL",
     "address": "0x30330208",
+    "address_cyclic": null,
     "page": 1576,
     "bits": [
       {
@@ -4409,6 +4560,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_I2C2_SDA",
     "address": "0x3033020C",
+    "address_cyclic": null,
     "page": 1578,
     "bits": [
       {
@@ -4436,6 +4588,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_I2C3_SCL",
     "address": "0x30330210",
+    "address_cyclic": null,
     "page": 1579,
     "bits": [
       {
@@ -4463,6 +4616,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_I2C3_SDA",
     "address": "0x30330214",
+    "address_cyclic": null,
     "page": 1580,
     "bits": [
       {
@@ -4490,6 +4644,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_I2C4_SCL",
     "address": "0x30330218",
+    "address_cyclic": null,
     "page": 1581,
     "bits": [
       {
@@ -4517,6 +4672,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_I2C4_SDA",
     "address": "0x3033021C",
+    "address_cyclic": null,
     "page": 1583,
     "bits": [
       {
@@ -4544,6 +4700,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_UART1_RXD",
     "address": "0x30330220",
+    "address_cyclic": null,
     "page": 1584,
     "bits": [
       {
@@ -4571,6 +4728,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_UART1_TXD",
     "address": "0x30330224",
+    "address_cyclic": null,
     "page": 1585,
     "bits": [
       {
@@ -4598,6 +4756,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_UART2_RXD",
     "address": "0x30330228",
+    "address_cyclic": null,
     "page": 1586,
     "bits": [
       {
@@ -4625,6 +4784,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_UART2_TXD",
     "address": "0x3033022C",
+    "address_cyclic": null,
     "page": 1587,
     "bits": [
       {
@@ -4652,6 +4812,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_UART3_RXD",
     "address": "0x30330230",
+    "address_cyclic": null,
     "page": 1588,
     "bits": [
       {
@@ -4679,6 +4840,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_UART3_TXD",
     "address": "0x30330234",
+    "address_cyclic": null,
     "page": 1590,
     "bits": [
       {
@@ -4706,6 +4868,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_UART4_RXD",
     "address": "0x30330238",
+    "address_cyclic": null,
     "page": 1591,
     "bits": [
       {
@@ -4733,6 +4896,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_UART4_TXD",
     "address": "0x3033023C",
+    "address_cyclic": null,
     "page": 1592,
     "bits": [
       {
@@ -4760,6 +4924,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_HDMI_DDC_SCL",
     "address": "0x30330240",
+    "address_cyclic": null,
     "page": 1594,
     "bits": [
       {
@@ -4787,6 +4952,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_HDMI_DDC_SDA",
     "address": "0x30330244",
+    "address_cyclic": null,
     "page": 1595,
     "bits": [
       {
@@ -4814,6 +4980,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_HDMI_CEC",
     "address": "0x30330248",
+    "address_cyclic": null,
     "page": 1596,
     "bits": [
       {
@@ -4841,6 +5008,7 @@
   {
     "register": "IOMUXC_SW_MUX_CTL_PAD_HDMI_HPD",
     "address": "0x3033024C",
+    "address_cyclic": null,
     "page": 1597,
     "bits": [
       {
@@ -4868,6 +5036,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_BOOT_MODE0",
     "address": "0x30330250",
+    "address_cyclic": null,
     "page": 1599,
     "bits": [
       {
@@ -4920,6 +5089,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_BOOT_MODE1",
     "address": "0x30330254",
+    "address_cyclic": null,
     "page": 1600,
     "bits": [
       {
@@ -4972,6 +5142,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_BOOT_MODE2",
     "address": "0x30330258",
+    "address_cyclic": null,
     "page": 1602,
     "bits": [
       {
@@ -5024,6 +5195,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_BOOT_MODE3",
     "address": "0x3033025C",
+    "address_cyclic": null,
     "page": 1604,
     "bits": [
       {
@@ -5076,6 +5248,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_JTAG_MOD",
     "address": "0x30330260",
+    "address_cyclic": null,
     "page": 1606,
     "bits": [
       {
@@ -5128,6 +5301,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_JTAG_TDI",
     "address": "0x30330264",
+    "address_cyclic": null,
     "page": 1608,
     "bits": [
       {
@@ -5180,6 +5354,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_JTAG_TMS",
     "address": "0x30330268",
+    "address_cyclic": null,
     "page": 1610,
     "bits": [
       {
@@ -5232,6 +5407,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_JTAG_TCK",
     "address": "0x3033026C",
+    "address_cyclic": null,
     "page": 1612,
     "bits": [
       {
@@ -5284,6 +5460,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_JTAG_TDO",
     "address": "0x30330270",
+    "address_cyclic": null,
     "page": 1614,
     "bits": [
       {
@@ -5336,6 +5513,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO00",
     "address": "0x30330274",
+    "address_cyclic": null,
     "page": 1616,
     "bits": [
       {
@@ -5388,6 +5566,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO01",
     "address": "0x30330278",
+    "address_cyclic": null,
     "page": 1618,
     "bits": [
       {
@@ -5440,6 +5619,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO02",
     "address": "0x3033027C",
+    "address_cyclic": null,
     "page": 1620,
     "bits": [
       {
@@ -5492,6 +5672,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO03",
     "address": "0x30330280",
+    "address_cyclic": null,
     "page": 1622,
     "bits": [
       {
@@ -5544,6 +5725,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO04",
     "address": "0x30330284",
+    "address_cyclic": null,
     "page": 1624,
     "bits": [
       {
@@ -5596,6 +5778,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO05",
     "address": "0x30330288",
+    "address_cyclic": null,
     "page": 1626,
     "bits": [
       {
@@ -5648,6 +5831,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO06",
     "address": "0x3033028C",
+    "address_cyclic": null,
     "page": 1628,
     "bits": [
       {
@@ -5700,6 +5884,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO07",
     "address": "0x30330290",
+    "address_cyclic": null,
     "page": 1630,
     "bits": [
       {
@@ -5752,6 +5937,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO08",
     "address": "0x30330294",
+    "address_cyclic": null,
     "page": 1632,
     "bits": [
       {
@@ -5804,6 +5990,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO09",
     "address": "0x30330298",
+    "address_cyclic": null,
     "page": 1634,
     "bits": [
       {
@@ -5856,6 +6043,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO10",
     "address": "0x3033029C",
+    "address_cyclic": null,
     "page": 1636,
     "bits": [
       {
@@ -5908,6 +6096,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO11",
     "address": "0x303302A0",
+    "address_cyclic": null,
     "page": 1638,
     "bits": [
       {
@@ -5960,6 +6149,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO12",
     "address": "0x303302A4",
+    "address_cyclic": null,
     "page": 1640,
     "bits": [
       {
@@ -6012,6 +6202,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO13",
     "address": "0x303302A8",
+    "address_cyclic": null,
     "page": 1642,
     "bits": [
       {
@@ -6064,6 +6255,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO14",
     "address": "0x303302AC",
+    "address_cyclic": null,
     "page": 1644,
     "bits": [
       {
@@ -6116,6 +6308,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_GPIO1_IO15",
     "address": "0x303302B0",
+    "address_cyclic": null,
     "page": 1646,
     "bits": [
       {
@@ -6168,6 +6361,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ENET_MDC",
     "address": "0x303302B4",
+    "address_cyclic": null,
     "page": 1648,
     "bits": [
       {
@@ -6220,6 +6414,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ENET_MDIO",
     "address": "0x303302B8",
+    "address_cyclic": null,
     "page": 1650,
     "bits": [
       {
@@ -6272,6 +6467,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ENET_TD3",
     "address": "0x303302BC",
+    "address_cyclic": null,
     "page": 1652,
     "bits": [
       {
@@ -6324,6 +6520,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ENET_TD2",
     "address": "0x303302C0",
+    "address_cyclic": null,
     "page": 1654,
     "bits": [
       {
@@ -6376,6 +6573,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ENET_TD1",
     "address": "0x303302C4",
+    "address_cyclic": null,
     "page": 1656,
     "bits": [
       {
@@ -6428,6 +6626,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ENET_TD0",
     "address": "0x303302C8",
+    "address_cyclic": null,
     "page": 1658,
     "bits": [
       {
@@ -6480,6 +6679,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ENET_TX_CTL",
     "address": "0x303302CC",
+    "address_cyclic": null,
     "page": 1660,
     "bits": [
       {
@@ -6532,6 +6732,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ENET_TXC",
     "address": "0x303302D0",
+    "address_cyclic": null,
     "page": 1662,
     "bits": [
       {
@@ -6584,6 +6785,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ENET_RX_CTL",
     "address": "0x303302D4",
+    "address_cyclic": null,
     "page": 1664,
     "bits": [
       {
@@ -6636,6 +6838,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ENET_RXC",
     "address": "0x303302D8",
+    "address_cyclic": null,
     "page": 1666,
     "bits": [
       {
@@ -6688,6 +6891,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ENET_RD0",
     "address": "0x303302DC",
+    "address_cyclic": null,
     "page": 1668,
     "bits": [
       {
@@ -6740,6 +6944,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ENET_RD1",
     "address": "0x303302E0",
+    "address_cyclic": null,
     "page": 1670,
     "bits": [
       {
@@ -6792,6 +6997,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ENET_RD2",
     "address": "0x303302E4",
+    "address_cyclic": null,
     "page": 1672,
     "bits": [
       {
@@ -6844,6 +7050,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ENET_RD3",
     "address": "0x303302E8",
+    "address_cyclic": null,
     "page": 1674,
     "bits": [
       {
@@ -6896,6 +7103,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD1_CLK",
     "address": "0x303302EC",
+    "address_cyclic": null,
     "page": 1676,
     "bits": [
       {
@@ -6948,6 +7156,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD1_CMD",
     "address": "0x303302F0",
+    "address_cyclic": null,
     "page": 1678,
     "bits": [
       {
@@ -7000,6 +7209,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD1_DATA0",
     "address": "0x303302F4",
+    "address_cyclic": null,
     "page": 1680,
     "bits": [
       {
@@ -7052,6 +7262,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD1_DATA1",
     "address": "0x303302F8",
+    "address_cyclic": null,
     "page": 1682,
     "bits": [
       {
@@ -7104,6 +7315,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD1_DATA2",
     "address": "0x303302FC",
+    "address_cyclic": null,
     "page": 1684,
     "bits": [
       {
@@ -7156,6 +7368,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD1_DATA3",
     "address": "0x30330300",
+    "address_cyclic": null,
     "page": 1686,
     "bits": [
       {
@@ -7208,6 +7421,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD1_DATA4",
     "address": "0x30330304",
+    "address_cyclic": null,
     "page": 1688,
     "bits": [
       {
@@ -7260,6 +7474,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD1_DATA5",
     "address": "0x30330308",
+    "address_cyclic": null,
     "page": 1690,
     "bits": [
       {
@@ -7312,6 +7527,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD1_DATA6",
     "address": "0x3033030C",
+    "address_cyclic": null,
     "page": 1692,
     "bits": [
       {
@@ -7364,6 +7580,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD1_DATA7",
     "address": "0x30330310",
+    "address_cyclic": null,
     "page": 1694,
     "bits": [
       {
@@ -7416,6 +7633,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD1_RESET_B",
     "address": "0x30330314",
+    "address_cyclic": null,
     "page": 1696,
     "bits": [
       {
@@ -7468,6 +7686,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD1_STROBE",
     "address": "0x30330318",
+    "address_cyclic": null,
     "page": 1698,
     "bits": [
       {
@@ -7520,6 +7739,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD2_CD_B",
     "address": "0x3033031C",
+    "address_cyclic": null,
     "page": 1700,
     "bits": [
       {
@@ -7572,6 +7792,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD2_CLK",
     "address": "0x30330320",
+    "address_cyclic": null,
     "page": 1702,
     "bits": [
       {
@@ -7624,6 +7845,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD2_CMD",
     "address": "0x30330324",
+    "address_cyclic": null,
     "page": 1704,
     "bits": [
       {
@@ -7676,6 +7898,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD2_DATA0",
     "address": "0x30330328",
+    "address_cyclic": null,
     "page": 1706,
     "bits": [
       {
@@ -7728,6 +7951,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD2_DATA1",
     "address": "0x3033032C",
+    "address_cyclic": null,
     "page": 1708,
     "bits": [
       {
@@ -7780,6 +8004,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD2_DATA2",
     "address": "0x30330330",
+    "address_cyclic": null,
     "page": 1710,
     "bits": [
       {
@@ -7832,6 +8057,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD2_DATA3",
     "address": "0x30330334",
+    "address_cyclic": null,
     "page": 1712,
     "bits": [
       {
@@ -7884,6 +8110,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD2_RESET_B",
     "address": "0x30330338",
+    "address_cyclic": null,
     "page": 1714,
     "bits": [
       {
@@ -7936,6 +8163,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SD2_WP",
     "address": "0x3033033C",
+    "address_cyclic": null,
     "page": 1716,
     "bits": [
       {
@@ -7988,6 +8216,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_ALE",
     "address": "0x30330340",
+    "address_cyclic": null,
     "page": 1718,
     "bits": [
       {
@@ -8040,6 +8269,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_CE0_B",
     "address": "0x30330344",
+    "address_cyclic": null,
     "page": 1720,
     "bits": [
       {
@@ -8092,6 +8322,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_CE1_B",
     "address": "0x30330348",
+    "address_cyclic": null,
     "page": 1722,
     "bits": [
       {
@@ -8144,6 +8375,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_CE2_B",
     "address": "0x3033034C",
+    "address_cyclic": null,
     "page": 1724,
     "bits": [
       {
@@ -8196,6 +8428,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_CE3_B",
     "address": "0x30330350",
+    "address_cyclic": null,
     "page": 1726,
     "bits": [
       {
@@ -8248,6 +8481,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_CLE",
     "address": "0x30330354",
+    "address_cyclic": null,
     "page": 1728,
     "bits": [
       {
@@ -8300,6 +8534,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_DATA00",
     "address": "0x30330358",
+    "address_cyclic": null,
     "page": 1730,
     "bits": [
       {
@@ -8352,6 +8587,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_DATA01",
     "address": "0x3033035C",
+    "address_cyclic": null,
     "page": 1732,
     "bits": [
       {
@@ -8404,6 +8640,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_DATA02",
     "address": "0x30330360",
+    "address_cyclic": null,
     "page": 1734,
     "bits": [
       {
@@ -8456,6 +8693,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_DATA03",
     "address": "0x30330364",
+    "address_cyclic": null,
     "page": 1736,
     "bits": [
       {
@@ -8508,6 +8746,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_DATA04",
     "address": "0x30330368",
+    "address_cyclic": null,
     "page": 1738,
     "bits": [
       {
@@ -8560,6 +8799,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_DATA05",
     "address": "0x3033036C",
+    "address_cyclic": null,
     "page": 1740,
     "bits": [
       {
@@ -8612,6 +8852,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_DATA06",
     "address": "0x30330370",
+    "address_cyclic": null,
     "page": 1742,
     "bits": [
       {
@@ -8664,6 +8905,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_DATA07",
     "address": "0x30330374",
+    "address_cyclic": null,
     "page": 1744,
     "bits": [
       {
@@ -8716,6 +8958,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_DQS",
     "address": "0x30330378",
+    "address_cyclic": null,
     "page": 1746,
     "bits": [
       {
@@ -8768,6 +9011,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_RE_B",
     "address": "0x3033037C",
+    "address_cyclic": null,
     "page": 1748,
     "bits": [
       {
@@ -8820,6 +9064,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_READY_B",
     "address": "0x30330380",
+    "address_cyclic": null,
     "page": 1750,
     "bits": [
       {
@@ -8872,6 +9117,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_WE_B",
     "address": "0x30330384",
+    "address_cyclic": null,
     "page": 1752,
     "bits": [
       {
@@ -8924,6 +9170,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_NAND_WP_B",
     "address": "0x30330388",
+    "address_cyclic": null,
     "page": 1754,
     "bits": [
       {
@@ -8976,6 +9223,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI5_RXFS",
     "address": "0x3033038C",
+    "address_cyclic": null,
     "page": 1756,
     "bits": [
       {
@@ -9028,6 +9276,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI5_RXC",
     "address": "0x30330390",
+    "address_cyclic": null,
     "page": 1758,
     "bits": [
       {
@@ -9080,6 +9329,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI5_RXD0",
     "address": "0x30330394",
+    "address_cyclic": null,
     "page": 1760,
     "bits": [
       {
@@ -9132,6 +9382,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI5_RXD1",
     "address": "0x30330398",
+    "address_cyclic": null,
     "page": 1762,
     "bits": [
       {
@@ -9184,6 +9435,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI5_RXD2",
     "address": "0x3033039C",
+    "address_cyclic": null,
     "page": 1764,
     "bits": [
       {
@@ -9236,6 +9488,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI5_RXD3",
     "address": "0x303303A0",
+    "address_cyclic": null,
     "page": 1766,
     "bits": [
       {
@@ -9288,6 +9541,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI5_MCLK",
     "address": "0x303303A4",
+    "address_cyclic": null,
     "page": 1768,
     "bits": [
       {
@@ -9340,6 +9594,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_RXFS",
     "address": "0x303303A8",
+    "address_cyclic": null,
     "page": 1770,
     "bits": [
       {
@@ -9392,6 +9647,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_RXC",
     "address": "0x303303AC",
+    "address_cyclic": null,
     "page": 1772,
     "bits": [
       {
@@ -9444,6 +9700,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_RXD0",
     "address": "0x303303B0",
+    "address_cyclic": null,
     "page": 1774,
     "bits": [
       {
@@ -9496,6 +9753,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_RXD1",
     "address": "0x303303B4",
+    "address_cyclic": null,
     "page": 1776,
     "bits": [
       {
@@ -9548,6 +9806,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_RXD2",
     "address": "0x303303B8",
+    "address_cyclic": null,
     "page": 1778,
     "bits": [
       {
@@ -9600,6 +9859,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_RXD3",
     "address": "0x303303BC",
+    "address_cyclic": null,
     "page": 1780,
     "bits": [
       {
@@ -9652,6 +9912,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_RXD4",
     "address": "0x303303C0",
+    "address_cyclic": null,
     "page": 1782,
     "bits": [
       {
@@ -9704,6 +9965,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_RXD5",
     "address": "0x303303C4",
+    "address_cyclic": null,
     "page": 1784,
     "bits": [
       {
@@ -9756,6 +10018,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_RXD6",
     "address": "0x303303C8",
+    "address_cyclic": null,
     "page": 1786,
     "bits": [
       {
@@ -9808,6 +10071,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_RXD7",
     "address": "0x303303CC",
+    "address_cyclic": null,
     "page": 1788,
     "bits": [
       {
@@ -9860,6 +10124,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_TXFS",
     "address": "0x303303D0",
+    "address_cyclic": null,
     "page": 1790,
     "bits": [
       {
@@ -9912,6 +10177,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_TXC",
     "address": "0x303303D4",
+    "address_cyclic": null,
     "page": 1792,
     "bits": [
       {
@@ -9964,6 +10230,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_TXD0",
     "address": "0x303303D8",
+    "address_cyclic": null,
     "page": 1794,
     "bits": [
       {
@@ -10016,6 +10283,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_TXD1",
     "address": "0x303303DC",
+    "address_cyclic": null,
     "page": 1796,
     "bits": [
       {
@@ -10068,6 +10336,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_TXD2",
     "address": "0x303303E0",
+    "address_cyclic": null,
     "page": 1798,
     "bits": [
       {
@@ -10120,6 +10389,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_TXD3",
     "address": "0x303303E4",
+    "address_cyclic": null,
     "page": 1800,
     "bits": [
       {
@@ -10172,6 +10442,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_TXD4",
     "address": "0x303303E8",
+    "address_cyclic": null,
     "page": 1802,
     "bits": [
       {
@@ -10224,6 +10495,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_TXD5",
     "address": "0x303303EC",
+    "address_cyclic": null,
     "page": 1804,
     "bits": [
       {
@@ -10276,6 +10548,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_TXD6",
     "address": "0x303303F0",
+    "address_cyclic": null,
     "page": 1806,
     "bits": [
       {
@@ -10328,6 +10601,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_TXD7",
     "address": "0x303303F4",
+    "address_cyclic": null,
     "page": 1808,
     "bits": [
       {
@@ -10380,6 +10654,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI1_MCLK",
     "address": "0x303303F8",
+    "address_cyclic": null,
     "page": 1810,
     "bits": [
       {
@@ -10432,6 +10707,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI2_RXFS",
     "address": "0x303303FC",
+    "address_cyclic": null,
     "page": 1812,
     "bits": [
       {
@@ -10484,6 +10760,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI2_RXC",
     "address": "0x30330400",
+    "address_cyclic": null,
     "page": 1814,
     "bits": [
       {
@@ -10536,6 +10813,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI2_RXD0",
     "address": "0x30330404",
+    "address_cyclic": null,
     "page": 1816,
     "bits": [
       {
@@ -10588,6 +10866,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI2_TXFS",
     "address": "0x30330408",
+    "address_cyclic": null,
     "page": 1818,
     "bits": [
       {
@@ -10640,6 +10919,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI2_TXC",
     "address": "0x3033040C",
+    "address_cyclic": null,
     "page": 1820,
     "bits": [
       {
@@ -10692,6 +10972,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI2_TXD0",
     "address": "0x30330410",
+    "address_cyclic": null,
     "page": 1822,
     "bits": [
       {
@@ -10744,6 +11025,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI2_MCLK",
     "address": "0x30330414",
+    "address_cyclic": null,
     "page": 1824,
     "bits": [
       {
@@ -10796,6 +11078,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI3_RXFS",
     "address": "0x30330418",
+    "address_cyclic": null,
     "page": 1826,
     "bits": [
       {
@@ -10848,6 +11131,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI3_RXC",
     "address": "0x3033041C",
+    "address_cyclic": null,
     "page": 1828,
     "bits": [
       {
@@ -10900,6 +11184,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI3_RXD",
     "address": "0x30330420",
+    "address_cyclic": null,
     "page": 1830,
     "bits": [
       {
@@ -10952,6 +11237,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI3_TXFS",
     "address": "0x30330424",
+    "address_cyclic": null,
     "page": 1832,
     "bits": [
       {
@@ -11004,6 +11290,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI3_TXC",
     "address": "0x30330428",
+    "address_cyclic": null,
     "page": 1834,
     "bits": [
       {
@@ -11056,6 +11343,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI3_TXD",
     "address": "0x3033042C",
+    "address_cyclic": null,
     "page": 1836,
     "bits": [
       {
@@ -11108,6 +11396,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SAI3_MCLK",
     "address": "0x30330430",
+    "address_cyclic": null,
     "page": 1838,
     "bits": [
       {
@@ -11160,6 +11449,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SPDIF_TX",
     "address": "0x30330434",
+    "address_cyclic": null,
     "page": 1840,
     "bits": [
       {
@@ -11212,6 +11502,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SPDIF_RX",
     "address": "0x30330438",
+    "address_cyclic": null,
     "page": 1842,
     "bits": [
       {
@@ -11264,6 +11555,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_SPDIF_EXT_CLK",
     "address": "0x3033043C",
+    "address_cyclic": null,
     "page": 1844,
     "bits": [
       {
@@ -11316,6 +11608,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ECSPI1_SCLK",
     "address": "0x30330440",
+    "address_cyclic": null,
     "page": 1846,
     "bits": [
       {
@@ -11368,6 +11661,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ECSPI1_MOSI",
     "address": "0x30330444",
+    "address_cyclic": null,
     "page": 1848,
     "bits": [
       {
@@ -11420,6 +11714,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ECSPI1_MISO",
     "address": "0x30330448",
+    "address_cyclic": null,
     "page": 1850,
     "bits": [
       {
@@ -11472,6 +11767,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ECSPI1_SS0",
     "address": "0x3033044C",
+    "address_cyclic": null,
     "page": 1852,
     "bits": [
       {
@@ -11524,6 +11820,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ECSPI2_SCLK",
     "address": "0x30330450",
+    "address_cyclic": null,
     "page": 1854,
     "bits": [
       {
@@ -11576,6 +11873,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ECSPI2_MOSI",
     "address": "0x30330454",
+    "address_cyclic": null,
     "page": 1856,
     "bits": [
       {
@@ -11628,6 +11926,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ECSPI2_MISO",
     "address": "0x30330458",
+    "address_cyclic": null,
     "page": 1858,
     "bits": [
       {
@@ -11680,6 +11979,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_ECSPI2_SS0",
     "address": "0x3033045C",
+    "address_cyclic": null,
     "page": 1860,
     "bits": [
       {
@@ -11732,6 +12032,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_I2C1_SCL",
     "address": "0x30330460",
+    "address_cyclic": null,
     "page": 1862,
     "bits": [
       {
@@ -11784,6 +12085,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_I2C1_SDA",
     "address": "0x30330464",
+    "address_cyclic": null,
     "page": 1864,
     "bits": [
       {
@@ -11836,6 +12138,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_I2C2_SCL",
     "address": "0x30330468",
+    "address_cyclic": null,
     "page": 1866,
     "bits": [
       {
@@ -11888,6 +12191,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_I2C2_SDA",
     "address": "0x3033046C",
+    "address_cyclic": null,
     "page": 1868,
     "bits": [
       {
@@ -11940,6 +12244,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_I2C3_SCL",
     "address": "0x30330470",
+    "address_cyclic": null,
     "page": 1870,
     "bits": [
       {
@@ -11992,6 +12297,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_I2C3_SDA",
     "address": "0x30330474",
+    "address_cyclic": null,
     "page": 1872,
     "bits": [
       {
@@ -12044,6 +12350,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_I2C4_SCL",
     "address": "0x30330478",
+    "address_cyclic": null,
     "page": 1874,
     "bits": [
       {
@@ -12096,6 +12403,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_I2C4_SDA",
     "address": "0x3033047C",
+    "address_cyclic": null,
     "page": 1876,
     "bits": [
       {
@@ -12148,6 +12456,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_UART1_RXD",
     "address": "0x30330480",
+    "address_cyclic": null,
     "page": 1878,
     "bits": [
       {
@@ -12200,6 +12509,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_UART1_TXD",
     "address": "0x30330484",
+    "address_cyclic": null,
     "page": 1880,
     "bits": [
       {
@@ -12252,6 +12562,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_UART2_RXD",
     "address": "0x30330488",
+    "address_cyclic": null,
     "page": 1882,
     "bits": [
       {
@@ -12304,6 +12615,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_UART2_TXD",
     "address": "0x3033048C",
+    "address_cyclic": null,
     "page": 1884,
     "bits": [
       {
@@ -12356,6 +12668,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_UART3_RXD",
     "address": "0x30330490",
+    "address_cyclic": null,
     "page": 1886,
     "bits": [
       {
@@ -12408,6 +12721,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_UART3_TXD",
     "address": "0x30330494",
+    "address_cyclic": null,
     "page": 1888,
     "bits": [
       {
@@ -12460,6 +12774,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_UART4_RXD",
     "address": "0x30330498",
+    "address_cyclic": null,
     "page": 1890,
     "bits": [
       {
@@ -12512,6 +12827,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_UART4_TXD",
     "address": "0x3033049C",
+    "address_cyclic": null,
     "page": 1892,
     "bits": [
       {
@@ -12564,6 +12880,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_HDMI_DDC_SCL",
     "address": "0x303304A0",
+    "address_cyclic": null,
     "page": 1894,
     "bits": [
       {
@@ -12616,6 +12933,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_HDMI_DDC_SDA",
     "address": "0x303304A4",
+    "address_cyclic": null,
     "page": 1896,
     "bits": [
       {
@@ -12668,6 +12986,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_HDMI_CEC",
     "address": "0x303304A8",
+    "address_cyclic": null,
     "page": 1898,
     "bits": [
       {
@@ -12720,6 +13039,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_HDMI_HPD",
     "address": "0x303304AC",
+    "address_cyclic": null,
     "page": 1900,
     "bits": [
       {
@@ -12772,6 +13092,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_CLKIN1",
     "address": "0x303304B0",
+    "address_cyclic": null,
     "page": 1902,
     "bits": [
       {
@@ -12824,6 +13145,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_CLKIN2",
     "address": "0x303304B4",
+    "address_cyclic": null,
     "page": 1904,
     "bits": [
       {
@@ -12876,6 +13198,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_CLKOUT1",
     "address": "0x303304B8",
+    "address_cyclic": null,
     "page": 1906,
     "bits": [
       {
@@ -12928,6 +13251,7 @@
   {
     "register": "IOMUXC_SW_PAD_CTL_PAD_CLKOUT2",
     "address": "0x303304BC",
+    "address_cyclic": null,
     "page": 1908,
     "bits": [
       {
@@ -12980,6 +13304,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_PDM_MIC_PDM_BITSTREAM_SELECT_INPUT_0",
     "address": "0x303304C0",
+    "address_cyclic": null,
     "page": 1909,
     "bits": [
       {
@@ -12997,12 +13322,14 @@
   {
     "register": "IOMUXC_AUDIOMIX_PDM_MIC_PDM_BITSTREAM_SELECT_INPUT_0",
     "address": "0x303304C0",
+    "address_cyclic": null,
     "page": 1910,
     "bits": []
   },
   {
     "register": "IOMUXC_AUDIOMIX_PDM_MIC_PDM_BITSTREAM_SELECT_INPUT_1",
     "address": "0x303304C4",
+    "address_cyclic": null,
     "page": 1910,
     "bits": [
       {
@@ -13020,6 +13347,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_PDM_MIC_PDM_BITSTREAM_SELECT_INPUT_2",
     "address": "0x303304C8",
+    "address_cyclic": null,
     "page": 1911,
     "bits": [
       {
@@ -13037,6 +13365,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_PDM_MIC_PDM_BITSTREAM_SELECT_INPUT_3",
     "address": "0x303304CC",
+    "address_cyclic": null,
     "page": 1912,
     "bits": [
       {
@@ -13054,6 +13383,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI1_RXSYNC_SELECT_INPUT",
     "address": "0x303304D0",
+    "address_cyclic": null,
     "page": 1912,
     "bits": [
       {
@@ -13071,6 +13401,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI1_TXBCLK_SELECT_INPUT",
     "address": "0x303304D4",
+    "address_cyclic": null,
     "page": 1913,
     "bits": [
       {
@@ -13088,6 +13419,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI1_TXSYNC_SELECT_INPUT",
     "address": "0x303304D8",
+    "address_cyclic": null,
     "page": 1913,
     "bits": [
       {
@@ -13105,6 +13437,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI2_RXDATA_SELECT_INPUT_1",
     "address": "0x303304DC",
+    "address_cyclic": null,
     "page": 1914,
     "bits": [
       {
@@ -13122,6 +13455,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI3_MCLK_SELECT_INPUT",
     "address": "0x303304E0",
+    "address_cyclic": null,
     "page": 1915,
     "bits": [
       {
@@ -13139,6 +13473,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI3_RXDATA_SELECT_INPUT_0",
     "address": "0x303304E4",
+    "address_cyclic": null,
     "page": 1916,
     "bits": [
       {
@@ -13156,6 +13491,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI3_TXBCLK_SELECT_INPUT",
     "address": "0x303304E8",
+    "address_cyclic": null,
     "page": 1917,
     "bits": [
       {
@@ -13173,6 +13509,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI3_TXSYNC_SELECT_INPUT",
     "address": "0x303304EC",
+    "address_cyclic": null,
     "page": 1918,
     "bits": [
       {
@@ -13190,6 +13527,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI5_MCLK_SELECT_INPUT",
     "address": "0x303304F0",
+    "address_cyclic": null,
     "page": 1919,
     "bits": [
       {
@@ -13207,6 +13545,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI5_RXBCLK_SELECT_INPUT",
     "address": "0x303304F4",
+    "address_cyclic": null,
     "page": 1919,
     "bits": [
       {
@@ -13224,6 +13563,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI5_RXDATA_SELECT_INPUT_0",
     "address": "0x303304F8",
+    "address_cyclic": null,
     "page": 1920,
     "bits": [
       {
@@ -13241,6 +13581,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI5_RXDATA_SELECT_INPUT_1",
     "address": "0x303304FC",
+    "address_cyclic": null,
     "page": 1921,
     "bits": [
       {
@@ -13258,6 +13599,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI5_RXDATA_SELECT_INPUT_2",
     "address": "0x30330500",
+    "address_cyclic": null,
     "page": 1921,
     "bits": [
       {
@@ -13275,6 +13617,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI5_RXDATA_SELECT_INPUT_3",
     "address": "0x30330504",
+    "address_cyclic": null,
     "page": 1922,
     "bits": [
       {
@@ -13292,6 +13635,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI5_RXSYNC_SELECT_INPUT",
     "address": "0x30330508",
+    "address_cyclic": null,
     "page": 1923,
     "bits": [
       {
@@ -13309,6 +13653,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI5_TXBCLK_SELECT_INPUT",
     "address": "0x3033050C",
+    "address_cyclic": null,
     "page": 1923,
     "bits": [
       {
@@ -13326,6 +13671,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI5_TXSYNC_SELECT_INPUT",
     "address": "0x30330510",
+    "address_cyclic": null,
     "page": 1924,
     "bits": [
       {
@@ -13343,6 +13689,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI6_MCLK_SELECT_INPUT",
     "address": "0x30330514",
+    "address_cyclic": null,
     "page": 1925,
     "bits": [
       {
@@ -13360,6 +13707,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI6_RXBCLK_SELECT_INPUT",
     "address": "0x30330518",
+    "address_cyclic": null,
     "page": 1925,
     "bits": [
       {
@@ -13377,6 +13725,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI6_RXDATA_SELECT_INPUT_0",
     "address": "0x3033051C",
+    "address_cyclic": null,
     "page": 1926,
     "bits": [
       {
@@ -13394,6 +13743,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI6_RXSYNC_SELECT_INPUT",
     "address": "0x30330520",
+    "address_cyclic": null,
     "page": 1927,
     "bits": [
       {
@@ -13411,6 +13761,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI6_TXBCLK_SELECT_INPUT",
     "address": "0x30330524",
+    "address_cyclic": null,
     "page": 1927,
     "bits": [
       {
@@ -13428,6 +13779,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI6_TXSYNC_SELECT_INPUT",
     "address": "0x30330528",
+    "address_cyclic": null,
     "page": 1928,
     "bits": [
       {
@@ -13445,6 +13797,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI7_MCLK_SELECT_INPUT",
     "address": "0x3033052C",
+    "address_cyclic": null,
     "page": 1929,
     "bits": [
       {
@@ -13462,6 +13815,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI7_RXBCLK_SELECT_INPUT",
     "address": "0x30330530",
+    "address_cyclic": null,
     "page": 1930,
     "bits": [
       {
@@ -13479,6 +13833,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI7_RXDATA_SELECT_INPUT_0",
     "address": "0x30330534",
+    "address_cyclic": null,
     "page": 1931,
     "bits": [
       {
@@ -13496,6 +13851,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI7_RXSYNC_SELECT_INPUT",
     "address": "0x30330538",
+    "address_cyclic": null,
     "page": 1932,
     "bits": [
       {
@@ -13513,6 +13869,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI7_TXBCLK_SELECT_INPUT",
     "address": "0x3033053C",
+    "address_cyclic": null,
     "page": 1933,
     "bits": [
       {
@@ -13530,6 +13887,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SAI7_TXSYNC_SELECT_INPUT",
     "address": "0x30330540",
+    "address_cyclic": null,
     "page": 1934,
     "bits": [
       {
@@ -13547,6 +13905,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_EARC_PHY_SPDIF_IN_SELECT_INPUT",
     "address": "0x30330544",
+    "address_cyclic": null,
     "page": 1935,
     "bits": [
       {
@@ -13564,6 +13923,7 @@
   {
     "register": "IOMUXC_AUDIOMIX_SPDIF_EXTCLK_SELECT_INPUT",
     "address": "0x30330548",
+    "address_cyclic": null,
     "page": 1935,
     "bits": [
       {
@@ -13581,6 +13941,7 @@
   {
     "register": "IOMUXC_CAN1_CANRX_SELECT_INPUT",
     "address": "0x3033054C",
+    "address_cyclic": null,
     "page": 1936,
     "bits": [
       {
@@ -13598,6 +13959,7 @@
   {
     "register": "IOMUXC_CAN2_CANRX_SELECT_INPUT",
     "address": "0x30330550",
+    "address_cyclic": null,
     "page": 1937,
     "bits": [
       {
@@ -13615,6 +13977,7 @@
   {
     "register": "IOMUXC_CCM_GPC_PMIC_VFUNCTIONAL_READY_SELECT_INPUT",
     "address": "0x30330554",
+    "address_cyclic": null,
     "page": 1937,
     "bits": [
       {
@@ -13632,6 +13995,7 @@
   {
     "register": "IOMUXC_ECSPI1_CSPI_CLK_IN_SELECT_INPUT",
     "address": "0x30330558",
+    "address_cyclic": null,
     "page": 1938,
     "bits": [
       {
@@ -13649,6 +14013,7 @@
   {
     "register": "IOMUXC_ECSPI1_MISO_SELECT_INPUT",
     "address": "0x3033055C",
+    "address_cyclic": null,
     "page": 1939,
     "bits": [
       {
@@ -13666,6 +14031,7 @@
   {
     "register": "IOMUXC_ECSPI1_MOSI_SELECT_INPUT",
     "address": "0x30330560",
+    "address_cyclic": null,
     "page": 1940,
     "bits": [
       {
@@ -13683,6 +14049,7 @@
   {
     "register": "IOMUXC_ECSPI1_SS_B_SELECT_INPUT_0",
     "address": "0x30330564",
+    "address_cyclic": null,
     "page": 1941,
     "bits": [
       {
@@ -13700,6 +14067,7 @@
   {
     "register": "IOMUXC_ECSPI2_CSPI_CLK_IN_SELECT_INPUT",
     "address": "0x30330568",
+    "address_cyclic": null,
     "page": 1942,
     "bits": [
       {
@@ -13717,6 +14085,7 @@
   {
     "register": "IOMUXC_ECSPI2_MISO_SELECT_INPUT",
     "address": "0x3033056C",
+    "address_cyclic": null,
     "page": 1942,
     "bits": [
       {
@@ -13734,6 +14103,7 @@
   {
     "register": "IOMUXC_ECSPI2_MOSI_SELECT_INPUT",
     "address": "0x30330570",
+    "address_cyclic": null,
     "page": 1943,
     "bits": [
       {
@@ -13751,6 +14121,7 @@
   {
     "register": "IOMUXC_ECSPI2_SS_B_SELECT_INPUT_0",
     "address": "0x30330574",
+    "address_cyclic": null,
     "page": 1944,
     "bits": [
       {
@@ -13768,6 +14139,7 @@
   {
     "register": "IOMUXC_ENET1_IPG_CLK_RMII_SELECT_INPUT",
     "address": "0x30330578",
+    "address_cyclic": null,
     "page": 1944,
     "bits": [
       {
@@ -13785,6 +14157,7 @@
   {
     "register": "IOMUXC_ENET1_MDIO_SELECT_INPUT",
     "address": "0x3033057C",
+    "address_cyclic": null,
     "page": 1945,
     "bits": [
       {
@@ -13802,6 +14175,7 @@
   {
     "register": "IOMUXC_ENET1_RXDATA_0_SELECT_INPUT",
     "address": "0x30330580",
+    "address_cyclic": null,
     "page": 1946,
     "bits": [
       {
@@ -13819,6 +14193,7 @@
   {
     "register": "IOMUXC_ENET1_RXDATA_1_SELECT_INPUT",
     "address": "0x30330584",
+    "address_cyclic": null,
     "page": 1947,
     "bits": [
       {
@@ -13836,6 +14211,7 @@
   {
     "register": "IOMUXC_ENET1_RXEN_SELECT_INPUT",
     "address": "0x30330588",
+    "address_cyclic": null,
     "page": 1948,
     "bits": [
       {
@@ -13853,6 +14229,7 @@
   {
     "register": "IOMUXC_ENET1_RXERR_SELECT_INPUT",
     "address": "0x3033058C",
+    "address_cyclic": null,
     "page": 1949,
     "bits": [
       {
@@ -13870,6 +14247,7 @@
   {
     "register": "IOMUXC_ENET_QOS_GMII_MDI_I_SELECT_INPUT",
     "address": "0x30330590",
+    "address_cyclic": null,
     "page": 1950,
     "bits": [
       {
@@ -13887,6 +14265,7 @@
   {
     "register": "IOMUXC_GPT1_CAPIN1_SELECT_INPUT",
     "address": "0x30330594",
+    "address_cyclic": null,
     "page": 1950,
     "bits": [
       {
@@ -13904,6 +14283,7 @@
   {
     "register": "IOMUXC_GPT1_CAPIN2_SELECT_INPUT",
     "address": "0x30330598",
+    "address_cyclic": null,
     "page": 1951,
     "bits": [
       {
@@ -13921,6 +14301,7 @@
   {
     "register": "IOMUXC_GPT1_CLKIN_SELECT_INPUT",
     "address": "0x3033059C",
+    "address_cyclic": null,
     "page": 1952,
     "bits": [
       {
@@ -13938,6 +14319,7 @@
   {
     "register": "IOMUXC_PCIE_CLKREQ_B_SELECT_INPUT",
     "address": "0x303305A0",
+    "address_cyclic": null,
     "page": 1953,
     "bits": [
       {
@@ -13955,6 +14337,7 @@
   {
     "register": "IOMUXC_I2C1_SCL_IN_SELECT_INPUT",
     "address": "0x303305A4",
+    "address_cyclic": null,
     "page": 1954,
     "bits": [
       {
@@ -13972,6 +14355,7 @@
   {
     "register": "IOMUXC_I2C1_SDA_IN_SELECT_INPUT",
     "address": "0x303305A8",
+    "address_cyclic": null,
     "page": 1954,
     "bits": [
       {
@@ -13989,6 +14373,7 @@
   {
     "register": "IOMUXC_I2C2_SCL_IN_SELECT_INPUT",
     "address": "0x303305AC",
+    "address_cyclic": null,
     "page": 1955,
     "bits": [
       {
@@ -14006,6 +14391,7 @@
   {
     "register": "IOMUXC_I2C2_SDA_IN_SELECT_INPUT",
     "address": "0x303305B0",
+    "address_cyclic": null,
     "page": 1956,
     "bits": [
       {
@@ -14023,6 +14409,7 @@
   {
     "register": "IOMUXC_I2C3_SCL_IN_SELECT_INPUT",
     "address": "0x303305B4",
+    "address_cyclic": null,
     "page": 1956,
     "bits": [
       {
@@ -14040,6 +14427,7 @@
   {
     "register": "IOMUXC_I2C3_SDA_IN_SELECT_INPUT",
     "address": "0x303305B8",
+    "address_cyclic": null,
     "page": 1957,
     "bits": [
       {
@@ -14057,6 +14445,7 @@
   {
     "register": "IOMUXC_I2C4_SCL_IN_SELECT_INPUT",
     "address": "0x303305BC",
+    "address_cyclic": null,
     "page": 1957,
     "bits": [
       {
@@ -14074,6 +14463,7 @@
   {
     "register": "IOMUXC_I2C4_SDA_IN_SELECT_INPUT",
     "address": "0x303305C0",
+    "address_cyclic": null,
     "page": 1958,
     "bits": [
       {
@@ -14091,6 +14481,7 @@
   {
     "register": "IOMUXC_I2C5_SCL_IN_SELECT_INPUT",
     "address": "0x303305C4",
+    "address_cyclic": null,
     "page": 1959,
     "bits": [
       {
@@ -14108,6 +14499,7 @@
   {
     "register": "IOMUXC_I2C5_SDA_IN_SELECT_INPUT",
     "address": "0x303305C8",
+    "address_cyclic": null,
     "page": 1960,
     "bits": [
       {
@@ -14125,6 +14517,7 @@
   {
     "register": "IOMUXC_I2C6_SCL_IN_SELECT_INPUT",
     "address": "0x303305CC",
+    "address_cyclic": null,
     "page": 1960,
     "bits": [
       {
@@ -14142,6 +14535,7 @@
   {
     "register": "IOMUXC_I2C6_SDA_IN_SELECT_INPUT",
     "address": "0x303305D0",
+    "address_cyclic": null,
     "page": 1961,
     "bits": [
       {
@@ -14159,6 +14553,7 @@
   {
     "register": "IOMUXC_ISP_FL_TRIG_0_SELECT_INPUT",
     "address": "0x303305D4",
+    "address_cyclic": null,
     "page": 1962,
     "bits": [
       {
@@ -14176,6 +14571,7 @@
   {
     "register": "IOMUXC_ISP_FL_TRIG_1_SELECT_INPUT",
     "address": "0x303305D8",
+    "address_cyclic": null,
     "page": 1963,
     "bits": [
       {
@@ -14193,6 +14589,7 @@
   {
     "register": "IOMUXC_ISP_SHUTTER_TRIG_0_SELECT_INPUT",
     "address": "0x303305DC",
+    "address_cyclic": null,
     "page": 1964,
     "bits": [
       {
@@ -14210,6 +14607,7 @@
   {
     "register": "IOMUXC_ISP_SHUTTER_TRIG_1_SELECT_INPUT",
     "address": "0x303305E0",
+    "address_cyclic": null,
     "page": 1965,
     "bits": [
       {
@@ -14227,6 +14625,7 @@
   {
     "register": "IOMUXC_UART1_UART_RTS_B_SELECT_INPUT",
     "address": "0x303305E4",
+    "address_cyclic": null,
     "page": 1966,
     "bits": [
       {
@@ -14244,6 +14643,7 @@
   {
     "register": "IOMUXC_UART1_UART_RXD_MUX_SELECT_INPUT",
     "address": "0x303305E8",
+    "address_cyclic": null,
     "page": 1966,
     "bits": [
       {
@@ -14261,6 +14661,7 @@
   {
     "register": "IOMUXC_UART2_UART_RTS_B_SELECT_INPUT",
     "address": "0x303305EC",
+    "address_cyclic": null,
     "page": 1967,
     "bits": [
       {
@@ -14278,6 +14679,7 @@
   {
     "register": "IOMUXC_UART2_UART_RXD_MUX_SELECT_INPUT",
     "address": "0x303305F0",
+    "address_cyclic": null,
     "page": 1967,
     "bits": [
       {
@@ -14295,6 +14697,7 @@
   {
     "register": "IOMUXC_UART3_UART_RTS_B_SELECT_INPUT",
     "address": "0x303305F4",
+    "address_cyclic": null,
     "page": 1968,
     "bits": [
       {
@@ -14312,6 +14715,7 @@
   {
     "register": "IOMUXC_UART3_UART_RXD_MUX_SELECT_INPUT",
     "address": "0x303305F8",
+    "address_cyclic": null,
     "page": 1969,
     "bits": [
       {
@@ -14329,6 +14733,7 @@
   {
     "register": "IOMUXC_UART4_UART_RTS_B_SELECT_INPUT",
     "address": "0x303305FC",
+    "address_cyclic": null,
     "page": 1970,
     "bits": [
       {
@@ -14346,6 +14751,7 @@
   {
     "register": "IOMUXC_UART4_UART_RXD_MUX_SELECT_INPUT",
     "address": "0x30330600",
+    "address_cyclic": null,
     "page": 1970,
     "bits": [
       {
@@ -14363,6 +14769,7 @@
   {
     "register": "IOMUXC_USDHC3_CARD_CLK_IN_SELECT_INPUT",
     "address": "0x30330604",
+    "address_cyclic": null,
     "page": 1971,
     "bits": [
       {
@@ -14380,6 +14787,7 @@
   {
     "register": "IOMUXC_USDHC3_CARD_DET_SELECT_INPUT",
     "address": "0x30330608",
+    "address_cyclic": null,
     "page": 1972,
     "bits": [
       {
@@ -14397,6 +14805,7 @@
   {
     "register": "IOMUXC_USDHC3_CMD_IN_SELECT_INPUT",
     "address": "0x3033060C",
+    "address_cyclic": null,
     "page": 1972,
     "bits": [
       {
@@ -14414,6 +14823,7 @@
   {
     "register": "IOMUXC_USDHC3_DAT0_IN_SELECT_INPUT",
     "address": "0x30330610",
+    "address_cyclic": null,
     "page": 1973,
     "bits": [
       {
@@ -14431,6 +14841,7 @@
   {
     "register": "IOMUXC_USDHC3_DAT1_IN_SELECT_INPUT",
     "address": "0x30330614",
+    "address_cyclic": null,
     "page": 1974,
     "bits": [
       {
@@ -14448,6 +14859,7 @@
   {
     "register": "IOMUXC_USDHC3_DAT2_IN_SELECT_INPUT",
     "address": "0x30330618",
+    "address_cyclic": null,
     "page": 1975,
     "bits": [
       {
@@ -14465,6 +14877,7 @@
   {
     "register": "IOMUXC_USDHC3_DAT3_IN_SELECT_INPUT",
     "address": "0x3033061C",
+    "address_cyclic": null,
     "page": 1976,
     "bits": [
       {
@@ -14482,6 +14895,7 @@
   {
     "register": "IOMUXC_USDHC3_DAT4_IN_SELECT_INPUT",
     "address": "0x30330620",
+    "address_cyclic": null,
     "page": 1977,
     "bits": [
       {
@@ -14499,6 +14913,7 @@
   {
     "register": "IOMUXC_USDHC3_DAT5_IN_SELECT_INPUT",
     "address": "0x30330624",
+    "address_cyclic": null,
     "page": 1978,
     "bits": [
       {
@@ -14516,6 +14931,7 @@
   {
     "register": "IOMUXC_USDHC3_DAT6_IN_SELECT_INPUT",
     "address": "0x30330628",
+    "address_cyclic": null,
     "page": 1979,
     "bits": [
       {
@@ -14533,6 +14949,7 @@
   {
     "register": "IOMUXC_USDHC3_DAT7_IN_SELECT_INPUT",
     "address": "0x3033062C",
+    "address_cyclic": null,
     "page": 1980,
     "bits": [
       {
@@ -14550,6 +14967,7 @@
   {
     "register": "IOMUXC_USDHC3_STROBE_SELECT_INPUT",
     "address": "0x30330630",
+    "address_cyclic": null,
     "page": 1981,
     "bits": [
       {
@@ -14567,6 +14985,7 @@
   {
     "register": "IOMUXC_USDHC3_WP_ON_SELECT_INPUT",
     "address": "0x30330634",
+    "address_cyclic": null,
     "page": 1982,
     "bits": [
       {
