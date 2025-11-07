@@ -79,11 +79,27 @@ class pdf2json:
         line = line.replace("\n", "")
 
         self.debug(f"is_field_name {line}")
-        if re.search(r"[A-Z_]", line) and not re.search(r"[a-z\-]", line):
+        if re.search(r"[A-Zn_]", line) and not re.search(r"[a-mo-z\-]", line):
             self.debug("is_field_name True")
             return True
 
         return False
+
+    def detect_registername(self, line):
+        self.debug(f"detect_registername {line}")
+        if "field descriptions" not in line:
+            return None
+
+        tmp = line.replace("field descriptions", "")
+        tmp = tmp.strip()
+        self.debug(f"detect_registername analyse {tmp}")
+        reg_match = re.search(r"([A-Zn0-9_]+)", tmp)
+        # reg_match = re.search(r"([A-Z0-9_]+)\s+field descriptions", line)
+        if reg_match:
+            self.debug(f"detect_registername found {reg_match}")
+            return reg_match
+
+        return None
 
     def extract_field_and_description(self, line):
         """
@@ -386,7 +402,7 @@ class pdf2json:
         self.debug(f"LINE {self.line_nr} cbit {self.current_bit}: {line}")
 
         # Register erkennen
-        reg_match = re.search(r"([A-Z0-9_]+)\s+field descriptions", line)
+        reg_match = self.detect_registername(line)
         if reg_match:
             tmpname = reg_match.group(1)
             if self.current_register == tmpname:
