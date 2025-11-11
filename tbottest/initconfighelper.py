@@ -111,12 +111,15 @@ def inifile_get_tbotfilename():
     # with for example: -f inifile_/tmp/tbot.ini
     flags = get_tbot_flags()
     pathinifile = None
+    tmppath = None
     for f in flags:
         if "inifile" in f:
             try:
                 pathinifile = f.split(":")[1]
             except:
                 raise RuntimeError("please use : as seperator inifile flag")
+        if "tmpfilepath" in f:
+            tmppath = f.split(":")[1]
 
     cfgpath = get_tbotconfig_path()
 
@@ -130,6 +133,10 @@ def inifile_get_tbotfilename():
 
     uidfile = get_unique_filename_extension()
     newfilename = f"{tbotinifile}-{uidfile}"
+    if tmppath:
+        name = os.path.basename(tbotinifile)
+        newfilename = f"{tmppath}/{name}-{uidfile}"
+
     initconfig.copy_file(tbotinifile, newfilename)
     TBOTINIFILE = newfilename
     return TBOTINIFILE
@@ -150,12 +157,15 @@ def inifile_get_tbotboardfilename():
     # with for example: -f inifile_/tmp/boardname.ini
     flags = get_tbot_flags()
     pathinifile = None
+    tmppath = None
     for f in flags:
         if "boardfile" in f:
             try:
                 pathinifile = f.split(":")[1]
             except:
                 raise RuntimeError("please use : as seperator boardfile flag")
+        if "tmpfilepath" in f:
+            tmppath = f.split(":")[1]
 
     cfgpath = get_tbotconfig_path()
 
@@ -169,6 +179,10 @@ def inifile_get_tbotboardfilename():
 
     uidfile = get_unique_filename_extension()
     newfilename = f"{filename}-{uidfile}"
+    if tmppath:
+        name = os.path.basename(filename)
+        newfilename = f"{tmppath}/{name}-{uidfile}"
+
     initconfig.copy_file(filename, newfilename)
     TBOTBOARDNAME = newfilename
     return TBOTBOARDNAME
