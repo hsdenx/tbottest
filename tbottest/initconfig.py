@@ -2,11 +2,13 @@ import configparser
 from configparser import ExtendedInterpolation
 import tbot
 import os
+import weakref
 from tbottest.dynamicimport import get_boardmodule_import
 from tbottest.dynamicimport import get_boardmodulepath_import
 import tbottest.initconfighelper as inithelper
 
 BOARDNAME = None
+
 
 def init_get_default_config(
     cfgp: configparser.RawConfigParser,
@@ -371,7 +373,9 @@ class IniTBotConfig:
             if f"TM021_{bn}" in s:
                 self.tm021 = True
 
-    def __del__(self):
+        weakref.finalize(self, self.cleanup)
+
+    def cleanup(self):
         if os.path.exists(self.tbotinifile):
             os.remove(self.tbotinifile)
 
@@ -397,8 +401,9 @@ class IniConfig:
         )
         self.filename = inithelper.inifile_get_tbotboardfilename()
         self.config_parser.read(self.filename)
+        weakref.finalize(self, self.cleanup)
 
-    def __del__(self):
+    def cleanup(self):
         if os.path.exists(self.filename):
             os.remove(self.filename)
 
