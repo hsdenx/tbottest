@@ -21,8 +21,6 @@ _INIT_CACHE: typing.Dict[str, bool] = {}
 
 LABSECTIONNAME = inithelper.get_lab_sectionname()
 
-LABNAME = cfgt.config_parser.get(LABSECTIONNAME, "labname")
-
 if cfgt.shelltype == "bash":
     LAB_LINUX_SHELL = linux.Bash
 else:
