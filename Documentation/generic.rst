@@ -648,6 +648,7 @@ settings needed for linux testcases.
         "cyclictestmaxvalue", "maximum allowed value from stress-ng 'Max' colum", "100", "cyclictestmaxvalue = 100"
         "dmesg", "list of strings, which should be in dmesg output", "[]", "dmesg = ['"OF: fdt: Machine model:'", '"gpio-193 (eeprom-wc): hogged as output/low'",]"
         "dmesg_false", "list of strings, which should be not in dmesg output", "[]", "dmesg = ['"crash'"]"
+        "iperf", "list of dictionary for iperf test", "[]", 'iperf = [{"intervall":"1","minval":"290000000","cycles":"30"}]'
         "leds", "list of dictionary for checking leds", "[]", "leds = [{'"path'":'"/sys/class/leds/led-orange'", #bootval'":'"0'", '"onval'":'"1'},]"
         "lnx_commands", "list of dictionary for checking linux commands", "[]", "lnx_commands = [{'"cmd'":'"<your linux command'", '"val'":'"<string which is in output of command> or undef'"},]"
         "network_iperf_intervall", "iperf intervall", "1", "network_iperf_intervall = 1"
@@ -656,6 +657,7 @@ settings needed for linux testcases.
         "nvramdev", "nvram device", "6", "nvramdev = 6"
         "nvramcomp", "compatibility string of nvram device", "microchip,48l640", "nvramcomp = 'microchip,48l640'"
         "nvramsz", "size of nvram device", "8192", "nvramsz = 8192"
+        "ping", "list of dict for ping config.", "[]", 'ping = [{"ip":"${default:serverip}","retry":"10"}]'
         "rs485labdev", "path to device", "/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0", 'rs485labdev = "/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0"'
         "rs485baud", "baudrate used for test", "115200", 'rs485baud = "115200"'
         "rs485boarddev", "list of strings, each string contains a path to device which used in test", '["/dev/ttymxc2"]', 'rs485boarddev = ["/dev/ttymxc2"]'

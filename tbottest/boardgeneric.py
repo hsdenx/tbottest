@@ -74,6 +74,9 @@ class GenericBoardConfig:
     rs485boarddev = eval(cfg.get_config("rs485boarddev", '["/dev/ttymxc2"]'))
     rs485lengths = eval(cfg.get_config("rs485lengths", '["20", "100", "1024"]'))
 
+    iperf = eval(cfg.get_config("iperf", "[]"))
+    ping = eval(cfg.get_config("ping", "[]"))
+
     sensors = eval(cfg.get_config("sensors", "[]"))
 
     lnx_dump_files = eval(cfg.get_config("lnx_dump_files", "[]"))

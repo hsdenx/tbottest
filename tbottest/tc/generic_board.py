@@ -8,6 +8,8 @@ from tbottest.tc.common import lnx_check_cmd
 from tbottest.tc.common import lnx_check_dmesg
 from tbottest.tc.common import lnx_check_revfile
 from tbottest.tc.common import lnx_create_revfile
+from tbottest.tc.network import lnx_network_ping
+from tbottest.tc.network import network_linux_iperf
 from tbottest.tc.kas import KAS
 from tbottest.tc.leds import lnx_test_led_simple
 from tbottest.tc.generictestdef import TC_SKIP, TC_FAIL, TC_OKAY, require_cfg
@@ -125,6 +127,67 @@ def generic_lnx_create_dump_files(
                 config["readtype"],
             )
 
+
+@tbot.testcase
+@require_cfg(cfg.iperf)
+def generic_lnx_network_iperf(
+    lab: linux.LinuxShell = None,
+    lnx: Optional[linux.LinuxShell] = None,
+) -> None:  # noqa: D107
+    """
+    prerequisite: Board boots into linux
+
+    wrapper for network_linux_iperf with ini file configuration
+
+    :param lnx: linux machine where we run
+
+    iperf -- array of dictionary with infos for network_linux_iperf test
+
+    .. code-block:: python
+
+        ping = [{"ip":"${default:serverip}","retry":"10"}]
+    """
+    with tbot.ctx() as cx:
+        if lab is None:
+            lab = cx.request(tbot.role.LabHost)
+
+        if lnx is None:
+            lnx = cx.request(tbot.role.BoardLinux)
+
+        si = cfg.get_default_config("serverip", "None")
+        ipaddr = cfg.get_default_config("ipaddr", "None")
+        for run in cfg.iperf:
+            tbot.log.message(tbot.log.c(f"---- start iperf test with server on lab host ----").green)
+            network_linux_iperf(lnx, lab, si,run["intervall"], run["cycles"], run["minval"])
+            tbot.log.message(tbot.log.c(f"---- start iperf test with server on board ----").green)
+            network_linux_iperf(lab, lnx, ipaddr, run["intervall"], run["cycles"], run["minval"])
+
+
+@tbot.testcase
+@require_cfg(cfg.ping)
+def generic_lnx_network_ping(
+    lnx: Optional[linux.LinuxShell] = None,
+) -> None:  # noqa: D107
+    """
+    prerequisite: Board boots into linux
+
+    simple ping test
+
+    :param lnx: linux machine where we run
+
+    ping -- array of dictionary with infos for ping
+
+    .. code-block:: python
+
+        ping = [{"ip":"${default:serverip}","retry":"10"}]
+    """
+
+    with tbot.ctx() as cx:
+        if lnx is None:
+            lnx = cx.request(tbot.role.BoardLinux)
+
+        for pings in cfg.ping:
+            lnx_network_ping(lnx, pings["ip"], int(pings["retry"]))
 
 @tbot.testcase
 @require_cfg(cfg.beep)
@@ -251,11 +314,14 @@ def generic_lnx_test_led(
     return TC_OKAY
 
 lnxtestcases = [
+    "generic_lnx_network_iperf",
+    "generic_lnx_network_ping",
     "generic_lnx_test_beep",
     "generic_lnx_commands",
     "generic_lnx_test_dmesg",
     "generic_lnx_test_led",
 ]
+
 
 @tbot.testcase
 def generic_lnx_all(
