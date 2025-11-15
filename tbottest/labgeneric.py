@@ -12,6 +12,7 @@ from tbottest import powercontrol
 from tbottest import machineinit
 from tbottest.common.boardlocking import lab_get_lock
 from tbottest.dynamicimport import get_boardcallback_import
+from tbottest.dynamicimport import get_boardmodule_import
 
 import tbottest.initconfighelper as inithelper
 
@@ -25,15 +26,6 @@ if cfgt.shelltype == "bash":
     LAB_LINUX_SHELL = linux.Bash
 else:
     LAB_LINUX_SHELL = linux.Ash
-
-# for ssh machine
-IP_BOARD_SSH_INTERFACE = "eth0"
-try:
-    ssh_ip_section = f"IPSETUP_{ini.generic_get_boardname()}_{IP_BOARD_SSH_INTERFACE}"
-    IP_BOARD = cfgt.config_parser.get(ssh_ip_section, "ipaddr")
-except:
-    IP_BOARD = None
-
 
 class boardPicocomConnector(PicocomConnector):
     bn = ini.generic_get_boardname()
@@ -80,7 +72,19 @@ class boardSSHConnector(connector.SSHConnector):
         ignore_hostkey = True
 
     username = ini.init_get_config(cfgp, "linux_user", "root")
-    if IP_BOARD is None:
+    # hostname for ssh machine to board
+    try:
+        board_detect_lx_ethernet_interface = getattr(get_boardmodule_import(), "board_detect_lx_ethernet_interface")
+        IP_BOARD_SSH_INTERFACE = board_detect_lx_ethernet_interface()
+        tbot.log.message(tbot.log.c(f"Use {IP_BOARD_SSH_INTERFACE} interface for ssh").yellow)
+    except:
+        IP_BOARD_SSH_INTERFACE = "eth1"
+        tbot.log.message(tbot.log.c(f"Use default {IP_BOARD_SSH_INTERFACE} interface for ssh, make it boardspecific through board_detect_lx_ethernet_interface()").yellow)
+
+    try:
+        ssh_ip_section = f"IPSETUP_{ini.generic_get_boardname()}_{IP_BOARD_SSH_INTERFACE}"
+        IP_BOARD = cfgt.config_parser.get(ssh_ip_section, "ipaddr")
+    except:
         RuntimeError(
             f"Please set ipaddr for ssh machine. Expect section {ssh_ip_section} with key ipaddr"
         )
