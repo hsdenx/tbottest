@@ -67,4 +67,4 @@ fi
 
 rm lab-lock-log
 cp $tbotinifile.save $tbotinifile
-exit $ENDRET
+exit $RET
