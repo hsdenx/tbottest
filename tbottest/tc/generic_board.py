@@ -10,6 +10,7 @@ from tbottest.tc.common import lnx_check_revfile
 from tbottest.tc.common import lnx_create_revfile
 from tbottest.tc.kas import KAS
 from tbottest.tc.leds import lnx_test_led_simple
+from tbottest.tc.generictestdef import TC_SKIP, TC_FAIL, TC_OKAY, require_cfg
 
 cfg = cfggeneric
 
@@ -126,6 +127,7 @@ def generic_lnx_create_dump_files(
 
 
 @tbot.testcase
+@require_cfg(cfg.beep)
 def generic_lnx_test_beep(
     lnx: Optional[linux.LinuxShell] = None,
 ) -> None:  # noqa: D107
@@ -152,6 +154,7 @@ def generic_lnx_test_beep(
 
 
 @tbot.testcase
+@require_cfg(cfg.lnx_commands)
 def generic_lnx_commands(
     lnx: Optional[linux.LinuxShell] = None,
 ) -> None:  # noqa: D107
@@ -180,9 +183,10 @@ def generic_lnx_commands(
 
 
 @tbot.testcase
+@require_cfg(cfg.dmesg)
 def generic_lnx_test_dmesg(
     lnx: Optional[linux.LinuxShell] = None,
-) -> None:  # noqa: D107
+) -> str:  # noqa: D107
     """
     prerequisite: Board boots into linux
 
@@ -213,11 +217,13 @@ def generic_lnx_test_dmesg(
         if not ret:
             raise RuntimeError("Error in dmesg output")
 
+    return TC_OKAY
 
 @tbot.testcase
+@require_cfg(cfg.leds)
 def generic_lnx_test_led(
     lnx: Optional[linux.LinuxShell] = None,
-) -> None:  # noqa: D107
+) -> str:  # noqa: D107
     """
     prerequisite: Board boots into linux
 
@@ -242,6 +248,49 @@ def generic_lnx_test_led(
 
         lnx_test_led_simple(lnx, cfg.leds)
 
+    return TC_OKAY
+
+lnxtestcases = [
+    "generic_lnx_test_beep",
+    "generic_lnx_commands",
+    "generic_lnx_test_dmesg",
+    "generic_lnx_test_led",
+]
+
+@tbot.testcase
+def generic_lnx_all(
+    lnx: Optional[linux.LinuxShell] = None,
+) -> None:  # noqa: D107
+    """
+    start all configured linux testcases
+    """
+    count = 0
+    failed = []
+    success = []
+    skipped = []
+
+    for tc in lnxtestcases:
+        count += 1
+        tbot.log.message(tbot.log.c(f"start tc {tc}").green)
+        try:
+            func = eval(tc)
+            ret = func()
+            tbot.log.message(tbot.log.c(f"tc {tc} return {ret}").yellow)
+            if ret == TC_SKIP:
+                skipped.append(tc)
+                tbot.log.message(tbot.log.c(f"tc {tc} skipped").yellow)
+            else:
+                success.append(tc)
+                tbot.log.message(tbot.log.c(f"tc {tc} success").green)
+        except:
+            failed.append(tc)
+            tbot.log.message(tbot.log.c(f"tc {tc} failed").red)
+
+    tbot.log.message(tbot.log.c(f"tc count {count} success {len(success)} skipped {len(skipped)} failed {len(failed)}").green)
+    if len(skipped):
+        tbot.log.message(tbot.log.c(f"skipped {skipped}").yellow)
+    if len(failed):
+        tbot.log.message(tbot.log.c(f"failed {failed}").red)
 
 ##############################################################
 # kas
