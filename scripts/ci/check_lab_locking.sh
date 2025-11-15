@@ -67,4 +67,5 @@ fi
 
 rm lab-lock-log
 cp $tbotinifile.save $tbotinifile
+echo "EXIT with exit code $RET"
 exit $RET
