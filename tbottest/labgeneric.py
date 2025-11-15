@@ -27,6 +27,7 @@ if cfgt.shelltype == "bash":
 else:
     LAB_LINUX_SHELL = linux.Ash
 
+
 class boardPicocomConnector(PicocomConnector):
     bn = ini.generic_get_boardname()
     cfg = f"PICOCOM_{bn}"
@@ -42,6 +43,7 @@ class boardPicocomConnector(PicocomConnector):
             except:  # noqa: E722
                 pass
 
+
 class boardScriptConnector(ScriptConnector):
     bn = ini.generic_get_boardname()
     cfg = f"SCRIPTCOM_{bn}"
@@ -50,6 +52,7 @@ class boardScriptConnector(ScriptConnector):
             scriptname = cfgt.config_parser.get(s, "scriptname")
             exitstring = cfgt.config_parser.get(s, "exitstring")
             boardname = bn
+
 
 class boardKermitConnector(KermitConnector):
     bn = ini.generic_get_boardname()
@@ -74,22 +77,29 @@ class boardSSHConnector(connector.SSHConnector):
     username = ini.init_get_config(cfgp, "linux_user", "root")
     # hostname for ssh machine to board
     try:
-        board_detect_lx_ethernet_interface = getattr(get_boardmodule_import(), "board_detect_lx_ethernet_interface")
+        board_detect_lx_ethernet_interface = getattr(
+            get_boardmodule_import(), "board_detect_lx_ethernet_interface"
+        )
         IP_BOARD_SSH_INTERFACE = board_detect_lx_ethernet_interface()
-        tbot.log.message(tbot.log.c(f"Use {IP_BOARD_SSH_INTERFACE} interface for ssh").yellow)
+        tbot.log.message(
+            tbot.log.c(f"Use {IP_BOARD_SSH_INTERFACE} interface for ssh").yellow
+        )
     except:
-        IP_BOARD_SSH_INTERFACE = "eth1"
-        tbot.log.message(tbot.log.c(f"Use default {IP_BOARD_SSH_INTERFACE} interface for ssh, make it boardspecific through board_detect_lx_ethernet_interface()").yellow)
+        IP_BOARD_SSH_INTERFACE = "eth0"
+        tbot.log.message(
+            tbot.log.c(
+                f"Use default {IP_BOARD_SSH_INTERFACE} interface for ssh, make it boardspecific through board_detect_lx_ethernet_interface()"
+            ).yellow
+        )
 
     try:
         ssh_ip_section = f"IPSETUP_{ini.generic_get_boardname()}_{IP_BOARD_SSH_INTERFACE}"
         IP_BOARD = cfgt.config_parser.get(ssh_ip_section, "ipaddr")
+        hostname = IP_BOARD
     except:
         RuntimeError(
             f"Please set ipaddr for ssh machine. Expect section {ssh_ip_section} with key ipaddr"
         )
-
-    hostname = IP_BOARD
 
     @property
     def authenticator(self) -> linux.auth.Authenticator:
@@ -149,6 +159,7 @@ class boardSisControl(powercontrol.SispmControl):
         if cfg == s:
             sispmctl_device = cfgt.config_parser.get(s, "device")
             sispmctl_port = cfgt.config_parser.get(s, "port")
+
 
 class boardTMControl(powercontrol.TM021Control):
     def power_check(self) -> bool:
@@ -594,7 +605,9 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
                     bmtype = "tbot.flag"
 
         if bms != None:
-            tbot.log.message(tbot.log.c(f"set bootmode {bms['name']} from {bmtype}").yellow)
+            tbot.log.message(
+                tbot.log.c(f"set bootmode {bms['name']} from {bmtype}").yellow
+            )
             try:
                 gpios = bms["gpios"]
                 for s in gpios.split(" "):
@@ -617,7 +630,7 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
                 pass
 
             try:
-                funcname = bms['func']
+                funcname = bms["func"]
                 func = getattr(get_boardcallback_import(), funcname)
                 ret = func(self)
                 return ret
@@ -625,9 +638,7 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
                 pass
 
             tbot.log.message(tbot.log.c(f"set bootmode {bms['name']} failed").red)
-            raise RuntimeError(
-                f"Exit until callbacks work"
-            )
+            raise RuntimeError(f"Exit until callbacks work")
 
         return False
 
