@@ -86,11 +86,6 @@ class boardSSHConnector(connector.SSHConnector):
         )
     except:
         IP_BOARD_SSH_INTERFACE = "eth0"
-        tbot.log.message(
-            tbot.log.c(
-                f"Use default {IP_BOARD_SSH_INTERFACE} interface for ssh, make it boardspecific through board_detect_lx_ethernet_interface()"
-            ).yellow
-        )
 
     try:
         ssh_ip_section = f"IPSETUP_{ini.generic_get_boardname()}_{IP_BOARD_SSH_INTERFACE}"
