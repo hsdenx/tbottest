@@ -47,7 +47,7 @@ if [ "$?" != "1" ];then
 fi
 
 echo "---- Delete the lock with wrong lockid must fail ----"
-tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth -f lablockid:foobar tbottest.common.boardlocking.lab_rm_lock
+tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth -f lablockid:foobar2 tbottest.common.boardlocking.lab_rm_lock
 if [ "$?" != "1" ];then
 	echo "ERROR: remove Locking with wrong lock foobar2 must fail"
 	RET=1
