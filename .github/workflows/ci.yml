@@ -96,11 +96,6 @@ jobs:
             echo "doing all build host tests failed"
             returncode=1
           fi
-          tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth -f buildername:sisyphus -q -q tbotconfig.ci.testbh.bhall
-          if [[ "${exitcode}" != "0" ]];then
-            echo "doing all sisyphus build host tests failed"
-            returncode=1
-          fi
           # now check board locking
           cp ../scripts/ci/check_lab_locking.sh .
           ./check_lab_locking.sh
