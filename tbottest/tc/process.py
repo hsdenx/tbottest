@@ -5,6 +5,22 @@ from tbot.machine import linux
 from tbottest.common.utils import string_to_dict
 
 
+def process_get_gnuplot_work_and_configpath(
+    local: linux.LinuxShell,
+):
+    """
+    return config and workpath for gnuplot
+    """
+    workpath = local.workdir()._local_str()
+    sourcepath = local.sourcedir()._local_str()
+
+    gnuplotpath = f"{workpath}/tbottest/results/measurements/process"
+    gnuplotconfigpath=f"{sourcepath}/tbottest/results/measurements/process"
+    local.exec0("mkdir", "-p", gnuplotpath)
+
+    return gnuplotpath, gnuplotconfigpath
+
+
 def ps_parse_ps(log) -> None:  # noqa: D107
     """
     parse the log output from ps command
@@ -337,13 +353,13 @@ def ps_create_measurement_png(
 
     .. code-block:: bash
 
-        results/measurements/process/{loops}_{intervall}_{pname}.dat
+        tbottest/results/measurements/process/{loops}_{intervall}_{pname}.dat
 
     call gnuplot with the config file
 
     .. code-block:: bash
 
-        results/measurements/process/gnuplot-bar.gp
+        tbottest/results/measurements/process/gnuplot-bar.gp
 
     The output png is stored in ```process-usage.png```. Example for
     viewing it:
@@ -404,10 +420,10 @@ def ps_create_measurement_png(
         newentry = {"loop": loopval, "cpuvalues": cpu}
         cpuvalues.append(newentry)
 
-    gnuplotpath = "tbottest/results/measurements/process"
+    gnuplotpath, gnuplotconfigpath = process_get_gnuplot_work_and_configpath(local)
     filename = f"{loops}_{intervall}_{pname}.dat"
     fname = gnuplotpath + "/" + filename
-    outputfilename = "process-usage.png"
+    outputfilename = gnuplotpath + "/" + "process-usage.png"
     try:
         fd = open(fname, "w")
     except:
@@ -453,7 +469,7 @@ def ps_create_measurement_png(
         f"outputfile='{outputfilename}'",
         "-e",
         f"columcount='{cmcount}'",
-        f"{gnuplotpath}/gnuplot-bar.gp",
+        f"{gnuplotconfigpath}/gnuplot-bar.gp",
     )
     tbot.log.c(f"gnuplot created png file {outputfilename} on local host").yellow
     tbot.log.c(f"type there\n gwenview {outputfilename}\nto show the image").yellow
@@ -475,13 +491,13 @@ def top_create_measurement_png(
 
     .. code-block:: bash
 
-        results/measurements/process/{loops}_{intervall}_top.dat
+        tbottest/results/measurements/process/{loops}_{intervall}_top.dat
 
     call gnuplot with the config file
 
     .. code-block:: bash
 
-        results/measurements/process/gnuplot-bar-cpustat.gp
+        tbottest/results/measurements/process/gnuplot-bar-cpustat.gp
 
     The output png is stored in ```process-usage.png```. Example for
     viewing it:
@@ -511,7 +527,7 @@ def top_create_measurement_png(
 
     example png:
 
-    .. image:: ../results/measurements/process/process-usage.png
+    .. image:: ../tbottest/results/measurements/process/process-usage.png
 
     """
     cpuvalues = []
@@ -559,10 +575,10 @@ def top_create_measurement_png(
     pnamelist.append("cpu_system")
     pnamelist.append("cpu_complete")
 
-    gnuplotpath = "tbottest/results/measurements/process"
+    gnuplotpath, gnuplotconfigpath = process_get_gnuplot_work_and_configpath(local)
     filename = f"{loops}_{intervall}_top.dat"
     fname = gnuplotpath + "/" + filename
-    outputfilename = "process-usage.png"
+    outputfilename = gnuplotpath + "/" + "process-usage.png"
     try:
         fd = open(fname, "w")
     except:
@@ -608,7 +624,7 @@ def top_create_measurement_png(
         f"outputfile='{outputfilename}'",
         "-e",
         f"columcount='{cmcount}'",
-        f"{gnuplotpath}/gnuplot-bar-cpustat.gp",
+        f"{gnuplotconfigpath}/gnuplot-bar-cpustat.gp",
     )
     tbot.log.c(f"gnuplot created png file {outputfilename} on local host").yellow
     tbot.log.c(f"type there\n gwenview {outputfilename}\nto show the image").yellow
