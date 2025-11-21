@@ -16,6 +16,10 @@ license = {file = "LICENSE"}
 [tool.setuptools]
 packages = ["tbottest", "tbottest.common", "tbottest.tc"]
 
+[tool.setuptools.package-data]
+tbottest = [
+    "tbottest/results/measurements/**",
+]
 
 [project.urls]
 Homepage = "https://github.com/hsdenx/tbottest.git"
