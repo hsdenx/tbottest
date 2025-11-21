@@ -1,3 +1,4 @@
+import os
 import typing
 import tbot
 from tbot.machine import connector, linux, board
@@ -725,8 +726,53 @@ class SSHMachine(connector.SSHConnector, linux.Bash):
         return None
 
 
+class LocalHostTest(
+    connector.SubprocessConnector, linux.Bash, linux.Lab, typing.ContextManager
+):
+    workdir_exists = False
+
+    def workdir(self) -> "linux.path.Path[LocalHostTest]":
+        """
+        returns tbot workdir on Local Host
+
+        default is ```/tmp```
+
+        If you want to set it to other path set Environment
+        variable ```TBOTTESTWORKPATH```
+        """
+        try:
+            tmp = os.environ["TBOTTESTWORKPATH"]
+        except:
+            tmp = "/tmp"
+
+        tmp = f"{tmp}/tbot"
+        if self.workdir_exists is False:
+            self.exec0("mkdir", "-p", tmp)
+            self.workdir_exists = True
+
+        return linux.Workdir.static(self, tmp)
+
+    def sourcedir(self) -> "linux.path.Path[LocalHostTest]":
+        """
+        returns tbottest sourcedir on Local host
+        (installation path of tbottest)
+
+        default is ```.```
+
+        If you need, you can set the path to tbottest
+        through Environment variable ```TBOTTESTPATH```
+        """
+        try:
+            tmp = os.environ["TBOTTESTPATH"]
+        except:
+            tmp = "."
+
+        return linux.Workdir.static(self, tmp)
+
+
 def register_machines(ctx):
     ctx.register(GenericLab, tbot.role.LabHost)
+    ctx.register(LocalHostTest, tbot.role.LocalHost)
     for s in cfgt.config_parser.sections():
         localfound = False
         if "BUILDHOST" in s:
