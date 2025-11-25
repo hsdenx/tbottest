@@ -8,11 +8,14 @@ from tbottest.tc.common import lnx_check_cmd
 from tbottest.tc.common import lnx_check_dmesg
 from tbottest.tc.common import lnx_check_revfile
 from tbottest.tc.common import lnx_create_revfile
+from tbottest.tc.common import lx_devmem2_get
+from tbottest.tc.cpu import generic_get_socname
 from tbottest.tc.network import lnx_network_ping
 from tbottest.tc.network import network_linux_iperf
 from tbottest.tc.kas import KAS
 from tbottest.tc.leds import lnx_test_led_simple
 from tbottest.tc.generictestdef import TC_SKIP, TC_FAIL, TC_OKAY, require_cfg
+from tbottest.tc.registermap import REGISTERMAP
 
 cfg = cfggeneric
 
@@ -126,6 +129,50 @@ def generic_lnx_create_dump_files(
                 config["mask"],
                 config["readtype"],
             )
+
+@tbot.testcase
+@require_cfg(cfg.regdump)
+def generic_lx_dump_register(
+    lnx: Optional[linux.LinuxShell] = None,
+) -> bool:  # noqa: D107
+    """
+    Create a register dump on lnx machine, and
+    save it on local hosts workdir in file "generic_registerdump.txt"
+
+    :param lnx: Linux machine we run on
+
+    Uses config variables:
+
+    regdump -- list of dictionary
+
+    .. code-block:: python
+
+        regdump = [{"address":"0x30340004"}, {"address":"0x30330070"}]
+    """
+    with tbot.ctx() as cx:
+        if lnx is None:
+            lnx = cx.request(tbot.role.BoardLinux)
+
+        local = cx.request(tbot.role.LocalHost)
+        sourcepath = local.sourcedir()._local_str()
+        workpath = local.workdir()._local_str()
+        socname = generic_get_socname(lnx)
+        if "not detected" in socname:
+            tbot.log.message(tbot.log.c(f"SoC not detected, please add in generic_get_socname").yellow)
+            return TC_SKIP
+
+        name = f"{socname}_registers.json"
+        registerfilepath = f"{sourcepath}/scripts/registermap/{name}"
+        regmap = REGISTERMAP(registerfilepath)
+        outputpath = f"{workpath}/generic_registerdump.txt"
+        local.exec0("rm", "-rf", outputpath)
+        for dump in cfg.regdump:
+            address = dump["address"]
+            #val = ub_read_register(ub, address)
+            val = lx_devmem2_get(lnx, address, "w")
+            regmap.registermap_dump_register_file(outputpath, address, val)
+
+        tbot.log.message(tbot.log.c(f"Register dumped to file {outputpath}").green)
 
 
 @tbot.testcase
@@ -314,6 +361,7 @@ def generic_lnx_test_led(
     return TC_OKAY
 
 lnxtestcases = [
+    "generic_lx_dump_register",
     "generic_lnx_network_iperf",
     "generic_lnx_network_ping",
     "generic_lnx_test_beep",

@@ -76,6 +76,7 @@ class GenericBoardConfig:
 
     iperf = eval(cfg.get_config("iperf", "[]"))
     ping = eval(cfg.get_config("ping", "[]"))
+    regdump = eval(cfg.get_config("regdump", "[]"))
 
     sensors = eval(cfg.get_config("sensors", "[]"))
 

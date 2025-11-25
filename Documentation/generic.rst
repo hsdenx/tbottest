@@ -658,6 +658,7 @@ settings needed for linux testcases.
         "nvramcomp", "compatibility string of nvram device", "microchip,48l640", "nvramcomp = 'microchip,48l640'"
         "nvramsz", "size of nvram device", "8192", "nvramsz = 8192"
         "ping", "list of dict for ping config.", "[]", 'ping = [{"ip":"${default:serverip}","retry":"10"}]'
+        "regdump", "list of dict for generic regdump", "[]", 'regdump = [{"address":"0x30340004"}, {"address":"0x30330070"}]'
         "rs485labdev", "path to device", "/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0", 'rs485labdev = "/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0"'
         "rs485baud", "baudrate used for test", "115200", 'rs485baud = "115200"'
         "rs485boarddev", "list of strings, each string contains a path to device which used in test", '["/dev/ttymxc2"]', 'rs485boarddev = ["/dev/ttymxc2"]'
