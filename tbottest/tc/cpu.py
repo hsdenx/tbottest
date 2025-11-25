@@ -36,3 +36,36 @@ def board_lnx_cpufreq(
             out = lnx.exec0("cat", c["file"])
             if c["val"] not in out:
                 raise RuntimeError(f'{c["val"]} not found in {c["file"]}')
+
+@tbot.testcase
+def generic_get_socname(
+    lnx: Optional[linux.LinuxShell] = None,
+) -> None:
+    """
+    Try to find out the SoC name.
+
+    First approach is to get name through /proc file
+    /proc/device-tree/soc@0/compatible
+
+    Currently supported SoC
+
+    fsl,imx8mp-soc    -> NXP imx8mp -> return "imx8mp"
+
+    :param lnx: linux machine where we run
+
+    :return: see above table, if SoC could not be detected "not detected"
+    """
+    with tbot.ctx() as cx:
+        if lnx is None:
+            lnx = cx.request(tbot.role.BoardLinux)
+
+        # Try through device-tree
+        try:
+            log = lnx.exec0("cat", "/proc/device-tree/soc@0/compatible")
+            print("LOG ", log)
+            if "fsl,imx8mp-soc" in log:
+                return "imx8mp"
+        except:
+            pass
+
+    return "not detected"
