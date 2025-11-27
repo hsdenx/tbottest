@@ -12,6 +12,11 @@ def get_bit_range(hex_str: str, bit_range: str, lsb_first: bool = False) -> str:
         if len(parts) != 2:
             raise ValueError(f"invalid range: {bit_range}")
         start_bit, end_bit = map(int, parts)
+    elif ":" in bit_range:
+        parts = bit_range.split(":")
+        if len(parts) != 2:
+            raise ValueError(f"invalid range: {bit_range}")
+        start_bit, end_bit = map(int, parts)
     else:
         start_bit = end_bit = int(bit_range)
 
