@@ -67,7 +67,7 @@ class REGISTERMAP:
                               {
                                 "range": "31:24",
                                 "field": "Reserved",
-                                "description": "must be kept at reset value.\n"
+                                "description": "must be kept at reset value."
                               },
                     ]
                   },
@@ -162,7 +162,9 @@ class REGISTERMAP:
         elif self.socname == "stm32mp157":
             return "registername"
 
-        raise RuntimeError(f"register field name in dict for SoC {self.socname} not found")
+        raise RuntimeError(
+            f"register field name in dict for SoC {self.socname} not found"
+        )
 
     def register_load_map(self) -> bool:
         """
@@ -211,8 +213,8 @@ class REGISTERMAP:
 
         :param address: hex string of address
         """
-        permaps = self.registermap[0]['peripheralmaps']
-        regmaps = self.registermap[1]['registermaps']
+        permaps = self.registermap[0]["peripheralmaps"]
+        regmaps = self.registermap[1]["registermaps"]
         tmpaddr = int(address, 16)
 
         # search peripheral mapping
@@ -260,7 +262,6 @@ class REGISTERMAP:
             return self.registermap_stm32mp1_search_address(address)
 
         raise RuntimeError(f"Soc {self.socname} not yet supported")
-
 
     def registermap_dump_register(self, address, val) -> bool:
         """
@@ -365,9 +366,7 @@ class REGISTERMAP:
                 return False
 
             regname = self.get_registername_from_dict()
-            f.write(
-                f"register name: {reg[regname]} val: {val} RM page {reg['page']}\n"
-            )
+            f.write(f"register name: {reg[regname]} val: {val} RM page {reg['page']}\n")
             f.write(
                 "------------------------------------------------------------------------------\n"
             )
