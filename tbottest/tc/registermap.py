@@ -17,7 +17,7 @@ class REGISTERMAP:
 
     :param mapname: name of the registermap file
 
-    registermap format is
+    registermap format for NXP is
 
     .. code-block:: python
 
@@ -36,9 +36,51 @@ class REGISTERMAP:
           },
         ]
 
+    registermap format for STM32MP157 is
 
-    The registermap can for example contain register mappings
-    from a SoC.
+    .. code-block:: python
+
+        [
+          {
+            "peripheralmaps": [
+              {
+                "bus": "Cortex-A7internal",
+                "range": "0xA0026000 - 0xA0027FFF",
+                "size": "8KB",
+                "peripheral": "GICV",
+                "peripheralmap": "GIC virtual CPU interface (GICV)"
+              },
+            ]
+          },
+          {
+            "registermaps": [
+              {
+                "mapname": "I2C registers",
+                "registers": [
+                  {
+                    "registername": "I2C_CR1",
+                    "offset": "0x00",
+                    "page": 2559,
+                    "chapter": "52.9.1",
+                    "resetvalue": "0x00000000",
+                    "bits": [
+                              {
+                                "range": "31:24",
+                                "field": "Reserved",
+                                "description": "must be kept at reset value.\n"
+                              },
+                    ]
+                  },
+                ]
+              },
+            ]
+          }
+        ]
+
+
+    The registermap contain register mappings for a SoC.
+
+    Example for imx8mp:
 
     .. code-block:: python
 
@@ -110,6 +152,18 @@ class REGISTERMAP:
         self.registermap = None
         self.register_load_map()
 
+    def get_registername_from_dict(self) -> str:
+        """
+        return the name of the registername field in the
+        dictionary for the SoC.
+        """
+        if self.socname == "imx8mp":
+            return "register"
+        elif self.socname == "stm32mp157":
+            return "registername"
+
+        raise RuntimeError(f"register field name in dict for SoC {self.socname} not found")
+
     def register_load_map(self) -> bool:
         """
         load the register map and analyse it.
@@ -123,7 +177,7 @@ class REGISTERMAP:
 
     def registermap_nxp_search_address(self, address):
         """
-        search for the address in the registermap
+        search for the address in the imx8mp registermap
 
         :param address: hex string of address
         """
@@ -151,8 +205,62 @@ class REGISTERMAP:
 
         return None
 
+    def registermap_stm32mp1_search_address(self, address):
+        """
+        search for the address in the imx8mp registermap
+
+        :param address: hex string of address
+        """
+        permaps = self.registermap[0]['peripheralmaps']
+        regmaps = self.registermap[1]['registermaps']
+        tmpaddr = int(address, 16)
+
+        # search peripheral mapping
+        permap = None
+        startaddr = None
+        for p in permaps:
+            start_str, end_str = p["range"].split(" - ")
+            start = int(start_str, 16)
+            end = int(end_str, 16)
+            if tmpaddr >= start and tmpaddr <= end:
+                permap = p
+                startaddr = start
+                break
+
+        if not permap:
+            raise RuntimeError(f"No peripheral map found for address {address}")
+
+        # search registermap
+        regmap = None
+        for r in regmaps:
+            if r["mapname"] == permap["peripheralmap"]:
+                regmap = r
+                break
+
+        if not regmap:
+            raise RuntimeError(f"No registermap map found for address {address}")
+
+        # find registermapping for full address
+        for reg in regmap["registers"]:
+            registeraddr = startaddr + int(reg["offset"], 16)
+            if registeraddr == tmpaddr:
+                return reg
+
+        raise RuntimeError(f"address {address} not found")
+
     def registermap_search_address(self, address):
-        pass
+        """
+        search for the address in the registermap for the SoC
+
+        :param address: hex string of address
+        """
+        if self.socname == "imx8mp":
+            return self.registermap_nxp_search_address(address)
+        elif self.socname == "stm32mp157":
+            return self.registermap_stm32mp1_search_address(address)
+
+        raise RuntimeError(f"Soc {self.socname} not yet supported")
+
 
     def registermap_dump_register(self, address, val) -> bool:
         """
@@ -170,9 +278,10 @@ class REGISTERMAP:
             tbot.log.message(tbot.log.c(f"regitermapping for {address} not found").red)
             return False
 
+        regname = self.get_registername_from_dict()
         tbot.log.message(
             tbot.log.c(
-                f"register name: {reg['register']} val: {val} RM page {reg['page']}"
+                f"register name: {reg[regname]} val: {val} RM page {reg['page']}"
             ).blue
         )
         for bit in reg["bits"]:
@@ -255,8 +364,9 @@ class REGISTERMAP:
                 f.write(f"registermapping for {address} not found\n")
                 return False
 
+            regname = self.get_registername_from_dict()
             f.write(
-                f"register name: {reg['register']} val: {val} RM page {reg['page']}\n"
+                f"register name: {reg[regname]} val: {val} RM page {reg['page']}\n"
             )
             f.write(
                 "------------------------------------------------------------------------------\n"
