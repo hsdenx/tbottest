@@ -236,7 +236,7 @@ class KAS:
         try:
             self.kasurl = self.cfg["kasurl"]
             self.kas_version = self.cfg["kasversion"]
-            self.kaspath = linux.Workdir.static(self.bh, self.bh.workdir / "kasdownload")
+            self.kaspath = linux.Workdir.static(self.bh, self.bh.workdir / self.cfg["subdir"] / "kasdownload")
             self.bh.exec0("cd", self.kaspath._local_str())
             self.bh.exec(
                 "git",
