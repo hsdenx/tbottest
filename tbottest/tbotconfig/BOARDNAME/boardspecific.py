@@ -138,54 +138,8 @@ def set_ub_board_specific(self):  # noqa: C901
     """
     sample implementation for U-Boot setup dependent on tbot.flags
     """
-    optargs = self.env("optargs")
-    optupd = False
-    if "bootchartd" in tbot.flags:
-        optargs = f"{optargs} init=/lib/systemd/systemd-bootchart"
-        optupd = True
-
-    if "debug_initcalls" in tbot.flags:
-        optargs = f"{optargs} initcall_debug"
-        optupd = True
-
-    # for tftp_nfs boot, set rauc.slot correct
-    if "bootcmd:tftp_nfs" in tbot.flags:
-        try:
-            bo = self.env("BOOT_ORDER")
-        except:
-            bo = "A B"
-            self.env("BOOT_ORDER", bo)
-
-        if bo == "A B":
-            optargs = optargs.replace("rauc.slot=B", "rauc.slot=A")
-            if "rauc.slot=A" not in optargs:
-                optargs = f"{optargs} rauc.slot=A"
-            optupd = True
-        if bo == "B A":
-            optargs = optargs.replace("rauc.slot=A", "rauc.slot=B")
-            if "rauc.slot=B" not in optargs:
-                optargs = f"{optargs} rauc.slot=B"
-            optupd = True
-
-    # in case of netboot remove a rauc.slot setting in optargs
-    # netboot adds rauc.slot
-    if "bootcmd:netboot" in tbot.flags:
-        optargs = optargs.replace("rauc.slot=B", "")
-        optargs = optargs.replace("rauc.slot=A", "")
-        optupd = True
-
-    if optupd is True:
-        self.env("optargs", optargs)
-
     if "silent" in tbot.flags:
         self.env("console", "silent")
-
-    for f in tbot.flags:
-        if "fixrauc" in f:
-            partition = f.split(":")[1]
-            optargs = self.env("optargs")
-            optargs = optargs.replace("rauc.slot=A", f"rauc.slot={partition}")
-            self.env("optargs", optargs)
 
 
 def set_board_cfg(temp: str = None, filename: str = None):  # noqa: C901
