@@ -104,7 +104,7 @@ def BOARDNAME_get_rootfsname():
             ROOTFSNAME = f.split(":")[1]
             return ROOTFSNAME
 
-    ROOTFSNAME = "CUSTOMER-image-qt-dev-denx"
+    ROOTFSNAME = "core-image-base"
     return ROOTFSNAME
 
 
@@ -158,6 +158,11 @@ def set_board_cfg(temp: str = None, filename: str = None):  # noqa: C901
 
         TBOTFILE = filename
 
+    replace_in_file(filename, "@@USERNAME@@", "please set in boardspecific.py")
+    # Should come from selected build section, ToDo
+    replace_in_file(filename, "@@BUILDUSERNAME@@", "please set in boardspecific.py")
+    replace_in_file(filename, "@@BUILDDOWNLOADSPATH@@", "please set in boardspecific.py")
+    replace_in_file(filename, "@@BUILSTSTATEPATH@@", "please set in boardspecific.py")
     replace_in_file(filename, "@@TBOTDATE@@", "20230406")
     replace_in_file(filename, "@@TBOTMACHINE@@", BOARDNAME_get_machinename())
     boardname = generic_get_boardname()
@@ -165,63 +170,8 @@ def set_board_cfg(temp: str = None, filename: str = None):  # noqa: C901
 
     kascontainer = "False"
     sshkeypath = None
-    kasfilename = "kas-denx-withdldir.yml"
+    kasfilename = "please set in boardspecifc.py your yml file"
     tftpsubdir = "${board}/${date}"
-    tftpsubdir_addbranch = None
-    tftpsubdir_addkas = False
-    tftpsubdir_addsisyphus = False
-    for f in tbot.flags:
-        if "buildername:sisyphus" in f:
-            # simulate production build, remove some stuff in ini file
-            kascontainer = "True"
-            sshkeypath = "/work/hs/yocto/.ssh"
-            # we want to build without meta-denx layer
-            # remove lines with "dev-denx"
-            find_in_file_and_delete(filename, "-dev-denx")
-            tftpsubdir_addkas = True
-            tftpsubdir_addsisyphus = True
-
-        if "kas" in f and "kaslayerbranch" not in f:
-            tftpsubdir_addkas = True
-
-        if "partition" in f:
-            part = f.split(":")[1]
-            replace_in_file(filename, "rootfspart = 3", f"rootfspart = 0:{part}")
-
-        if "kasfilename" in f:
-            kasfilename = f.split(":")[1]
-
-        if "lauterbachloader" in f:
-            replace_in_file(
-                filename, "uboot_autoboot_iter = 1", "uboot_autoboot_iter = 2"
-            )
-
-        if "kaslayerbranch" in f:
-            br = f.split(":")[1]
-            tftpsubdir_addbranch = br
-            replace_in_file(
-                filename,
-                "subdir = ${vendor}/${machine}",
-                f"subdir = ${{vendor}}/${{machine}}/{br}",
-            )
-            replace_in_file(
-                filename, "denxlayerbranch = master", f"denxlayerbranch = {br}"
-            )
-            if "kirkstone" in br:
-                # build kirkstone based sources in ubuntu 20.04 container
-                replace_in_file(filename, "port = 11606", "port = 12004")
-
-    # create tftpsubdir
-    if tftpsubdir_addbranch:
-        tftpsubdir = f"${{board}}/{tftpsubdir_addbranch}/${{date}}"
-    if tftpsubdir_addkas:
-        tftpsubdir = f"{tftpsubdir}/kas"
-    if tftpsubdir_addsisyphus:
-        tftpsubdir = "{tftpsubdir}/sisyphus"
-
-    if "oldbsp" in tbot.flags:
-        tftpsubdir = "${{board}}//${{date}}"
-
     replace_in_file(filename, "@@TBOTBOARD@@", boardname)
     replace_in_file(filename, "@@TFTPSUBDIR@@", tftpsubdir)
     tmp = BOARDNAME_get_rootfsname()
