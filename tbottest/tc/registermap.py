@@ -321,7 +321,7 @@ class REGISTERMAP:
         regname = self.get_registername_from_dict()
         tbot.log.message(
             tbot.log.c(
-                f"register name: {reg[regname]} val: {val} RM page {reg['page']}"
+                f"register name: {reg[regname]} addr {address} val: {val} RM page {reg['page']}"
             ).blue
         )
         for bit in reg["bits"]:
@@ -405,7 +405,7 @@ class REGISTERMAP:
                 return False
 
             regname = self.get_registername_from_dict()
-            f.write(f"register name: {reg[regname]} val: {val} RM page {reg['page']}\n")
+            f.write(f"register name: {reg[regname]} addr {address} val: {val} RM page {reg['page']}\n")
             f.write(
                 "------------------------------------------------------------------------------\n"
             )
