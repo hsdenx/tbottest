@@ -5264,8 +5264,17 @@
               {
                 "range": "0",
                 "field": "DE",
-                "description": "DLL enable/disable\nEnable (0) or disable (1) the DLL.\nDLL must be enabled for normal operation.\n7.7.19 DDRPHYC MR1 register for LPDDR2 [alternate]\n(DDRPHYC_LPDDR2_MR1)\nAddress offset: 0x044\nReset value: 0x0000\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res. Res. NWR[2:0] WC BT BL[2:0]\nrw rw rw rw rw rw rw rw\n"
-              },
+                "description": "DLL enable/disable\nEnable (0) or disable (1) the DLL.\nDLL must be enabled for normal operation.\n7.7.19 DDRPHYC MR1 register for LPDDR2 [alternate]\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_LPDDR2_MR1-alternate",
+            "offset": "0x044",
+            "page": 401,
+            "chapter": "7.7.19",
+            "resetvalue": "0x00000000",
+            "bits": [
               {
                 "range": "15:8",
                 "field": "Reserved",
@@ -5289,8 +5298,17 @@
               {
                 "range": "2:0",
                 "field": "BL[2:0]",
-                "description": "Burst length\nDetermines the maximum number of column locations that can be accessed during a given\nread or write command. Valid values are:\n010: 4\n011: 8\n100: 16\nOthers: Reserved\n7.7.20 DDRPHYC MR1 register for LPDDR3 [alternate]\n(DDRPHYC_LPDDR3_MR1)\nAddress offset: 0x044\nReset value: 0x0000\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res. Res. NWR[2:0] Res. Res. BL[2:0]\nrw rw rw rw rw rw\n"
-              },
+                "description": "Burst length\nDetermines the maximum number of column locations that can be accessed during a given\nread or write command. Valid values are:\n010: 4\n011: 8\n100: 16\nOthers: Reserved\n7.7.20 DDRPHYC MR1 register for LPDDR3 [alternate]\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_LPDDR3_MR1-alternate",
+            "offset": "0x044",
+            "page": 402,
+            "chapter": "7.7.20",
+            "resetvalue": "0x00000000",
+            "bits": [
               {
                 "range": "15:8",
                 "field": "Reserved",
@@ -5353,8 +5371,17 @@
               {
                 "range": "2:0",
                 "field": "PASR[2:0]",
-                "description": "Partial array self-refresh\nSpecifies that data located in areas of the array beyond the specified location are lost if self\nrefresh is entered.\nValid settings for 8 banks are:\n000: Full Array\n001: Half Array (BA[2:0] = 000, 001, 010 & 011)\n010: Quarter Array (BA[2:0] = 000, 001)\n011: 1/8 Array (BA[2:0] = 000)\n100: 3/4 Array (BA[2:0] = 010, 011, 100, 101, 110 & 111)\n101: Half Array (BA[2:0] = 100, 101, 110 & 111)\n110: Quarter Array (BA[2:0] = 110 & 111)\n111: 1/8 Array (BA[2:0] 111)\nRM0436 Rev 7 403/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n7.7.22 DDRPHYC MR2 register for LPDDR2 [alternate]\n(DDRPHYC_LPDDR2_MR2)\nAddress offset: 0x048\nReset value: 0x0000\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. RLWL[2:0]\nrw rw rw\n"
-              },
+                "description": "Partial array self-refresh\nSpecifies that data located in areas of the array beyond the specified location are lost if self\nrefresh is entered.\nValid settings for 8 banks are:\n000: Full Array\n001: Half Array (BA[2:0] = 000, 001, 010 & 011)\n010: Quarter Array (BA[2:0] = 000, 001)\n011: 1/8 Array (BA[2:0] = 000)\n100: 3/4 Array (BA[2:0] = 010, 011, 100, 101, 110 & 111)\n101: Half Array (BA[2:0] = 100, 101, 110 & 111)\n110: Quarter Array (BA[2:0] = 110 & 111)\n111: 1/8 Array (BA[2:0] 111)\nRM0436 Rev 7 403/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n7.7.22 DDRPHYC MR2 register for LPDDR2 [alternate]\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_LPDDR2_MR2-alternate",
+            "offset": "0x048",
+            "page": 404,
+            "chapter": "7.7.22",
+            "resetvalue": "0x00000000",
+            "bits": [
               {
                 "range": "15:3",
                 "field": "Reserved",
@@ -5363,8 +5390,17 @@
               {
                 "range": "2:0",
                 "field": "RLWL[2:0]",
-                "description": "Read and write latency\n001: RL = 3 /WL = 1\n010: RL = 4 / WL = 2\n011: RL = 5 / WL = 2\n100: RL = 6 / WL = 3\n101: RL = 7 / WL = 4\n110: RL = 8 / WL = 4\nOthers: Reserved\n7.7.23 DDRPHYC MR2 register for LPDDR3 [alternate]\n(DDRPHYC_LPDDR3_MR2)\nAddress offset: 0x048\nReset value: 0x0000\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res. Res. WR WL Res. NWRE Res. RLWL[2:0]\nrw rw rw rw rw rw\n"
-              },
+                "description": "Read and write latency\n001: RL = 3 /WL = 1\n010: RL = 4 / WL = 2\n011: RL = 5 / WL = 2\n100: RL = 6 / WL = 3\n101: RL = 7 / WL = 4\n110: RL = 8 / WL = 4\nOthers: Reserved\n7.7.23 DDRPHYC MR2 register for LPDDR3 [alternate]\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_LPDDR3_MR2-alternate",
+            "offset": "0x048",
+            "page": 404,
+            "chapter": "7.7.23",
+            "resetvalue": "0x00000000",
+            "bits": [
               {
                 "range": "15:8",
                 "field": "Reserved",
@@ -5422,8 +5458,17 @@
               {
                 "range": "1:0",
                 "field": "MPRLOC[1:0]",
-                "description": "Multi-purpose register (MPR) location\nSelects MPR data location.\n00: Predefined pattern for system calibration\nOthers: Reserved\n7.7.25 DDRPHYC MR3 register for LPDDR2 [alternate]\n(DDRPHYC_LPDDR2_MR3)\nAddress offset: 0x04C\nReset value: 0x0000 0000\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res.\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. DS[3:0]\nrw rw rw rw\n"
-              },
+                "description": "Multi-purpose register (MPR) location\nSelects MPR data location.\n00: Predefined pattern for system calibration\nOthers: Reserved\n7.7.25 DDRPHYC MR3 register for LPDDR2 [alternate]\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_LPDDR2_MR3-alternate",
+            "offset": "0x04C",
+            "page": 405,
+            "chapter": "7.7.25",
+            "resetvalue": "0x00000000",
+            "bits": [
               {
                 "range": "31:4",
                 "field": "Reserved",
@@ -5432,8 +5477,17 @@
               {
                 "range": "3:0",
                 "field": "DS[3:0]",
-                "description": "Drive strength\nValid values are:\n0000: Reserved\n0001: 34.3Ω typical\n0010: 40Ω typical\n0011: 48Ω typical\n0100: 60Ω typical\n0101: Reserved\n0110: 80Ω typical\n0111: 120Ω typical\nOthers: Reserved\nRM0436 Rev 7 405/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n7.7.26 DDRPHYC MR3 register for LPDDR3 [alternate]\n(DDRPHYC_LPDDR3_MR3)\nAddress offset: 0x04C\nReset value: 0x0000 0000\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res.\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. PDCTL[1:0] DQ[1:0]\nrw rw rw rw\n"
-              },
+                "description": "Drive strength\nValid values are:\n0000: Reserved\n0001: 34.3Ω typical\n0010: 40Ω typical\n0011: 48Ω typical\n0100: 60Ω typical\n0101: Reserved\n0110: 80Ω typical\n0111: 120Ω typical\nOthers: Reserved\nRM0436 Rev 7 405/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n7.7.26 DDRPHYC MR3 register for LPDDR3 [alternate]\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_LPDDR3_MR3-alternate",
+            "offset": "0x04C",
+            "page": 406,
+            "chapter": "7.7.26",
+            "resetvalue": "0x00000000",
+            "bits": [
               {
                 "range": "31:4",
                 "field": "Reserved",
@@ -6165,8 +6219,17 @@
               {
                 "range": "2:0",
                 "field": "OPERATING_MODE[2:0]",
-                "description": "Operating mode. This is 3-bits wide in configurations with\nmDDR/LPDDR2/LPDDR3/LPDDR4/DDR4 support and 2-bits in all other configurations.\nCondition non-mDDR/LPDDR2/LPDDR3/LPDDR4 and non-DDR4 designs:\n- 000 - Init\n- 001 - Normal\n- 010 - Power-down\n- 011 - Self refresh\nCondition mDDR/LPDDR2/LPDDR3 or DDR4 designs:\n- 000 - Init\n- 001 - Normal\n- 010 - Power-down\n- 011 - Self refresh\n- 1XX - Deep power-down / Maximum Power Saving Mode\nCondition LPDDR4 designs:\n- 000 - Init\n- 001 - Normal\n- 010 - Power-down\n- 011 - Self refresh / Self refresh power-down\nProgramming mode: Dynamic\n222/4054 RM0436 Rev 7\nRM0436 DDR3/LPDDR2/LPDDR3 controller (DDRCTRL)\n5.7.3 DDRCTRL mode register read/write control register 0\n(DDRCTRL_MRCTRL0)\nAddress offset: 0x010\nReset value: 0x0000 0010\nMode Register Read/Write Control Register 0.\nNote: Do not enable more than one of the following fields simultaneously:\n• sw_init_int\n• pda_en\n• mpr_en\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRM0436 Rev 7 223/4054\n318\nRW_RM\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res.\nrs\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nMR_ADDR[3:0] Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res.\nEPYT_RM\nrw rw rw rw rw\n"
-              },
+                "description": "Operating mode. This is 3-bits wide in configurations with\nmDDR/LPDDR2/LPDDR3/LPDDR4/DDR4 support and 2-bits in all other configurations.\nCondition non-mDDR/LPDDR2/LPDDR3/LPDDR4 and non-DDR4 designs:\n- 000 - Init\n- 001 - Normal\n- 010 - Power-down\n- 011 - Self refresh\nCondition mDDR/LPDDR2/LPDDR3 or DDR4 designs:\n- 000 - Init\n- 001 - Normal\n- 010 - Power-down\n- 011 - Self refresh\n- 1XX - Deep power-down / Maximum Power Saving Mode\nCondition LPDDR4 designs:\n- 000 - Init\n- 001 - Normal\n- 010 - Power-down\n- 011 - Self refresh / Self refresh power-down\nProgramming mode: Dynamic\n222/4054 RM0436 Rev 7\nRM0436 DDR3/LPDDR2/LPDDR3 controller (DDRCTRL)\n5.7.3 DDRCTRL mode register read/write control register 0\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRCTRL_MRCTRL0",
+            "offset": "0x010",
+            "page": 223,
+            "chapter": "5.7.3",
+            "resetvalue": "0x00000010",
+            "bits": [
               {
                 "range": "31",
                 "field": "MR_WR",
@@ -6195,8 +6258,17 @@
               {
                 "range": "0",
                 "field": "MR_TYPE",
-                "description": "Indicates whether the mode register operation is read or write. Only used for\nLPDDR2/LPDDR3/LPDDR4/DDR4.\n- 0 - Write, MRCTRL register does not support MR read for LPDDR2/3\n- 1 - Reserved\nProgramming mode: Dynamic\n5.7.4 DDRCTRL mode register read/write control register 1\n(DDRCTRL_MRCTRL1)\nAddress offset: 0x014\nReset value: 0x0000 0000\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res.\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nMR_DATA[15:0]\nrw rw rw rw rw rw rw rw rw rw rw rw rw rw rw rw\n"
-              },
+                "description": "Indicates whether the mode register operation is read or write. Only used for\nLPDDR2/LPDDR3/LPDDR4/DDR4.\n- 0 - Write, MRCTRL register does not support MR read for LPDDR2/3\n- 1 - Reserved\nProgramming mode: Dynamic\n5.7.4 DDRCTRL mode register read/write control register 1\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRCTRL_MRCTRL1",
+            "offset": "0x014",
+            "page": 224,
+            "chapter": "5.7.4",
+            "resetvalue": "0x00000000",
+            "bits": [
               {
                 "range": "31:16",
                 "field": "Reserved",
@@ -6205,8 +6277,25 @@
               {
                 "range": "15:0",
                 "field": "MR_DATA[15:0]",
-                "description": "Mode register write data for all non-LPDDR2/non-LPDDR3/non-LPDDR4\nmodes.\nFor LPDDR2/LPDDR3/LPDDR4, MRCTRL1[15:0] are interpreted as\n[15:8] MR Address\n[7:0] MR data for writes, don't care for reads. This is 18-bits wide in configurations with DDR4\nsupport and 16-bits in all other configurations.\nProgramming mode: Dynamic\n224/4054 RM0436 Rev 7\nRM0436 DDR3/LPDDR2/LPDDR3 controller (DDRCTRL)\n5.7.5 DDRCTRL mode register read/write status register\n(DDRCTRL_MRSTAT)\nAddress offset: 0x018\nReset value: 0x0000 0000\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res.\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res.\n5.7.6 DDRCTRL temperature derate enable register\n(DDRCTRL_DERATEEN)\nAddress offset: 0x020\nReset value: 0x0000 0000\nRM0436 Rev 7 225/4054\n318\nYSUB_RW_RM\nr\n"
-              },
+                "description": "Mode register write data for all non-LPDDR2/non-LPDDR3/non-LPDDR4\nmodes.\nFor LPDDR2/LPDDR3/LPDDR4, MRCTRL1[15:0] are interpreted as\n[15:8] MR Address\n[7:0] MR data for writes, don't care for reads. This is 18-bits wide in configurations with DDR4\nsupport and 16-bits in all other configurations.\nProgramming mode: Dynamic\n224/4054 RM0436 Rev 7\nRM0436 DDR3/LPDDR2/LPDDR3 controller (DDRCTRL)\n5.7.5 DDRCTRL mode register read/write status register\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRCTRL_MRSTAT",
+            "offset": "0x018",
+            "page": 225,
+            "chapter": "5.7.5",
+            "resetvalue": "0x00000000",
+            "bits": []
+          },
+          {
+            "registername": "DDRCTRL_DERATEEN",
+            "offset": "0x020",
+            "page": 225,
+            "chapter": "5.7.6",
+            "resetvalue": "0x00000000",
+            "bits": [
               {
                 "range": "31:1",
                 "field": "Reserved",
@@ -6240,8 +6329,17 @@
               {
                 "range": "0",
                 "field": "DERATE_ENABLE",
-                "description": "Enables derating\n- 0 - Timing parameter derating is disabled\n- 1 - Timing parameter derating is enabled using MR4 read value.\nPresent only in designs configured to support LPDDR2/LPDDR3/LPDDR4\nThis field must be set to '0' for non-LPDDR2/LPDDR3/LPDDR4 mode.\nProgramming mode: Dynamic\n5.7.7 DDRCTRL temperature derate interval register\n(DDRCTRL_DERATEINT)\nAddress offset: 0x024\nReset value: 0x0080 0000\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nMR4_READ_INTERVAL[31:16]\nrw rw rw rw rw rw rw rw rw rw rw rw rw rw rw rw\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nMR4_READ_INTERVAL[15:0]\nrw rw rw rw rw rw rw rw rw rw rw rw rw rw rw rw\n"
-              },
+                "description": "Enables derating\n- 0 - Timing parameter derating is disabled\n- 1 - Timing parameter derating is enabled using MR4 read value.\nPresent only in designs configured to support LPDDR2/LPDDR3/LPDDR4\nThis field must be set to '0' for non-LPDDR2/LPDDR3/LPDDR4 mode.\nProgramming mode: Dynamic\n5.7.7 DDRCTRL temperature derate interval register\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRCTRL_DERATEINT",
+            "offset": "0x024",
+            "page": 226,
+            "chapter": "5.7.7",
+            "resetvalue": "0x00800000",
+            "bits": [
               {
                 "range": "31:0",
                 "field": "MR4_READ_INTERVAL[31:0]",
@@ -6333,8 +6431,17 @@
               {
                 "range": "4:0",
                 "field": "POWERDOWN_TO_X32[4:0]",
-                "description": "After this many clocks of the DDRC command channel being\nidle the DDRCTRL automatically puts the SDRAM into power-down. The DDRC command\nchannel is considered idle when there are no HIF commands outstanding. This must be\nenabled in the PWRCTL.powerdown_en.\nUnit: Multiples of 32 DFI clocks\nFor performance only.\nProgramming mode: Quasi-dynamic Group 4\n5.7.10 DDRCTRL hardware low power control register\n(DDRCTRL_HWLPCTL)\nAddress offset: 0x038\nReset value: 0x0000 0003\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. Res. HW_LP_IDLE_X32[11:0]\nrw rw rw rw rw rw rw rw rw rw rw rw\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res.\nRM0436 Rev 7 229/4054\n318\nNE_ELDI_TIXE_PL_WH\nNE_PL_WH\nrw rw\n"
-              },
+                "description": "After this many clocks of the DDRC command channel being\nidle the DDRCTRL automatically puts the SDRAM into power-down. The DDRC command\nchannel is considered idle when there are no HIF commands outstanding. This must be\nenabled in the PWRCTL.powerdown_en.\nUnit: Multiples of 32 DFI clocks\nFor performance only.\nProgramming mode: Quasi-dynamic Group 4\n5.7.10 DDRCTRL hardware low power control register\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRCTRL_HWLPCTL",
+            "offset": "0x038",
+            "page": 229,
+            "chapter": "5.7.10",
+            "resetvalue": "0x00000003",
+            "bits": [
               {
                 "range": "31:28",
                 "field": "Reserved",
@@ -7318,8 +7425,17 @@
               {
                 "range": "4:0",
                 "field": "DFI_T_DRAM_CLK_ENABLE[4:0]",
-                "description": "Specifies the number of DFI clock cycles from the de-\nassertion of the dfi_dram_clk_disable signal on the DFI until the first valid rising edge of the\nclock to the DRAM memory devices, at the PHY-DRAM boundary. If the DFI clock and the\nmemory clock are not phase aligned, this timing parameter should be rounded up to the next\ninteger value.\nProgramming mode: Quasi-dynamic Group 4\n5.7.40 DDRCTRL low power configuration register 0\n(DDRCTRL_DFILPCFG0)\nAddress offset: 0x198\nReset value: 0x0700 0000\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. DFI_TLP_RESP[4:0]\nRM0436 Rev 7 259/4054\n318\n]0:3[DPD_PUEKAW_PL_IFD\nRes. Res. Res.\nDPD_NE_PL_IFD\nrw rw rw rw rw rw rw rw rw rw\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nDFI_LP_WAKEUP_SR[3:0] Res. Res. Res.\nRS_NE_PL_IFD\nDFI_LP_WAKEUP_PD[3:0] Res. Res. Res.\nDP_NE_PL_IFD\nrw rw rw rw rw rw rw rw rw rw\n"
-              },
+                "description": "Specifies the number of DFI clock cycles from the de-\nassertion of the dfi_dram_clk_disable signal on the DFI until the first valid rising edge of the\nclock to the DRAM memory devices, at the PHY-DRAM boundary. If the DFI clock and the\nmemory clock are not phase aligned, this timing parameter should be rounded up to the next\ninteger value.\nProgramming mode: Quasi-dynamic Group 4\n5.7.40 DDRCTRL low power configuration register 0\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRCTRL_DFILPCFG0",
+            "offset": "0x198",
+            "page": 259,
+            "chapter": "5.7.40",
+            "resetvalue": "0x07000000",
+            "bits": [
               {
                 "range": "31:29",
                 "field": "Reserved",
@@ -8092,8 +8208,17 @@
               {
                 "range": "7:0",
                 "field": "PAGECLOSE_TIMER[7:0]",
-                "description": "This field works in conjunction with SCHED.pageclose.\nIt only has meaning if SCHED.pageclose==1.\nIf SCHED.pageclose==1 and pageclose_timer==0, then an auto-precharge may be scheduled\nfor last read\nor write command in the CAM with a bank and page hit.\nNote, sometimes an explicit precharge is scheduled instead of the auto-precharge. See\nSCHED.pageclose for details of when this may happen.\nIf SCHED.pageclose==1 and pageclose_timer>0, then an auto-precharge is not scheduled for\nlast read\nor write command in the CAM with a bank and page hit.\nInstead, a timer is started, with pageclose_timer as the initial value.\nThere is a timer on a per bank basis.\nThe timer decrements unless the next read or write in the CAM to a bank is a page hit.\nIt gets reset to pageclose_timer value if the next read or write in the CAM to a bank is a page\nhit.\nOnce the timer has reached zero, an explicit precharge is attempted to be scheduled.\nProgramming mode: Static.\n5.7.60 DDRCTRL high priority read CAM register 1\n(DDRCTRL_PERFHPR1)\nAddress offset: 0x25C\nReset value: 0x0F00 0001\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nHPR_XACT_RUN_LENGTH[7:0] Res. Res. Res. Res. Res. Res. Res. Res.\nrw rw rw rw rw rw rw rw\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nHPR_MAX_STARVE[15:0]\nrw rw rw rw rw rw rw rw rw rw rw rw rw rw rw rw\n"
-              },
+                "description": "This field works in conjunction with SCHED.pageclose.\nIt only has meaning if SCHED.pageclose==1.\nIf SCHED.pageclose==1 and pageclose_timer==0, then an auto-precharge may be scheduled\nfor last read\nor write command in the CAM with a bank and page hit.\nNote, sometimes an explicit precharge is scheduled instead of the auto-precharge. See\nSCHED.pageclose for details of when this may happen.\nIf SCHED.pageclose==1 and pageclose_timer>0, then an auto-precharge is not scheduled for\nlast read\nor write command in the CAM with a bank and page hit.\nInstead, a timer is started, with pageclose_timer as the initial value.\nThere is a timer on a per bank basis.\nThe timer decrements unless the next read or write in the CAM to a bank is a page hit.\nIt gets reset to pageclose_timer value if the next read or write in the CAM to a bank is a page\nhit.\nOnce the timer has reached zero, an explicit precharge is attempted to be scheduled.\nProgramming mode: Static.\n5.7.60 DDRCTRL high priority read CAM register 1\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRCTRL_PERFHPR1",
+            "offset": "0x25C",
+            "page": 283,
+            "chapter": "5.7.60",
+            "resetvalue": "0x0f000001",
+            "bits": [
               {
                 "range": "31:24",
                 "field": "HPR_XACT_RUN_LENGTH[7:0]",
@@ -8349,8 +8474,25 @@
               {
                 "range": "0",
                 "field": "RANK0_REFRESH_BUSY",
-                "description": "SoC core may initiate a rank0_refresh operation (refresh operation\nto rank 0) only if this signal is low. This signal goes high in the clock after\nDBGCMD.rank0_refresh is set to one. It goes low when the rank0_refresh operation is stored in\nthe DDRCTRL. It is recommended not to perform rank0_refresh operations when this signal is\nhigh.\n- 0 - Indicates that the SoC core can initiate a rank0_refresh operation\n- 1 - Indicates that rank0_refresh operation has not been stored yet in the DDRCTRL\nProgramming mode: Dynamic\nDDR3/LPDDR2/LPDDR3 controller (DDRCTRL) RM0436\n5.7.68 DDRCTRL software register programming control enable\n(DDRCTRL_SWCTL)\nAddress offset: 0x320\nReset value: 0x0000 0001\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res.\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res.\n5.7.69 DDRCTRL software register programming control status\n(DDRCTRL_SWSTAT)\nAddress offset: 0x324\nReset value: 0x0000 0001\n290/4054 RM0436 Rev 7\nENOD_WS\nrw\n"
-              },
+                "description": "SoC core may initiate a rank0_refresh operation (refresh operation\nto rank 0) only if this signal is low. This signal goes high in the clock after\nDBGCMD.rank0_refresh is set to one. It goes low when the rank0_refresh operation is stored in\nthe DDRCTRL. It is recommended not to perform rank0_refresh operations when this signal is\nhigh.\n- 0 - Indicates that the SoC core can initiate a rank0_refresh operation\n- 1 - Indicates that rank0_refresh operation has not been stored yet in the DDRCTRL\nProgramming mode: Dynamic\nDDR3/LPDDR2/LPDDR3 controller (DDRCTRL) RM0436\n5.7.68 DDRCTRL software register programming control enable\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRCTRL_SWCTL",
+            "offset": "0x320",
+            "page": 290,
+            "chapter": "5.7.68",
+            "resetvalue": "0x00000001",
+            "bits": []
+          },
+          {
+            "registername": "DDRCTRL_SWSTAT",
+            "offset": "0x324",
+            "page": 290,
+            "chapter": "5.7.69",
+            "resetvalue": "0x00000001",
+            "bits": [
               {
                 "range": "31:1",
                 "field": "Reserved",
@@ -8369,8 +8511,17 @@
               {
                 "range": "0",
                 "field": "SW_DONE_ACK",
-                "description": "Register programming done. This register is the echo of SWCTL.sw_done.\nWait for sw_done value 1 to propagate to sw_done_ack at the end of the programming\nsequence to ensure that the correct registers values are propagated to the destination clock\ndomains.\nProgramming mode: Static\nRM0436 DDR3/LPDDR2/LPDDR3 controller (DDRCTRL)\n5.7.70 DDRCTRL AXI Poison configuration register\n(DDRCTRL_POISONCFG)\nAddress offset: 0x36C\nReset value: 0x0011 0011\nAXI Poison configuration register common for all AXI ports.\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. Res. Res. Res. Res.\nRM0436 Rev 7 291/4054\n318\nRLC_RTNI_NOSIOP_DR\nRes. Res. Res.\nNE_RTNI_NOSIOP_DR\nRes. Res. Res.\nNE_RREVLS_NOSIOP_DR\nrc_w1 rw rw\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res.\nRLC_RTNI_NOSIOP_RW\nRes. Res. Res.\nNE_RTNI_NOSIOP_RW\nRes. Res. Res.\nNE_RREVLS_NOSIOP_RW\nrc_w1 rw rw\n"
-              },
+                "description": "Register programming done. This register is the echo of SWCTL.sw_done.\nWait for sw_done value 1 to propagate to sw_done_ack at the end of the programming\nsequence to ensure that the correct registers values are propagated to the destination clock\ndomains.\nProgramming mode: Static\nRM0436 DDR3/LPDDR2/LPDDR3 controller (DDRCTRL)\n5.7.70 DDRCTRL AXI Poison configuration register\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRCTRL_POISONCFG",
+            "offset": "0x36C",
+            "page": 291,
+            "chapter": "5.7.70",
+            "resetvalue": "0x00110011",
+            "bits": [
               {
                 "range": "31:25",
                 "field": "Reserved",
@@ -8595,8 +8746,17 @@
               {
                 "range": "9:0",
                 "field": "RD_PORT_PRIORITY[9:0]",
-                "description": "Determines the initial load value of read aging counters. These\ncounters are parallel loaded after reset, or after each grant to the corresponding port. The\naging counters down-count every clock cycle where the port is requesting but not granted. The\nhigher significant 5-bits of the read aging counter sets the priority of the read channel of a given\nport. Port's priority increases as the higher significant 5-bits of the counter starts to decrease.\nWhen the aging counter becomes 0, the corresponding port channel has the highest priority\nlevel (timeout condition - Priority0). For multi-port configurations, the aging counters cannot be\nused to set port priorities when external dynamic priority inputs (arqos) are enabled (timeout is\nstill applicable). For single port configurations, the aging counters are only used when they\ntimeout (become 0) to force read-write direction switching. In this case, external dynamic\npriority input, arqos (for reads only) can still be used to set the DDRC read priority (2 priority\nlevels: low priority read - LPR, high priority read - HPR) on a command by command basis.\nNote: The two LSBs of this register field are tied internally to 2'b00.\nProgramming mode: Static\n5.7.75 DDRCTRL port x configuration write register\n(DDRCTRL_PCFGW_x)\nAddress offset: 0x408 + 0xB0 * x, (x = 0 to 1)\nReset value: 0x0000 4000\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res.\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes.\n296/4054 RM0436 Rev 7\nNE_HCTAMEGAP_TROP_RW\nNE_TNEGRU_TROP_RW\nNE_GNIGA_TROP_RW\nRes. Res. WR_PORT_PRIORITY[9:0]\nrw rw rw rw rw rw rw rw rw rw rw rw rw\n"
-              },
+                "description": "Determines the initial load value of read aging counters. These\ncounters are parallel loaded after reset, or after each grant to the corresponding port. The\naging counters down-count every clock cycle where the port is requesting but not granted. The\nhigher significant 5-bits of the read aging counter sets the priority of the read channel of a given\nport. Port's priority increases as the higher significant 5-bits of the counter starts to decrease.\nWhen the aging counter becomes 0, the corresponding port channel has the highest priority\nlevel (timeout condition - Priority0). For multi-port configurations, the aging counters cannot be\nused to set port priorities when external dynamic priority inputs (arqos) are enabled (timeout is\nstill applicable). For single port configurations, the aging counters are only used when they\ntimeout (become 0) to force read-write direction switching. In this case, external dynamic\npriority input, arqos (for reads only) can still be used to set the DDRC read priority (2 priority\nlevels: low priority read - LPR, high priority read - HPR) on a command by command basis.\nNote: The two LSBs of this register field are tied internally to 2'b00.\nProgramming mode: Static\n5.7.75 DDRCTRL port x configuration write register\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRCTRL_PCFGW_x",
+            "offset": "0x408",
+            "page": 296,
+            "chapter": "5.7.75",
+            "resetvalue": "0x00004000",
+            "bits": [
               {
                 "range": "31:15",
                 "field": "Reserved",
@@ -8633,6 +8793,7 @@
             "registername": "DDRCTRL_PCTRL_x",
             "offset": "0x490",
             "page": 297,
+            "chapter": "5.7.76",
             "resetvalue": "0x00000000",
             "bits": [
               {
@@ -8643,8 +8804,17 @@
               {
                 "range": "0",
                 "field": "PORT_EN",
-                "description": "Enables AXI port n.\nProgramming mode: Dynamic\nDDR3/LPDDR2/LPDDR3 controller (DDRCTRL) RM0436\n5.7.77 DDRCTRL port x read Q0S configuration register 0\n(DDRCTRL_PCFGQOS0_x)\nAddress offset: 0x494 + 0xB0 * x, (x = 0 to 1)\nReset value: 0x0200 0E00\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. Res. Res. Res.\n298/4054 RM0436 Rev 7\n]0:1[2NOIGER_PAM_SOQR\nRes. Res.\n]0:1[1NOIGER_PAM_SOQR\nRes. Res.\n]0:1[0NOIGER_PAM_SOQR\nrw rw rw rw rw rw\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. RQOS_MAP_LEVEL2[3:0] Res. Res. Res. Res. RQOS_MAP_LEVEL1[3:0]\nrw rw rw rw rw rw rw rw\n"
-              },
+                "description": "Enables AXI port n.\nProgramming mode: Dynamic\nDDR3/LPDDR2/LPDDR3 controller (DDRCTRL) RM0436\n5.7.77 DDRCTRL port x read Q0S configuration register 0\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRCTRL_PCFGQOS0_x",
+            "offset": "0x494",
+            "page": 298,
+            "chapter": "5.7.77",
+            "resetvalue": "0x02000e00",
+            "bits": [
               {
                 "range": "31:26",
                 "field": "Reserved",
@@ -8693,8 +8863,17 @@
               {
                 "range": "3:0",
                 "field": "RQOS_MAP_LEVEL1[3:0]",
-                "description": "Separation level1 indicating the end of region0 mapping; start of\nregion0 is 0. Possible values for level1 are 0 to 13 (for dual RAQ) or 0 to 14 (for single RAQ)\nwhich corresponds to arqos.\nNote that for PA, arqos values are used directly as port priorities, where the higher the value\ncorresponds to higher port priority.\nAll of the map_level* registers must be set to distinct values.\nProgramming mode: Quasi-dynamic Group 3\n5.7.78 DDRCTRL port x read Q0S configuration register 1\n(DDRCTRL_PCFGQOS1_x)\nAddress offset: 0x498 + 0xB0 * x, (x = 0 to 1)\nReset value: 0x00000000\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. Res. Res. RQOS_MAP_TIMEOUTR[10:0]\nrw rw rw rw rw rw rw rw rw rw rw\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. RQOS_MAP_TIMEOUTB[10:0]\nrw rw rw rw rw rw rw rw rw rw rw\n"
-              },
+                "description": "Separation level1 indicating the end of region0 mapping; start of\nregion0 is 0. Possible values for level1 are 0 to 13 (for dual RAQ) or 0 to 14 (for single RAQ)\nwhich corresponds to arqos.\nNote that for PA, arqos values are used directly as port priorities, where the higher the value\ncorresponds to higher port priority.\nAll of the map_level* registers must be set to distinct values.\nProgramming mode: Quasi-dynamic Group 3\n5.7.78 DDRCTRL port x read Q0S configuration register 1\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRCTRL_PCFGQOS1_x",
+            "offset": "0x498",
+            "page": 299,
+            "chapter": "5.7.78",
+            "resetvalue": "0x00000000",
+            "bits": [
               {
                 "range": "31:27",
                 "field": "Reserved",
@@ -8713,8 +8892,17 @@
               {
                 "range": "10:0",
                 "field": "RQOS_MAP_TIMEOUTB[10:0]",
-                "description": "Specifies the timeout value for transactions mapped to the\nblue address queue.\nProgramming mode: Quasi-dynamic Group 3.\n5.7.79 DDRCTRL port x write Q0S configuration register 0\n(DDRCTRL_PCFGWQOS0_x)\nAddress offset: 0x49C + 0xB0 * x, (x = 0 to 1)\nReset value: 0x0000 0E00\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. Res. Res. Res.\n300/4054 RM0436 Rev 7\n]0:1[2NOIGER_PAM_SOQW\nRes. Res.\n]0:1[1NOIGER_PAM_SOQW\nRes. Res.\n]0:1[0NOIGER_PAM_SOQW\nrw rw rw rw rw rw\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. WQOS_MAP_LEVEL2[3:0] Res. Res. Res. Res. WQOS_MAP_LEVEL1[3:0]\nrw rw rw rw rw rw rw rw\n"
-              },
+                "description": "Specifies the timeout value for transactions mapped to the\nblue address queue.\nProgramming mode: Quasi-dynamic Group 3.\n5.7.79 DDRCTRL port x write Q0S configuration register 0\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRCTRL_PCFGWQOS0_x",
+            "offset": "0x49C",
+            "page": 300,
+            "chapter": "5.7.79",
+            "resetvalue": "0x00000e00",
+            "bits": [
               {
                 "range": "31:26",
                 "field": "Reserved",
@@ -8763,8 +8951,16 @@
               {
                 "range": "3:0",
                 "field": "WQOS_MAP_LEVEL1[3:0]",
-                "description": "Separation level indicating the end of region0 mapping; start of\nregion0 is 0. Possible values for level1 are 0 to 13 which corresponds to awqos.\nNote that for PA, awqos values are used directly as port priorities, where the higher the value\ncorresponds to higher port priority.\nAll of the map_level* registers must be set to distinct values.\nProgramming mode: Quasi-dynamic Group 3\n5.7.80 DDRCTRL port x write Q0S configuration register 1\n(DDRCTRL_PCFGWQOS1_x)\nAddress offset: 0x4A0 + 0xB0 * x, (x = 0 to 1)\nReset value: 0x0000 0000\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. Res. Res. WQOS_MAP_TIMEOUT2[10:0]\nrw rw rw rw rw rw rw rw rw rw rw\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. WQOS_MAP_TIMEOUT1[10:0]\nrw rw rw rw rw rw rw rw rw rw rw\n"
-              },
+                "description": "Separation level indicating the end of region0 mapping; start of\nregion0 is 0. Possible values for level1 are 0 to 13 which corresponds to awqos.\nNote that for PA, awqos values are used directly as port priorities, where the higher the value\ncorresponds to higher port priority.\nAll of the map_level* registers must be set to distinct values.\nProgramming mode: Quasi-dynamic Group 3\n5.7.80 DDRCTRL port x write Q0S configuration register 1\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRCTRL_PCFGWQOS1_x",
+            "offset": "0x4A0",
+            "page": 301,
+            "resetvalue": "0x00000000",
+            "bits": [
               {
                 "range": "31:27",
                 "field": "Reserved",

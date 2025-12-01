@@ -232,8 +232,8 @@ class pdf2json:
                     # LINE 3: (SYSCFG_PMCSETR) True True True
                     #
                     #pattern = r"(?P<chapter>\d{1,3}\.\d+\.\d+)\s+[^()]*\((?P<regname>[^()]+)\)"
-                    if line[0] == "(" and line[1] == "S":
-                        self.debug(f"LINE {line_num}: ==== line start with (S {oldline}")
+                    if line[0] == "(" and line[1] == "S" or line[0] == "(" and line[1] == "D" and line[2] == "D":
+                        self.debug(f"LINE {line_num}: ==== line start with (S or (DD {oldline}")
                         if oldline:
                             pattern = re.compile(
                                 r'(?P<chapter>\b(?P<x>\d{1,3})\.(?P<y>\d{1,3})(?:\.(?P<z>\d{1,3}))?)\b(?:(?!register).)*\bregister\b',
