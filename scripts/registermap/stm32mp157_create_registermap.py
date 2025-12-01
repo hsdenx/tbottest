@@ -102,6 +102,9 @@ class pdf2json:
         if mapname == "ADC registers (for each ADC)":
             start_page = 1577
             end_page = 1610
+        elif mapname == "DDRCTRL registers":
+            start_page = 219
+            end_page = 302
         elif mapname == "DTS registers":
             start_page = 1631
             end_page = 1639
@@ -173,6 +176,10 @@ class pdf2json:
                         #
                         #if self.page_nr > 2742 and self.page_nr < 2744:
                         #    self.debug(f"LINE {line_num}: {line} ==== search end chapter {mapname} {chapter} {chapterstart}")
+                        #
+                        # DDRCTRL registers summary
+                        #
+                        foundEnd = False
                         pattern = re.compile(
                             r'^(?P<chapter>\d{1,3}\.\d{1,3}(?:\.\d{1,3})?)\b.*\b(?:register map|common registers)\b',
                             flags=re.IGNORECASE
@@ -180,33 +187,19 @@ class pdf2json:
                         m = re.search(pattern, line)
                         if m:
                             self.debug(f"LINE {line_num}: {line} ==== found other chapter than {mapname} END ====")
-                            if regname:
-                                if bitstemp:
-                                    self.debug(f"LINE {line_num}: {line} ==== commit bitstemp {bitstemp}")
-                                    bits.append(bitstemp)
-
-                                registers.append(
-                                    {
-                                        "registername" : regname,
-                                        "offset" : offset,
-                                        "page" : page,
-                                        "resetvalue": resetvalue,
-                                        "bits" : bits,
-                                    }
-                                )
-
-                            self.registermaps.append(
-                                {
-                                    "mapname" : mapname,
-                                    "registers" : registers,
-                                }
-                            )
-                            return
+                            foundEnd = True
 
                         pattern = rf"(?P<chapterstart>{re.escape(chapterstart)}\.\d+)\s+.*map and reset values$"
                         m = re.search(pattern, line)
                         if m:
                             self.debug(f"LINE {line_num}: {line} ==== found other chapter than {mapname} END ====")
+                            foundEnd = True
+
+                        if "DDRCTRL registers summary" in line:
+                            self.debug(f"LINE {line_num}: {line} ==== found other chapter than {mapname} END ====")
+                            foundEnd = True
+
+                        if foundEnd:
                             if regname:
                                 if bitstemp:
                                     self.debug(f"LINE {line_num}: {line} ==== commit bitstemp {bitstemp}")

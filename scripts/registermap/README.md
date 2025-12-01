@@ -20,7 +20,10 @@ registers:
 If you need others, adapt the script or send patches, which
 makes this more comfortable.
 
-Currently there is only SoC ```imx8mp``` supported.
+Currently supported SoCs:
+
+- ```imx8mp```
+- ```stm32mp157```
 
 # use the regdump tool without tbot
 
