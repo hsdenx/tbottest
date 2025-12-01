@@ -43,6 +43,12 @@ def parse_arguments():
         help="Directory where the result will be written",
     )
 
+    parser.add_argument(
+        "--regsfile",
+        default=None,
+        help="File with a list of registername, index, value lines",
+    )
+
     # One positional argument for address-value pairs
     parser.add_argument(
         "regs",
@@ -88,7 +94,25 @@ def analyze_register(args):
     regmap = REGISTERMAP(input_path)
     os.makedirs(args.output_dir, exist_ok=True)
     output_path = os.path.join(args.output_dir, f"{args.soc}_result.txt")
-    for regs in args.regs:
+    if args.regsfile:
+        registers = []
+        with open(args.regsfile, "r") as f:
+            for line in f:
+                l = line.strip()
+                name = l.split(" ")[0]
+                index = l.split(" ")[1]
+                value = l.split(" ")[2]
+                try:
+                    addr = regmap.registername_to_address(name, index)
+                    #print(f'name {name} index {index} name {name} addr {addr} value {value}')
+                    registers.append({"address":addr, "value":value})
+                except:
+                    print(f'register {name} not found!!')
+                    pass
+    else:
+        registers = args.regs
+
+    for regs in registers:
         regmap.registermap_dump_register_file(output_path, regs["address"], regs["value"])
 
 
