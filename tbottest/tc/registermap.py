@@ -166,6 +166,45 @@ class REGISTERMAP:
             f"register field name in dict for SoC {self.socname} not found"
         )
 
+
+    def registername_to_address(self, name, index) -> str:
+        """
+        converts registername to address
+        """
+        permaps = self.registermap[0]["peripheralmaps"]
+        regmaps = self.registermap[1]["registermaps"]
+        # search register map
+        fmap = None
+        for m in regmaps:
+            registers = m["registers"]
+            for r in registers:
+                if r["registername"] == name:
+                    fmap = m
+                    break
+            if fmap:
+                break
+
+        if not fmap:
+            raise RuntimeError(f"Could not find register {name}")
+
+        # search peripjeral map
+        i = 0
+        for p in permaps:
+            if p["peripheralmap"] == fmap["mapname"]:
+                # one found
+                if i == int(index):
+                    start_str, end_str = p["range"].split(" - ")
+                    start = int(start_str, 16)
+                    offset_str = r["offset"]
+                    offset = int(offset_str, 16)
+                    addr = start + offset
+                    return f"0x{addr:08x}"
+
+                i += 1
+
+        raise RuntimeError(f"Could not find peripheralmap index {index}")
+
+
     def register_load_map(self) -> bool:
         """
         load the register map and analyse it.
