@@ -105,6 +105,9 @@ class pdf2json:
         elif mapname == "DDRCTRL registers":
             start_page = 219
             end_page = 302
+        elif mapname == "PUBL registers":
+            start_page = 378
+            end_page = 421
         elif mapname == "DTS registers":
             start_page = 1631
             end_page = 1639

@@ -4169,6 +4169,1891 @@
         ]
       },
       {
+        "mapname": "PUBL registers",
+        "registers": [
+          {
+            "registername": "DDRPHYC_RIDR",
+            "offset": "0x000",
+            "page": 378,
+            "chapter": "7.7.1",
+            "resetvalue": "0x00200200",
+            "bits": [
+              {
+                "range": "31:24",
+                "field": "UDRID[7:0]",
+                "description": "User-defined rev ID\n"
+              },
+              {
+                "range": "23:20",
+                "field": "PHYMJR[3:0]",
+                "description": "PHY maj rev\n"
+              },
+              {
+                "range": "19:16",
+                "field": "PHYMDR[3:0]",
+                "description": "PHY moderate rev\n"
+              },
+              {
+                "range": "15:12",
+                "field": "PHYMNR[3:0]",
+                "description": "PHY minor rev\n"
+              },
+              {
+                "range": "11:8",
+                "field": "PUBMJR[3:0]",
+                "description": "PUB maj rev\n"
+              },
+              {
+                "range": "7:4",
+                "field": "PUBMDR[3:0]",
+                "description": "PUB moderate rev\n"
+              },
+              {
+                "range": "3:0",
+                "field": "PUBMNR[3:0]",
+                "description": "PUB minor rev\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_PIR",
+            "offset": "0x004",
+            "page": 378,
+            "chapter": "7.7.2",
+            "resetvalue": "0x00000000",
+            "bits": [
+              {
+                "range": "31",
+                "field": "INITBYP",
+                "description": "Initialization bypass\nBypasses or stops, if set, all initialization routines currently running, including PHY\ninitialization, DRAM initialization, and PHY training.\nInitialization may be triggered manually using INIT and the other relevant bits of the\nDDRPHYC_PIR register. This bit is self-clearing.\n"
+              },
+              {
+                "range": "30",
+                "field": "ZCALBYP",
+                "description": "zcal bypass\nBypasses or stops, if set, impedance calibration of all ZQ control blocks that automatically\ntriggers after reset.\nImpedance calibration may be triggered manually using INIT and ZCAL bits of the\nDDRPHYC_PIR register. This bit is self-clearing.\n"
+              },
+              {
+                "range": "29",
+                "field": "LOCKBYP",
+                "description": "DLL lock bypass\nBypasses or stops, if set, the waiting of DLLs to lock. DLL lock wait is automatically triggers\nafter reset.\nDLL lock wait may be triggered manually using INIT and DLLLOCK bits of the\nDDRPHYC_PIR register. This bit is self-clearing.\n"
+              },
+              {
+                "range": "28",
+                "field": "CLRSR",
+                "description": "clear status register\nWriting 1 to this bits does the following:\n– Auto-clears itself. This means a following read to bit CLRSR returns 0\n– Clears the DXnGSR0 bits for DTDONE, DTERR, DTIERR\n– Clears bit DFTERR in DDRPHYC_PGSR register and bit DFTERR in\nDDRPHYC_DXnGSR1 register\nThis bit is primarily for debug purposes and is typically not needed during normal functional\noperation.\nIt can be used when bit IDONE=1 in PGSR register, to manually clear the PGSR status bits,\nhowever, the PGSR status bits (except for the DFTRR and TQ bits) are automatically cleared\nby starting a new init process.\nThe bit can also be used to manually clear the DXnGSR status bits, however, starting a new\ndata training process automatically clears the DXnGSR status bits.\n"
+              },
+              {
+                "range": "27:19",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "18",
+                "field": "CTLDINIT",
+                "description": "Controller DRAM initialization\nIndicates if set that DRAM initialization is performed by the controller. Otherwise if not set it\nindicates that DRAM initialization is performed using the built-in initialization sequence or\nusing software through the configuration port.\n"
+              },
+              {
+                "range": "17",
+                "field": "DLLBYP",
+                "description": "DLL bypass\nA setting of 1 on this bit puts all PHY DLLs in bypass mode. A bypassed DLL is also powered\ndown (disabled).\n"
+              },
+              {
+                "range": "16",
+                "field": "ICPC",
+                "description": "Initialization complete pin configuration\nSpecifies how the DFI 2.1 initialization complete output pin should be used to indicate the\nstatus of initialization.\n0: Asserted after PHY initialization (DLL locking and impedance calibration) is complete.\n1: Asserted after PHY initialization is complete and the triggered PUBL initialization (DRAM\ninitialization, data training, or initialization trigger with no selected initialization) is complete.\n"
+              },
+              {
+                "range": "15:9",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\nRM0436 Rev 7 379/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n"
+              },
+              {
+                "range": "8",
+                "field": "RVTRN",
+                "description": "\nit is expected that RVTRN and DQSTRN are run with LPDDR2/3; RVTRN is not required for\nDDR3\nIf RVTRN=1 and bit QSTRN=0, when bit INIT=1 (triggering the init process) the read DQS\ngate training algorithm still runs (as if bit QSTRN in DDRPHYC_PIR register was actually set\nto 1).\nIf it is necessary to run only RV training stand-alone, with no read DQS gate training, you can\nprevent the read DQS gate training from running by setting bit LBGDQS=1 in\nDDRPHYC_PGCR register.\nNote: RV training cannot use multi-purpose register (MPR) and must use the user data\nprogrammed in DTDR0-1.\n"
+              },
+              {
+                "range": "7",
+                "field": "QSTRN",
+                "description": "Read DQS training\nExecutes a PUBL training routine to determine the optimum position of the read data DQS\nstrobe for maximum system timing margins.\nNote: Read DQS training cannot use multi-purpose register (MPR) and must use the user data\nprogrammed in DTDR0-1.\n"
+              },
+              {
+                "range": "6",
+                "field": "DRAMINIT",
+                "description": "DRAM initialization\nExecutes the DRAM initialization sequence\n"
+              },
+              {
+                "range": "5",
+                "field": "DRAMRST",
+                "description": "DRAM reset (DDR3 only)\nIssues a reset to the DRAM (by driving the DRAM reset pin low) and wait 200us.\nThis can be triggered in isolation or with the full DRAM initialization (DRAMINIT). For the\nlatter case, the reset is issued and 200us is waited before starting the full initialization\nsequence.\n"
+              },
+              {
+                "range": "4",
+                "field": "ITMSRST",
+                "description": "ITM reset\nSoft resets the interface timing modules for the data and data strobes, i.e., it asserts the ITM\nsoft reset (srstb) signal.\n"
+              },
+              {
+                "range": "3",
+                "field": "ZCAL",
+                "description": "Impedance calibration (Driver and ODT)\nPerforms PHY impedance calibration.\n"
+              },
+              {
+                "range": "2",
+                "field": "DLLLOCK",
+                "description": "DLL lock\nWaits for the PHY DLLs to lock.\n"
+              },
+              {
+                "range": "1",
+                "field": "DLLSRST",
+                "description": "DLL soft reset\nSoft resets all PHY DLLs by driving the DLL soft reset pin.\nNote: - Requires that ctl_clk be toggling for the DLL soft reset signal to be output from the DLL.\nIf ctl_clk (AC DLL's cclk_0) is not guaranteed to be toggling, it is recommended to use\nthe manual DLL soft reset bit DLLSRST of DDRPHYC_ACDLLCR, and not bit\nDLLSRST of DDRPHYC_PIR.\n- Ensure that the minimum requirements for DLL bypass and DLL reset are observed\nwhile asserting this bit.\n"
+              },
+              {
+                "range": "0",
+                "field": "INIT",
+                "description": "Initialization trigger\nA write of '1' to this bit triggers the DDR system initialization, including PHY initialization,\nDRAM initialization, and PHY training.\nThe exact initialization steps to be executes are specified in bits 1 to 6 of this register. A bit\nsetting of 1 means the step is executed as part of the initialization sequence, while a setting\nof ‘0’ means the step is bypassed.\nThe initialization trigger bit is self-clearing.\n380/4054 RM0436 Rev 7\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_PGCR",
+            "offset": "0x008",
+            "page": 381,
+            "chapter": "7.7.3",
+            "resetvalue": "0x01842e04",
+            "bits": [
+              {
+                "range": "31",
+                "field": "LBMODE",
+                "description": "Loop back mode\nIndicates if set that the PHY/PUB is in loopback mode\n"
+              },
+              {
+                "range": "30",
+                "field": "LBGDQS",
+                "description": "Loop back DQS gating\nSelects the DQS gating mode that should be used when the PHY is in loopback mode. Valid\nvalues are:\n0: DQS gate training is triggered on the PUB\n1: DQS gate is set manually using software\n"
+              },
+              {
+                "range": "29",
+                "field": "LBDQSS",
+                "description": "Loop back DQS shift\nSelects how the read DQS is shifted during loopback to ensure that the read DQS is centered\ninto the read data eye. Valid values are:\n0: PUB sets the read DQS delay to 0; DQS is already shifted 90 degrees by write path\n1: The read DQS shift is set manually through software.\n"
+              },
+              {
+                "range": "28:25",
+                "field": "RFSHDT[3:0]",
+                "description": "Refresh during training\nA non-zero value specifies that a burst of refreshes equal to the number specified in this field\nshould be sent to the SDRAM after training each rank except the last rank.\n"
+              },
+              {
+                "range": "24",
+                "field": "PDDISDX",
+                "description": "Power down disabled byte\nIndicates if set that the DLL and I/Os of a disabled byte should be powered down.\n"
+              },
+              {
+                "range": "23:22",
+                "field": "ZKSEL[1:0]",
+                "description": "Impedance clock divider selection\nSelects the divide ratio for the clock used by the impedance control logic. The source clock\nfor\nthe divider is the configuration port clock signal (pclk), depending on which configuration port\ntype used (see “Impedance Calibration” on page tbc).\nValid values are:\n00: Divide by 2\n01: Divide by 8\n10: Divide by 32\n11: Divide by 64\n"
+              },
+              {
+                "range": "21:18",
+                "field": "RANKEN[3:0]",
+                "description": "Rank enable\nSpecifies the ranks that are enabled for data-training.\nonly Bit 0 is used and controls rank 0.\nSetting the bit to ‘1’ enables the rank, and setting it to ‘0’ disables the rank.\nDDR physical interface control (DDRPHYC) RM0436\n"
+              },
+              {
+                "range": "17:16",
+                "field": "IODDRM[1:0]",
+                "description": "I/O DDR mode\nSelects the DDR mode for the I/Os.\n"
+              },
+              {
+                "range": "15",
+                "field": "IOLB",
+                "description": "I/O loop back select\nSelects where inside the I/O the loop-back of signals happens. Not applicable to D3A I/Os.\nValid values are:\n0: Loopback is after output buffer; output enable must be asserted\n1: Loopback is before output buffer; output enable is don’t care\n"
+              },
+              {
+                "range": "14",
+                "field": "CKINV",
+                "description": "CK invert\nSpecifies if set that CK/CK# should be inverted. Otherwise CK/CK# toggles with normal\npolarity.\n"
+              },
+              {
+                "range": "13:12",
+                "field": "CKDV[1:0]",
+                "description": "CK disable value\nSpecifies the static value that should be driven on CK/CK# pair(s) when the pair(s) is\ndisabled. CKDV[0] specifies the value for CK and CKDV[1] specifies the value for CK#.\n"
+              },
+              {
+                "range": "11:9",
+                "field": "CKEN[2:0]",
+                "description": "CK enable\nControls whether the CK going to the SDRAM is enabled (toggling) or\ndisabled (static value defined by CKDV). One bit for each of the three CK pairs.\n"
+              },
+              {
+                "range": "8:5",
+                "field": "DTOSEL[3:0]",
+                "description": "Digital test output select\nDigital Test Output Select: Selects the PHY digital test output that should be driven\nonto PHY digital test output (DDR_DTO0) pin: Valid values are:\n0000: DATX8 0 DLL digital test output\n0001: DATX8 1 DLL digital test output\n0010: DATX8 2 DLL digital test output\n0011: DATX8 3 DLL digital test output\n0100: DATX8 4 DLL digital test output\n0101: DATX8 5 DLL digital test output\n0110: DATX8 6 DLL digital test output\n0111: DATX8 7 DLL digital test output\n1000: DATX8 8 DLL digital test output\n1001: AC DLL digital test output\nOther: Reserved\n"
+              },
+              {
+                "range": "4:3",
+                "field": "DFTLMT[1:0]",
+                "description": "DQS drift limit\nSpecifies the expected limit of drift on read data strobes. A drift of this value or greater is\nreported as a drift error through the host port error flag. Valid values are:\n00: No limit (no error reported)\n01: 90° drift\n10: 180° drift\n11: 270° or more drift\nNote: Although reported through the error flag, this is not an error requiring any action. It is\nsimply an indicator that the drift is greater than expected.\n382/4054 RM0436 Rev 7\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              },
+              {
+                "range": "2",
+                "field": "DFTCMP",
+                "description": "DQS drift compensation\nEnables or disables DQS drift compensation. Valid values are:\n0: Disables data strobe drift compensation\n1: Enables data strobe drift compensation\nBy default, drift compensation is enabled.\nNote: Drift compensation is not supported under any of the following situations:\n- LPDDR2/3 (bit DDRMD set to LPDDR2 in DDRPHYC_DCR register)\n- Burst length 2 (bit BL in DDRPHYC_MR0 register set to burst length of 2)\n- Read DQS gating using passive windowing (bit DQSCFG in DDRPHYC_PGCR\nregister set to passive windowing)\nDrift compensation must be set to disabled if any of the above are set.\n"
+              },
+              {
+                "range": "1",
+                "field": "DQSCFG",
+                "description": "DQS gating configuration\nSelects one of the two DQS gating schemes:\n0: DQS gating is shut off using the rising edge of DQS_b (active windowing mode)\n1: DQS gating blankets the whole burst (passive windowing mode).\nNote: Passive windowing must be used for LPDDR2/3.\n"
+              },
+              {
+                "range": "0",
+                "field": "ITMDMD",
+                "description": "ITM DDR mode\nSelects whether ITMS uses DQS and DQS# or it only uses DQS.\nValid values are:\n0: ITMS uses DQS and DQS#\n1: ITMS uses DQS only\nNote: The correct setting is always DQS and DQS#.\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_PGSR",
+            "offset": "0x00C",
+            "page": 383,
+            "chapter": "7.7.4",
+            "resetvalue": "0x00000000",
+            "bits": [
+              {
+                "range": "31",
+                "field": "TQ",
+                "description": "Temperature output (LPDDR only) N/A\n"
+              },
+              {
+                "range": "30:10",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "9",
+                "field": "RVEIRR",
+                "description": "Read valid training intermittent error\nIf set, indicates that there was an intermittent error during read valid training, such as a pass\nwas followed by a fail then followed by another pass.\n"
+              },
+              {
+                "range": "8",
+                "field": "RVERR",
+                "description": "Read valid training error\nIf set, indicates that a valid read valid placement could not be found during read valid training.\n"
+              },
+              {
+                "range": "7",
+                "field": "DFTERR",
+                "description": "DQS drift error\nIf set, indicates that at least one of the read data strobes has drifted by more than or equal to\nthe drift limit set in the PHY General Configuration Register (PGCR).\nDDR physical interface control (DDRPHYC) RM0436\n"
+              },
+              {
+                "range": "6",
+                "field": "DTIERR",
+                "description": "DQS gate training intermittent error\nIf set, indicates that there was an intermittent error during DQS gate training, such as a pass\nwas followed by a fail then followed by another pass.\n"
+              },
+              {
+                "range": "5",
+                "field": "DTERR",
+                "description": "DQS gate training error\nIf set, indicates that a valid DQS gating window could not be found during DQS gate training.\n"
+              },
+              {
+                "range": "4",
+                "field": "DTDONE",
+                "description": "Data training done\nIndicates, if set, that the PHY has finished doing data training.\n"
+              },
+              {
+                "range": "3",
+                "field": "DIDONE",
+                "description": "DRAM initialization done\nIndicates if set that DRAM initialization has completed.\n"
+              },
+              {
+                "range": "2",
+                "field": "ZCDDONE",
+                "description": "zcal done\nIndicates if set that impedance calibration has completed.\n"
+              },
+              {
+                "range": "1",
+                "field": "DLDONE",
+                "description": "DLL lock done\nIndicates if set that DLL locking has completed.\n"
+              },
+              {
+                "range": "0",
+                "field": "IDONE",
+                "description": "Initialization done\nIndicates if set that the DDR system initialization has completed.\nThis bit is set after all the selected initialization routines in DDRPHYC_PIR register have\ncompleted.\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DLLGCR",
+            "offset": "0x010",
+            "page": 384,
+            "chapter": "7.7.5",
+            "resetvalue": "0x03737000",
+            "bits": [
+              {
+                "range": "31:30",
+                "field": "DLLRSVD2[1:0]",
+                "description": "\nThese bit are connected to the DLL control bus and reserved for future use.\n"
+              },
+              {
+                "range": "29",
+                "field": "LOCKDET",
+                "description": "Master lock detect enable\nNote: This field is only valid for a few processes. For all other processes this field is reserved.\n"
+              },
+              {
+                "range": "28:27",
+                "field": "FDTRMSL[1:0]",
+                "description": "Slave bypass fixed delay trim\n00: Nominal delay\n01: Nominal delay – 10%\n10: Nominal delay + 10%\n11: Nominal delay + 20%\n"
+              },
+              {
+                "range": "26:24",
+                "field": "SBIAS5_3[2:0]",
+                "description": "Slave bias trim\nUsed to trim the bias for the slave DLL.\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              },
+              {
+                "range": "23",
+                "field": "BPS200",
+                "description": "Bypass mode frequency range\n0: 0 to 100MHz\n1: 0 to 200MHz\n"
+              },
+              {
+                "range": "22:20",
+                "field": "SBIAS2_0[2:0]",
+                "description": "Slave bias trim\nUsed to trim the bias for the slave DLL.\n"
+              },
+              {
+                "range": "19:12",
+                "field": "MBIAS[7:0]",
+                "description": "Master bias trim\nUsed to trim the bias for the master DLL.\n"
+              },
+              {
+                "range": "11",
+                "field": "TESTSW",
+                "description": "Test switch\nSelects the test signals of either the master DLL, set to 0, or the slave DLL, set to 1.\n"
+              },
+              {
+                "range": "10:9",
+                "field": "ATC[1:0]",
+                "description": "Analog test control\nSelects the analog signal to be output on the DLL analog test output (DDR_ATO) when\nTESTEN is high (Output is Vss when TESTEN is low).\nThe test output either comes from the master DLL or the slave DLL, depending on the setting\nof the test switch (TESTSW).\nBoth master DLL and slave DLL output similar analog test signals. Valid settings for analog\ntest control are:\n00: Replica bias output for PMOS (Vbp)\n01: Replica bias output for NMOS (Vbn)\n10: Filter output (Vc)\n11: V\nDDCORE\n"
+              },
+              {
+                "range": "8:6",
+                "field": "DTC[2:0]",
+                "description": "Digital test control\nSelects the digital signal to be output on the DLL digital test output (DTO1 pin) when TESTEN\nis high (Output is '0' when TESTEN is low). The DTO0 pin output masters the DLL reference\nclock (clk_0).\nValid settings for master DLL (such as, when TESTSW = '0'):\n- 000: 0 output clock (clk_0)\n- 001: 90 output clock (clk_90)\n- 010: 180 output clock (clk_180)\n- 011: 270 output clock (clk_270)\n- 100: 360 internal clock (clk_360_int)\n- 101: Speed-up pulse (spdup)\n- 110: Slow-down pulse (slwdn)\n- 111: 0 MCTL logic clock (cclk_0)\nValid settings for slave DLL (such as when TESTSW = '1'):\n- 000: Input DQS strobe (dqs)\n- 001: Input clock reference (clk_90_in)\n- 010: Internal feedback clock (clk_0_out)\n- 011: 90 output DQS# strobe (dqsb_90)\n- 100: 90 output DQS strobe (dqs_90)\n- 101: Speed-up pulse (spdup)\n- 110: Slow-down pulse (slwdn)\n- 111: Auto-lock enable signal\nRM0436 Rev 7 385/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n"
+              },
+              {
+                "range": "5",
+                "field": "TESTEN",
+                "description": "Test enable\nEnables digital and analog test outputs selected by DTC and ATC respectively.\n"
+              },
+              {
+                "range": "4:2",
+                "field": "IPUMP[2:0]",
+                "description": "Charge pump current trim\n000: maximum current\n111: minimum current\n"
+              },
+              {
+                "range": "1:0",
+                "field": "DRES[1:0]",
+                "description": "Trim reference current versus resistor value variation\n00: Rnom\n01: Rnom - 20%\n1x: Rnom + 20%\nNote: For a few processes this field is reserved and is not used by the DLL.\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_ACDLLCR",
+            "offset": "0x014",
+            "page": 386,
+            "chapter": "7.7.6",
+            "resetvalue": "0x40000000",
+            "bits": [
+              {
+                "range": "31",
+                "field": "DLLDIS",
+                "description": "DLL disable\nA disabled DLL is bypassed. By default DLL is enabled.\nNote: DLL bypass must only be changed when DDRPHYC clock (dphy_ker_ck) is inactive.\n"
+              },
+              {
+                "range": "30",
+                "field": "DLLSRST",
+                "description": "DLL soft reset\nSoft resets the AC DLL by driving the DLL soft reset pin.\nNote: DLL reset must only be changed to 0 when DDRPHYC clock (dphy_ker_ck) is inactive.\n"
+              },
+              {
+                "range": "29:19",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "18",
+                "field": "ATESTEN",
+                "description": "Analog test enable\nEnables the analog test signal to be output on the DLL analog test output (ATO pin). The DLL\nanalog test output is tri-stated when this bit is '0'.\n"
+              },
+              {
+                "range": "17:12",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "11:9",
+                "field": "MFWDLY[2:0]",
+                "description": "Master DLL feed-forward delay trim\nUsed to trim the delay in the master DLL feed-forward path:\n000: minimum delay\n111: maximum delay\n"
+              },
+              {
+                "range": "8:6",
+                "field": "MFBDLY[2:0]",
+                "description": "Master DLL feed-back delay trim\nUsed to trim the delay in the master DLL feed-back path:\n000: minimum delay\n111: maximum delay\n"
+              },
+              {
+                "range": "5:0",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_PTR0",
+            "offset": "0x018",
+            "page": 387,
+            "chapter": "7.7.7",
+            "resetvalue": "0x0022af9b",
+            "bits": [
+              {
+                "range": "31:22",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "21:18",
+                "field": "TITMSRST[3:0]",
+                "description": "ITM soft reset\nNumber of configuration clock cycles that the ITM soft reset pin must remain asserted when\nthe soft reset is applied to the ITMs.\nThis must correspond to a value that is equal to or more than 8 controller clock cycles.\nDefault value corresponds to 8 controller clock cycles.\n"
+              },
+              {
+                "range": "17:6",
+                "field": "TDLLLOCK[11:0]",
+                "description": "DLL lock time\nNumber of configuration clock cycles for the DLL to stabilize and lock, i.e. number of clock\ncycles from when the DLL reset pin is de-asserted to when the DLL has locked and is ready\nfor use.\nDefault value corresponds to 5.12us at 533MHz.\n"
+              },
+              {
+                "range": "5:0",
+                "field": "TDLLSRST[5:0]",
+                "description": "DLL soft reset\nNumber of configuration clock cycles that the DLL soft reset pin must remain asserted when\nthe soft reset is triggered through the PHY initialization register (DDRPHYC_PIR).\nThis must correspond to a value that is equal to or more than 50ns or 8 controller clock\ncycles, whichever is bigger.\nDefault value corresponds to 50ns at 533MHz.\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_PTR1",
+            "offset": "0x01C",
+            "page": 387,
+            "chapter": "7.7.8",
+            "resetvalue": "0x0604111d",
+            "bits": [
+              {
+                "range": "31:27",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "26:19",
+                "field": "TDINIT1[7:0]",
+                "description": "tDINIT1\nDRAM initialization time corresponding to the following:\nDDR3 = CKE high time to first command (tRFC +10 ns or 5 tCK, whichever value is larger)\nLPDDR2 = CKE low time with power and clock stable (100 ns)\nLPDDR3 = CKE low time with power and clock stable (100 ns)\nDefault value corresponds to DDR3 360ns at 533MHz.\n"
+              },
+              {
+                "range": "18:0",
+                "field": "TDINIT0[18:0]",
+                "description": "tDINIT0\nDRAM initialization time corresponding to the following:\nDDR3 = CKE low time with power and clock stable (500 us)\nLPDDR2 = CKE high time to first command (200 us)\nLPDDR3 = CKE high time to first command (200us)\nDefault value corresponds to DDR3 500 us at 533MHz.\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_PTR2",
+            "offset": "0x020",
+            "page": 388,
+            "chapter": "7.7.9",
+            "resetvalue": "0x042da072",
+            "bits": [
+              {
+                "range": "31:27",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "26:17",
+                "field": "TDINIT3[9:0]",
+                "description": "tDINIT3\nDRAM initialization time corresponding to the following:\nLPDDR2 = Time from ZQ initialization command to first command (1 us)\nLPDDR3 = Time from ZQ initialization command to first command (1us)\nDefault value corresponds to the LPDDR2/3 1 us at 533MHz.\n"
+              },
+              {
+                "range": "16:0",
+                "field": "TDINIT2[16:0]",
+                "description": "tDINIT2\nDRAM initialization time corresponding to the following:\nDDR3 = Reset low time (200 us on power-up or 100 ns after power-up)\nLPDDR2 = Time from reset command to end of auto initialization (1 us + 10 us = 11us)\nLPDDR3 = Time from reset command to end of auto initialization (11us)\nDefault value corresponds to DDR3 200 us at 533MHz\n388/4054 RM0436 Rev 7\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_ACIOCR",
+            "offset": "0x024",
+            "page": 389,
+            "chapter": "7.7.10",
+            "resetvalue": "0x30400812",
+            "bits": [
+              {
+                "range": "31:30",
+                "field": "ACSR[1:0]",
+                "description": "AC slew rate\nSelects slew rate of the I/O for all address and command pins.\n"
+              },
+              {
+                "range": "29",
+                "field": "RSTIOM",
+                "description": "Reset I/O mode\nSelects SSTL mode (when set to 0) or CMOS mode (when set to 1) of the I/O for SDRAM\nReset.\n"
+              },
+              {
+                "range": "28",
+                "field": "RSTPDR",
+                "description": "RST pin power down receiver\nPowers down, when set, the input receiver on the I/O for SDRAM RST# pin.\n"
+              },
+              {
+                "range": "27",
+                "field": "RSTPDD",
+                "description": "RST pin power down driver\nPowers down, when set, the output driver on the I/O for SDRAM RST# pin.\n"
+              },
+              {
+                "range": "26",
+                "field": "RSTODT",
+                "description": "RST pin ODT\nEnables, when set, the on-die termination on the I/O for SDRAM RST# pin.\n"
+              },
+              {
+                "range": "25:23",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "22",
+                "field": "RANKPDR",
+                "description": "Rank power down receiver\nPowers down, when set, the input receiver on the I/O CKE, ODT, and CS# pins.\nOnly RANKPDR[0] is used for single rank\n"
+              },
+              {
+                "range": "21:19",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "18",
+                "field": "CSPDD",
+                "description": "CS power down driver\nPowers down, when set, the output driver on the I/O for CS# pins.\nOnly PDD[0] is used for single rank.\nCKE and ODT driver power down is controlled by DSGCR register.\n"
+              },
+              {
+                "range": "17:15",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "14",
+                "field": "RANKODT",
+                "description": "Rank ODT\nEnables, when set, the on-die termination on the I/O for CKE, ODT, and CS# pins.\n"
+              },
+              {
+                "range": "13:11",
+                "field": "CKPDR[2:0]",
+                "description": "CK pin power down receiver\nPowers down, when set, the input receiver on the I/O for CK[0], CK[1], and CK[2] pins,\nrespectively\n"
+              },
+              {
+                "range": "10:8",
+                "field": "CKPDD[2:0]",
+                "description": "CK pin power down driver\nPowers down, when set, the output driver on the I/O for CK[0], CK[1], and CK[2] pins,\nrespectively.\nDDR physical interface control (DDRPHYC) RM0436\n"
+              },
+              {
+                "range": "7:5",
+                "field": "CKODT[2:0]",
+                "description": "CK pin ODT\nEnables, when set, the on-die termination on the I/O for CK[0], CK[1], and CK[2] pins,\nrespectively.\n"
+              },
+              {
+                "range": "4",
+                "field": "ACPDR",
+                "description": "AC pins power down receivers\nPowers down, when set, the input receiver on the I/O for RAS#, CAS#, WE#, BA[2:0], and\nA[15:0] pins.\n"
+              },
+              {
+                "range": "3",
+                "field": "ACPDD",
+                "description": "AC pins power down drivers\nPowers down, when set, the output driver on the I/O for RAS#, CAS#, WE#, BA[2:0], and\nA[15:0] pins\n"
+              },
+              {
+                "range": "2",
+                "field": "ACODT",
+                "description": "AC pins ODT\nEnables, when set, the on-die termination on the I/O for RAS#, CAS#, WE#, BA[2:0], and\nA[15:0] pins\n"
+              },
+              {
+                "range": "1",
+                "field": "ACOE",
+                "description": "AC pins output enable\nEnables, when set, the output driver on the I/O for all address and command pins\n"
+              },
+              {
+                "range": "0",
+                "field": "ACIOM",
+                "description": "AC pins I/O mode\nSelects SSTL mode (when set to 0) or CMOS mode (when set to 1) of the I/O for all address\nand command pins,\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DXCCR",
+            "offset": "0x028",
+            "page": 390,
+            "chapter": "7.7.11",
+            "resetvalue": "0x00000800",
+            "bits": [
+              {
+                "range": "31:17",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "16",
+                "field": "AWDT",
+                "description": "Active window data train\nIndicates if set that data training (DQS gate training and read valid training) should be\nperformed with active DQS gate window.\nThis is just for debug purposes.\nThe default is to perform training with passive windowing.\n"
+              },
+              {
+                "range": "15",
+                "field": "RVSEL",
+                "description": "ITMD read valid select\nSelects the scheme used for ITMD read valid. Valid values are:\n0: ITMD read valid signal is generated by delayed DFI read enable signal.\n1: ITMD read valid is generated by the ITMD itself using asynchronous crossing.\n"
+              },
+              {
+                "range": "14",
+                "field": "DQSNRST",
+                "description": "DQS reset\nIndicates, if set, that the ITMS of DQS# should always be put in reset such that its output\nenable is always '1' and its data output is always '0'.\nThis is done by driving the oe_set_b and do_rst_b pins of this ITMS to '0' in order to force the\nunused DQS# PAD to a known state of '0' in applications that don't use DQS#.\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              },
+              {
+                "range": "13:12",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "11:8",
+                "field": "DQSNRES[3:0]",
+                "description": "DQS# resistor\nSelects the on-die pull-up/pull-down resistor for DQS# pins. Same encoding as DQSRES.\nNote: DQS# resistor must be connected for LPDDR2.\n"
+              },
+              {
+                "range": "7:4",
+                "field": "DQSRES[3:0]",
+                "description": "DQS resistor\nSelects the on-die pull-down/pull-up resistor for DQS pins.\nDQSRES[3] selects pull-down (when set to 0) or pull-up (when set to 1).\nDQSRES[2:0] selects the resistor value as follows:\n000: Open: On-die resistor disconnected\n001: 688 Ω\n010: 611 Ω\n011: 550 Ω\n100: 500 Ω\n101: 458 Ω\n110: 393 Ω\n111: 344 Ω\nNote: DQS resistor must be connected for LPDDR2\n"
+              },
+              {
+                "range": "3",
+                "field": "DXPDR",
+                "description": "Data power down receiver\nPowers down, when set, the input receiver on I/O for DQ, DM, and DQS/DQS# pins of all\nDATX8 macros. It also powers down the PDQSR cell of all DAXT8 macros. This bit is ORed\nwith the PDR and DQSRPD configuration bits of the individual DATX8\n"
+              },
+              {
+                "range": "2",
+                "field": "DXPDD",
+                "description": "Data power down driver\nPowers down, when set, the output driver on I/O for DQ, DM, and DQS/DQS# pins of all\nDATX8 macros. This bit is ORed with the PDD configuration bit of the individual DATX8.\n"
+              },
+              {
+                "range": "1",
+                "field": "DXIOM",
+                "description": "Data I/O mode\nSelects SSTL mode (when set to 0) or CMOS mode (when set to 1) of the I/O for DQ, DM,\nand DQS/DQS# pins of all DATX8 macros. This bit is ORed with the IOM configuration bit of\nthe individual DATX8.\n"
+              },
+              {
+                "range": "0",
+                "field": "DXODT",
+                "description": "Data on die termination\nEnables, when set, the on-die termination on the I/O for DQ, DM, and DQS/DQS# pins of all\nDATX8 macros. This bit is ORed with the ODT configuration bit of the individual DATX8.\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DSGCR",
+            "offset": "0x02C",
+            "page": 391,
+            "chapter": "7.7.12",
+            "resetvalue": "0xfa00001f",
+            "bits": [
+              {
+                "range": "31",
+                "field": "CKEOE",
+                "description": "CKE output enable\nSets the output driver on the I/O for SDRAM CKE pins.\n"
+              },
+              {
+                "range": "30",
+                "field": "RSTOE",
+                "description": "RST output enable\nEnables, when set, the output driver on the I/O for SDRAM RST# pin\n"
+              },
+              {
+                "range": "29",
+                "field": "ODTOE",
+                "description": "ODT output enable\nEnables, when set, the output driver on the I/O for SDRAM ODT pins.\n"
+              },
+              {
+                "range": "28",
+                "field": "CKOE",
+                "description": "CK output enable\nEnables, when set, the output driver on the I/O for SDRAM CK/CK# pins.\n"
+              },
+              {
+                "range": "27",
+                "field": "TPDOE",
+                "description": "TPD output enable (N/A LPDDR only)\n"
+              },
+              {
+                "range": "26",
+                "field": "TPDPD",
+                "description": "TPD power down driver (N/A LPDDR only)\n"
+              },
+              {
+                "range": "25",
+                "field": "NL2OE",
+                "description": "Non LPDDR2 output enable\nEnables, when set, the output driver on the I/O for non-LPDDR2/LPDDR3 (ODT, RAS#,\nCAS#, WE#, and BA) pins.\nThis may be used when a chip that is designed for both LPDDR2/LPDDR3 and other DDR\nmodes is being used in LPDDR2/LPDDR3 mode.\nFor these pins, the I/O output enable signal (OE) is an AND of this bit and the respective\noutput enable bit in ACIOCR or DSGCR registers.\n"
+              },
+              {
+                "range": "24",
+                "field": "NL2PD",
+                "description": "Non LPDDR2 power down\nPowers down, when set, the output driver and the input receiver on the I/O for non-\nLPDDR2/LPDDR3 (ODT, RAS#, CAS#, WE#, and BA) pins.\nThis may be used when a chip that is designed for both LPDDR2/LPDDR3 and other DDR\nmodes is being used in LPDDR2/LPDDR3 mode.\nFor these pins, the I/O power down signal (PDD or PDR) is an OR of this bit and the\nrespective power-down bit in ACIOCR register.\n"
+              },
+              {
+                "range": "23:21",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "20",
+                "field": "ODTPDD",
+                "description": "ODT power down driver\nPowers down, when set, the output driver on the I/O for ODT pin.\n"
+              },
+              {
+                "range": "19:17",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "16",
+                "field": "CKEPDD",
+                "description": "CKE power down driver\nPowers down, when set, the output driver on the I/O for CKE pin.\n"
+              },
+              {
+                "range": "15:13",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "12",
+                "field": "FXDLAT",
+                "description": "Fixed latency\nSpecified whether all reads should be returned to the controller with a fixed read latency.\nEnabling fixed read latency increases the read latency. Valid values are:\n0: Disable fixed read latency\n1: Enable fixed read latency\n"
+              },
+              {
+                "range": "11",
+                "field": "NOBUB",
+                "description": "No bubble\nSpecified whether reads should be returned to the controller with no bubbles. Enabling no-\nbubble reads increases the read latency. Valid values are:\n0: Bubbles are allowed during reads\n1: Bubbles are not allowed during reads\n392/4054 RM0436 Rev 7\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              },
+              {
+                "range": "10:8",
+                "field": "DQSGE[2:0]",
+                "description": "DQS gate early\nSpecifies the number of clock cycles for which the DQS gating must be enable dearlier than\nits normal position. Only applicable when using PDQSR I/O cell, passive DQS gating and no\ndrift compensation.\nThis field is recommended to be set to zero for all DDR types other than LPDDR2/LPDDR3.\nFor LPDDR2/LPDDR3 it should be set to (tDQSCKmax - tDQSCKmin) divide by clock period\nand rounded up. tDQSCKmax and tDQSCKmin can be found in the LPDDR/LPDDR2 vendor\ndatasheet.\n"
+              },
+              {
+                "range": "7:5",
+                "field": "DQSGX[2:0]",
+                "description": "DQS gate extension\nSpecifies the number of clock cycles for which the DQS gating must be extended beyond the\nnormal burst length width. Only applicable when using PDQSR I/O cell, passive DQS gating\nand no drift compensation.\nThis field is recommended to be set to zero for all DDR types other than LPDDR2/LPDDR3.\nFor LPDDR2/LPDDR3 it should be set to (tDQSCKmax- tDQSCKmin) divide by clock period\nand rounded up. tDQSCKmax and tDQSCKmin can be found in the LPDDR2 vendor\ndatasheet.\n"
+              },
+              {
+                "range": "4",
+                "field": "LPDLLPD",
+                "description": "Low power DLL power down\nSpecifies if set that the PHY should respond to the DFI low power opportunity request and\npower down the DLL of the PHY if the wakeup time request satisfies the DLL lock time.\nFor more information on requirements when enabling and disabling the DLL, refer to “bypass\nmode register control”\n"
+              },
+              {
+                "range": "3",
+                "field": "LPIOPD",
+                "description": "Low power I/O power down\nSpecifies if set that the PHY should respond to the DFI low power opportunity request and\npower down the I/Os of the PHY.\n"
+              },
+              {
+                "range": "2",
+                "field": "ZUEN",
+                "description": "zcal on DFI update request\nSpecifies if set that the PHY should perform impedance calibration (update) whenever there\nis a controller initiated DFI update request. Otherwise the PHY ignores an update request\nfrom the controller.\n"
+              },
+              {
+                "range": "1",
+                "field": "BDISEN",
+                "description": "Byte disable enable\nSpecifies if set that the PHY should respond to DFI byte disable request. Otherwise the byte\ndisable from the DFI is ignored in which case bytes can only be disabled using the DXnGCR\nregister\n"
+              },
+              {
+                "range": "0",
+                "field": "PUREN",
+                "description": "PHY update request enable\nSpecifies if set, that the PHY should issue PHY initiated DFI update request when there is\nDQS drift of more than ¾ of a clock cycle within one continuous (back-to-back) read burst.\nBy default the PHY issues PHY initiated update requests and the controller should respond\notherwise the PHY may return erroneous values.\nThe option to disable it is provided only for silicon evaluation and testing.\nRM0436 Rev 7 393/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DCR",
+            "offset": "0x030",
+            "page": 394,
+            "chapter": "7.7.13",
+            "resetvalue": "0x0000000b",
+            "bits": [
+              {
+                "range": "31",
+                "field": "TPD",
+                "description": "Test power down (N/A LPDDR only)\nIf set it places the DRAM in deep power down mode.\n"
+              },
+              {
+                "range": "30",
+                "field": "RDIMM",
+                "description": "Registered DIMM\nIndicates if set that a registered DIMM is used. In this case, the PUBL increases the SDRAM\nwrite and read latencies (WL/RL) by 1.\nThis only applies to PUBL internal SDRAM transactions. Transactions generated by the\ncontroller must make its own adjustments to WL/RL when using a registered DIMM\n"
+              },
+              {
+                "range": "29",
+                "field": "UDIMM",
+                "description": "Unbuffered DIMM\nIndicates if set that there is address mirroring on the second rank of an un-buffered DIMM\n(the rank connected to CS#[1]).\nIn this case, the PUBL re-scrambles the bank and address when sending mode register\ncommands to the second rank.\nThis only applies to PUBL internal SDRAM transactions. Transactions generated by the\ncontroller must make its own adjustments when using an un-buffered DIMM. DCR[NOSRA]\nmust be set if address mirroring is enabled.\n"
+              },
+              {
+                "range": "28",
+                "field": "DDR2T",
+                "description": "2T timing\nIndicates if set that 2T timing should be used by PUB internally generated SDRAM\ntransactions.\n"
+              },
+              {
+                "range": "27",
+                "field": "NOSRA",
+                "description": "No simultaneous rank access\nSpecifies if set that simultaneous rank access on the same clock cycle is not allowed. This\nmeans that multiple chip select signals should not be asserted at the same time. This may be\nrequired on some DIMM systems.\n"
+              },
+              {
+                "range": "26:10",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "9:8",
+                "field": "DDRTYPE[1:0]",
+                "description": "DDR type (LPDDR2 S4)\nSelects the DDR type for the specified LPDDR mode.\nValid values for LPDDR2 are:\n00: LPDDR2-S4\n01: LPDDR2-S2\nOthers: Reserved\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              },
+              {
+                "range": "7",
+                "field": "MPRDQ",
+                "description": "MPR DQ\nSpecifies the value that is driven on non-primary DQ pins during MPR reads.\nValid values are:\n0: Primary DQ drives out the data from MPR (0-1-0-1); non-primary DQs drive ‘0’\n1: Primary DQ and non-primary DQs all drive the same data from MPR (0-1-0-1)\n"
+              },
+              {
+                "range": "6:4",
+                "field": "PDQ[2:0]",
+                "description": "Primary DQ(DDR3 Only)\nSpecifies the DQ pin in a byte that is designated as a primary pin for Multi-Purpose Register\n(MPR) reads. Valid values are 0 to 7 for DQ[0] to DQ[7], respectively\n"
+              },
+              {
+                "range": "3",
+                "field": "DDR8BNK",
+                "description": "DDR 8 banks\nIndicates if set that the SDRAM used has 8 banks. tRPA = tRP+1 and tFAW are used for 8-\nbank DRAMs, other tRPA = tRP and no tFAW is used.\nNote: A setting of 1 for DRAMs that have fewer than 8 banks still results in correct functionality\nbut less tighter DRAM command spacing for the parameters described here.\n"
+              },
+              {
+                "range": "2:0",
+                "field": "DDRMD[2:0]",
+                "description": "SDRAM DDR mode\n011: DDR3\n100: LPDDR2 (Mobile DDR2)\n101: LPDDR3 (Mobile DDR3)\nOthers: Reserved\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DTPR0",
+            "offset": "0x034",
+            "page": 395,
+            "chapter": "7.7.14",
+            "resetvalue": "0x3092666e",
+            "bits": [
+              {
+                "range": "31",
+                "field": "TCCD",
+                "description": "tCCDRead to read and write to write command delay\n0: BL/2 for DDR2 and 4 for DDR3\n1: BL/2 + 1 for DDR2 and 5 for DDR3\n"
+              },
+              {
+                "range": "30:25",
+                "field": "TRC[5:0]",
+                "description": "tRC\nActivate to activate command delay (same bank). Valid values are 2 to 42.\n"
+              },
+              {
+                "range": "24:21",
+                "field": "TRRD[3:0]",
+                "description": "tRRD\nActivate to activate command delay (different banks). Valid values are 1 to 8.\n"
+              },
+              {
+                "range": "20:16",
+                "field": "TRAS[4:0]",
+                "description": "tRAS\nActivate to precharge command delay. Valid values are 2 to 31.\n"
+              },
+              {
+                "range": "15:12",
+                "field": "TRCD[3:0]",
+                "description": "tRCD\nActivate to read or write delay. Minimum time from when an activate command is issued to\nwhen a read or write to the activated row can be issued. Valid values are 2 to 11.\nRM0436 Rev 7 395/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n"
+              },
+              {
+                "range": "11:8",
+                "field": "TRP[3:0]",
+                "description": "tRP\nPrecharge command period: The minimum time between a precharge command and any\nother command.\nNote: Note that the controller automatically derives tRPA for 8-bank DDR2 devices by adding\n1 to tRP. Valid values are 2 to 11.\n"
+              },
+              {
+                "range": "7:5",
+                "field": "TWTR[2:0]",
+                "description": "tWTR\nInternal write to read command delay. Valid values are 1 to 6.\n"
+              },
+              {
+                "range": "4:2",
+                "field": "TRTP[2:0]",
+                "description": "tRTP\nInternal read to precharge command delay. Valid values are 2 to 6. Note that even though\nRTP does not apply to JEDEC DDR devices, this parameter must still be set to a minimum\nvalue of 2 for DDR because the Controller always uses the DDR2 equation, AL + BL/2 +\nmax(RTP,2) – 2, to compute the read to precharge timing (which is BL/2 for JEDEC DDR).\n"
+              },
+              {
+                "range": "1:0",
+                "field": "TMRD[1:0]",
+                "description": "tMRD\nLoad mode cycle time: The minimum time between a load mode register command and any\nother command.\nFor DDR3 this is the minimum time between two load mode register commands.\nFor DDR3, the value used for tMRD is 4 plus the value programmed in these bits, i.e. tMRD\nvalue for DDR3 ranges from 4 to 7.\nFor LPDDR3, the value used for tMRD is 8 plus the value programmed in these bits.\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DTPR1",
+            "offset": "0x038",
+            "page": 396,
+            "chapter": "7.7.15",
+            "resetvalue": "0x09830090",
+            "bits": [
+              {
+                "range": "31:30",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "29:27",
+                "field": "TDQSCKMAX[2:0]",
+                "description": "tDQSCKmax\nMaximum DQS output access time from CK/CK# (LPDDR2 only).\nThis value is used for implementing read-to-write spacing. Valid values are 1 to 7.\n"
+              },
+              {
+                "range": "26:24",
+                "field": "TDQSCKMIN[2:0]",
+                "description": "tDQSCKmin\nDQS output access time from CK/CK# (LPDDR2/3 only).\nThis value is used for computing the read latency. Valid values are 0 to 7.\nThis value is derived from the corresponding parameter in the SDRAM datasheet divided by\nthe clock cycle time without rounding up.\nThe fractional remainder is automatically adjusted for by data training in quarter clock cycle\nunits.\nIf data training is not performed then this fractional remainder must be converted to quarter\nclock cycle units and the gating registers (DXnDQSTR) adjusted accordingly.\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              },
+              {
+                "range": "23:16",
+                "field": "TRFC[7:0]",
+                "description": "tRFC\nRefresh-to-Refresh: Indicates the minimum time, in clock cycles, between two refresh\ncommands or between a refresh and an active command. This is derived from the minimum\nrefresh interval from the datasheet, tRFC(min), divided by the clock cycle time.\nThe default number of clock cycles is for the largest JEDEC tRFC(min parameter value\nsupported.\n"
+              },
+              {
+                "range": "15:12",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "11",
+                "field": "TRTODT",
+                "description": "tRTODT\nRead to ODT delay (DDR3 only). Specifies whether ODT can be enabled immediately after\nthe read post-amble or one clock delay has to be added.\nValid values are:\n0: ODT may be turned on immediately after read post-amble\n1: ODT may not be turned on until one clock after the read post-amble\nIf tRTODT is set to 1, then the read-to-write latency is increased by 1 if ODT is enabled.\n"
+              },
+              {
+                "range": "10:9",
+                "field": "TMOD[1:0]",
+                "description": "tMOD\nLoad mode update delay (DDR3 only). The minimum time between a load mode register\ncommand and a non-load mode register command.\nValid values are:\n00: 12\n01: 13\n10: 14\n11: 15\n"
+              },
+              {
+                "range": "8:3",
+                "field": "TFAW[5:0]",
+                "description": "tFAW\n4-bank activate period. No more than 4-bank activate commands may be issued in a given\ntFAW period. Only applies to 8-bank devices.\nValid values are 2 to 31.\n"
+              },
+              {
+                "range": "2",
+                "field": "TRTW",
+                "description": "tRTW\nRead to Write command delay.\nValid values are:\n0: standard bus turn around delay\n1: add 1 clock to standard bus turn around delay\nThis parameter allows the user to increase the delay between issuing Write commands to the\nSDRAM when preceded by Read commands. This provides an option to increase bus turn-\naround margin for high frequency systems.\n"
+              },
+              {
+                "range": "1:0",
+                "field": "TAOND[1:0]",
+                "description": "tAOND/tAOFD\nODT turn-on/turn-off delays (DDR2 only). The delays are in clock cycles.\nValid values are:\n00: 2/2.5\n01: 3/3.5\n10: 4/4.5\n11: 5/5.5\nMost DDR2 devices utilize a fixed value of 2/2.5. For non-standard SDRAMs, the\nuser must ensure that the operational Write Latency is always greater than or equal\nto the ODT turn-on delay. For example, a DDR2 SDRAM with CAS latency set to 3\nand CAS additive latency set to 0 has a Write Latency of 2. Thus 2/2.5 can be used,\nbut not 3/3.5 or higher.\nRM0436 Rev 7 397/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DTPR2",
+            "offset": "0x03C",
+            "page": 398,
+            "chapter": "7.7.16",
+            "resetvalue": "0x1001a0c8",
+            "bits": [
+              {
+                "range": "31:29",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "28:19",
+                "field": "TDLLK[9:0]",
+                "description": "tDLLK\nDLL locking time. Valid values are 2 to 1023.\n"
+              },
+              {
+                "range": "18:15",
+                "field": "TCKE[3:0]",
+                "description": "tCKE\nCKE minimum pulse width. Also specifies the minimum time that the SDRAM must remain in\npower down or self refresh mode. For DDR3 this parameter must be set to the value of\ntCKESR which is usually bigger than the value of tCKE. Valid values are 2 to 15.\n"
+              },
+              {
+                "range": "14:10",
+                "field": "TXP[4:0]",
+                "description": "tXP\nPower down exit delay. The minimum time between a power down exit command and any\nother command. This parameter must be set to the maximum of the various minimum power\ndown exit delay parameters specified in the SDRAM datasheet, i.e. max(tXP, tXARD,\ntXARDS) for DDR2 and max(tXP, tXPDLL) for DDR3. Valid values are 2 to 31.\n"
+              },
+              {
+                "range": "9:0",
+                "field": "TXS[9:0]",
+                "description": "tXS\nSelf refresh exit delay. The minimum time between a self refresh exit command and any\nother command. This parameter must be set to the maximum of the various minimum self\nrefresh exit delay parameters specified in the SDRAM datasheet, i.e. max(tXSNR, tXSRD)\nfor DDR2 and max(tXS, tXSDLL) for DDR3. Valid values are 2 to 1023.\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DDR3_MR0",
+            "offset": "0x040",
+            "page": 398,
+            "chapter": "7.7.17",
+            "resetvalue": "0x00000a52",
+            "bits": [
+              {
+                "range": "15:13",
+                "field": "RSVD[2:0]",
+                "description": "JEDEC reserved.\n"
+              },
+              {
+                "range": "12",
+                "field": "PD",
+                "description": "Power-down control\nControls the exit time for power-down modes. Refer to SDRAM datasheet for details on\npower-down modes. Valid values are:\n0: Slow exit (DLL off)\n1: Fast exit (DLL on)\n"
+              },
+              {
+                "range": "11:9",
+                "field": "WR[2:0]",
+                "description": "Write recovery\nThis is the value of the write recovery in clock cycles. It is calculated by dividing the data\nsheet write recovery time, tWR (ns) by the data sheet clock cycle time, tCK (ns) and rounding\nup a non-integer value to the next integer.\nValid values are:\n001: 5\n010: 6\n011: 7\n100: 8\n101: 10\n110: 12\nAll other settings are reserved and should not be used.\nNote: tWR (ns) is the time from the first SDRAM positive clock edge after the last data-in pair\nof a write command, to when a precharge of the same bank can be issued.\n"
+              },
+              {
+                "range": "8",
+                "field": "DR",
+                "description": "DLL reset (autoclear)\nWriting a ‘1’ to this bit resets the SDRAM DLL. This bit is self clearing,\ni.e. it returns back to ‘0’ after the DLL reset has been issued.\n"
+              },
+              {
+                "range": "7",
+                "field": "TM",
+                "description": "Operating mode\nSelects either normal operating mode (0) or test mode (1). Test mode is reserved for the\nmanufacturer and should not be used.\n"
+              },
+              {
+                "range": "3",
+                "field": "BT",
+                "description": "Burst type\nIndicates whether a burst is sequential (0) or interleaved (1).\nBits 6, 5, 4, 2 CL[3:0]: CAS latency\nThe delay, in clock cycles, between when the SDRAM registers a read command to when\ndata is available.\nValid values for CL[3:0] are:\n0010: 5\n0100: 6\n0110: 7\n1000: 8\n1010: 9\n1100: 10\n1110: 11\nOthers: Reserved\n"
+              },
+              {
+                "range": "1:0",
+                "field": "BL[1:0]",
+                "description": "Burst length\nDetermines the maximum number of column locations that can be accessed during a given\nread or write command.\nValid values for DDR3 are:\n00: 8 (Fixed)\n01: 4 or 8 (On the fly)\n10: 4 (Fixed)\n11: Reserved\nRM0436 Rev 7 399/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DDR3_MR1",
+            "offset": "0x044",
+            "page": 400,
+            "chapter": "7.7.18",
+            "resetvalue": "0x00000000",
+            "bits": [
+              {
+                "range": "15:13",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "12",
+                "field": "QOFF",
+                "description": "Output enable/disable\n0: all outputs function as normal\n1: all SDRAM outputs are disabled removing output buffer current.\nThis feature is intended to be used for IDD characterization of read current and should not be\nused in normal operation.\n"
+              },
+              {
+                "range": "11",
+                "field": "TDQS",
+                "description": "Termination data strobe\nWhen enabled (‘1’) TDQS provides additional termination resistance outputs that may be\nuseful in some system configurations. (N/A)\n"
+              },
+              {
+                "range": "10",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "8",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "7",
+                "field": "LEVEL",
+                "description": "Write leveling enable (N/A)\n"
+              },
+              {
+                "range": "4:3",
+                "field": "AL[1:0]",
+                "description": "Posted CAS Additive Latency:\nSetting additive latency that allows read and write commands to be issued to the SDRAM\nearlier than normal (refer to SDRAM datasheet for details). Valid values are:\n00: 0 (AL disabled)\n01: CL - 1\n10: CL - 2\n11: Reserved\nRM0436 DDR physical interface control (DDRPHYC)\nBits 9, 6, 2 RTT[2:0]: On die termination\nSelects the effective resistance for SDRAM on die termination.\nValid values for {RTT2,RTT1,RTT0} are:\n000: ODT disabled\n001: RZQ/4\n010: RZQ/2\n011: RZQ/6\n100: RZQ/12\n101: RZQ/8\nOthers: Reserved\nBits 5, 1 DIC[1:0]: Output driver impedance control\nControls the output drive strength.\nValid values for {DIC1,DIC0} are:\n00: RZQ/6\n01: RZQ/7\n10: Reserved\n11: Reserved\n"
+              },
+              {
+                "range": "0",
+                "field": "DE",
+                "description": "DLL enable/disable\nEnable (0) or disable (1) the DLL.\nDLL must be enabled for normal operation.\n7.7.19 DDRPHYC MR1 register for LPDDR2 [alternate]\n(DDRPHYC_LPDDR2_MR1)\nAddress offset: 0x044\nReset value: 0x0000\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res. Res. NWR[2:0] WC BT BL[2:0]\nrw rw rw rw rw rw rw rw\n"
+              },
+              {
+                "range": "15:8",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "7:5",
+                "field": "NWR[2:0]",
+                "description": "Write recovery\n001: nWR=3\n100: nWR=6\n110: nWR=8\n111: nWR=9\nOthers: Reserved\nRM0436 Rev 7 401/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n"
+              },
+              {
+                "range": "4",
+                "field": "WC",
+                "description": "Wrap control\n0: wrap\n1: no wrap\n"
+              },
+              {
+                "range": "3",
+                "field": "BT",
+                "description": "Burst Type: Indicates whether a burst is sequential (0) or interleaved (1). ,\n"
+              },
+              {
+                "range": "2:0",
+                "field": "BL[2:0]",
+                "description": "Burst length\nDetermines the maximum number of column locations that can be accessed during a given\nread or write command. Valid values are:\n010: 4\n011: 8\n100: 16\nOthers: Reserved\n7.7.20 DDRPHYC MR1 register for LPDDR3 [alternate]\n(DDRPHYC_LPDDR3_MR1)\nAddress offset: 0x044\nReset value: 0x0000\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res. Res. NWR[2:0] Res. Res. BL[2:0]\nrw rw rw rw rw rw\n"
+              },
+              {
+                "range": "15:8",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "7:5",
+                "field": "NWR[2:0]",
+                "description": "Write recovery\nIf nWRE (MR2 [4]) = 0:\n- 001: nWR=3\n- 100: nWR=6\n- 110: nWR=8\n- 111: nWR=9\nIf nWRE (MR2[4]) = 1:\n- 000: nWR=10\n- 001: nWR=11\n- 010: nWR=12\nOthers: Reserved\n"
+              },
+              {
+                "range": "4:3",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "2:0",
+                "field": "BL[2:0]",
+                "description": "Burst length\nDetermines the maximum number of column locations that can be accessed during a given\nread or write command.\n011: 8\nOthers: Reserved\n402/4054 RM0436 Rev 7\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DDR3_MR2",
+            "offset": "0x048",
+            "page": 403,
+            "chapter": "7.7.21",
+            "resetvalue": "0x00000000",
+            "bits": [
+              {
+                "range": "15:11",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "10:9",
+                "field": "RTTWR[1:0]",
+                "description": "Dynamic ODT\nSelects RTT for dynamic ODT.\n00: Dynamic ODT off\n01: RZQ/4\n10: RZQ/2\n11: Reserved\n"
+              },
+              {
+                "range": "8",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "7",
+                "field": "SRT",
+                "description": "Self-refresh temperature range\nSelects either normal (‘0’) or extended (‘1’) operating temperature range during self-refresh.\n"
+              },
+              {
+                "range": "6",
+                "field": "ASR",
+                "description": "Auto self-refresh\nWhen enabled (‘1’), SDRAM automatically provides self-refresh power management\nfunctions for all supported operating temperature values.\nOtherwise the SRT bit must be programmed to indicate the temperature range.\n"
+              },
+              {
+                "range": "5:3",
+                "field": "CWL[2:0]",
+                "description": "CAS write latency\nThe delay, in clock cycles, between when the SDRAM registers a write command to when\nwrite data is available.\n000: 5 (tCK = 2.5ns)\n001: 6 (2.5ns > tCK = 1.875ns)\n010: 7 (1.875ns > tCK = 1.5ns)\n011: 8 (1.5ns > tCK = 1.25ns)\nOthers: Reserved\n"
+              },
+              {
+                "range": "2:0",
+                "field": "PASR[2:0]",
+                "description": "Partial array self-refresh\nSpecifies that data located in areas of the array beyond the specified location are lost if self\nrefresh is entered.\nValid settings for 8 banks are:\n000: Full Array\n001: Half Array (BA[2:0] = 000, 001, 010 & 011)\n010: Quarter Array (BA[2:0] = 000, 001)\n011: 1/8 Array (BA[2:0] = 000)\n100: 3/4 Array (BA[2:0] = 010, 011, 100, 101, 110 & 111)\n101: Half Array (BA[2:0] = 100, 101, 110 & 111)\n110: Quarter Array (BA[2:0] = 110 & 111)\n111: 1/8 Array (BA[2:0] 111)\nRM0436 Rev 7 403/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n7.7.22 DDRPHYC MR2 register for LPDDR2 [alternate]\n(DDRPHYC_LPDDR2_MR2)\nAddress offset: 0x048\nReset value: 0x0000\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. RLWL[2:0]\nrw rw rw\n"
+              },
+              {
+                "range": "15:3",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "2:0",
+                "field": "RLWL[2:0]",
+                "description": "Read and write latency\n001: RL = 3 /WL = 1\n010: RL = 4 / WL = 2\n011: RL = 5 / WL = 2\n100: RL = 6 / WL = 3\n101: RL = 7 / WL = 4\n110: RL = 8 / WL = 4\nOthers: Reserved\n7.7.23 DDRPHYC MR2 register for LPDDR3 [alternate]\n(DDRPHYC_LPDDR3_MR2)\nAddress offset: 0x048\nReset value: 0x0000\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res. Res. WR WL Res. NWRE Res. RLWL[2:0]\nrw rw rw rw rw rw\n"
+              },
+              {
+                "range": "15:8",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "7",
+                "field": "WR",
+                "description": "New for LPDDR3 (not used by this PHY, leave at zero)\n"
+              },
+              {
+                "range": "6",
+                "field": "WL",
+                "description": "New for LPDDR3 (not used by this PHY, leave at zero)\n"
+              },
+              {
+                "range": "5",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "4",
+                "field": "NWRE",
+                "description": "New for LPDDR3 (not used by this PHY, leave at zero)\n"
+              },
+              {
+                "range": "3",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "2:0",
+                "field": "RLWL[2:0]",
+                "description": "Read and write latency\n001: RL = 3 /WL = 1\n010: RL = 4 / WL = 2\n011: RL = 5 / WL = 2\n100: RL = 6 / WL = 3\n101: RL = 7 / WL = 4\n110: RL = 8 / WL = 4\nOthers: Reserved\n404/4054 RM0436 Rev 7\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DDR3_MR3",
+            "offset": "0x04C",
+            "page": 405,
+            "chapter": "7.7.24",
+            "resetvalue": "0x00000000",
+            "bits": [
+              {
+                "range": "31:3",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "2",
+                "field": "MPR",
+                "description": "Multi-purpose register enable\nEnables, if set, that read data should come from the Multi-Purpose Register. Otherwise read\ndata come from the DRAM array.\n"
+              },
+              {
+                "range": "1:0",
+                "field": "MPRLOC[1:0]",
+                "description": "Multi-purpose register (MPR) location\nSelects MPR data location.\n00: Predefined pattern for system calibration\nOthers: Reserved\n7.7.25 DDRPHYC MR3 register for LPDDR2 [alternate]\n(DDRPHYC_LPDDR2_MR3)\nAddress offset: 0x04C\nReset value: 0x0000 0000\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res.\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. DS[3:0]\nrw rw rw rw\n"
+              },
+              {
+                "range": "31:4",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "3:0",
+                "field": "DS[3:0]",
+                "description": "Drive strength\nValid values are:\n0000: Reserved\n0001: 34.3Ω typical\n0010: 40Ω typical\n0011: 48Ω typical\n0100: 60Ω typical\n0101: Reserved\n0110: 80Ω typical\n0111: 120Ω typical\nOthers: Reserved\nRM0436 Rev 7 405/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n7.7.26 DDRPHYC MR3 register for LPDDR3 [alternate]\n(DDRPHYC_LPDDR3_MR3)\nAddress offset: 0x04C\nReset value: 0x0000 0000\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res.\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. Res. PDCTL[1:0] DQ[1:0]\nrw rw rw rw\n"
+              },
+              {
+                "range": "31:4",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "3:2",
+                "field": "PDCTL[1:0]",
+                "description": "Power-down control\n00: ODT disabled by DRAM during power-down\n01: ODT enabled by DRAM during power-down\nOthers: Reserved\n"
+              },
+              {
+                "range": "1:0",
+                "field": "DQ[1:0]",
+                "description": "ODT on-die termination\n00: Disable (default)\n01: Rzq/4 (see note)\n10: Rzq/2\n11: Rzq/1\nNote: Rzq/4 is optional for LPDDR3-1066 devices.\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_ODTCR",
+            "offset": "0x050",
+            "page": 406,
+            "chapter": "7.7.27",
+            "resetvalue": "0x00010000",
+            "bits": [
+              {
+                "range": "31:17",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "16",
+                "field": "WRODT",
+                "description": "\nSpecifies whether ODT should be enabled (‘1’) or disabled (‘0’) on write\n"
+              },
+              {
+                "range": "15:1",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "0",
+                "field": "RDODT",
+                "description": "\nSpecifies whether ODT should be enabled (‘1’) or disabled (‘0’) on read\n406/4054 RM0436 Rev 7\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DTAR",
+            "offset": "0x054",
+            "page": 407,
+            "chapter": "7.7.28",
+            "resetvalue": "0x00000000",
+            "bits": []
+          },
+          {
+            "registername": "DDRPHYC_DTDR0",
+            "offset": "0x058",
+            "page": 407,
+            "chapter": "7.7.29",
+            "resetvalue": "0xdd22ee11",
+            "bits": [
+              {
+                "range": "31",
+                "field": "DTMPR",
+                "description": "Data training using MPR (DDR3 Only):\nSpecifies, if set, that data-training should use the SDRAM Multi-Purpose Register (MPR)\nregister. Otherwise data-training is performed by first writing to some locations in the SDRAM\nand then reading the back.\n"
+              },
+              {
+                "range": "30:28",
+                "field": "DTBANK[2:0]",
+                "description": "Data training bank address:\nSelects the SDRAM bank address to be used during data training.\n"
+              },
+              {
+                "range": "27:12",
+                "field": "DTROW[15:0]",
+                "description": "Data training row address:\nSelects the SDRAM row address to be used during data training.\n"
+              },
+              {
+                "range": "11:0",
+                "field": "DTCOL[11:0]",
+                "description": "Data training column address:\nSelects the SDRAM column address to be used during data training.\nThe lower four bits of this address must always be “0000”.\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nDTBYTE3[7:0] DTBYTE2[7:0]\nrw rw rw rw rw rw rw rw rw rw rw rw rw rw rw rw\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nDTBYTE1[7:0] DTBYTE0[7:0]\nrw rw rw rw rw rw rw rw rw rw rw rw rw rw rw rw\n"
+              },
+              {
+                "range": "31:24",
+                "field": "DTBYTE3[7:0]",
+                "description": "Data training data\nThe first 4 bytes (e.g. shifted as Byte 0,1,2,3) of data used during data training. This same\ndata byte is used for each Byte Lane.\nDefault sequence is a walking 1 while toggling data every data cycle.\n"
+              },
+              {
+                "range": "23:16",
+                "field": "DTBYTE2[7:0]",
+                "description": "Data Training Data\n"
+              },
+              {
+                "range": "15:8",
+                "field": "DTBYTE1[7:0]",
+                "description": "Data Training Data\n"
+              },
+              {
+                "range": "7:0",
+                "field": "DTBYTE0[7:0]",
+                "description": "Data Training Data\nDDR physical interface control (DDRPHYC) RM0436\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DTDR1",
+            "offset": "0x05C",
+            "page": 408,
+            "chapter": "7.7.30",
+            "resetvalue": "0x7788bb44",
+            "bits": [
+              {
+                "range": "31:24",
+                "field": "DTBYTE7[7:0]",
+                "description": "Data training data:\nThe second 4 bytes (e.g. shifted as Byte 4,5,6,7) of data used during data training. This same\ndata byte is used for each Byte Lane.\nDefault sequence is a walking 1 while toggling data every data cycle.\n"
+              },
+              {
+                "range": "23:16",
+                "field": "DTBYTE6[7:0]",
+                "description": "Data Training Data\n"
+              },
+              {
+                "range": "15:8",
+                "field": "DTBYTE5[7:0]",
+                "description": "Data Training Data\n"
+              },
+              {
+                "range": "7:0",
+                "field": "DTBYTE4[7:0]",
+                "description": "Data Training Data\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_GPR0",
+            "offset": "0x178",
+            "page": 408,
+            "chapter": "7.7.31",
+            "resetvalue": "0x00000000",
+            "bits": [
+              {
+                "range": "31:0",
+                "field": "GPR0[31:0]",
+                "description": "General purpose register 0 bits\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_GPR1",
+            "offset": "0x17C",
+            "page": 408,
+            "chapter": "7.7.32",
+            "resetvalue": "0x00000000",
+            "bits": [
+              {
+                "range": "31:0",
+                "field": "GPR1[31:0]",
+                "description": "General purpose register 1 bits\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_ZQ0CR0",
+            "offset": "0x180",
+            "page": 409,
+            "chapter": "7.7.33",
+            "resetvalue": "0x0000014a",
+            "bits": [
+              {
+                "range": "31",
+                "field": "ZQPD",
+                "description": "ZCAL power down\nPowers down, if set, the PZQ cell.\n"
+              },
+              {
+                "range": "30",
+                "field": "ZCAL",
+                "description": "ZCAL trigger\nImpedance Calibration Trigger: A write of '1' to this bit triggers impedance calibration to be\nperformed by the impedance control logic.\nThe impedance calibration trigger bit is self-clearing and returns back to '0' when the\ncalibration is complete.\nNote: If ZDEN is set, then the ZCAL bit should be set to 0.\n"
+              },
+              {
+                "range": "29",
+                "field": "ZCALBYP",
+                "description": "Impedance calibration bypass\nImpedance Calibration Bypass: Disables, if set, impedance calibration of this ZQ control\nblock when impedance calibration is triggered globally using the ZCAL bit of DDRPHYC_PIR.\nImpedance calibration of this ZQ block may be triggered manually using ZCAL.\n"
+              },
+              {
+                "range": "28",
+                "field": "ZDEN",
+                "description": "Impedance override enable\nImpedance Over-ride Enable: When this bit is set, it allows users to directly drive the\nimpedance control using the data programmed in the ZQDATA field. Otherwise, the control is\ngenerated automatically by the impedance control logic.\nNote: If ZDEN is set, then the ZCAL bit should be set to 0.\n"
+              },
+              {
+                "range": "27:20",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "19:0",
+                "field": "ZDATA[19:0]",
+                "description": "Impedance override\nImpedance Over-Ride Data: Data used to directly drive the impedance control.\nZDATA field mapping for D3R I/Os is as follows:\nZDATA[27:20] is reserved and returns zeros on reads\nZDATA[19:15] is used to select the pull-up on-die termination impedance\nZDATA[14:10] is used to select the pull-down on-die termination impedance\nZDATA[9:5] is used to select the pull-up output impedance\nZDATA[4:0] is used to select the pull-down output impedance\nNote: See mPHY ST40c25 Datasheet for ZDATA encoding, default value is: ODT pulp-\nup/down set to hi-impedance and pull-up/down set to ~44.5Ω for DDR3, 48.8Ω for\nDDR3L, 55.5Ω for LPDDR2 typical corner 25C\nDDR physical interface control (DDRPHYC) RM0436\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_ZQ0CR1",
+            "offset": "0x184",
+            "page": 410,
+            "chapter": "7.7.34",
+            "resetvalue": "0x0000007b",
+            "bits": [
+              {
+                "range": "7:4",
+                "field": "ZPROG[7:4]",
+                "description": "Impedance divide ratio to ext R\nImpedance divide ratio: selects the external resistor divide ratio to be used to set the output\nimpedance and the on-die termination as follows:\nZPROG[7:4] = On-die termination divide select (with RZQ = 240Ω ±1%)\n- 0x0: Reserved\n- 0x1: 120Ω\n- 0x2: 96Ω\n- 0x3: 80Ω\n- 0x4: 69Ω\n- 0x5: 60Ω\n- 0x6: 52Ω\n- 0x7: 46Ω\n- 0x8: 40Ω\n- 0x9: 37Ω\n- 0xA: 34Ω\n- 0xB: 32Ω\n- 0xC: 30Ω\n- 0xD: 28Ω\n- 0xE: 26.5Ω\n- 0xF: 25Ω\n"
+              },
+              {
+                "range": "3:0",
+                "field": "ZPROG[3:0]",
+                "description": "Impedance divide ratio to ext R\nImpedance divide ratio: selects the external resistor divide ratio to be used to set the output\nimpedance and the on-die termination as follows:\nZPROG[3:0] = Output impedance divide select (with RZQ = 240Ω ±1%)\n- 0x0 to 0x4: Reserved\n- 0x5: 80Ω\n- 0x6: 69Ω\n- 0x7: 60Ω\n- 0x8: 53Ω\n- 0x9: 48Ω\n- 0xA: 44Ω\n- 0xB: 40Ω\n- 0xC: 37Ω\n- 0xD: 34Ω\n- 0xE: 32Ω\n- 0xF: 30Ω\n410/4054 RM0436 Rev 7\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_ZQ0SR0",
+            "offset": "0x188",
+            "page": 411,
+            "chapter": "7.7.35",
+            "resetvalue": "0x0000014a",
+            "bits": []
+          },
+          {
+            "registername": "DDRPHYC_ZQ0SR1",
+            "offset": "0x18C",
+            "page": 411,
+            "chapter": "7.7.36",
+            "resetvalue": "0x00000000",
+            "bits": [
+              {
+                "range": "31",
+                "field": "ZDONE",
+                "description": "Impedance calibration done\nIndicates that impedance calibration has completed.\n"
+              },
+              {
+                "range": "30",
+                "field": "ZERR",
+                "description": "Impedance calibration error\nIf set, indicates that there was an error during impedance calibration.\n"
+              },
+              {
+                "range": "29:20",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "19:0",
+                "field": "ZCTRL[19:0]",
+                "description": "Impedance control\nImpedance Control: Current value of impedance control.\nZZCTRL field mapping for D3R I/Os is as follows:\nZCTRL[27:20] is reserved and returns zeros on reads\nZCTRL[19:15] is used to select the pull-up on-die termination impedance\nZCTRL[14:10] is used to select the pull-down on-die termination impedance\nZCTRL[9:5] is used to select the pull-up output impedance\nZCTRL[4:0] is used to select the pull-down output impedance\n7 6 5 4 3 2 1 0\nOPU[1:0] OPD[1:0] ZPU[1:0] ZPD[1:0]\nr r r r r r r r\nDDR physical interface control (DDRPHYC) RM0436\n"
+              },
+              {
+                "range": "7:6",
+                "field": "OPU[1:0]",
+                "description": "opu calibration status\nOn-Die termination (ODT) pull-up calibration status.\n00: Completed with no errors\n01: Overflow error\n10: Underflow error\n11: Calibration in progress\n"
+              },
+              {
+                "range": "5:4",
+                "field": "OPD[1:0]",
+                "description": "opd calibration status\nOn-Die termination (ODT) pull-down calibration status.\n00: Completed with no errors\n01: Overflow error\n10: Underflow error\n11: Calibration in progress\n"
+              },
+              {
+                "range": "3:2",
+                "field": "ZPU[1:0]",
+                "description": "zpu calibration status\nOutput impedance pull-up calibration status. Valid status encodings are:\n00: Completed with no errors\n01: Overflow error\n10: Underflow error\n11: Calibration in progress\n"
+              },
+              {
+                "range": "1:0",
+                "field": "ZPD[1:0]",
+                "description": "zpd calibration status\nOutput impedance pull-down calibration status. Valid status encodings are:\n00: Completed with no errors\n01: Overflow error\n10: Underflow error\n11: Calibration in progress\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DXnGCR",
+            "offset": "0x1C0",
+            "page": 412,
+            "chapter": "7.7.37",
+            "resetvalue": "0x00010e81",
+            "bits": [
+              {
+                "range": "31:17",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "16:14",
+                "field": "R0RVSL[2:0]",
+                "description": "Read valid system latency in steps\nUsed to specify the read valid system latency relative to the ideal placement of the ITMD read\nvalid signal when bit RVSEL in DDRPHYC_DXCCR register is set to 0.\nPower-up default is 011 (i.e. ideal placement of the read valid signal).\nThe RVSL fields are initially set by the PUB during automatic read valid training but these\nvalues can be overwritten by a direct write to this register.\nValid values are:\n000: read valid system latency = ideal placement - 3\n001: read valid system latency = ideal placement - 2\n010: read valid system latency = ideal placement - 1\n011: read valid system latency = ideal placement\n100: read valid system latency = ideal placement + 1\n101: read valid system latency = ideal placement + 2\n110: read valid system latency = ideal placement + 3\nOthers: Reserved\n"
+              },
+              {
+                "range": "13",
+                "field": "RTTOAL",
+                "description": "RTT ON additive latency\nIndicates when the ODT control of DQ/DQS SSTL I/Os is set to the value in\nDQODT/DQSODT during read cycles.\nValid values are:\n0: ODT control is set to DQSODT/DQODT almost two cycles before read data preamble\n1: ODT control is set to DQSODT/DQODT almost one cycle before read data preamble\n"
+              },
+              {
+                "range": "12:11",
+                "field": "RTTOH[1:0]",
+                "description": "RTT output hold\nIndicates the number of clock cycles (from 0 to 3) after the read data postamble for which\nODT control should remain set to DQSODT for DQS or DQODT for DQ/DM before disabling\nit (setting it to ‘0’) when using dynamic ODT control.\nODT is disabled almost RTTOH clock cycles after the read postamble\n"
+              },
+              {
+                "range": "10",
+                "field": "DQRTT",
+                "description": "DQ dynamic RTT control\nIndicates, if set, that the ODT control of DQ/DM SSTL I/Os be dynamically controlled by\nsetting it to the value in DQODT during reads and disabling it (setting it to ‘0’) during any\nother cycle.\nIf this bit is not set, then the ODT control of DQ SSTL I/Os is always set to the value in\nDQODT.\nSince dynamic ODT is on by default, when using LPDDR2/LPDDR3 this bit must be set to 0\nsince LPDDR2/LPDDR3 does not require ODT to be on.`\n"
+              },
+              {
+                "range": "9",
+                "field": "DQSRTT",
+                "description": "DQS dynamic RTT control\nIndicates, if set, that the ODT control of DQS SSTL I/Os be dynamically controlled by setting\nit to the value in DQSODT during reads and disabling it (setting it to ‘0’) during any other\ncycle.\nIf this bit is not set, then the ODT control of DQS SSTL I/Os is always set to the value in\nDQSODT field.\nSince dynamic ODT is on by default, when using LPDDR2/LPDDR3 this bit must be set to 0\nsince LPDDR2/LPDDR3 does not require ODT to be on.\nRM0436 Rev 7 413/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n"
+              },
+              {
+                "range": "8:7",
+                "field": "DSEN[1:0]",
+                "description": "Write DQS enable\nControls whether the write DQS going to the SDRAM is enabled (toggling) or disabled (static\nvalue) and whether the DQS is inverted.\nDQS# is always the inversion of DQS.\nThese values are valid only when DQS/DQS# output enable is on, otherwise the DQS/DQS#\nis tristated.\nValid settings are:\n00: DQS disabled (Driven to constant 0)\n01: DQS toggling with normal polarity (This should be the default setting)\n10: DQS toggling with inverted polarity\n11: DQS disabled (Driven to constant 1)\n"
+              },
+              {
+                "range": "6",
+                "field": "DQSRPD",
+                "description": "DQSR power-down\nPowers down, if set, the PDQSR cell.\nThis bit is ORed with the common PDR configuration bit\n"
+              },
+              {
+                "range": "5",
+                "field": "DXPDR",
+                "description": "Data power-down receiver\nPowers down, when set, the input receiver on I/O for DQ, DM, and DQS/DQS# pins of the\nbyte. This bit is ORed with the common PDR configuration bit\n"
+              },
+              {
+                "range": "4",
+                "field": "DXPDD",
+                "description": "Data power-down driver\nPowers down, when set, the output driver on I/O for DQ, DM, and DQS/DQS# pins of the\nbyte. This bit is ORed with the common PDD configuration bit\n"
+              },
+              {
+                "range": "3",
+                "field": "DXIOM",
+                "description": "Data I/O mode\nSelects SSTL mode (when set to 0) or CMOS mode (when set to 1) for the I/O for DQ, DM,\nand DQS/DQS# pins of the byte.\nThis bit is ORed with the IOM configuration bit of the individual DATX8\n"
+              },
+              {
+                "range": "2",
+                "field": "DQODT",
+                "description": "DQ ODT enable\nEnables, when set, the on-die termination on the I/O for DQ and DM pins of the byte.\nThis bit is ORed with the common DATX8 ODT configuration bit\n"
+              },
+              {
+                "range": "1",
+                "field": "DQSODT",
+                "description": "DQS ODT enable\nEnables, when set, the on-die termination on the I/O for DQS/DQS# pin of the byte.\nThis bit is ORed with the common DATX8 ODT configuration bit\n"
+              },
+              {
+                "range": "0",
+                "field": "DXEN",
+                "description": "DATA byte enable\nEnables, if set, the DATX8 and SSTL I/Os used on the data byte.\nSetting this bit to ‘0’ disables the byte, i.e. the byte SSTL I/Os are put in power-down mode\nand the DLL in the DATX8 is put in bypass mode.\nAfter changing a Byte Lane from disabled to enabled, the DLL for that Byte Lane must be\nreset and re-locked.\nSoftware can use bits DLLSRST and DLLLOCK of DDRPHYC_PIR register to accomplish\nthis (reset and re-locks all DLLs in the DDR PHY).\n414/4054 RM0436 Rev 7\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DXnGSR0",
+            "offset": "0x1C4",
+            "page": 415,
+            "chapter": "7.7.38",
+            "resetvalue": "0x00000000",
+            "bits": []
+          },
+          {
+            "registername": "DDRPHYC_DXnGSR1",
+            "offset": "0x1C8",
+            "page": 415,
+            "chapter": "7.7.39",
+            "resetvalue": "0x00000000",
+            "bits": [
+              {
+                "range": "15:13",
+                "field": "DTPASS[2:0]",
+                "description": "DQS training pass count\nThe number of passing configurations during DQS gate training.\n"
+              },
+              {
+                "range": "12:9",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "8",
+                "field": "DTIERR",
+                "description": "DQS gate training intermittent error\nIf set, indicates that there was an intermittent error during DQS gate training of the byte, such\nas a pass was followed by a fail then followed by another pass.\n"
+              },
+              {
+                "range": "7:5",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "4",
+                "field": "DTERR",
+                "description": "DQS gate training error\nIf set, indicates that a valid DQS gating window could not be found during DQS gate training\nof the byte.\n"
+              },
+              {
+                "range": "3:1",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "0",
+                "field": "DTDONE",
+                "description": "Data training done\nIndicates, if set, that the byte has finished doing data training.\n31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16\nRes. Res. Res. Res. Res. Res. Res. Res. Res. RVPASS[2:0] Res. Res. Res.\nRREIVR\nr r r r\n15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0\nRes. Res. Res.\nRREVR\nRes. Res. Res. Res. Res. Res. DQSDFT[1:0] Res. Res. Res.\nRRETFD\nr r r r\n"
+              },
+              {
+                "range": "31:23",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "22:20",
+                "field": "RVPASS[2:0]",
+                "description": "Read valid training pass count\nThe number of passing configurations during read valid training.\n"
+              },
+              {
+                "range": "19:17",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\nDDR physical interface control (DDRPHYC) RM0436\n"
+              },
+              {
+                "range": "16",
+                "field": "RVIERR",
+                "description": "RV intermittent error for rank\nIf set, indicates that there was an intermittent error during read valid training of the byte, such\nas a pass was followed by a fail then followed by another pass.\n"
+              },
+              {
+                "range": "15:13",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "12",
+                "field": "RVERR",
+                "description": "RV training error\nIf set, indicates that a valid read valid placement could not be found during read valid training\nof the byte\n"
+              },
+              {
+                "range": "11:6",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "5:4",
+                "field": "DQSDFT[1:0]",
+                "description": "DQS drift value\nUsed to report the drift on the read data strobe of the data byte.\nValid settings are:\n00: No drift\n01: 90° drift\n10: 180° drift\n11: 270° drift or more\n"
+              },
+              {
+                "range": "3:1",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "0",
+                "field": "DFTERR",
+                "description": "DQS drift error\nIf set, indicates that the byte read data strobe has drifted by more than or equal to the drift\nlimit set in the PHY General Configuration Register (PGCR).\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DXnDLLCR",
+            "offset": "0x1CC",
+            "page": 416,
+            "chapter": "7.7.40",
+            "resetvalue": "0x40000000",
+            "bits": [
+              {
+                "range": "31",
+                "field": "DLLDIS",
+                "description": "DLL bypass\nA disabled DLL is bypassed. Default ('0') is DLL enabled.\nNote: DLL bypass must only be changed when DDRPHYC clock (dphy_ker_ck) is inactive.\n"
+              },
+              {
+                "range": "30",
+                "field": "DLLSRST",
+                "description": "DLL reset\nSoft resets the byte DLL by driving the DLL soft reset pin.\nNote: DLL reset must only be changed to 0 when DDRPHYC clock (dphy_ker_ck) is inactive.\n"
+              },
+              {
+                "range": "29:20",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "19",
+                "field": "SDLBMODE",
+                "description": "Bypass slave DLL during loopback\nIf this bit is set, the slave DLL is put in loopback mode in which there is no 90 degrees phase\nshift on read DQS/DQS#. This bit must be set when operating the byte PHYs in loopback\nmode.\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              },
+              {
+                "range": "18",
+                "field": "ATESTEN",
+                "description": "Enable path to pin 'ATO'\nEnables the analog test signal to be output on the DLL analog test output (DDR_ATO).\nThe DLL analog test output is tri-stated when this bit is '0'.\n"
+              },
+              {
+                "range": "17:14",
+                "field": "SDPHASE[3:0]",
+                "description": "Slave DLL phase\nSelects the phase difference between the input clock and\nthe corresponding output clock of the slave DLL. Valid settings:\n0000: 90\n0001: 72\n0010: 54\n0011: 36\n0100: 108\n0101: 90\n0110: 72\n0111: 54\n1000: 126\n1001: 108\n1010: 90\n1011: 72\n1100: 144\n1101: 126\n1110: 108\n1111: 90\n"
+              },
+              {
+                "range": "13:12",
+                "field": "SSTART[1:0]",
+                "description": "Slave DLL autostart\nUsed to control how the slave DLL starts up relative to the\nmaster DLL locking:\n0X: Slave DLL automatically starts up once the master DLL has achieved lock.\n10: The automatic startup of the slave DLL is disabled; the phase detector is\ndisabled.\n11: The automatic startup of the slave DLL is disabled; the phase detector is\nenabled.\n"
+              },
+              {
+                "range": "11:9",
+                "field": "MFWDLY[2:0]",
+                "description": "Master DLL feed-forward trim\nUsed to trim the delay in the master DLL feedforward path:\n000: minimum delay\n...\n111: maximum delay\nRM0436 Rev 7 417/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n"
+              },
+              {
+                "range": "8:6",
+                "field": "MFBDLY[2:0]",
+                "description": "Master DLL feed-back trim\nUsed to trim the delay in the master DLL feedback path:\n000: minimum delay\n...\n111: maximum delay\n"
+              },
+              {
+                "range": "5:3",
+                "field": "SFWDLY[2:0]",
+                "description": "Slave DLL feed-forward trim\nSlave Feed-Forward Delay Trim: Used to trim the delay in the slave DLL feedforward path:\n000: minimum delay\n...\n111: maximum delay\n"
+              },
+              {
+                "range": "2:0",
+                "field": "SFBDLY[2:0]",
+                "description": "Slave DLL feed-back trim\nSlave Feed-Back Delay Trim: Used to trim the delay in the slave DLL feedback path:\n000: minimum delay\n...\n111: maximum delay\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DXnDQTR",
+            "offset": "0x1D0",
+            "page": 418,
+            "chapter": "7.7.41",
+            "resetvalue": "0xffffffff",
+            "bits": [
+              {
+                "range": "31:28",
+                "field": "DQDLY7[3:0]",
+                "description": "DQ delay for bit 7\nUsed to adjust the delay of the data relative to the nominal delay that is matched to the delay\nof the data strobes through the slave DLL and clock tree.\nThe lower two bits of the DQDLY for each DQ bit controls the delay for the data clocked by\nDQS, while the higher two bits control the delay for the data clocked by DQS_b.\nValid settings for each 2-bit control field are:\n00: nominal delay\n01: nominal delay + 1 step\n10: nominal delay + 2 steps\n11: nominal delay + 3 steps\n"
+              },
+              {
+                "range": "27:24",
+                "field": "DQDLY6[3:0]",
+                "description": "DQ delay for bit 6\nidem\n"
+              },
+              {
+                "range": "23:20",
+                "field": "DQDLY5[3:0]",
+                "description": "DQ delay for bit 5\nIdem\n"
+              },
+              {
+                "range": "19:16",
+                "field": "DQDLY4[3:0]",
+                "description": "DQ delay for bit 4\nIdem\n"
+              },
+              {
+                "range": "15:12",
+                "field": "DQDLY3[3:0]",
+                "description": "DQ delay for bit 3\nIdem\n418/4054 RM0436 Rev 7\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              },
+              {
+                "range": "11:8",
+                "field": "DQDLY2[3:0]",
+                "description": "DQ delay for bit 2\nIdem\n"
+              },
+              {
+                "range": "7:4",
+                "field": "DQDLY1[3:0]",
+                "description": "DQ delay for bit 1\nIdem\n"
+              },
+              {
+                "range": "3:0",
+                "field": "DQDLY0[3:0]",
+                "description": "DQ delay for bit 0\nIdem\n"
+              }
+            ]
+          },
+          {
+            "registername": "DDRPHYC_DXnDQSTR",
+            "offset": "0x1D4",
+            "page": 419,
+            "resetvalue": "0x3db02000",
+            "bits": [
+              {
+                "range": "31:30",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "29:26",
+                "field": "DMDLY[3:0]",
+                "description": "DM delay\nUsed to adjust the delay of the data relative to the nominal delay that is matched to the delay\nof the data strobes through the slave DLL and clock tree.\nThe lower two bits of the DQDLY for each DQ bit controls the delay for the data clocked by\nDQS, while the higher two bits control the delay for the data clocked by DQS_b.\nValid settings for each 2-bit control field are:\n00: nominal delay\n01: nominal delay + 1 step\n10: nominal delay + 2 steps\n11: nominal delay + 3 steps\n"
+              },
+              {
+                "range": "25:23",
+                "field": "DQSNDLY[2:0]",
+                "description": "DQS# delay\nUsed to adjust the delay of the data strobes relative to the nominal delay that is matched to\nthe delay of the data bit through the slave DLL and clock tree.\nValid values are:\n000: nominal delay - 3 steps\n001: nominal delay - 2 steps\n010: nominal delay - 1 step\n011: nominal delay\n100: nominal delay + 1 step\n101: nominal delay + 2 steps\n110: nominal delay + 3 steps\n111: nominal delay + 4 steps\nNote: - After changing this value, an ITM soft reset must be issued: bit ITMSRST=1 and bit\nINIT=1 in DDRPHYC_PIR register.\nRM0436 Rev 7 419/4054\n426\nDDR physical interface control (DDRPHYC) RM0436\n"
+              },
+              {
+                "range": "22:20",
+                "field": "DQSDLY[2:0]",
+                "description": "DQS delay\nUsed to adjust the delay of the data strobes relative to the nominal delay that is matched to\nthe delay of the data bit through the slave DLL and clock tree.\nValid values are:\n000: nominal delay - 3 steps\n001: nominal delay - 2 steps\n010: nominal delay - 1 step\n011: nominal delay\n100: nominal delay + 1 step\n101: nominal delay + 2 steps\n110: nominal delay + 3 steps\n111: nominal delay + 4 steps\nNote: - After changing this value, an ITM soft reset (bit ITMSRST=1 and bit INIT=1 in\nDDRPHYC_PIR register) must be issued.\n"
+              },
+              {
+                "range": "19:14",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "13:12",
+                "field": "R0DGPS[1:0]",
+                "description": "Rank 0 DQS gating phase select\nSelects the clock used to enable the data strobes during read so that the value of the data\nstrobes before and after the preamble/postamble are filtered out.\nR0DGPS is initially set by the PUBL during automatic DQS data training and subsequently\nupdated during data strobe drift compensation. However, these values can be overwritten by\na direct write to this register, and the automatic update during DQS drift compensation can be\ndisabled using the PHY General Configuration Register (PGCR).\nValid values are:\n00: 180 clock (clk180)\n01: 270 clock (clk270)\n10: 360 clock (clk0)\n11: 450 clock (next clk90)\n"
+              },
+              {
+                "range": "11:3",
+                "field": "Reserved",
+                "description": "must be kept at reset value.\n"
+              },
+              {
+                "range": "2:0",
+                "field": "R0DGSL[2:0]",
+                "description": "Rank 0 DQS gating system latency\nUsed to increase the number of clock cycles needed to expect valid DDR read data by up to\nfive extra clock cycles.\nThis is used to compensate for board delays and other system delays.\nPower-up default is 000 (i.e. no extra clock cycles required).\nThe SL fields are initially set by the PUBL during automatic DQS data training but these\nvalues can be overwritten by a direct write to this register.\nValid values are:\n000: No extra clock cycles\n001: 1 extra clock cycle\n010: 2 extra clock cycles\n011: 3 extra clock cycles\n100: 4 extra clock cycles\n101: 5 extra clock cycles\nOthers: Reserved\n420/4054 RM0436 Rev 7\nRM0436 DDR physical interface control (DDRPHYC)\n"
+              }
+            ]
+          }
+        ]
+      },
+      {
         "mapname": "DDRCTRL registers",
         "registers": [
           {
