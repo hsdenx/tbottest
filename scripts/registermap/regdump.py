@@ -113,7 +113,10 @@ def analyze_register(args):
         registers = args.regs
 
     for regs in registers:
-        regmap.registermap_dump_register_file(output_path, regs["address"], regs["value"])
+        try:
+            regmap.registermap_dump_register_file(output_path, regs["address"], regs["value"])
+        except:
+            print(f'address {regs["address"]} not found')
 
 
 def main():
