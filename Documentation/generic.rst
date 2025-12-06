@@ -514,6 +514,20 @@ Here as example for setup eth0 on wandboard.
 
         "ethintf", "ethernetinterface used on lab host for u-boot, default is eth0", "eth0"
 
+setup for dfu-util tool
+^^^^^^^^^^^^^^^^^^^^^^^
+
+if you need to load U-Boot binaries with dfu-util tool, use
+
+:py:meth:`tbottest.machineinit.DFUUTIL`
+
+define the section
+
+.. csv-table:: [DFUUTIL_CONFIG_<BOARDNAME>]
+        :header: "key", "value", "example"
+
+        "cmds", "array of dictionary, format see example", "[{'a':'@FSBL /0x01/1*1Me', 'D':'${LABHOST:tftproot}/${LABHOST:tftpsubdir}/u-boot-spl.stm32'}, {'a':'u-boot.itb', 'D':'${LABHOST:tftproot}/${LABHOST:tftpsubdir}/u-boot.itb'}]"
+
 
 setup for uuu tool
 ^^^^^^^^^^^^^^^^^^
@@ -888,6 +902,7 @@ powershellscript         use a shellscript for boards power control
 tinkerforge              use tinkerforge for boards power control
 picocom                  use picocom for serial console
 scriptcom                use a script for serial console
+dfuutilloader            load SPL/U-Boot with dfu-util tool
 uuuloader                load SPL/U-Boot with uuu tool from NXP
 ignore_loglevel          add ignore_level to miscargs (deprecated, use set_ub_board_specific)
 enterinitramfs           enter initramfs, add enterinitramfs to miscargs(deprecated, use set_ub_board_specific)

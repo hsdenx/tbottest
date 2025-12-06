@@ -226,6 +226,15 @@ class boardControlUUU(BOARDCTL, machineinit.UUULoad):
 
         return cmds
 
+class boardControlDFUUTIL(BOARDCTL, machineinit.DFUUTIL):
+    def dfuutil_loader_steps(self):
+        tftpd = self.host.tftp_dir()._local_str()
+        cfg = cfgt.dfuutilcfg[ini.generic_get_boardname()]
+        for c in cfg:
+            c["a"] = c["a"].replace("LBD", tftpd)
+            c["D"] = c["D"].replace("LBD", tftpd)
+
+        return cfg
 
 # if we want to download bootloader with Lauterbach TRACE32
 # after powering on the board, we must load the bootloader
@@ -283,6 +292,8 @@ class boardControlSegger(BOARDCTL, machineinit.SeggerLoad):
 
 if "uuuloader" in tbot.flags:
     BOARDCTRL = boardControlUUU
+elif "dfuutilloader" in tbot.flags:
+    BOARDCTRL = boardControlDFUUTIL
 elif "lauterbachloader" in tbot.flags:
     BOARDCTRL = boardControlLauterbach
 elif "seggerloader" in tbot.flags:

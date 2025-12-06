@@ -302,6 +302,13 @@ class IniTBotConfig:
 
                 self.ubcfg[nm] = cfg
 
+        self.dfuutilcfg = {}
+        for s in self.config_parser.sections():
+            if "DFUUTIL_CONFIG" in s:
+                nm = s.split("_")[2]
+                cmds = self.config_parser.get(s, "cmds")
+                self.dfuutilcfg[nm] = eval(cmds)
+
         self.uuucfg = {}
         for s in self.config_parser.sections():
             if "UUU_CONFIG" in s:

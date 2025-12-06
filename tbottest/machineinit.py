@@ -365,6 +365,62 @@ class UsbSdpLoad(machine.Initializer):
 
         yield None
 
+class DFUUTIL(machine.Initializer):
+    """
+    Machine-initializer for loading SPL/U-Boot image into
+    RAM with dfu-util tool
+
+    https://dfu-util.sourceforge.net/
+    https://sourceforge.net/p/dfu-util/dfu-util/ci/master/tree/
+
+    **Example**: (board config)
+
+    .. code-block:: python
+
+        from tbot.machine import board
+        from tbottest.powercontrol import SispmControl
+        from tbottest.machineinit import DFUUTIL
+
+        class MyControl(SispmControl, board.Board):
+            sispmctl_device = "01:01:5c:29:39"
+            sispmctl_port = "2"
+
+        class MyControlLoadUB(MyControl, DFUUTIL):
+            def dfuutil_loader_steps(self):
+                return [{'a':'@FSBL /0x01/1*1Me', 'D':'/tftpdir/u-boot-spl.stm32'}, {'a':'u-boot.itb', 'D':'/tftpdir/u-boot.itb'}]
+
+
+    This class sets also a tbot flag "dfuutilloader"
+
+    if passed to tbot, this class is active, if not passed
+    this class does nothing.
+    """
+    @abc.abstractmethod
+    def dfuutil_loader_steps(self) -> List[str]:
+        """
+        return list of steps to do for dfu-util tool
+
+            def dfuutil_loader_steps(self):
+                return [{"a":"@FSBL /0x01/1*1Me", "D":"<tftppath>/u-boot-spl.stm32;dfu-util"}, {"a":"u-boot.itb", "D":"<tftppath>/u-boot.itb"}]
+
+        This property is **required**.
+        """
+        raise Exception("abstract method")
+
+
+    @contextlib.contextmanager
+    def _init_machine(self) -> typing.Iterator:
+        if "dfuutilloader" not in tbot.flags:
+            yield None
+            return
+
+        cmds = self.dfuutil_loader_steps()  # type: List[str]
+        for cmd in cmds:
+            # command fails... FixMe
+            self.host.exec("dfu-util", "-w", "-a", cmd["a"], "-D", cmd["D"])  # type: ignore
+
+        yield None
+
 
 class UUULoad(machine.Initializer):
     """
@@ -483,6 +539,7 @@ class UUULoad(machine.Initializer):
 
 
 FLAGS = {
+    "dfuutilloader": "load images with dfu-util tool",
     "lauterbachloader": "load SPL/UBoot with Lauterbach TRACE32",
     "seggerloader": "load SPL/UBoot with Segger JLinkExe",
     "usbloader": "load SPL / U-Boot images with imx_usb_loader",
