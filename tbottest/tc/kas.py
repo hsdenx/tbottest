@@ -19,19 +19,25 @@ class KAS:
         cfgkas = {
             "kasurl" : "url from where kas sources get downloaded",
             "kasversion" : "kas version",
-            "build_machine" : "machinename",
-            "subdir" : "temp/customer",
-            "kascontainer" : True,
-            "netrc_file" : "path to .netrc file, sets NETRC_FILE",
-            "git_credential_store" : "/home/<username>/.git-credentials",
-            "ssh_dir" : "/home/<username>/.ssh",
-            "kaslayer" : "192.168.1.107:<path_to_kasconfig_layer>",
-            "kaslayername" : "name_of_repo",
-            "kaslayerbranch" : "dunfell",
-            "kasconfigfile" : "<pathto>/kas-machinename-denx.yml",
+            "build_machine" : "${default:machine}",
+            "subdir" : "${default:subdir}",
+            "netrc_file" :"/home/${default:build_user}/.netrc",
+            "git_credential_store" : "/home/${default:build_user}/.git-credentials",
+            "ssh_dir" : "/home/${default:build_user}/.ssh",
+            "kascontainer" : @@KASCONTAINER@@,
+            "kaslayer" : "${default:kasurl}/${default:kaslayer}.git",
+            "kaslayername" : "${default:kaslayer}",
+            "kaslayerbranch" : "${default:kaslayerbranch}",
+            "kasconfigfile" : "${default:kaslayer}/${default:kasymlname}",
+            "kas_runtime_args" : '\"--privileged -v ${default:build_dl}:/downloads -v ${default:build_sstate}:/sstate-cache\"',
             "bitbakeenvinit" : "sources/poky/oe-init-build-env",
             "envinit" : [""],
-            "buildtargets" : ["core-image", "rescueimage-fit", "swu-image"]
+            "auto.conf" : [
+               'DL_DIR="/downloads"',
+               'SSTATE_DIR="/sstate-cache"',
+               ],
+            "deploypath": "${default:deploydir}",
+            "buildtargets" : ["${default:rootfsname}"]
             "bitbakeoptions" : ["-q -q"]
         }
 
@@ -192,6 +198,7 @@ class KAS:
         self.container = False
         self.kasconfigpath = None
         self.autoconf = None
+        self.deploypath = None
 
         try:
             self.lab = self.cfg["labhost"]
@@ -270,6 +277,11 @@ class KAS:
             self.subdir = self.cfg["subdir"]
         except:  # noqa: E722
             raise RuntimeError("please configure subdir")
+
+        try:
+            self.deploypath = self.cfg["deploypath"]
+        except:  # noqa: E722
+            pass
 
         try:
             self.kaslayer = self.cfg["kaslayer"]
@@ -367,7 +379,11 @@ class KAS:
         """
         # we do not want to create this path
         # this is done through yocto setup
-        return self.kas_get_buildpath() / f"tmp/deploy/images/{self.build_machine}"
+        if not self.deploypath:
+            return self.kas_get_buildpath() / f"tmp/deploy/images/{self.build_machine}"
+
+        return self.kas_get_buildpath() / f"{self.deploypath}"
+
 
     @tbot.testcase
     def kas_env_init(self):
