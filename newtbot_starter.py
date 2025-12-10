@@ -34,7 +34,11 @@ except:
     sys.path.insert(0, currentdir + "/tbotconfig")
 
 sys.path.insert(0, currentdir + "/../tbot")
-sys.path.insert(0, currentdir + "/../tbottest")
+try:
+    TBOTTESTPATH = os.environ['TBOTTESTPATH']
+    sys.path.insert(0, TBOTTESTPATH)
+except:
+    sys.path.insert(0, currentdir + "/../tbottest")
 
 from tbot.newbot import main  # noqa: E402
 
