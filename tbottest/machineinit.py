@@ -6,6 +6,7 @@ from tbot.machine import machine
 from tbot.machine import linux
 from typing import List
 import time
+from tbottest.tc.common import search_string_in_multiline
 
 import platform
 
@@ -387,7 +388,7 @@ class DFUUTIL(machine.Initializer):
 
         class MyControlLoadUB(MyControl, DFUUTIL):
             def dfuutil_loader_steps(self):
-                return [{'a':'@FSBL /0x01/1*1Me', 'D':'/tftpdir/u-boot-spl.stm32'}, {'a':'u-boot.itb', 'D':'/tftpdir/u-boot.itb'}]
+                return [{'a':'@FSBL /0x01/1*1Me', 'D':'/tftpdir/u-boot-spl.stm32', 'dmesgcheck':'004900383232510630323432'}, {'a':'u-boot.itb', 'D':'/tftpdir/u-boot.itb'}]
 
 
     This class sets also a tbot flag "dfuutilloader"
@@ -417,6 +418,20 @@ class DFUUTIL(machine.Initializer):
         cmds = self.dfuutil_loader_steps()  # type: List[str]
         for cmd in cmds:
             # command fails... FixMe
+            try:
+                dmesgcheck = cmd["dmesgcheck"]
+            except:
+                dmesgcheck = None
+
+            if dmesgcheck:
+                print("dmesg check", dmesgcheck)
+                while(True):
+                    log = self.host.exec0("dmesg", linux.Raw("|"), "tail", "-5")
+                    if search_string_in_multiline(dmesgcheck, log):
+                        break
+
+                    time.sleep(1)
+
             self.host.exec("dfu-util", "-w", "-a", cmd["a"], "-D", cmd["D"])  # type: ignore
 
         yield None
