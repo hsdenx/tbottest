@@ -138,40 +138,13 @@ Here some setup tricks to get PI working as lab host
 
 My setup is always
 
-.. aafig::
 
-    +-------------------+
-    | Wifi to the world |
-    +-------------------+
-           ^
-           |
-           |  wifi
-           |
-           v
-    +---------------------+
-    |    wlan0            |
-    |                     |
-    |        PI           |
-    |                     |
-    | runs:               |
-    | - tftp server       |
-    | - local DHCP server |
-    | - nfs server        |
-    |                     |
-    |    eth0             |
-    +---------------------+
-           ^
-           |
-           | ethernet
-           | 192.168.3.x
-           |
-           v
-    +----------+
-    |    eth0  |
-    |          |
-    |   DUT    |
-    |          |
-    +----------+
+.. image:: images/hardware-setup.png
+   :alt: example hardware setup
+   :width: 600px
+   :align: center
+
+with a raspberry PI as lab host.
 
 setup ssh
 .........
