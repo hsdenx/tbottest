@@ -544,6 +544,26 @@ define the section
 
         "cmd", "comma seperated list of uuu commands to load SPL/U-Boot with uuu tool.", "LBD/SPL,SDPV: delay 100,SDPV: write -f LBD/u-boot.img -addr 0x877fffc0,SDPV: jump -addr 0x877fffc0"
 
+setup for sb tool
+^^^^^^^^^^^^^^^^^
+
+if you need to use UART boot and xmodem / ymodem transfer
+for loading the bootloader onto the hardware use this class
+
+:py:meth:`tbottest.machineinit.XMODEMLoad`
+
+define the section
+
+.. csv-table:: [XMODEM_CONFIG__wandboard]
+        :header: "key", "value", "example"
+
+        "device", "serial device sb tool uses", /dev/ttyUSB0
+        "cmd", "list of commands to load SPL/U-Boot with sb tool.", ["sb --xmodem TFTPDIR/tiboot3.bin > SERDEV < SERDEV"]
+
+SERDEV is replaced before executing the command with the value in device
+and TFTPDIR is replaced with the boards current tftp path.
+
+
 setup for Lauterbacher debugger
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -904,6 +924,7 @@ picocom                  use picocom for serial console
 scriptcom                use a script for serial console
 dfuutilloader            load SPL/U-Boot with dfu-util tool
 uuuloader                load SPL/U-Boot with uuu tool from NXP
+xmodemloader             load SPL/U-Boot with sb tool (xmodem/ymodem)
 ignore_loglevel          add ignore_level to miscargs (deprecated, use set_ub_board_specific)
 enterinitramfs           enter initramfs, add enterinitramfs to miscargs(deprecated, use set_ub_board_specific)
 linux_no_cmd_after_login set nothing after linux login (beside disable clutter)

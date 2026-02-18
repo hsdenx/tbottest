@@ -552,6 +552,108 @@ class UUULoad(machine.Initializer):
 
         yield None
 
+class XMODEMLoad(machine.Initializer):
+    """
+    Machine-initializer for loading SPL/U-Boot image into
+    RAM with UART bootmode (for example on TI AM62x)
+
+    You need to install the lrzsz tools on your labhost, so
+    you have the sb tool.
+
+    We may can check if tool is installed and if not
+    install it automagically...
+
+    **Example**: (board config)
+
+    .. code-block:: python
+
+        from tbot.machine import board
+        from tbottest.powercontrol import SispmControl
+        from tbottest.machineinit import XMODEMLoad
+
+        class MyControl(SispmControl, board.Board):
+            sispmctl_device = "01:01:5c:29:39"
+            sispmctl_port = "2"
+
+        class MyControlLoadUB(MyControl, XMODEMLoad):
+            def xmodem_loader_device(self):
+                return "/dev/ttyUSB0"
+
+            def xmodem_loader_steps(self):
+                return ["sb --xmodem TFTPDIR/tiboot3.bin > SERDEV < SERDEV",
+                        "sb --ymodem TFTPDIR/tispl.bin > SERDEV < SERDEV",
+                        "sb --ymodem TFTPDIR/u-boot.img > SERDEV < SERDEV",
+                        ]
+
+    This class sets also a tbot flag "xmodemloader"
+
+    if passed to tbot, this class is active, if not passed
+    this class does nothing.
+    """
+    toolchecked = False
+
+    @abc.abstractmethod
+    def xmodem_loader_steps(self) -> List[str]:
+        """
+        return list of steps send with sb tool
+
+            def xmodem_loader_steps(self):
+                return ["sb --xmodem TFTPDIR/tiboot3.bin > SERDEV < SERDEV",
+                        "sb --ymodem TFTPDIR/tispl.bin > SERDEV < SERDEV",
+                        "sb --ymodem TFTPDIR/u-boot.img > SERDEV < SERDEV"]
+
+        This property is **required**.
+        """
+        raise Exception("abstract method")
+
+    @abc.abstractmethod
+    def xmodem_loader_device(self) -> List[str]:
+        """
+        return serial device
+
+            def xmodem_loader_steps(self):
+                return "/dev/ttyUSB0"
+
+        This property is **required**.
+        """
+        raise Exception("abstract method")
+
+
+    def _check_xmodem_tool(self) -> bool:
+        """
+        check if sb tool is installed and can be used.
+        It is contained in lrzsz package
+        """
+        if self.toolchecked:
+            return True
+
+        try:
+            self.host.exec0("sb", "--help")
+            self.toolchecked = True
+            return True
+        except:
+            return False
+
+
+    @contextlib.contextmanager
+    def _init_machine(self) -> typing.Iterator:
+        if "xmodemloader" not in tbot.flags:
+            yield None
+            return
+
+        if not self._check_xmodem_tool():
+            yield None
+            return
+
+        steps = self.xmodem_loader_steps()  # type: List[str]
+        serialdev = serialdev = "/dev/serial/by-id/usb-FTDI_Dual_RS232-HS-if00-port0"
+        self.host.exec0("stty", "-F",  serialdev, "115200")  # type: ignore
+        for st in steps:
+            self.host.exec0(linux.Raw(st))  # type: ignore
+
+        yield None
+
+
 
 FLAGS = {
     "dfuutilloader": "load images with dfu-util tool",
@@ -559,4 +661,5 @@ FLAGS = {
     "seggerloader": "load SPL/UBoot with Segger JLinkExe",
     "usbloader": "load SPL / U-Boot images with imx_usb_loader",
     "uuuloader": "load images with uuu tool",
+    "xmodemloader": "load images with xmodem/ymodem sb tool (lrszsz package)",
 }

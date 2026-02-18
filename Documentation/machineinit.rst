@@ -25,3 +25,6 @@ are:
 
 .. autoclass:: tbottest.machineinit.LauterbachLoad
    :members: get_trace32_config, get_trace32_script
+
+.. autoclass:: tbottest.machineinit.XMODEMLoad
+   :members: xmodem_loader_device, xmodem_loader_steps

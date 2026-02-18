@@ -321,6 +321,16 @@ class IniTBotConfig:
 
                 self.uuucfg[nm] = uuucmd
 
+        self.xmodemcfg = {}
+        self.xmodemdevice = {}
+        for s in self.config_parser.sections():
+            if "XMODEM_CONFIG" in s:
+                nm = s.split("_")[2]
+                cmd = self.config_parser.get(s, "cmd")
+                xmodemcmd = eval(cmd)
+                self.xmodemcfg[nm] = xmodemcmd
+                self.xmodemdevice[nm] = self.config_parser.get(s, "device")
+
         self.lauterbachcfg = {}
         for s in self.config_parser.sections():
             if "LAUTERBACH_CONFIG" in s:

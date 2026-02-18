@@ -226,6 +226,19 @@ class boardControlUUU(BOARDCTL, machineinit.UUULoad):
 
         return cmds
 
+class boardControlXmodem(BOARDCTL, machineinit.XMODEMLoad):
+    def xmodem_loader_device(self):
+        return cfgt.xmodemdevice[ini.generic_get_boardname()]
+
+    def xmodem_loader_steps(self):
+        lbd = self.host.tftp_dir()._local_str()
+        xcfg = cfgt.xmodemcfg[ini.generic_get_boardname()]
+        xdev = self.xmodem_loader_device()
+        cmds = [s.replace("TFTPDIR", lbd) for s in xcfg]
+        cmds = [s.replace("SERDEV", xdev) for s in cmds]
+        return cmds
+
+
 class boardControlDFUUTIL(BOARDCTL, machineinit.DFUUTIL):
     def dfuutil_loader_steps(self):
         tftpd = self.host.tftp_dir()._local_str()
@@ -298,6 +311,8 @@ elif "lauterbachloader" in tbot.flags:
     BOARDCTRL = boardControlLauterbach
 elif "seggerloader" in tbot.flags:
     BOARDCTRL = boardControlSegger
+elif "xmodemloader" in tbot.flags:
+    BOARDCTRL = boardControlXmodem
 else:
     BOARDCTRL = BOARDCTL
 
