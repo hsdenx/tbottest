@@ -680,6 +680,20 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
         if "LABINIT" not in _INIT_CACHE:
             _INIT_CACHE["LABINIT"] = True
 
+            self.labinitfilename = "/tmp/tbotlabinitdone"
+            labinit = []
+            try:
+                labinit = eval(cfgt.config_parser.get(LABSECTIONNAME, "labinit"))
+
+                ret, log = self.exec("test", "-f", self.labinitfilename)
+                if ret is not 0:
+                    for i in labinit:
+                        self.exec0(linux.Raw(i))
+
+                    self.exec0("date", linux.Raw(">"), self.labinitfilename)
+            except:  # noqa: E722
+                pass
+
             if "noethinit" in tbot.flags:
                 return
 
@@ -703,13 +717,6 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
                     time.sleep(1)
                     out = self.exec0("ip", "link", "show", "dev", labdev)
 
-            labinit = []
-            try:
-                labinit = eval(cfgt.config_parser.get(LABSECTIONNAME, "labinit"))
-            except:  # noqa: E722
-                pass
-            for i in labinit:
-                self.exec0(linux.Raw(i))
 
     def has_sshmachine(self) -> bool:
         for s in cfgt.config_parser.sections():
