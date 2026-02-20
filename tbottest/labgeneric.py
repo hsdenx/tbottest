@@ -226,6 +226,7 @@ class boardControlUUU(BOARDCTL, machineinit.UUULoad):
 
         return cmds
 
+
 class boardControlXmodem(BOARDCTL, machineinit.XMODEMLoad):
     def xmodem_loader_device(self):
         return cfgt.xmodemdevice[ini.generic_get_boardname()]
@@ -248,6 +249,7 @@ class boardControlDFUUTIL(BOARDCTL, machineinit.DFUUTIL):
             c["D"] = c["D"].replace("LBD", tftpd)
 
         return cfg
+
 
 # if we want to download bootloader with Lauterbach TRACE32
 # after powering on the board, we must load the bootloader
@@ -686,7 +688,7 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
                 labinit = eval(cfgt.config_parser.get(LABSECTIONNAME, "labinit"))
 
                 ret, log = self.exec("test", "-f", self.labinitfilename)
-                if ret is not 0:
+                if ret != 0:
                     for i in labinit:
                         self.exec0(linux.Raw(i))
 
@@ -716,7 +718,6 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
                     self.exec0("sudo", "ethtool", "-s", labdev, "autoneg", "on")
                     time.sleep(1)
                     out = self.exec0("ip", "link", "show", "dev", labdev)
-
 
     def has_sshmachine(self) -> bool:
         for s in cfgt.config_parser.sections():
