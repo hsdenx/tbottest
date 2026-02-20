@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generic tbot config implementation &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tbottest.tbotconfig - ini file config" href="boardspecific.html" />
+    <link rel="prev" title="tbottest.powercontrol" href="powercontrol.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Generic tbot config implementation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardPicocomConnector"><code class="docutils literal notranslate"><span class="pre">boardPicocomConnector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardScriptConnector"><code class="docutils literal notranslate"><span class="pre">boardScriptConnector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardKermitConnector"><code class="docutils literal notranslate"><span class="pre">boardKermitConnector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardSSHConnector"><code class="docutils literal notranslate"><span class="pre">boardSSHConnector</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardSSHConnector.authenticator"><code class="docutils literal notranslate"><span class="pre">boardSSHConnector.authenticator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardGpioControl"><code class="docutils literal notranslate"><span class="pre">boardGpioControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardGpioControl.power_check"><code class="docutils literal notranslate"><span class="pre">boardGpioControl.power_check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardGpioControl.ch"><code class="docutils literal notranslate"><span class="pre">boardGpioControl.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardPowerShellControl"><code class="docutils literal notranslate"><span class="pre">boardPowerShellControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardPowerShellControl.power_check"><code class="docutils literal notranslate"><span class="pre">boardPowerShellControl.power_check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardPowerShellControl.ch"><code class="docutils literal notranslate"><span class="pre">boardPowerShellControl.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardSisControl"><code class="docutils literal notranslate"><span class="pre">boardSisControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardSisControl.power_check"><code class="docutils literal notranslate"><span class="pre">boardSisControl.power_check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardSisControl.ch"><code class="docutils literal notranslate"><span class="pre">boardSisControl.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardTMControl"><code class="docutils literal notranslate"><span class="pre">boardTMControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardTMControl.power_check"><code class="docutils literal notranslate"><span class="pre">boardTMControl.power_check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardTMControl.ch"><code class="docutils literal notranslate"><span class="pre">boardTMControl.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardTFControl"><code class="docutils literal notranslate"><span class="pre">boardTFControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardTFControl.ch"><code class="docutils literal notranslate"><span class="pre">boardTFControl.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.BOARDCTL"><code class="docutils literal notranslate"><span class="pre">BOARDCTL</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardControlUUU"><code class="docutils literal notranslate"><span class="pre">boardControlUUU</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlUUU.get_uuu_tool"><code class="docutils literal notranslate"><span class="pre">boardControlUUU.get_uuu_tool()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlUUU.uuu_loader_steps"><code class="docutils literal notranslate"><span class="pre">boardControlUUU.uuu_loader_steps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlUUU.ch"><code class="docutils literal notranslate"><span class="pre">boardControlUUU.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardControlXmodem"><code class="docutils literal notranslate"><span class="pre">boardControlXmodem</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlXmodem.xmodem_loader_device"><code class="docutils literal notranslate"><span class="pre">boardControlXmodem.xmodem_loader_device()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlXmodem.xmodem_loader_steps"><code class="docutils literal notranslate"><span class="pre">boardControlXmodem.xmodem_loader_steps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlXmodem.ch"><code class="docutils literal notranslate"><span class="pre">boardControlXmodem.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardControlDFUUTIL"><code class="docutils literal notranslate"><span class="pre">boardControlDFUUTIL</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlDFUUTIL.dfuutil_loader_steps"><code class="docutils literal notranslate"><span class="pre">boardControlDFUUTIL.dfuutil_loader_steps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlDFUUTIL.ch"><code class="docutils literal notranslate"><span class="pre">boardControlDFUUTIL.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardControlLauterbach"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlLauterbach.get_host"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.get_host()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlLauterbach.get_trace32_install_path"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.get_trace32_install_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlLauterbach.get_trace32_cmd"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.get_trace32_cmd()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlLauterbach.get_trace32_config"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.get_trace32_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlLauterbach.get_trace32_script"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.get_trace32_script()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlLauterbach.ch"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardControlSegger"><code class="docutils literal notranslate"><span class="pre">boardControlSegger</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlSegger.get_host"><code class="docutils literal notranslate"><span class="pre">boardControlSegger.get_host()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlSegger.get_segger_cmds"><code class="docutils literal notranslate"><span class="pre">boardControlSegger.get_segger_cmds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.boardControlSegger.ch"><code class="docutils literal notranslate"><span class="pre">boardControlSegger.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.BOARDCTRL"><code class="docutils literal notranslate"><span class="pre">BOARDCTRL</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.BOARDCON"><code class="docutils literal notranslate"><span class="pre">BOARDCON</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardControlFull"><code class="docutils literal notranslate"><span class="pre">boardControlFull</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.boardExtPower"><code class="docutils literal notranslate"><span class="pre">boardExtPower</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.GenericLab"><code class="docutils literal notranslate"><span class="pre">GenericLab</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.GenericLab.ssh_config"><code class="docutils literal notranslate"><span class="pre">GenericLab.ssh_config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.GenericLab.authenticator"><code class="docutils literal notranslate"><span class="pre">GenericLab.authenticator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.GenericLab.tftp_root_path"><code class="docutils literal notranslate"><span class="pre">GenericLab.tftp_root_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.GenericLab.tftp_dir_board"><code class="docutils literal notranslate"><span class="pre">GenericLab.tftp_dir_board()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.GenericLab.workdir"><code class="docutils literal notranslate"><span class="pre">GenericLab.workdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.GenericLab.tmpdir"><code class="docutils literal notranslate"><span class="pre">GenericLab.tmpdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.GenericLab.tmpmntdir"><code class="docutils literal notranslate"><span class="pre">GenericLab.tmpmntdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.GenericLab.nfsbasedir"><code class="docutils literal notranslate"><span class="pre">GenericLab.nfsbasedir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.GenericLab.nfsboardbasedir"><code class="docutils literal notranslate"><span class="pre">GenericLab.nfsboardbasedir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.GenericLab.toolsdir"><code class="docutils literal notranslate"><span class="pre">GenericLab.toolsdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.GenericLab.yocto_result_dir"><code class="docutils literal notranslate"><span class="pre">GenericLab.yocto_result_dir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.GenericLab.toolchains"><code class="docutils literal notranslate"><span class="pre">GenericLab.toolchains</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.GenericLab.lab_set_sd_mux_mode"><code class="docutils literal notranslate"><span class="pre">GenericLab.lab_set_sd_mux_mode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.GenericLab.set_bootmode"><code class="docutils literal notranslate"><span class="pre">GenericLab.set_bootmode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.GenericLab.init"><code class="docutils literal notranslate"><span class="pre">GenericLab.init()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.SSHMachine"><code class="docutils literal notranslate"><span class="pre">SSHMachine</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.SSHMachine.workdir"><code class="docutils literal notranslate"><span class="pre">SSHMachine.workdir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.SSHMachine.init"><code class="docutils literal notranslate"><span class="pre">SSHMachine.init()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.labgeneric.LocalHostTest"><code class="docutils literal notranslate"><span class="pre">LocalHostTest</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.LocalHostTest.workdir"><code class="docutils literal notranslate"><span class="pre">LocalHostTest.workdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.labgeneric.LocalHostTest.sourcedir"><code class="docutils literal notranslate"><span class="pre">LocalHostTest.sourcedir()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Generic tbot config implementation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/labgeneric.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="generic-tbot-config-implementation">
+<h1>Generic tbot config implementation<a class="headerlink" href="#generic-tbot-config-implementation" title="Permalink to this heading">¶</a></h1>
+<p>This implements the apporach for an generic tbot configuration
+configured through ini files.</p>
+<span class="target" id="module-tbottest.labgeneric"></span><dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardPicocomConnector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardPicocomConnector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mach</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardPicocomConnector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardPicocomConnector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="connector.html#tbottest.connector.PicocomConnector" title="tbottest.connector.PicocomConnector"><code class="xref py py-class docutils literal notranslate"><span class="pre">PicocomConnector</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mach</strong> (<em>LinuxShell</em>) – A cloneable lab-host machine.  The
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ConsoleConnector</span></code> will try to clone this machine’s
+connection and use that to connect to the board.  This means that
+you have to make sure you give the correct lab-host for your
+respecitive board to the constructor here.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardScriptConnector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardScriptConnector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mach</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardScriptConnector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardScriptConnector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="connector.html#tbottest.connector.ScriptConnector" title="tbottest.connector.ScriptConnector"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptConnector</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mach</strong> (<em>LinuxShell</em>) – A cloneable lab-host machine.  The
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ConsoleConnector</span></code> will try to clone this machine’s
+connection and use that to connect to the board.  This means that
+you have to make sure you give the correct lab-host for your
+respecitive board to the constructor here.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardKermitConnector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardKermitConnector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mach</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardKermitConnector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardKermitConnector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="connector.html#tbottest.connector.KermitConnector" title="tbottest.connector.KermitConnector"><code class="xref py py-class docutils literal notranslate"><span class="pre">KermitConnector</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mach</strong> (<em>LinuxShell</em>) – A cloneable lab-host machine.  The
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ConsoleConnector</span></code> will try to clone this machine’s
+connection and use that to connect to the board.  This means that
+you have to make sure you give the correct lab-host for your
+respecitive board to the constructor here.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardSSHConnector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardSSHConnector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardSSHConnector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardSSHConnector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">SSHConnector</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardSSHConnector.authenticator">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">authenticator</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.14)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PasswordAuthenticator</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">PrivateKeyAuthenticator</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NoneAuthenticator</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">UndefinedAuthenticator</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#tbottest.labgeneric.boardSSHConnector.authenticator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an authenticator that allows logging in on this machine.</p>
+<p>See <code class="xref py py-mod docutils literal notranslate"><span class="pre">tbot.machine.linux.auth</span></code> for available authenticators.</p>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>It is strongly advised to use key authentication.  If you use password
+auth, <strong>THE PASSWORD WILL BE LEAKED</strong> and <strong>MIGHT EASILY BE STOLEN</strong>
+by other users on your labhost.  It will also be visible in the log file.</p>
+<p>If you decide to use this, you’re doing this on your own risk.</p>
+<p>The only case where I support using passwords is when connecting to
+a test board with a default password.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tbot.machine.linux.auth.Authenticator</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardGpioControl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardGpioControl</span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardGpioControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardGpioControl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="powercontrol.html#tbottest.powercontrol.GpiopmControl" title="tbottest.powercontrol.GpiopmControl"><code class="xref py py-class docutils literal notranslate"><span class="pre">GpiopmControl</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardGpioControl.power_check">
+<span class="sig-name descname"><span class="pre">power_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardGpioControl.power_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardGpioControl.power_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the board is already on and someone else might be using it.</p>
+<p>Implementations of this function should raise an exception in case they
+detect the board to be on or return <code class="docutils literal notranslate"><span class="pre">False</span></code>.  If the board is off and
+ready to be used, an implementation should return <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardGpioControl.ch">
+<span class="sig-name descname"><span class="pre">ch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">channel.Channel</span></em><a class="headerlink" href="#tbottest.labgeneric.boardGpioControl.ch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel to communicate with this machine.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Please refrain from interacting with the channel directly.  Instead,
+write a <code class="xref py py-class docutils literal notranslate"><span class="pre">Shell</span></code> that wraps around the
+channel interaction.  That way, the state of the channel is only
+managed in a single place and you won’t have to deal with nasty bugs
+when multiple parties make assumptions about the state of the channel.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardPowerShellControl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardPowerShellControl</span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardPowerShellControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardPowerShellControl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="powercontrol.html#tbottest.powercontrol.PowerShellScriptControl" title="tbottest.powercontrol.PowerShellScriptControl"><code class="xref py py-class docutils literal notranslate"><span class="pre">PowerShellScriptControl</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardPowerShellControl.power_check">
+<span class="sig-name descname"><span class="pre">power_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardPowerShellControl.power_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardPowerShellControl.power_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the board is already on and someone else might be using it.</p>
+<p>Implementations of this function should raise an exception in case they
+detect the board to be on or return <code class="docutils literal notranslate"><span class="pre">False</span></code>.  If the board is off and
+ready to be used, an implementation should return <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardPowerShellControl.ch">
+<span class="sig-name descname"><span class="pre">ch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">channel.Channel</span></em><a class="headerlink" href="#tbottest.labgeneric.boardPowerShellControl.ch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel to communicate with this machine.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Please refrain from interacting with the channel directly.  Instead,
+write a <code class="xref py py-class docutils literal notranslate"><span class="pre">Shell</span></code> that wraps around the
+channel interaction.  That way, the state of the channel is only
+managed in a single place and you won’t have to deal with nasty bugs
+when multiple parties make assumptions about the state of the channel.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardSisControl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardSisControl</span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardSisControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardSisControl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="powercontrol.html#tbottest.powercontrol.SispmControl" title="tbottest.powercontrol.SispmControl"><code class="xref py py-class docutils literal notranslate"><span class="pre">SispmControl</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardSisControl.power_check">
+<span class="sig-name descname"><span class="pre">power_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardSisControl.power_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardSisControl.power_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the board is already on and someone else might be using it.</p>
+<p>Implementations of this function should raise an exception in case they
+detect the board to be on or return <code class="docutils literal notranslate"><span class="pre">False</span></code>.  If the board is off and
+ready to be used, an implementation should return <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardSisControl.ch">
+<span class="sig-name descname"><span class="pre">ch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">channel.Channel</span></em><a class="headerlink" href="#tbottest.labgeneric.boardSisControl.ch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel to communicate with this machine.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Please refrain from interacting with the channel directly.  Instead,
+write a <code class="xref py py-class docutils literal notranslate"><span class="pre">Shell</span></code> that wraps around the
+channel interaction.  That way, the state of the channel is only
+managed in a single place and you won’t have to deal with nasty bugs
+when multiple parties make assumptions about the state of the channel.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardTMControl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardTMControl</span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardTMControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardTMControl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="powercontrol.html#tbottest.powercontrol.TM021Control" title="tbottest.powercontrol.TM021Control"><code class="xref py py-class docutils literal notranslate"><span class="pre">TM021Control</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardTMControl.power_check">
+<span class="sig-name descname"><span class="pre">power_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardTMControl.power_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardTMControl.power_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the board is already on and someone else might be using it.</p>
+<p>Implementations of this function should raise an exception in case they
+detect the board to be on or return <code class="docutils literal notranslate"><span class="pre">False</span></code>.  If the board is off and
+ready to be used, an implementation should return <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardTMControl.ch">
+<span class="sig-name descname"><span class="pre">ch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">channel.Channel</span></em><a class="headerlink" href="#tbottest.labgeneric.boardTMControl.ch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel to communicate with this machine.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Please refrain from interacting with the channel directly.  Instead,
+write a <code class="xref py py-class docutils literal notranslate"><span class="pre">Shell</span></code> that wraps around the
+channel interaction.  That way, the state of the channel is only
+managed in a single place and you won’t have to deal with nasty bugs
+when multiple parties make assumptions about the state of the channel.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardTFControl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardTFControl</span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardTFControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardTFControl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="powercontrol.html#tbottest.powercontrol.TinkerforgeControl" title="tbottest.powercontrol.TinkerforgeControl"><code class="xref py py-class docutils literal notranslate"><span class="pre">TinkerforgeControl</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardTFControl.ch">
+<span class="sig-name descname"><span class="pre">ch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">channel.Channel</span></em><a class="headerlink" href="#tbottest.labgeneric.boardTFControl.ch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel to communicate with this machine.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Please refrain from interacting with the channel directly.  Instead,
+write a <code class="xref py py-class docutils literal notranslate"><span class="pre">Shell</span></code> that wraps around the
+channel interaction.  That way, the state of the channel is only
+managed in a single place and you won’t have to deal with nasty bugs
+when multiple parties make assumptions about the state of the channel.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tbottest.labgeneric.BOARDCTL">
+<span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">BOARDCTL</span></span><a class="headerlink" href="#tbottest.labgeneric.BOARDCTL" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#tbottest.labgeneric.boardSisControl" title="tbottest.labgeneric.boardSisControl"><code class="xref py py-class docutils literal notranslate"><span class="pre">boardSisControl</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlUUU">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardControlUUU</span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlUUU"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlUUU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tbottest.labgeneric.boardSisControl" title="tbottest.labgeneric.boardSisControl"><code class="xref py py-class docutils literal notranslate"><span class="pre">boardSisControl</span></code></a>, <a class="reference internal" href="machineinit.html#tbottest.machineinit.UUULoad" title="tbottest.machineinit.UUULoad"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUULoad</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlUUU.get_uuu_tool">
+<span class="sig-name descname"><span class="pre">get_uuu_tool</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlUUU.get_uuu_tool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlUUU.get_uuu_tool" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>def get_uuu_tool(self) -&gt; linux.Path:</dt><dd><p>return lh.workdir / “tools”</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>linux.Path</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the uuu directory on your LabHost</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlUUU.uuu_loader_steps">
+<span class="sig-name descname"><span class="pre">uuu_loader_steps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlUUU.uuu_loader_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlUUU.uuu_loader_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>return list of steps to do for uuu tool</p>
+<blockquote>
+<div><dl>
+<dt>def uuu_loader_steps(self):</dt><dd><p>p = self.host.yocto_result_dir()
+return [linux.Raw(f”SDP: boot -f /srv/tftpboot/SPL”),</p>
+<blockquote>
+<div><p>linux.Raw(f”SDPV: delay 100”),
+linux.Raw(f”SDPV: write -f /srv/tftpboot/u-boot-dtb.img -addr 0x877fffc0 -skipfhdr”),
+linux.Raw(f”SDPV: jump -addr 0x877fffc0”),
+]</p>
+</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+<p>This property is <strong>required</strong>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlUUU.ch">
+<span class="sig-name descname"><span class="pre">ch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">channel.Channel</span></em><a class="headerlink" href="#tbottest.labgeneric.boardControlUUU.ch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel to communicate with this machine.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Please refrain from interacting with the channel directly.  Instead,
+write a <code class="xref py py-class docutils literal notranslate"><span class="pre">Shell</span></code> that wraps around the
+channel interaction.  That way, the state of the channel is only
+managed in a single place and you won’t have to deal with nasty bugs
+when multiple parties make assumptions about the state of the channel.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlXmodem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardControlXmodem</span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlXmodem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlXmodem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tbottest.labgeneric.boardSisControl" title="tbottest.labgeneric.boardSisControl"><code class="xref py py-class docutils literal notranslate"><span class="pre">boardSisControl</span></code></a>, <a class="reference internal" href="machineinit.html#tbottest.machineinit.XMODEMLoad" title="tbottest.machineinit.XMODEMLoad"><code class="xref py py-class docutils literal notranslate"><span class="pre">XMODEMLoad</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlXmodem.xmodem_loader_device">
+<span class="sig-name descname"><span class="pre">xmodem_loader_device</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlXmodem.xmodem_loader_device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlXmodem.xmodem_loader_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>return serial device</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def xmodem_loader_steps(self):</dt><dd><p>return “/dev/ttyUSB0”</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>This property is <strong>required</strong>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlXmodem.xmodem_loader_steps">
+<span class="sig-name descname"><span class="pre">xmodem_loader_steps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlXmodem.xmodem_loader_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlXmodem.xmodem_loader_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>return list of steps send with sb tool</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def xmodem_loader_steps(self):</dt><dd><dl class="simple">
+<dt>return [“sb –xmodem TFTPDIR/tiboot3.bin &gt; SERDEV &lt; SERDEV”,</dt><dd><p>“sb –ymodem TFTPDIR/tispl.bin &gt; SERDEV &lt; SERDEV”,
+“sb –ymodem TFTPDIR/u-boot.img &gt; SERDEV &lt; SERDEV”]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p>This property is <strong>required</strong>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlXmodem.ch">
+<span class="sig-name descname"><span class="pre">ch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">channel.Channel</span></em><a class="headerlink" href="#tbottest.labgeneric.boardControlXmodem.ch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel to communicate with this machine.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Please refrain from interacting with the channel directly.  Instead,
+write a <code class="xref py py-class docutils literal notranslate"><span class="pre">Shell</span></code> that wraps around the
+channel interaction.  That way, the state of the channel is only
+managed in a single place and you won’t have to deal with nasty bugs
+when multiple parties make assumptions about the state of the channel.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlDFUUTIL">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardControlDFUUTIL</span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlDFUUTIL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlDFUUTIL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tbottest.labgeneric.boardSisControl" title="tbottest.labgeneric.boardSisControl"><code class="xref py py-class docutils literal notranslate"><span class="pre">boardSisControl</span></code></a>, <a class="reference internal" href="machineinit.html#tbottest.machineinit.DFUUTIL" title="tbottest.machineinit.DFUUTIL"><code class="xref py py-class docutils literal notranslate"><span class="pre">DFUUTIL</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlDFUUTIL.dfuutil_loader_steps">
+<span class="sig-name descname"><span class="pre">dfuutil_loader_steps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlDFUUTIL.dfuutil_loader_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlDFUUTIL.dfuutil_loader_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>return list of steps to do for dfu-util tool</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def dfuutil_loader_steps(self):</dt><dd><p>return [{“a”:”&#64;FSBL /0x01/1*1Me”, “D”:”&lt;tftppath&gt;/u-boot-spl.stm32;dfu-util”}, {“a”:”u-boot.itb”, “D”:”&lt;tftppath&gt;/u-boot.itb”}]</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>This property is <strong>required</strong>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlDFUUTIL.ch">
+<span class="sig-name descname"><span class="pre">ch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">channel.Channel</span></em><a class="headerlink" href="#tbottest.labgeneric.boardControlDFUUTIL.ch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel to communicate with this machine.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Please refrain from interacting with the channel directly.  Instead,
+write a <code class="xref py py-class docutils literal notranslate"><span class="pre">Shell</span></code> that wraps around the
+channel interaction.  That way, the state of the channel is only
+managed in a single place and you won’t have to deal with nasty bugs
+when multiple parties make assumptions about the state of the channel.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlLauterbach">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardControlLauterbach</span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlLauterbach"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlLauterbach" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tbottest.labgeneric.boardSisControl" title="tbottest.labgeneric.boardSisControl"><code class="xref py py-class docutils literal notranslate"><span class="pre">boardSisControl</span></code></a>, <a class="reference internal" href="machineinit.html#tbottest.machineinit.LauterbachLoad" title="tbottest.machineinit.LauterbachLoad"><code class="xref py py-class docutils literal notranslate"><span class="pre">LauterbachLoad</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlLauterbach.get_host">
+<span class="sig-name descname"><span class="pre">get_host</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlLauterbach.get_host"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlLauterbach.get_host" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>def get_trace32_path(self) -&gt; linux.Bash:</dt><dd><p>return self.host</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Host on which the trace32 tool is installed</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlLauterbach.get_trace32_install_path">
+<span class="sig-name descname"><span class="pre">get_trace32_install_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlLauterbach.get_trace32_install_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlLauterbach.get_trace32_install_path" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>def get_trace32_path(self) -&gt; str:</dt><dd><p>return “/opt/t32”</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the trace32 directory on your Host</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlLauterbach.get_trace32_cmd">
+<span class="sig-name descname"><span class="pre">get_trace32_cmd</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlLauterbach.get_trace32_cmd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlLauterbach.get_trace32_cmd" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>def get_trace32_path(self) -&gt; str:</dt><dd><p>return “/opt/t32/bin/pc_linux64/t32marm-qt”</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the trace32 directory on your Host</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlLauterbach.get_trace32_config">
+<span class="sig-name descname"><span class="pre">get_trace32_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlLauterbach.get_trace32_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlLauterbach.get_trace32_config" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>def get_trace32_path(self) -&gt; str:</dt><dd><p>return “&lt;pathto&gt;/config.t32”</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the config.t32 file on your Host</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlLauterbach.get_trace32_script">
+<span class="sig-name descname"><span class="pre">get_trace32_script</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlLauterbach.get_trace32_script"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlLauterbach.get_trace32_script" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>def get_trace32_path(self) -&gt; str:</dt><dd><p>return “&lt;pathto&gt;/autoboot.cmm”</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the cript file on your Host</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlLauterbach.ch">
+<span class="sig-name descname"><span class="pre">ch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">channel.Channel</span></em><a class="headerlink" href="#tbottest.labgeneric.boardControlLauterbach.ch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel to communicate with this machine.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Please refrain from interacting with the channel directly.  Instead,
+write a <code class="xref py py-class docutils literal notranslate"><span class="pre">Shell</span></code> that wraps around the
+channel interaction.  That way, the state of the channel is only
+managed in a single place and you won’t have to deal with nasty bugs
+when multiple parties make assumptions about the state of the channel.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlSegger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardControlSegger</span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlSegger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlSegger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tbottest.labgeneric.boardSisControl" title="tbottest.labgeneric.boardSisControl"><code class="xref py py-class docutils literal notranslate"><span class="pre">boardSisControl</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">SeggerLoad</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlSegger.get_host">
+<span class="sig-name descname"><span class="pre">get_host</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlSegger.get_host"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlSegger.get_host" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>def get_host(self) -&gt; linux.Bash:</dt><dd><p>return self.host</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Host on which the segger tools are installed</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlSegger.get_segger_cmds">
+<span class="sig-name descname"><span class="pre">get_segger_cmds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlSegger.get_segger_cmds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlSegger.get_segger_cmds" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>def get_segger_cmds(self) -&gt; str:</dt><dd><p>return [{“cmd”:”foo”, “prompt”:”pro1”, {“cmd”:”bar”, “prompt”:”por2”}]</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlSegger.ch">
+<span class="sig-name descname"><span class="pre">ch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">channel.Channel</span></em><a class="headerlink" href="#tbottest.labgeneric.boardControlSegger.ch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel to communicate with this machine.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Please refrain from interacting with the channel directly.  Instead,
+write a <code class="xref py py-class docutils literal notranslate"><span class="pre">Shell</span></code> that wraps around the
+channel interaction.  That way, the state of the channel is only
+managed in a single place and you won’t have to deal with nasty bugs
+when multiple parties make assumptions about the state of the channel.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tbottest.labgeneric.BOARDCTRL">
+<span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">BOARDCTRL</span></span><a class="headerlink" href="#tbottest.labgeneric.BOARDCTRL" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#tbottest.labgeneric.boardSisControl" title="tbottest.labgeneric.boardSisControl"><code class="xref py py-class docutils literal notranslate"><span class="pre">boardSisControl</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tbottest.labgeneric.BOARDCON">
+<span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">BOARDCON</span></span><a class="headerlink" href="#tbottest.labgeneric.BOARDCON" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#tbottest.labgeneric.boardKermitConnector" title="tbottest.labgeneric.boardKermitConnector"><code class="xref py py-class docutils literal notranslate"><span class="pre">boardKermitConnector</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardControlFull">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardControlFull</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mach</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardControlFull"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardControlFull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tbottest.labgeneric.boardKermitConnector" title="tbottest.labgeneric.boardKermitConnector"><code class="xref py py-class docutils literal notranslate"><span class="pre">boardKermitConnector</span></code></a>, <a class="reference internal" href="#tbottest.labgeneric.boardSisControl" title="tbottest.labgeneric.boardSisControl"><code class="xref py py-class docutils literal notranslate"><span class="pre">boardSisControl</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Board</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mach</strong> (<em>LinuxShell</em>) – A cloneable lab-host machine.  The
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ConsoleConnector</span></code> will try to clone this machine’s
+connection and use that to connect to the board.  This means that
+you have to make sure you give the correct lab-host for your
+respecitive board to the constructor here.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.boardExtPower">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">boardExtPower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mach</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#boardExtPower"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.boardExtPower" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tbottest.labgeneric.boardKermitConnector" title="tbottest.labgeneric.boardKermitConnector"><code class="xref py py-class docutils literal notranslate"><span class="pre">boardKermitConnector</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Board</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mach</strong> (<em>LinuxShell</em>) – A cloneable lab-host machine.  The
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ConsoleConnector</span></code> will try to clone this machine’s
+connection and use that to connect to the board.  This means that
+you have to make sure you give the correct lab-host for your
+respecitive board to the constructor here.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">GenericLab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#GenericLab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.GenericLab" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">SSHConnector</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Bash</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Lab</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Builder</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab.ssh_config">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ssh_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#tbottest.labgeneric.GenericLab.ssh_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>if ProxyJump does not work, execute this command from hand
+on the lab PC with BatchMode=no” -&gt; answer allwith “yes”
+If again password question pops up, copy id_rsa.pub from
+lab PC to authorized_keys on build PC</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab.authenticator">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">authenticator</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.14)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PasswordAuthenticator</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">PrivateKeyAuthenticator</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NoneAuthenticator</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">UndefinedAuthenticator</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#tbottest.labgeneric.GenericLab.authenticator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an authenticator that allows logging in on this machine.</p>
+<p>See <code class="xref py py-mod docutils literal notranslate"><span class="pre">tbot.machine.linux.auth</span></code> for available authenticators.</p>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>It is strongly advised to use key authentication.  If you use password
+auth, <strong>THE PASSWORD WILL BE LEAKED</strong> and <strong>MIGHT EASILY BE STOLEN</strong>
+by other users on your labhost.  It will also be visible in the log file.</p>
+<p>If you decide to use this, you’re doing this on your own risk.</p>
+<p>The only case where I support using passwords is when connecting to
+a test board with a default password.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tbot.machine.linux.auth.Authenticator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab.tftp_root_path">
+<span class="sig-name descname"><span class="pre">tftp_root_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tbottest.labgeneric.GenericLab" title="tbottest.labgeneric.GenericLab"><span class="pre">GenericLab</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#GenericLab.tftp_root_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.GenericLab.tftp_root_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns root tftp path</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab.tftp_dir_board">
+<span class="sig-name descname"><span class="pre">tftp_dir_board</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tbottest.labgeneric.GenericLab" title="tbottest.labgeneric.GenericLab"><span class="pre">GenericLab</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#GenericLab.tftp_dir_board"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.GenericLab.tftp_dir_board" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns tftp path for u-boot tftp command</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab.workdir">
+<span class="sig-name descname"><span class="pre">workdir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tbottest.labgeneric.GenericLab" title="tbottest.labgeneric.GenericLab"><span class="pre">GenericLab</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#GenericLab.workdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.GenericLab.workdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns tbot workdir for this lab</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab.tmpdir">
+<span class="sig-name descname"><span class="pre">tmpdir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tbottest.labgeneric.GenericLab" title="tbottest.labgeneric.GenericLab"><span class="pre">GenericLab</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#GenericLab.tmpdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.GenericLab.tmpdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns tbot tmpdir for this lab</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab.tmpmntdir">
+<span class="sig-name descname"><span class="pre">tmpmntdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tbottest.labgeneric.GenericLab" title="tbottest.labgeneric.GenericLab"><span class="pre">GenericLab</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#GenericLab.tmpmntdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.GenericLab.tmpmntdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns tbot tmpdir for mounting stuff on this lab</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab.nfsbasedir">
+<span class="sig-name descname"><span class="pre">nfsbasedir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tbottest.labgeneric.GenericLab" title="tbottest.labgeneric.GenericLab"><span class="pre">GenericLab</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#GenericLab.nfsbasedir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.GenericLab.nfsbasedir" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns nfs base directory, configured in section [LABHOST]
+in <code class="docutils literal notranslate"><span class="pre">`tbot.ini`</span></code>, key value <code class="docutils literal notranslate"><span class="pre">`nfs_base_path`</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab.nfsboardbasedir">
+<span class="sig-name descname"><span class="pre">nfsboardbasedir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tbottest.labgeneric.GenericLab" title="tbottest.labgeneric.GenericLab"><span class="pre">GenericLab</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#GenericLab.nfsboardbasedir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.GenericLab.nfsboardbasedir" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns nfs base directory for the specific board,
+configured in section [default] in <code class="docutils literal notranslate"><span class="pre">`BOARDNAME.ini`</span></code>,
+key value <code class="docutils literal notranslate"><span class="pre">`nfs_path`</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab.toolsdir">
+<span class="sig-name descname"><span class="pre">toolsdir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tbottest.labgeneric.GenericLab" title="tbottest.labgeneric.GenericLab"><span class="pre">GenericLab</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#GenericLab.toolsdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.GenericLab.toolsdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns directory where tbot finds tools</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab.yocto_result_dir">
+<span class="sig-name descname"><span class="pre">yocto_result_dir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tbottest.labgeneric.GenericLab" title="tbottest.labgeneric.GenericLab"><span class="pre">GenericLab</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#GenericLab.yocto_result_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.GenericLab.yocto_result_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns path to directory where tbot finds yocto build results</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab.toolchains">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">toolchains</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.14)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Toolchain</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#tbottest.labgeneric.GenericLab.toolchains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary of all toolchains that exist on this buildhost.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@property</span>
+<span class="k">def</span> <span class="nf">toolchains</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">build</span><span class="o">.</span><span class="n">Toolchain</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;armv7a&quot;</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">build</span><span class="o">.</span><span class="n">DistroToolchain</span><span class="p">(</span><span class="s2">&quot;arm&quot;</span><span class="p">,</span> <span class="s2">&quot;arm-linux-gnueabi-&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;armv8&quot;</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">build</span><span class="o">.</span><span class="n">DistroToolchain</span><span class="p">(</span><span class="s2">&quot;aarch64&quot;</span><span class="p">,</span> <span class="s2">&quot;aarch64-linux-gnu-&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;mipsel&quot;</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">build</span><span class="o">.</span><span class="n">DistroToolchain</span><span class="p">(</span><span class="s2">&quot;mips&quot;</span><span class="p">,</span> <span class="s2">&quot;mipsel-linux-gnu-&quot;</span><span class="p">),</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab.lab_set_sd_mux_mode">
+<span class="sig-name descname"><span class="pre">lab_set_sd_mux_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#GenericLab.lab_set_sd_mux_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.GenericLab.lab_set_sd_mux_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>set sd mux mode to lab or dut</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab.set_bootmode">
+<span class="sig-name descname"><span class="pre">set_bootmode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wantbootmode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#GenericLab.set_bootmode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.GenericLab.set_bootmode" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the bootmode defined in config file section [BOOTMODE_&lt;boardname&gt;]</p>
+<p>example config for gpio setup:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[BOOTMODE_testboard]</span>
+<span class="na">modes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[{&quot;name&quot;:&quot;bootmode:uart0&quot;, &quot;gpios&quot;:&quot;26:1 19:0&quot;}, {&quot;name&quot;:&quot;bootmode:spinor&quot;, &quot;gpios&quot;:&quot;26:0 19:0&quot;} ]</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-f<span class="w"> </span>bootmode:uart0
+-f<span class="w"> </span>bootmode:spinor
+</pre></div>
+</div>
+<p>example config for sd mux:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[BOOTMODE_testboard]</span>
+<span class="na">modes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[{&quot;name&quot;:&quot;bootmode:sd&quot;, &quot;sdwire&quot;:&quot;dut&quot;}, {&quot;name&quot;:&quot;bootmode:emmc&quot;, &quot;sdwire&quot;:&quot;lab&quot;} ]</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-f<span class="w"> </span>bootmode:sd
+-f<span class="w"> </span>bootmode:emmc
+</pre></div>
+</div>
+<p>example config for calling function in tbotconfig/labcallbacks.py:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[BOOTMODE_testboard]</span>
+<span class="na">modes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[{&quot;name&quot;:&quot;bootmode:usb&quot;, &quot;func&quot;:&quot;board_setbootmode_usb&quot;}, {&quot;name&quot;:&quot;bootmode:emmc&quot;, &quot;func&quot;:&quot;board_setbootmode_emmc&quot;} ]</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-f<span class="w"> </span>bootmode:usb
+-f<span class="w"> </span>bootmode:emmc
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This is a hack !</p>
+<p>You need to add the new file tbotconfig/labcallbacks.py and
+implement there the files you define in “modes”</p>
+<p>Only use it, for fast testing, then implement it in a class!</p>
+</div>
+<p>Currently there is only one argument passed:</p>
+<p>Example code</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">board_setbootmode_usb</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+    <span class="c1"># call commands on lab with</span>
+    <span class="c1"># lab.exec0(&quot;....&quot;)</span>
+    <span class="k">return</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>wantbootmode</strong> – str, bootmode string, use this, when you call the function from within python function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.GenericLab.init">
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#GenericLab.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.GenericLab.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional hook that allows running some code after the machine is initialized.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FooUBoot</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">Connector</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">UBootShell</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;foo-u-boot&quot;</span>
+    <span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;=&gt; &quot;</span>
+
+    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;autoload&quot;</span><span class="p">,</span> <span class="s2">&quot;no&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;dhcp&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;serverip&quot;</span><span class="p">,</span> <span class="s2">&quot;192.168.1.2&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.SSHMachine">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">SSHMachine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#SSHMachine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.SSHMachine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">SSHConnector</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Bash</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="tbottest.labgeneric.SSHMachine.workdir">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">workdir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tbottest.labgeneric.SSHMachine" title="tbottest.labgeneric.SSHMachine"><span class="pre">SSHMachine</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#tbottest.labgeneric.SSHMachine.workdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to a directory which testcases can use to store files in.</p>
+<p>If configured properly, tbot will make sure this directory exists.
+Testcases should be able to deal with corrupt or missing files in this
+directory.  Implementations should use <code class="xref py py-class docutils literal notranslate"><span class="pre">tbot.machine.linux.Workdir</span></code>.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is the defaut implementation</span>
+<span class="nd">@property</span>
+<span class="k">def</span> <span class="nf">workdir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">Workdir</span><span class="o">.</span><span class="n">xdg_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.SSHMachine.init">
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#SSHMachine.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.SSHMachine.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional hook that allows running some code after the machine is initialized.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FooUBoot</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">Connector</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">UBootShell</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;foo-u-boot&quot;</span>
+    <span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;=&gt; &quot;</span>
+
+    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;autoload&quot;</span><span class="p">,</span> <span class="s2">&quot;no&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;dhcp&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;serverip&quot;</span><span class="p">,</span> <span class="s2">&quot;192.168.1.2&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.labgeneric.LocalHostTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.labgeneric.</span></span><span class="sig-name descname"><span class="pre">LocalHostTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/labgeneric.html#LocalHostTest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.LocalHostTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">SubprocessConnector</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Bash</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Lab</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractContextManager</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.LocalHostTest.workdir">
+<span class="sig-name descname"><span class="pre">workdir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tbottest.labgeneric.LocalHostTest" title="tbottest.labgeneric.LocalHostTest"><span class="pre">LocalHostTest</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#LocalHostTest.workdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.LocalHostTest.workdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns tbot workdir on Local Host</p>
+<p>default is <code class="docutils literal notranslate"><span class="pre">`/tmp`</span></code></p>
+<p>If you want to set it to other path set Environment
+variable <code class="docutils literal notranslate"><span class="pre">`TBOTTESTWORKPATH`</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.labgeneric.LocalHostTest.sourcedir">
+<span class="sig-name descname"><span class="pre">sourcedir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tbottest.labgeneric.LocalHostTest" title="tbottest.labgeneric.LocalHostTest"><span class="pre">LocalHostTest</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/labgeneric.html#LocalHostTest.sourcedir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.labgeneric.LocalHostTest.sourcedir" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns tbottest sourcedir on Local host
+(installation path of tbottest)</p>
+<p>default is <code class="docutils literal notranslate"><span class="pre">`.`</span></code></p>
+<p>If you need, you can set the path to tbottest
+through Environment variable <code class="docutils literal notranslate"><span class="pre">`TBOTTESTPATH`</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="powercontrol.html" class="btn btn-neutral float-left" title="tbottest.powercontrol" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="boardspecific.html" class="btn btn-neutral float-right" title="tbottest.tbotconfig - ini file config" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

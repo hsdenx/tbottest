@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.tc.cpu &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.tc.cpu</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.tc.cpu</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tbot</span>
+<span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">linux</span>
+<span class="kn">from</span> <span class="nn">tbot.context</span> <span class="kn">import</span> <span class="n">Optional</span>
+
+
+<div class="viewcode-block" id="board_lnx_cpufreq"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.cpu.board_lnx_cpufreq">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">board_lnx_cpufreq</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cpufreq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    simple cpufreq setup tests.</span>
+
+<span class="sd">    look for all elements in cpufreq, if</span>
+<span class="sd">    the file in &quot;file&quot; contains the value &quot;val&quot;</span>
+
+<span class="sd">    :param lnx: linux machine we work on</span>
+<span class="sd">    :param cpufreq: List of dictionary see below</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        cpufreq = [</span>
+<span class="sd">            {&quot;file&quot; : &quot;/sys/devices/system/cpu/cpufreq/policy0/scaling_governor&quot;, &quot;val&quot; : &quot;performance&quot;},</span>
+<span class="sd">            {&quot;file&quot; : &quot;/sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq&quot;, &quot;val&quot; : &quot;1600000&quot;},</span>
+<span class="sd">            {&quot;file&quot; : &quot;/sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state&quot;, &quot;val&quot; : &quot;0&quot;},</span>
+<span class="sd">        ]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">cpufreq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;please configure cpufreq table&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cpufreq</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;file&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> not found in </span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;file&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="generic_get_socname"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.cpu.generic_get_socname">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">generic_get_socname</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Try to find out the SoC name.</span>
+
+<span class="sd">    First approach is to get name through /proc file</span>
+<span class="sd">    /proc/device-tree/soc@0/compatible</span>
+
+<span class="sd">    Currently supported SoC</span>
+
+<span class="sd">    fsl,imx8mp-soc    -&gt; NXP imx8mp -&gt; return &quot;imx8mp&quot;</span>
+
+<span class="sd">    :param lnx: linux machine where we run</span>
+
+<span class="sd">    :return: see above table, if SoC could not be detected &quot;not detected&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="c1"># Try through device-tree</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">log</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;/proc/device-tree/soc@0/compatible&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;LOG &quot;</span><span class="p">,</span> <span class="n">log</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;fsl,imx8mp-soc&quot;</span> <span class="ow">in</span> <span class="n">log</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;imx8mp&quot;</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="s2">&quot;not detected&quot;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

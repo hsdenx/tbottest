@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.powercontrol &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.powercontrol</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.powercontrol</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">tbot</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">board</span>
+<span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">linux</span>
+
+<span class="kn">from</span> <span class="nn">tbot_contrib.gpio</span> <span class="kn">import</span> <span class="n">Gpio</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;GpiopmControl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PowerShellScriptControl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SispmControl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TinkerforgeControl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TM021Control&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="GpiopmControl"><a class="viewcode-back" href="../../powercontrol.html#tbottest.powercontrol.GpiopmControl">[docs]</a><span class="k">class</span> <span class="nc">GpiopmControl</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">PowerControl</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    control Power On/off through a Gpio pin</span>
+
+<span class="sd">    **Example**: (board config)</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from tbot.machine import board</span>
+<span class="sd">        from tbottest.powercontrol import GpiopmControl</span>
+
+<span class="sd">        class MyControl(GpiopmControl, board.Board):</span>
+<span class="sd">            gpiopmctl_pin = &quot;17&quot;</span>
+<span class="sd">            gpiopmctl_state = &quot;1&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">gpiopmctl_pin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">gpiopmctl_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">poweron</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gpio</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gpio</span> <span class="o">=</span> <span class="n">Gpio</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gpiopmctl_pin</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gpio</span><span class="o">.</span><span class="n">set_direction</span><span class="p">(</span><span class="s2">&quot;out&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gpio</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gpiopmctl_state</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">poweroff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;nopoweroff&quot;</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Do not power off ...&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gpio</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gpio</span> <span class="o">=</span> <span class="n">Gpio</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gpiopmctl_pin</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gpio</span><span class="o">.</span><span class="n">set_direction</span><span class="p">(</span><span class="s2">&quot;out&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gpiopmctl_state</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gpio</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gpio</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Waiting a bit to let power settle down ...&quot;</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PowerShellScriptControl"><a class="viewcode-back" href="../../powercontrol.html#tbottest.powercontrol.PowerShellScriptControl">[docs]</a><span class="k">class</span> <span class="nc">PowerShellScriptControl</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">PowerControl</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    control Power On/off with a shell script</span>
+
+<span class="sd">    The shell script needs to evaluate the first parameter passed to</span>
+<span class="sd">    the script. Values are:</span>
+
+<span class="sd">    &quot;on&quot; for powering on the board</span>
+
+<span class="sd">    &quot;off&quot; for powering off the board</span>
+
+<span class="sd">    **Example**: (board config)</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from tbot.machine import board</span>
+<span class="sd">        from tbottest.powercontrol import PowerShellScriptControl</span>
+
+<span class="sd">        class MyControl(PowerShellScriptControl, board.Board):</span>
+<span class="sd">            shell_script = &quot;&lt;path to shell script&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">shell_script</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        shell command executed</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">poweron</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+            <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shell_script</span><span class="p">),</span>
+            <span class="s2">&quot;on&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">poweroff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;nopoweroff&quot;</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Do not power off ...&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+                <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shell_script</span><span class="p">),</span>
+                <span class="s2">&quot;off&quot;</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SispmControl"><a class="viewcode-back" href="../../powercontrol.html#tbottest.powercontrol.SispmControl">[docs]</a><span class="k">class</span> <span class="nc">SispmControl</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">PowerControl</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    control Power On/off with sispmctl</span>
+
+<span class="sd">    http://sispmctl.sourceforge.net/</span>
+
+<span class="sd">    **Example**: (board config)</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from tbot.machine import board</span>
+<span class="sd">        from tbottest.powercontrol import SispmControl</span>
+
+<span class="sd">        class MyControl(SispmControl, board.Board):</span>
+<span class="sd">            sispmctl_device = &quot;01:01:5c:29:39&quot;</span>
+<span class="sd">            sispmctl_port = &quot;2&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">sispmctl_device</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Device used. Get device id with</span>
+<span class="sd">        sispcmtl -s</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">sispmctl_port</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        port used.</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">poweron</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;sispmctl&quot;</span><span class="p">,</span> <span class="s2">&quot;-D&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sispmctl_device</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sispmctl_port</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">poweroff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;nopoweroff&quot;</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Do not power off ...&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+                <span class="s2">&quot;sispmctl&quot;</span><span class="p">,</span> <span class="s2">&quot;-D&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sispmctl_device</span><span class="p">,</span> <span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sispmctl_port</span>
+            <span class="p">)</span>
+
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Waiting a bit to let power settle down ...&quot;</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TinkerforgeControl"><a class="viewcode-back" href="../../powercontrol.html#tbottest.powercontrol.TinkerforgeControl">[docs]</a><span class="k">class</span> <span class="nc">TinkerforgeControl</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">PowerControl</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    control Power On/off with Tinkerforge</span>
+
+<span class="sd">    https://www.tinkerforge.com/</span>
+
+<span class="sd">    **Example**: (board config)</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from tbot.machine import board</span>
+<span class="sd">        from tbottest.powercontrol import Tinkerforge</span>
+
+<span class="sd">        class MyControl(Tinkerforge, board.Board):</span>
+<span class="sd">            channel = &quot;&quot;</span>
+<span class="sd">            uid = &quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">channel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        channel used.</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">uid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        uid</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">poweron</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+            <span class="s2">&quot;tinkerforge&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;--host&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span>
+            <span class="s2">&quot;call&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;industrial-dual-relay-bricklet&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span>
+            <span class="s2">&quot;set-selected-value&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span>
+            <span class="s2">&quot;false&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">poweroff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;nopoweroff&quot;</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Do not power off ...&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+                <span class="s2">&quot;tinkerforge&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;--host&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span>
+                <span class="s2">&quot;call&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;industrial-dual-relay-bricklet&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span>
+                <span class="s2">&quot;set-selected-value&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span>
+                <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+<span class="n">TM021_SCRIPTS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># scripts which tm021 uses:</span>
+    <span class="s2">&quot;TestModule.py&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">class TestModule:</span>
+<span class="s2">    def __init__(self, testBus, name, addr, debug=False):</span>
+<span class="s2">        self.testBus = testBus</span>
+<span class="s2">        self.name = name</span>
+<span class="s2">        self.addr = addr</span>
+<span class="s2">        self.debug = debug</span>
+
+<span class="s2">    def send(self, scpiCmd):</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+<span class="s2">        Send SCPI command to test module. No return value.</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+<span class="s2">        snd = f&#39;</span><span class="si">{self.name}</span><span class="s2">#</span><span class="si">{self.addr}</span><span class="s2">:</span><span class="si">{scpiCmd}</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">n&#39;</span>
+<span class="s2">        if self.debug:</span>
+<span class="s2">            print(f&#39;TX: {snd.strip()}&#39;)</span>
+<span class="s2">        self.testBus.write(snd.encode())</span>
+
+<span class="s2">    def sendCheck(self, scpiCmd):</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+<span class="s2">        Send SCPI command to test module and check Error/Event Queue afterwards.</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+<span class="s2">        self.send(scpiCmd)</span>
+<span class="s2">        errNum, errStr = self.checkErrorQueue()</span>
+<span class="s2">        if bool(int(errNum)):</span>
+<span class="s2">            raise ConnectionError(f&#39;</span><span class="si">{self.name}</span><span class="s2">#</span><span class="si">{self.addr}</span><span class="s2"> reported an error: </span><span class="si">{errStr}</span><span class="s2"> (</span><span class="si">{errNum}</span><span class="s2">)&#39;)</span>
+
+<span class="s2">    def receive(self):</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+<span class="s2">        Receives a line from the test bus.</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+<span class="s2">        line = self.testBus.readline().decode().strip()</span>
+<span class="s2">        if self.debug:</span>
+<span class="s2">            print(f&#39;RX: </span><span class="si">{line}</span><span class="s2">&#39;)</span>
+
+<span class="s2">        if not line:</span>
+<span class="s2">            raise ConnectionError(f&#39;</span><span class="si">{self.name}</span><span class="s2">#</span><span class="si">{self.addr}</span><span class="s2"> did not respond&#39;)</span>
+
+<span class="s2">        _, name, addr, resp = line.split(&#39;,&#39;, 3)</span>
+<span class="s2">        if name != self.name or addr != self.addr:</span>
+<span class="s2">            raise ConnectionError(f&#39;Wrong test module responded (</span><span class="si">{name}</span><span class="s2">#</span><span class="si">{addr}</span><span class="s2"> instead of </span><span class="si">{self.name}</span><span class="s2">#</span><span class="si">{self.addr}</span><span class="s2">)&#39;)</span>
+
+<span class="s2">        return resp</span>
+
+<span class="s2">    def sendReceive(self, scpiCmd):</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+<span class="s2">        Sends and receives a line to/from the test bus.</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+<span class="s2">        self.send(scpiCmd)</span>
+<span class="s2">        return self.receive()</span>
+
+<span class="s2">    def clearErrorQueue(self, queueSize=32):</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+<span class="s2">        Clears the Error/Event Queue of the test module.</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+<span class="s2">        self.send(&#39;*CLS&#39;)</span>
+<span class="s2">        resp = self.sendReceive(&#39;SYST:ERR?&#39;)</span>
+<span class="s2">        errNum, _ = resp.split(&#39;,&#39;, 1)</span>
+<span class="s2">        if int(errNum) != 0:</span>
+<span class="s2">            raise ConnectionError(&#39;Could not completely clear error queue&#39;)</span>
+
+<span class="s2">    def checkErrorQueue(self):</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+<span class="s2">        Returns SCPI error number and SCPI error string as tuple</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+<span class="s2">        resp = self.sendReceive(&#39;SYST:ERR?&#39;)</span>
+<span class="s2">        errNum, errStr = resp.split(&#39;,&#39;, 1)</span>
+<span class="s2">        return (int(errNum), errStr)</span>
+
+<span class="s2">    def wait(self, numTries=20):</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+<span class="s2">        Tries to read *IDN? until the test module responds.</span>
+<span class="s2">        The wait time depends on the timeout of the testBus and numTries.</span>
+<span class="s2">        The default numTries value assumes 1 second timeout.</span>
+<span class="s2">        This function is useful in case the test module has blocking operations,</span>
+<span class="s2">        that take a long time. No return value.</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+<span class="s2">        for i in range(numTries):</span>
+<span class="s2">            try:</span>
+<span class="s2">                _ = self.sendReceive(&#39;*IDN?&#39;)</span>
+<span class="s2">            except ConnectionError:</span>
+<span class="s2">                continue</span>
+<span class="s2">            try:</span>
+<span class="s2">                self.clearErrorQueue()</span>
+<span class="s2">            except ConnectionError:</span>
+<span class="s2">                pass</span>
+<span class="s2">            return</span>
+<span class="s2">        raise ConnectionError(f&#39;Waiting for </span><span class="si">{self.name}</span><span class="s2">#</span><span class="si">{self.addr}</span><span class="s2"> failed, it never responded&#39;)</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="c1"># Script which tbot uses for tm021 access:</span>
+    <span class="s2">&quot;tm021.py&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">#!/usr/bin/env python3</span>
+
+<span class="s2">import serial # pySerial</span>
+<span class="s2">import sys</span>
+
+<span class="s2">from TestModule import TestModule</span>
+
+<span class="s2"># 1 : device</span>
+<span class="s2"># 2 : baudrate</span>
+<span class="s2"># 3 : timeout</span>
+<span class="s2"># 4 : address</span>
+<span class="s2"># 5 : port</span>
+<span class="s2"># 6 : on or off</span>
+<span class="s2"># 7 : debug</span>
+
+
+<span class="s2">testBus = serial.Serial(str(sys.argv[1]), int(sys.argv[2]), timeout=int(sys.argv[3]))</span>
+<span class="s2">if sys.argv[7] == &quot;True&quot;:</span>
+<span class="s2">    print (&quot;ARGS &quot;, sys.argv)</span>
+
+<span class="s2">tm021addr0 = TestModule(testBus, &#39;TM021&#39;, str(sys.argv[4]), debug=sys.argv[7])</span>
+
+<span class="s2">tm021addr0.clearErrorQueue()</span>
+<span class="s2">tm021addr0.sendCheck(&#39;SYST:REM&#39;)</span>
+
+<span class="s2">state = &quot;OPEN&quot;</span>
+<span class="s2">if sys.argv[6] == &quot;on&quot;:</span>
+<span class="s2">    state = &quot;CLOS&quot;</span>
+
+<span class="s2">tmp = f&quot;ROUT:</span><span class="si">{state}</span><span class="s2"> (@</span><span class="si">{sys.argv[5]}</span><span class="s2">)&quot;</span>
+<span class="s2">tm021addr0.sendCheck(tmp)</span>
+<span class="s2">response=tm021addr0.sendReceive(&#39;ROUT:CLOS? (@1)&#39;)</span>
+<span class="s2">print (&quot;RESP &quot;, response)</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="TM021Control"><a class="viewcode-back" href="../../powercontrol.html#tbottest.powercontrol.TM021Control">[docs]</a><span class="k">class</span> <span class="nc">TM021Control</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">PowerControl</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    control Power On/off with DH Electronics</span>
+<span class="sd">    TM-021 4-fach Relaismodul</span>
+
+<span class="sd">    https://www.dh-electronics.com</span>
+
+<span class="sd">    **Example**: (board config)</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from tbot.machine import board</span>
+<span class="sd">        from tbottest.powercontrol import TM021</span>
+
+<span class="sd">        class MyControl(TM021, board.Board):</span>
+<span class="sd">            device = &quot;/dev/relais&quot;</span>
+<span class="sd">            baudrate = &quot;500000&quot;</span>
+<span class="sd">            timeout = &quot;5&quot;</span>
+<span class="sd">            address = &quot;0&quot;</span>
+<span class="sd">            port = &quot;1&quot;</span>
+<span class="sd">            debug = False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scriptexists</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">tm021_baudrate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Baudrate for serial device</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">500000</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">tm021_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        timeout for one command in seconds</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">5</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">tm021_device</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        linux device used.</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">tm021_address</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The address of the relais</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">tm021_port</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The port of the relais</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">tm021_debug</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enable debug traces</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;False&quot;</span>
+
+    <span class="k">def</span> <span class="nf">copy_script</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scriptexists</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">hookdir</span> <span class="o">=</span> <span class="n">linux</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="s2">&quot;/tmp/tbot/tm021&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;mkdir&quot;</span><span class="p">,</span> <span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hookdir</span><span class="p">)</span>
+        <span class="c1"># Generate a hash for the version of the control files</span>
+        <span class="n">script_hasher</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">script</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">TM021_SCRIPTS</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="n">script_hasher</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">script</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+        <span class="n">script_hash</span> <span class="o">=</span> <span class="n">script_hasher</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+
+        <span class="n">hashfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hookdir</span> <span class="o">/</span> <span class="s2">&quot;tbot-scripts.sha256&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">up_to_date</span> <span class="o">=</span> <span class="n">script_hash</span> <span class="o">==</span> <span class="n">hashfile</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">up_to_date</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">up_to_date</span><span class="p">:</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Hooks are up to date, skipping deployment ...&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Updating hook scripts ...&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">scriptname</span><span class="p">,</span> <span class="n">script</span> <span class="ow">in</span> <span class="n">TM021_SCRIPTS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;scriptname &quot;</span><span class="p">,</span> <span class="n">scriptname</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;script     &quot;</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">script</span><span class="p">))</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hookdir</span> <span class="o">/</span> <span class="n">scriptname</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;chmod&quot;</span><span class="p">,</span> <span class="s2">&quot;+x&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hookdir</span> <span class="o">/</span> <span class="n">scriptname</span><span class="p">)</span>
+
+            <span class="c1"># Write checksum so we don&#39;t re-deploy next time</span>
+            <span class="n">hashfile</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">script_hash</span><span class="p">)</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">scriptexists</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">poweron</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># we cannot use pyserial as device is on lab host, and tbot</span>
+        <span class="c1"># may is not started on lab host!</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">copy_script</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hookdir</span> <span class="o">/</span> <span class="s2">&quot;tm021.py&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tm021_device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tm021_baudrate</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tm021_timeout</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tm021_address</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tm021_port</span><span class="p">,</span>
+            <span class="s2">&quot;on&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tm021_debug</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">poweroff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;nopoweroff&quot;</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;Do not power off ...&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hookdir</span> <span class="o">/</span> <span class="s2">&quot;tm021.py&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tm021_device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tm021_baudrate</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tm021_timeout</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tm021_address</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tm021_port</span><span class="p">,</span>
+                <span class="s2">&quot;off&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tm021_debug</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+
+
+<span class="n">FLAGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;nopoweroff&quot;</span><span class="p">:</span> <span class="s2">&quot;Do not power off board at the end&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

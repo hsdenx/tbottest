@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.tc.network &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.tc.network</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.tc.network</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tbot</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">linux</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">from</span> <span class="nn">tbottest.tc.common</span> <span class="kn">import</span> <span class="n">lnx_install_package</span>
+
+
+<span class="k">def</span> <span class="nf">lnx_network_ping</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">retry</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">retry</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;ping&quot;</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;-W&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not bring up device </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">lnx_network_up</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">sip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">retry</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;ifconfig&quot;</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="s2">&quot;down&quot;</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="s2">&quot;up&quot;</span><span class="p">)</span>
+    <span class="n">lnx_network_ping</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">sip</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not bring up device </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_check_iperf_installed</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">try_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    check if iperf3 is installed on lnx machine</span>
+
+<span class="sd">    If try_install try to install it if not</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ret</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;iperf3&quot;</span><span class="p">,</span> <span class="s2">&quot;-v&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">try_install</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1"># Try to install iperf3 on OS</span>
+    <span class="k">return</span> <span class="n">lnx_install_package</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="s2">&quot;iperf3&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="network_linux_iperf"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.network.network_linux_iperf">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">network_linux_iperf</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">lnxh</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">sip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span><span class="p">,</span>
+    <span class="n">intervall</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+    <span class="n">cycles</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+    <span class="n">minval</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;40&quot;</span><span class="p">,</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;iperf.dat&quot;</span><span class="p">,</span>
+    <span class="n">subject</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unkown&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: C901</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    start iperf measurement between lnx and lnxh machine</span>
+
+<span class="sd">    toolname : iperf (oldversion) or iperf3</span>
+
+<span class="sd">    lnxh : machine where iperf server runs</span>
+<span class="sd">    lnx  : machine which start iperf client</span>
+
+<span class="sd">    interval : seconds between periodic throughput reports</span>
+<span class="sd">    cycles   : count of intervalls</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">toolname</span> <span class="o">=</span> <span class="s2">&quot;iperf3&quot;</span>
+    <span class="n">pid</span> <span class="o">=</span> <span class="s2">&quot;notstarted&quot;</span>
+
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">_check_iperf_installed</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">try_install</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Please install </span><span class="si">{</span><span class="n">toolname</span><span class="si">}</span><span class="s2"> in your rootfs&quot;</span><span class="p">)</span>
+
+    <span class="n">_check_iperf_installed</span><span class="p">(</span><span class="n">lnxh</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ymax</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">minval</span><span class="p">)</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">intervall</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">xmax</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">cycles</span><span class="p">)</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">intervall</span><span class="p">))</span>
+    <span class="n">good</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1"># check if iperf is on rootfs, if not copy it</span>
+    <span class="c1"># iperf = bbzu.copy_utility(lh, lnx, &quot;iperf&quot;)</span>
+    <span class="c1"># lnx.exec0(&quot;chmod&quot;, &quot;+x&quot;, iperf)</span>
+    <span class="c1"># check on labhost, if iperf server runs</span>
+    <span class="c1"># if not start it</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">lnxh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;ls&quot;</span><span class="p">,</span> <span class="s2">&quot;-al&quot;</span><span class="p">,</span> <span class="s2">&quot;/bin/ps&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;busybox&quot;</span> <span class="ow">in</span> <span class="n">ret</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">lnxh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;ps&quot;</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Pipe</span><span class="p">,</span> <span class="s2">&quot;grep&quot;</span><span class="p">,</span> <span class="n">toolname</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">lnxh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;ps&quot;</span><span class="p">,</span> <span class="s2">&quot;afx&quot;</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Pipe</span><span class="p">,</span> <span class="s2">&quot;grep&quot;</span><span class="p">,</span> <span class="n">toolname</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">ret</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;iperf&quot;</span> <span class="ow">in</span> <span class="n">ln</span> <span class="ow">and</span> <span class="s2">&quot;grep&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ln</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">start</span><span class="p">:</span>
+        <span class="c1"># lnxh.exec0(toolname, &quot;-s&quot;, linux.Background)</span>
+        <span class="n">lnxh</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">toolname</span><span class="si">}</span><span class="s2"> -s 2&gt;/dev/null 1&gt;/dev/null &amp;&quot;</span><span class="p">))</span>
+        <span class="c1"># lnxh.ch.sendline(f&quot;{toolname} -s 2&gt;&amp;1 1&gt;/dev/null &amp;&quot;)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="c1"># lnxh.ch.read_until_prompt()</span>
+        <span class="c1"># wait as command has some output</span>
+        <span class="n">pid</span> <span class="o">=</span> <span class="n">lnxh</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">)</span>
+        <span class="c1"># lnxh.ch.sendline(&quot;iperf -s &amp;&quot;)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># log_event.doc_tag(&quot;iperf_minval&quot;, minval)</span>
+    <span class="c1"># log_event.doc_tag(&quot;iperf_cycles&quot;, cycles)</span>
+    <span class="c1"># log_event.doc_tag(&quot;iperf_intervall&quot;, intervall)</span>
+    <span class="c1"># log_event.doc_begin(&quot;iperf_test&quot;)</span>
+
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="n">toolname</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="n">sip</span><span class="p">,</span> <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="n">intervall</span><span class="p">,</span> <span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>  <span class="c1"># noqa: E501</span>
+
+    <span class="n">lowestval</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+    <span class="c1"># output is something like</span>
+    <span class="c1"># [  5]   4.00-5.00   sec  5.47 MBytes  45.9 Mbits/sec    0    102 KBytes</span>
+    <span class="c1"># get Bitrate</span>
+    <span class="n">unit</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span>
+    <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">ret</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;- -&quot;</span> <span class="ow">in</span> <span class="n">ln</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="k">if</span> <span class="s2">&quot;Gbits/sec&quot;</span> <span class="ow">in</span> <span class="n">ln</span><span class="p">:</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="s2">&quot;Gbits/sec&quot;</span>
+            <span class="n">mult</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
+
+        <span class="k">if</span> <span class="s2">&quot;Mbits/sec&quot;</span> <span class="ow">in</span> <span class="n">ln</span> <span class="ow">and</span> <span class="n">unit</span> <span class="o">==</span> <span class="s2">&quot;unknown&quot;</span><span class="p">:</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="s2">&quot;Mbits/sec&quot;</span>
+            <span class="n">mult</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
+
+        <span class="k">if</span> <span class="s2">&quot;Kbits/sec&quot;</span> <span class="ow">in</span> <span class="n">ln</span> <span class="ow">and</span> <span class="n">unit</span> <span class="o">==</span> <span class="s2">&quot;unknown&quot;</span><span class="p">:</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="s2">&quot;Kbits/sec&quot;</span>
+            <span class="n">mult</span> <span class="o">=</span> <span class="mi">1024</span>
+
+        <span class="k">if</span> <span class="s2">&quot;bits/sec&quot;</span> <span class="ow">in</span> <span class="n">ln</span> <span class="ow">and</span> <span class="n">unit</span> <span class="o">==</span> <span class="s2">&quot;unknown&quot;</span><span class="p">:</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="s2">&quot;bits/sec&quot;</span>
+            <span class="n">mult</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s2">&quot;unknown&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;Bytes&quot;</span><span class="p">)</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">*</span> <span class="n">mult</span>
+
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;bandwith&quot;</span><span class="p">:</span> <span class="n">val</span><span class="p">,</span> <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="n">step</span><span class="p">})</span>
+        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">ymax</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+            <span class="n">ymax</span> <span class="o">=</span> <span class="n">val</span>
+
+        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">minval</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">good</span><span class="p">:</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not enough Bandwith </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> &lt; </span><span class="si">{</span><span class="n">minval</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+                <span class="n">good</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">lowestval</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+            <span class="n">lowestval</span> <span class="o">=</span> <span class="n">val</span>
+
+        <span class="n">step</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">intervall</span><span class="p">))</span>
+
+    <span class="c1"># log_event.doc_tag(&quot;iperf_unit&quot;, unit)</span>
+    <span class="c1"># log_event.doc_end(&quot;iperf_test&quot;)</span>
+    <span class="k">if</span> <span class="n">pid</span> <span class="o">!=</span> <span class="s2">&quot;notstarted&quot;</span><span class="p">:</span>
+        <span class="n">lnxh</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;kill&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Then</span><span class="p">,</span> <span class="s2">&quot;wait&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">good</span><span class="p">:</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;network Bandwith above </span><span class="si">{</span><span class="n">minval</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span><span class="p">)</span>
+
+    <span class="n">step</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># round up ymax</span>
+    <span class="n">ymax</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">ymax</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">))</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="s2">&quot;results/iperf/&quot;</span> <span class="o">+</span> <span class="n">filename</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;could not open </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">, May you create results/iperf, if you want to use the iperf results later&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">yellow</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">good</span>
+
+    <span class="c1"># save the xmax and ymax value behind the headlines</span>
+    <span class="c1"># gnuplot uses them for setting the correct xmax / ymax values</span>
+    <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;step bandwith minimum </span><span class="si">{</span><span class="n">xmax</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">ymax</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+        <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">el</span><span class="p">[</span><span class="s2">&quot;step&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">el</span><span class="p">[</span><span class="s2">&quot;bandwith&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">minval</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">step</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">intervall</span><span class="p">)</span>
+
+    <span class="n">fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">good</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

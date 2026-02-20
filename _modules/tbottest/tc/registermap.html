@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.tc.registermap &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.tc.registermap</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.tc.registermap</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">tbot</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;tbot lib not found, some functions will fail&quot;</span><span class="p">)</span>
+    <span class="k">pass</span>
+
+<span class="kn">from</span> <span class="nn">tbottest.tc.common_generic</span> <span class="kn">import</span> <span class="n">get_bit_range</span>
+
+
+<div class="viewcode-block" id="REGISTERMAP"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP">[docs]</a><span class="k">class</span> <span class="nc">REGISTERMAP</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    helper class for creating register dumps with analysing</span>
+<span class="sd">    the bits from a registermap.</span>
+
+<span class="sd">    :param mapname: name of the registermap file</span>
+
+<span class="sd">    registermap format for NXP is</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        [</span>
+<span class="sd">          {</span>
+<span class="sd">            &quot;register&quot;: &quot;name of the register&quot;,</span>
+<span class="sd">            &quot;address&quot;: &quot;address in hex of the regsiter&quot;,</span>
+<span class="sd">            &quot;page&quot;: &lt;page in the reference manual&gt;,</span>
+<span class="sd">            &quot;bits&quot;: [</span>
+<span class="sd">              {</span>
+<span class="sd">                &quot;range&quot;: &quot;bitfiles range example &#39;3&#39; &#39;31-27&#39; &quot;,</span>
+<span class="sd">                &quot;field&quot;: &quot;name of the bitfield&quot;,</span>
+<span class="sd">                &quot;description&quot;: &quot;help text from the manuel for the field&quot;</span>
+<span class="sd">              }</span>
+<span class="sd">            ]</span>
+<span class="sd">          },</span>
+<span class="sd">        ]</span>
+
+<span class="sd">    registermap format for STM32MP157 is</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        [</span>
+<span class="sd">          {</span>
+<span class="sd">            &quot;peripheralmaps&quot;: [</span>
+<span class="sd">              {</span>
+<span class="sd">                &quot;bus&quot;: &quot;Cortex-A7internal&quot;,</span>
+<span class="sd">                &quot;range&quot;: &quot;0xA0026000 - 0xA0027FFF&quot;,</span>
+<span class="sd">                &quot;size&quot;: &quot;8KB&quot;,</span>
+<span class="sd">                &quot;peripheral&quot;: &quot;GICV&quot;,</span>
+<span class="sd">                &quot;peripheralmap&quot;: &quot;GIC virtual CPU interface (GICV)&quot;</span>
+<span class="sd">              },</span>
+<span class="sd">            ]</span>
+<span class="sd">          },</span>
+<span class="sd">          {</span>
+<span class="sd">            &quot;registermaps&quot;: [</span>
+<span class="sd">              {</span>
+<span class="sd">                &quot;mapname&quot;: &quot;I2C registers&quot;,</span>
+<span class="sd">                &quot;registers&quot;: [</span>
+<span class="sd">                  {</span>
+<span class="sd">                    &quot;registername&quot;: &quot;I2C_CR1&quot;,</span>
+<span class="sd">                    &quot;offset&quot;: &quot;0x00&quot;,</span>
+<span class="sd">                    &quot;page&quot;: 2559,</span>
+<span class="sd">                    &quot;chapter&quot;: &quot;52.9.1&quot;,</span>
+<span class="sd">                    &quot;resetvalue&quot;: &quot;0x00000000&quot;,</span>
+<span class="sd">                    &quot;bits&quot;: [</span>
+<span class="sd">                              {</span>
+<span class="sd">                                &quot;range&quot;: &quot;31:24&quot;,</span>
+<span class="sd">                                &quot;field&quot;: &quot;Reserved&quot;,</span>
+<span class="sd">                                &quot;description&quot;: &quot;must be kept at reset value.&quot;</span>
+<span class="sd">                              },</span>
+<span class="sd">                    ]</span>
+<span class="sd">                  },</span>
+<span class="sd">                ]</span>
+<span class="sd">              },</span>
+<span class="sd">            ]</span>
+<span class="sd">          }</span>
+<span class="sd">        ]</span>
+
+
+<span class="sd">    The registermap contain register mappings for a SoC.</span>
+
+<span class="sd">    Example for imx8mp:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from tbottest.tc.uboot import ub_read_register</span>
+<span class="sd">        from tbottest.tc.registermap import REGISTERMAP</span>
+
+<span class="sd">        regmap = REGISTERMAP(&quot;imx8mp_registers.json&quot;)</span>
+<span class="sd">        with tbot.ctx() as cx:</span>
+<span class="sd">            if ub is None:</span>
+<span class="sd">                ub = cx.request(tbot.role.BoardUBoot)</span>
+
+<span class="sd">            addresses = [&quot;0x30330070&quot;]</span>
+<span class="sd">            for address in addresses:</span>
+<span class="sd">                val = ub_read_register(ub, address)</span>
+<span class="sd">                regmap.registermap_dump_register(address, val)</span>
+
+<span class="sd">    Will generate the following register dump</span>
+
+<span class="sd">    .. code-block:: shell</span>
+
+<span class="sd">        │   ├─[helios-uboot] md.l 0x30330070 1</span>
+<span class="sd">        │   │    ## 30330070: 00000000                             ....</span>
+<span class="sd">        │   ├─-------------------------------</span>
+<span class="sd">        │   ├─register name: IOMUXC_SW_MUX_CTL_PAD_ENET_TXC val: 0x00000000 RM page 1438</span>
+<span class="sd">        │   ├─31-5   -                              val 000000000000000000000000000</span>
+<span class="sd">        │   ├─desc This field is reserved.</span>
+<span class="sd">        │   │ Reserved</span>
+<span class="sd">        │   │</span>
+<span class="sd">        │   ├─--------</span>
+<span class="sd">        │   ├─4      SION                           val 0</span>
+<span class="sd">        │   ├─desc Software Input On Field.</span>
+<span class="sd">        │   │ Force the selected mux mode Input path no matter of MUX_MODE functionality.</span>
+<span class="sd">        │   │ 1 ENABLED — Force input path of pad ENET_TXC</span>
+<span class="sd">        │   │ 0 DISABLED — Input Path is determined by functionality</span>
+<span class="sd">        │   ├─--------</span>
+<span class="sd">        │   ├─3      -                              val 0</span>
+<span class="sd">        │   ├─desc This field is reserved.</span>
+<span class="sd">        │   │ Reserved</span>
+<span class="sd">        │   │</span>
+<span class="sd">        │   ├─--------</span>
+<span class="sd">        │   ├─2-0    MUX_MODE                       val 000</span>
+<span class="sd">        │   ├─desc MUX Mode Select Field.</span>
+<span class="sd">        │   │ Select 1 of 6 iomux modes to be used for pad: ENET_TXC.</span>
+<span class="sd">        │   │ 000 ALT0_CCM_ENET_QOS_CLOCK_GENERATE_TX_CLK — Select mux mode: ALT0 mux port:</span>
+<span class="sd">        │   │ CCM_ENET_QOS_CLOCK_GENERATE_TX_CLK of instance: ccm_enet_qos_clock_generate</span>
+<span class="sd">        │   │ 001 ALT1_ENET_QOS_TX_ER — Select mux mode: ALT1 mux port: ENET_QOS_TX_ER of instance:</span>
+<span class="sd">        │   │ enet_qos</span>
+<span class="sd">        │   │ 010 ALT2_AUDIOMIX_SAI7_TX_DATA[0] — Select mux mode: ALT2 mux port:</span>
+<span class="sd">        │   │ AUDIOMIX_SAI7_TX_DATA00 of instance: sai7</span>
+<span class="sd">        │   │ 101 ALT5_GPIO1_IO[23] — Select mux mode: ALT5 mux port: GPIO1_IO23 of instance: gpio1</span>
+<span class="sd">        │   │ 110 ALT6_USDHC3_DATA1 — Select mux mode: ALT6 mux port: USDHC3_DATA1 of instance:</span>
+<span class="sd">        │   │ usdhc3</span>
+<span class="sd">        │   │</span>
+<span class="sd">        │   ├─--------</span>
+
+
+<span class="sd">    There are also helper script in `scripts/registermap &lt;https://github.com/hsdenx/tbottest/tree/master/scripts/registermap&gt;`_</span>
+<span class="sd">    with which you can generate such a mapping from a reference manual.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">socname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapname</span> <span class="o">=</span> <span class="n">mapname</span>
+        <span class="k">if</span> <span class="n">socname</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Try to get socname from filename</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socname</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapname</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">socname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">registermap</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_load_map</span><span class="p">()</span>
+
+<div class="viewcode-block" id="REGISTERMAP.get_registername_from_dict"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.get_registername_from_dict">[docs]</a>    <span class="k">def</span> <span class="nf">get_registername_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return the name of the registername field in the</span>
+<span class="sd">        dictionary for the SoC.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">socname</span> <span class="o">==</span> <span class="s2">&quot;imx8mp&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;register&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">socname</span> <span class="o">==</span> <span class="s2">&quot;stm32mp157&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;registername&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;register field name in dict for SoC </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">socname</span><span class="si">}</span><span class="s2"> not found&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="REGISTERMAP.registername_to_address"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.registername_to_address">[docs]</a>    <span class="k">def</span> <span class="nf">registername_to_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        converts registername to address</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">permaps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">registermap</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;peripheralmaps&quot;</span><span class="p">]</span>
+        <span class="n">regmaps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">registermap</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;registermaps&quot;</span><span class="p">]</span>
+        <span class="c1"># search register map</span>
+        <span class="n">fmap</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">regmaps</span><span class="p">:</span>
+            <span class="n">registers</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;registers&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">registers</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;registername&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+                    <span class="n">fmap</span> <span class="o">=</span> <span class="n">m</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="n">fmap</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fmap</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find register </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># search peripjeral map</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">permaps</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;peripheralmap&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">fmap</span><span class="p">[</span><span class="s2">&quot;mapname&quot;</span><span class="p">]:</span>
+                <span class="c1"># one found</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
+                    <span class="n">start_str</span><span class="p">,</span> <span class="n">end_str</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;range&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; - &quot;</span><span class="p">)</span>
+                    <span class="n">start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">start_str</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+                    <span class="n">offset_str</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;offset&quot;</span><span class="p">]</span>
+                    <span class="n">offset</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">offset_str</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+                    <span class="n">addr</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">offset</span>
+                    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;0x</span><span class="si">{</span><span class="n">addr</span><span class="si">:</span><span class="s2">08x</span><span class="si">}</span><span class="s2">&quot;</span>
+
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find peripheralmap index </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="REGISTERMAP.register_load_map"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.register_load_map">[docs]</a>    <span class="k">def</span> <span class="nf">register_load_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        load the register map and analyse it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapname</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">registermap</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not load register definitions from </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mapname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="REGISTERMAP.registermap_nxp_search_address"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_nxp_search_address">[docs]</a>    <span class="k">def</span> <span class="nf">registermap_nxp_search_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        search for the address in the imx8mp registermap</span>
+
+<span class="sd">        :param address: hex string of address</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">registermap</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">reg</span><span class="p">[</span><span class="s2">&quot;address&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">reg</span><span class="p">[</span><span class="s2">&quot;address&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">address</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">reg</span>
+            <span class="k">elif</span> <span class="n">reg</span><span class="p">[</span><span class="s2">&quot;address_cyclic&quot;</span><span class="p">]:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">reg</span><span class="p">[</span><span class="s2">&quot;address_cyclic&quot;</span><span class="p">]</span>
+                <span class="n">base</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;base&quot;</span><span class="p">]</span>
+                <span class="n">off</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;offset&quot;</span><span class="p">]</span>
+                <span class="n">step</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;step&quot;</span><span class="p">]</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">]</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">]</span>
+
+                <span class="n">addr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">off</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+                <span class="n">valid_addresses</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">addr</span> <span class="o">+</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">step</span> <span class="o">*</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="p">]</span>
+
+                <span class="n">tmp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">tmp</span> <span class="ow">in</span> <span class="n">valid_addresses</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">reg</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="REGISTERMAP.registermap_stm32mp1_search_address"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_stm32mp1_search_address">[docs]</a>    <span class="k">def</span> <span class="nf">registermap_stm32mp1_search_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        search for the address in the imx8mp registermap</span>
+
+<span class="sd">        :param address: hex string of address</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">permaps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">registermap</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;peripheralmaps&quot;</span><span class="p">]</span>
+        <span class="n">regmaps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">registermap</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;registermaps&quot;</span><span class="p">]</span>
+        <span class="n">tmpaddr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+        <span class="c1"># search peripheral mapping</span>
+        <span class="n">permap</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">startaddr</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">permaps</span><span class="p">:</span>
+            <span class="n">start_str</span><span class="p">,</span> <span class="n">end_str</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;range&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; - &quot;</span><span class="p">)</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">start_str</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">end_str</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tmpaddr</span> <span class="o">&gt;=</span> <span class="n">start</span> <span class="ow">and</span> <span class="n">tmpaddr</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">:</span>
+                <span class="n">permap</span> <span class="o">=</span> <span class="n">p</span>
+                <span class="n">startaddr</span> <span class="o">=</span> <span class="n">start</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">permap</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No peripheral map found for address </span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># search registermap</span>
+        <span class="n">regmap</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">regmaps</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;mapname&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">permap</span><span class="p">[</span><span class="s2">&quot;peripheralmap&quot;</span><span class="p">]:</span>
+                <span class="n">regmap</span> <span class="o">=</span> <span class="n">r</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">regmap</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No registermap map found for address </span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># find registermapping for full address</span>
+        <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="n">regmap</span><span class="p">[</span><span class="s2">&quot;registers&quot;</span><span class="p">]:</span>
+            <span class="n">registeraddr</span> <span class="o">=</span> <span class="n">startaddr</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">reg</span><span class="p">[</span><span class="s2">&quot;offset&quot;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">registeraddr</span> <span class="o">==</span> <span class="n">tmpaddr</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">reg</span>
+
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;address </span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="REGISTERMAP.registermap_search_address"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_search_address">[docs]</a>    <span class="k">def</span> <span class="nf">registermap_search_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        search for the address in the registermap for the SoC</span>
+
+<span class="sd">        :param address: hex string of address</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">socname</span> <span class="o">==</span> <span class="s2">&quot;imx8mp&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">registermap_nxp_search_address</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">socname</span> <span class="o">==</span> <span class="s2">&quot;stm32mp157&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">registermap_stm32mp1_search_address</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Soc </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">socname</span><span class="si">}</span><span class="s2"> not yet supported&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="REGISTERMAP.registermap_dump_register"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_dump_register">[docs]</a>    <span class="k">def</span> <span class="nf">registermap_dump_register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        dump the value val which is read from address</span>
+
+<span class="sd">        This is a first proofe of concept version, the output</span>
+<span class="sd">        could be nicer.</span>
+
+<span class="sd">        :param address: hex string of address</span>
+<span class="sd">        :param val: value hex_string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;-------------------------------&quot;</span><span class="p">)</span>
+        <span class="n">reg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">registermap_search_address</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">reg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;regitermapping for </span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">regname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_registername_from_dict</span><span class="p">()</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;register name: </span><span class="si">{</span><span class="n">reg</span><span class="p">[</span><span class="n">regname</span><span class="p">]</span><span class="si">}</span><span class="s2"> addr </span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2"> val: </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> RM page </span><span class="si">{</span><span class="n">reg</span><span class="p">[</span><span class="s1">&#39;page&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">blue</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">reg</span><span class="p">[</span><span class="s2">&quot;bits&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="s2">&quot;NXP bug not documented&quot;</span> <span class="ow">in</span> <span class="n">bit</span><span class="p">[</span><span class="s2">&quot;range&quot;</span><span class="p">]:</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;NXPbug in doc name of field </span><span class="si">{</span><span class="n">bit</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> desc </span><span class="si">{</span><span class="n">bit</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">red</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">bit</span><span class="p">[</span><span class="s2">&quot;range&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;field </span><span class="si">{</span><span class="n">bit</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> desc </span><span class="si">{</span><span class="n">bit</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">red</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bits</span> <span class="o">=</span> <span class="n">get_bit_range</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">bit</span><span class="p">[</span><span class="s2">&quot;range&quot;</span><span class="p">])</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bit</span><span class="p">[</span><span class="s1">&#39;range&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">6</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">bit</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">30</span><span class="si">}</span><span class="s2"> val </span><span class="si">{</span><span class="n">bits</span><span class="si">:</span><span class="s2">6</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">blue</span>
+                <span class="p">)</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;desc </span><span class="si">{</span><span class="n">bit</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;--------&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="REGISTERMAP.registermap_dump_register_file"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_dump_register_file">[docs]</a>    <span class="k">def</span> <span class="nf">registermap_dump_register_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        dump the value val which is read from address into a file</span>
+
+<span class="sd">        This is a first proofe of concept version, the output</span>
+<span class="sd">        could be nicer.</span>
+
+<span class="sd">        :param filepath: full path to outputfile</span>
+<span class="sd">        :param address: hex string of address</span>
+<span class="sd">        :param val: value hex_string</span>
+
+<span class="sd">        Example output:</span>
+
+<span class="sd">        .. code-block:: shell</span>
+
+<span class="sd">            ------------------------------------------------------------------------------</span>
+<span class="sd">            register name: IOMUXC_SW_MUX_CTL_PAD_ENET_TXC val: 0x00000000 RM page 1438</span>
+<span class="sd">            ------------------------------------------------------------------------------</span>
+<span class="sd">            31-5   -                              val 000000000000000000000000000</span>
+<span class="sd">            desc This field is reserved.</span>
+<span class="sd">            Reserved</span>
+
+<span class="sd">            ...........................................</span>
+<span class="sd">            4      SION                           val 0</span>
+<span class="sd">            desc Software Input On Field.</span>
+<span class="sd">            Force the selected mux mode Input path no matter of MUX_MODE functionality.</span>
+<span class="sd">            1 ENABLED — Force input path of pad ENET_TXC</span>
+<span class="sd">            0 DISABLED — Input Path is determined by functionality</span>
+<span class="sd">            ...........................................</span>
+<span class="sd">            3      -                              val 0</span>
+<span class="sd">            desc This field is reserved.</span>
+<span class="sd">            Reserved</span>
+
+<span class="sd">            ...........................................</span>
+<span class="sd">            2-0    MUX_MODE                       val 000</span>
+<span class="sd">            desc MUX Mode Select Field.</span>
+<span class="sd">            Select 1 of 6 iomux modes to be used for pad: ENET_TXC.</span>
+<span class="sd">            000 ALT0_CCM_ENET_QOS_CLOCK_GENERATE_TX_CLK — Select mux mode: ALT0 mux port:</span>
+<span class="sd">            CCM_ENET_QOS_CLOCK_GENERATE_TX_CLK of instance: ccm_enet_qos_clock_generate</span>
+<span class="sd">            001 ALT1_ENET_QOS_TX_ER — Select mux mode: ALT1 mux port: ENET_QOS_TX_ER of instance:</span>
+<span class="sd">            enet_qos</span>
+<span class="sd">            010 ALT2_AUDIOMIX_SAI7_TX_DATA[0] — Select mux mode: ALT2 mux port:</span>
+<span class="sd">            AUDIOMIX_SAI7_TX_DATA00 of instance: sai7</span>
+<span class="sd">            101 ALT5_GPIO1_IO[23] — Select mux mode: ALT5 mux port: GPIO1_IO23 of instance: gpio1</span>
+<span class="sd">            110 ALT6_USDHC3_DATA1 — Select mux mode: ALT6 mux port: USDHC3_DATA1 of instance:</span>
+<span class="sd">            usdhc3</span>
+
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="s2">&quot;------------------------------------------------------------------------------</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="n">reg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">registermap_search_address</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">reg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;registermapping for </span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2"> not found</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="n">regname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_registername_from_dict</span><span class="p">()</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;register name: </span><span class="si">{</span><span class="n">reg</span><span class="p">[</span><span class="n">regname</span><span class="p">]</span><span class="si">}</span><span class="s2"> addr </span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2"> val: </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> RM page </span><span class="si">{</span><span class="n">reg</span><span class="p">[</span><span class="s1">&#39;page&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="s2">&quot;------------------------------------------------------------------------------</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">reg</span><span class="p">[</span><span class="s2">&quot;bits&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="s2">&quot;NXP bug not documented&quot;</span> <span class="ow">in</span> <span class="n">bit</span><span class="p">[</span><span class="s2">&quot;range&quot;</span><span class="p">]:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;NXPbug in doc name of field </span><span class="si">{</span><span class="n">bit</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> desc </span><span class="si">{</span><span class="n">bit</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">elif</span> <span class="n">bit</span><span class="p">[</span><span class="s2">&quot;range&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;field </span><span class="si">{</span><span class="n">bit</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> desc </span><span class="si">{</span><span class="n">bit</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">bits</span> <span class="o">=</span> <span class="n">get_bit_range</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">bit</span><span class="p">[</span><span class="s2">&quot;range&quot;</span><span class="p">])</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bit</span><span class="p">[</span><span class="s1">&#39;range&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">6</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">bit</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">30</span><span class="si">}</span><span class="s2"> val </span><span class="si">{</span><span class="n">bits</span><span class="si">:</span><span class="s2">6</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;desc </span><span class="si">{</span><span class="n">bit</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;...........................................</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

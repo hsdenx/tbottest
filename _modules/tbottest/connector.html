@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.connector &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.connector</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.connector</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">channel</span><span class="p">,</span> <span class="n">connector</span><span class="p">,</span> <span class="n">linux</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;KermitConnector&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PicocomConnector&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="KermitConnector"><a class="viewcode-back" href="../../connector.html#tbottest.connector.KermitConnector">[docs]</a><span class="k">class</span> <span class="nc">KermitConnector</span><span class="p">(</span><span class="n">connector</span><span class="o">.</span><span class="n">ConsoleConnector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Connect to a serial console using kermit</span>
+
+<span class="sd">    You can configure the device name using the ``kermit_cfg_file`` property.</span>
+
+<span class="sd">    **Example**: (board config)</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from tbot.machine import board</span>
+<span class="sd">        from tbottest.connector import KermitConnector</span>
+
+<span class="sd">        class MyBoard(KermitConnector, board.Board):</span>
+<span class="sd">            kermit_cfg_file = &quot;path to config file&quot;</span>
+
+<span class="sd">        BOARD = MyBoard</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">kermit_delay</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        delay after exit, default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">kermit_cfg_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        kermit config file</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span>
+
+    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span> <span class="nf">kermitconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mach</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">channel</span><span class="o">.</span><span class="n">Channel</span><span class="p">:</span>
+        <span class="n">KERMIT_PROMPT</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;C-Kermit&gt;&quot;</span>
+        <span class="n">ch</span> <span class="o">=</span> <span class="n">mach</span><span class="o">.</span><span class="n">open_channel</span><span class="p">(</span><span class="s2">&quot;kermit&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kermit_cfg_file</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">buf</span> <span class="o">=</span> <span class="n">ret</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;Locked&quot;</span> <span class="ow">in</span> <span class="n">buf</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;serial line is locked </span><span class="si">{</span><span class="n">buf</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">yield</span> <span class="n">ch</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">ch</span><span class="o">.</span><span class="n">sendcontrol</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">ch</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">)</span>
+            <span class="n">ch</span><span class="o">.</span><span class="n">read_until_prompt</span><span class="p">(</span><span class="n">KERMIT_PROMPT</span><span class="p">)</span>
+            <span class="n">ch</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s2">&quot;exit&quot;</span><span class="p">)</span>
+
+            <span class="c1"># get original prompt...</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kermit_delay</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kermit_delay</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mach</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">channel</span><span class="o">.</span><span class="n">Channel</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kermitconnect</span><span class="p">(</span><span class="n">mach</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PicocomConnector"><a class="viewcode-back" href="../../connector.html#tbottest.connector.PicocomConnector">[docs]</a><span class="k">class</span> <span class="nc">PicocomConnector</span><span class="p">(</span><span class="n">connector</span><span class="o">.</span><span class="n">ConsoleConnector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Connect to a serial console using picocom</span>
+
+
+
+<span class="sd">    **Example**: (board config)</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from tbot.machine import board</span>
+<span class="sd">        from tbottest.connector import PicocomConnector</span>
+
+<span class="sd">        class MyBoard(PicocomConnector, board.Board):</span>
+<span class="sd">            baudrate = 115200</span>
+<span class="sd">            device = /dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller-if00-port0</span>
+<span class="sd">            noreset</span>
+
+<span class="sd">        BOARD = MyBoard</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">delay</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        delay after exit, default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">baudrate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        baudrate (picocom argument -b)</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">device</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        tty device (argument -l)</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;picocom abstract method&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">noreset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pass -r picocom argument</span>
+
+<span class="sd">        picocom manual says:</span>
+<span class="sd">        If given, picocom will not reset the serial port when exiting.</span>
+<span class="sd">        It will just close the respective filedescriptor and do nothing more.</span>
+<span class="sd">        The serial port settings will not be restored to their original values and,</span>
+<span class="sd">        unless the --hangup option is also given, the modem-control lines will not</span>
+<span class="sd">        beaffected.  This is useful, for example, for leaving modems connected when</span>
+<span class="sd">        exiting picocom. Regardless whether the --noreset option is given, the user</span>
+<span class="sd">        can exit picocom using the &quot;Quit&quot;command (instead of &quot;Exit&quot;), which makes</span>
+<span class="sd">        picocom behave exactly as if --noreset was given. See also the --hangup option.</span>
+
+<span class="sd">        (Default: Disabled)</span>
+
+<span class="sd">        NOTICE: Picocom clears the modem control lines on exit by setting the HUPCL</span>
+<span class="sd">        control bit of therespective port. Picocom always sets HUPCL according to the</span>
+<span class="sd">        --noreset and --hangup options. If --noreset is given and --hangup is not, then</span>
+<span class="sd">        HUPCL for the port is cleared and will remain soafter exiting picocom.</span>
+<span class="sd">        If --noreset is not given, or if both --noreset and --hangup are given, then</span>
+<span class="sd">        HUPCL is set for the port and will remain so after exiting picocom. This is</span>
+<span class="sd">        true, regardless ofthe way picocom terminates (command, read zero-bytes from</span>
+<span class="sd">        standard input, killed by signal,fatal error, etc), and regardless of the</span>
+<span class="sd">        --noinit option.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span> <span class="nf">picocomconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mach</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">channel</span><span class="o">.</span><span class="n">Channel</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noreset</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-r&quot;</span><span class="p">)</span>
+
+        <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">baudrate</span><span class="p">)</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-l&quot;</span><span class="p">)</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">ch</span> <span class="o">=</span> <span class="n">mach</span><span class="o">.</span><span class="n">open_channel</span><span class="p">(</span><span class="s2">&quot;picocom&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">ch</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">ch</span><span class="o">.</span><span class="n">sendcontrol</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+            <span class="n">ch</span><span class="o">.</span><span class="n">sendcontrol</span><span class="p">(</span><span class="s2">&quot;Q&quot;</span><span class="p">)</span>
+
+            <span class="c1"># some usb adapters need here an delay...</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delay</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mach</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">channel</span><span class="o">.</span><span class="n">Channel</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">picocomconnect</span><span class="p">(</span><span class="n">mach</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScriptConnector"><a class="viewcode-back" href="../../connector.html#tbottest.connector.ScriptConnector">[docs]</a><span class="k">class</span> <span class="nc">ScriptConnector</span><span class="p">(</span><span class="n">connector</span><span class="o">.</span><span class="n">ConsoleConnector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Connect to a serial console using a script</span>
+
+<span class="sd">    **Example**: (board config)</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from tbot.machine import board</span>
+<span class="sd">        from tbottest.connector import PicocomConnector</span>
+
+<span class="sd">        class MyBoard(ScriptConnector, board.Board):</span>
+<span class="sd">            scriptname = &quot;connect&quot;</span>
+<span class="sd">            exitstring = ~~.</span>
+<span class="sd">            boardname = wandboard</span>
+
+<span class="sd">        BOARD = MyBoard</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">boardname</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Name of the board</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">exitstring</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        string send to exit</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">scriptname</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Name of the script</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span>
+
+    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span> <span class="nf">scriptconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mach</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">boardname</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">channel</span><span class="o">.</span><span class="n">Channel</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ch</span> <span class="o">=</span> <span class="n">mach</span><span class="o">.</span><span class="n">open_channel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scriptname</span><span class="p">,</span> <span class="n">boardname</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">ch</span>
+        <span class="k">except</span>  <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exception &quot;</span><span class="p">,</span> <span class="n">ex</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">ch</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exitstring</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mach</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">channel</span><span class="o">.</span><span class="n">Channel</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scriptconnect</span><span class="p">(</span><span class="n">mach</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">boardname</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

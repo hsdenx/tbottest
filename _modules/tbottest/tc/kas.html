@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.tc.kas &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.tc.kas</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.tc.kas</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tbot</span>
+<span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">linux</span>
+<span class="kn">from</span> <span class="nn">tbot.tc.shell</span> <span class="kn">import</span> <span class="n">copy</span> <span class="k">as</span> <span class="n">shell_copy</span>
+
+
+<div class="viewcode-block" id="KAS"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.kas.KAS">[docs]</a><span class="k">class</span> <span class="nc">KAS</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    helper class for building yocto projects with kas</span>
+
+<span class="sd">    | url: https://github.com/siemens/kas</span>
+<span class="sd">    | doc: https://kas.readthedocs.io/en/latest/</span>
+
+<span class="sd">    example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from kas import KAS</span>
+
+<span class="sd">        cfgkas = {</span>
+<span class="sd">            &quot;kasurl&quot; : &quot;url from where kas sources get downloaded&quot;,</span>
+<span class="sd">            &quot;kasversion&quot; : &quot;kas version&quot;,</span>
+<span class="sd">            &quot;build_machine&quot; : &quot;${default:machine}&quot;,</span>
+<span class="sd">            &quot;subdir&quot; : &quot;${default:subdir}&quot;,</span>
+<span class="sd">            &quot;netrc_file&quot; :&quot;/home/${default:build_user}/.netrc&quot;,</span>
+<span class="sd">            &quot;git_credential_store&quot; : &quot;/home/${default:build_user}/.git-credentials&quot;,</span>
+<span class="sd">            &quot;ssh_dir&quot; : &quot;/home/${default:build_user}/.ssh&quot;,</span>
+<span class="sd">            &quot;kascontainer&quot; : @@KASCONTAINER@@,</span>
+<span class="sd">            &quot;kaslayer&quot; : &quot;${default:kasurl}/${default:kaslayer}.git&quot;,</span>
+<span class="sd">            &quot;kaslayername&quot; : &quot;${default:kaslayer}&quot;,</span>
+<span class="sd">            &quot;kaslayerbranch&quot; : &quot;${default:kaslayerbranch}&quot;,</span>
+<span class="sd">            &quot;kasconfigfile&quot; : &quot;${default:kaslayer}/${default:kasymlname}&quot;,</span>
+<span class="sd">            &quot;kas_runtime_args&quot; : &#39;\&quot;--privileged -v ${default:build_dl}:/downloads -v ${default:build_sstate}:/sstate-cache\&quot;&#39;,</span>
+<span class="sd">            &quot;bitbakeenvinit&quot; : &quot;sources/poky/oe-init-build-env&quot;,</span>
+<span class="sd">            &quot;envinit&quot; : [&quot;&quot;],</span>
+<span class="sd">            &quot;auto.conf&quot; : [</span>
+<span class="sd">               &#39;DL_DIR=&quot;/downloads&quot;&#39;,</span>
+<span class="sd">               &#39;SSTATE_DIR=&quot;/sstate-cache&quot;&#39;,</span>
+<span class="sd">               ],</span>
+<span class="sd">            &quot;deploypath&quot;: &quot;${default:deploydir}&quot;,</span>
+<span class="sd">            &quot;buildtargets&quot; : [&quot;${default:rootfsname}&quot;]</span>
+<span class="sd">            &quot;bitbakeoptions&quot; : [&quot;-q -q&quot;]</span>
+<span class="sd">        }</span>
+
+
+<span class="sd">    kasurl</span>
+
+<span class="sd">    if you need (or want) to download kas sources from an url, set this.</span>
+
+<span class="sd">    You do not need to install kas from this sources, as this class simply</span>
+<span class="sd">    use **run-kas** script from within the kas sources.</span>
+
+<span class="sd">    kasversion</span>
+
+<span class="sd">    kas version which get checkedout, when you download kas</span>
+
+<span class="sd">    build_machine</span>
+
+<span class="sd">    machine name which is used for the build</span>
+
+<span class="sd">    subdir</span>
+
+<span class="sd">    based on the build machines workdir, kas sources get checkout into</span>
+<span class="sd">    **subdir**</span>
+
+<span class="sd">    kas-container</span>
+
+<span class="sd">    to build with kas-container script set kascontainer to True</span>
+<span class="sd">    You may need to pass **--git-credential-store** to the kas-container script.</span>
+<span class="sd">    Set this through:</span>
+
+<span class="sd">       git_credential_store</span>
+
+<span class="sd">    You may need to pass **--ssh-dir** to the kas-container script. Set this</span>
+<span class="sd">    Set this through:</span>
+
+<span class="sd">        ssh_dir</span>
+
+<span class="sd">    You may need to pass a .netrc file, so set the kas environment varaible</span>
+<span class="sd">    NETRC_FILE.</span>
+
+<span class="sd">    Set this through:</span>
+
+<span class="sd">        netrc_file</span>
+
+<span class="sd">    You may want to set the used container engine through **KAS_CONTAINER_ENGINE**</span>
+<span class="sd">    Set this through:</span>
+
+<span class="sd">       kascontainerengine</span>
+
+<span class="sd">    You may want to add &quot;--runtime-args&quot; to kas-container, so set</span>
+
+<span class="sd">        kas_runtime_args</span>
+
+<span class="sd">    example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        &quot;kas_runtime_args&quot; : &#39;\&quot;-v /work/hs/yocto/download:/workdownload\&quot;&#39;,</span>
+
+<span class="sd">    You need the ```&quot;``` so escape them!</span>
+
+<span class="sd">    kaslayer</span>
+
+<span class="sd">    sources which contain your kas config file(s). This class downloads them</span>
+<span class="sd">    into kas_get_basepath / &quot;kasconfig&quot;</span>
+
+<span class="sd">    kaslayername</span>
+
+<span class="sd">    you can give them an unique name</span>
+
+<span class="sd">    kaslayerbranch</span>
+
+<span class="sd">    branch which is used</span>
+
+<span class="sd">    kasconfigfile</span>
+
+<span class="sd">    kas config file which is used</span>
+
+<span class="sd">    auto.conf</span>
+
+<span class="sd">    You can define here an auto.conf file, if you need to add</span>
+<span class="sd">    special settings. The file is created after kas_checkout</span>
+<span class="sd">    ends.</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">       &quot;auto.conf&quot; : [&#39;DL_DIR=&quot;/workdownload&quot;&#39;,</span>
+<span class="sd">                     &#39;SSTATE_DIR=&quot;/worksstate-cache&quot;&#39;,</span>
+<span class="sd">           ],</span>
+
+<span class="sd">    bitbakeenvinit</span>
+
+<span class="sd">    if you are not using a kas container you need to source the oe environment</span>
+<span class="sd">    script (and may have to setup more stuff) before you can call bitbake. This</span>
+<span class="sd">    entry contains a list of commandstrings, which are executed when kas</span>
+<span class="sd">    has checkout the source code. Default is &quot;sources/poky/oe-init-build-env&quot;</span>
+
+<span class="sd">    envinit</span>
+
+<span class="sd">    Here you can add additional commands you need, when you build in kas-container</span>
+
+<span class="sd">    _`buildtargets`</span>
+
+<span class="sd">    array of strings containing the names of the build targets with which bitbake</span>
+<span class="sd">    is called.</span>
+
+<span class="sd">    If string &quot;bitbake&quot; is in buildtargets, bitbake command is not added</span>
+<span class="sd">    to command.</span>
+
+<span class="sd">    For example you can write</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        &quot;buildtargets&quot; : [&quot;core-image&quot;, &quot;DISTRO=poky-rescue bitbake rescueimage-fit&quot;, &quot;swu-image&quot;]</span>
+
+<span class="sd">    which will result in the following bitbake calls</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">        $ bitbake core-image</span>
+<span class="sd">        $ DISTRO=poky-rescue bitbake rescueimage-fit</span>
+<span class="sd">        $ bitbake rescueimage-fit</span>
+<span class="sd">        $ bitbake swu-image</span>
+
+
+<span class="sd">    bitbakeoptions</span>
+
+<span class="sd">    options with which bitbake is called (for example you may want to pass -q)</span>
+<span class="sd">    So with above setting:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        &quot;bitbakeoptions&quot; : [&quot;-q -q&quot;]</span>
+
+<span class="sd">    you get the bitbake calls:</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">        $ bitbake -q -q core-image</span>
+<span class="sd">        $ DISTRO=poky-rescue bitbake rescueimage-fit</span>
+<span class="sd">        $ bitbake -q -q rescueimage-fit</span>
+<span class="sd">        $ bitbake -q -q swu-image</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env_inited</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buildsubpath</span> <span class="o">=</span> <span class="s2">&quot;build&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bitbakeoptions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kascmd</span> <span class="o">=</span> <span class="s2">&quot;kas&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kaspath</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">netrc_file</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">git_credential_store</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kas_runtime_args</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kas_ssh_dir</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">container_engine</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kasconfigpath</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">autoconf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deploypath</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;labhost&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;please define labhost&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;buildhost&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;please define buildhost&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;kascontainer&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">container_engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;kascontainerengine&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">git_credential_store</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;git_credential_store&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">netrc_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;netrc_file&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kas_runtime_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;kas_runtime_args&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kas_ssh_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;ssh_dir&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kasurl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;kasurl&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kas_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;kasversion&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kaspath</span> <span class="o">=</span> <span class="n">linux</span><span class="o">.</span><span class="n">Workdir</span><span class="o">.</span><span class="n">static</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">workdir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;subdir&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="s2">&quot;kasdownload&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kaspath</span><span class="o">.</span><span class="n">_local_str</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span>
+                <span class="s2">&quot;git&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;-C&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;kas&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;pull&quot;</span><span class="p">,</span>
+                <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="s2">&quot;||&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;git&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;clone&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kasurl</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_version</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span> <span class="s2">&quot;kas&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;checkout&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_version</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kascmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kaspath</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span><span class="si">}</span><span class="s2">/kas/kas-container&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kascmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kaspath</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span><span class="si">}</span><span class="s2">/kas/run-kas&quot;</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="c1"># simply use the installed kas command</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build_machine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;build_machine&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;please define build_machine&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subdir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;subdir&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;please configure subdir&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deploypath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;deploypath&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kaslayer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;kaslayer&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;please configure kaslayer&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kaslayername</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;kaslayername&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kaslayername</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kaslayerbranch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;kaslayerbranch&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;please configure kaslayerbranch&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kasconfigfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;kasconfigfile&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;please configure kasconfigfile&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bitbakeenvinit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;bitbakeenvinit&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bitbakeenvinit</span> <span class="o">=</span> <span class="s2">&quot;sources/poky/oe-init-build-env&quot;</span>
+
+        <span class="c1"># optional setting</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bitbakeoptions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;bitbakeoptions&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buildtargets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;buildtargets&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">resultimages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;resultimages&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">envinit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;envinit&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">envinit</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">autoconf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;auto.conf&quot;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">autoconf</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kasconfigpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_get_basepath</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;kasconfig&quot;</span>
+
+<div class="viewcode-block" id="KAS.kas_get_basepath"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.kas.KAS.kas_get_basepath">[docs]</a>    <span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+    <span class="k">def</span> <span class="nf">kas_get_basepath</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">linux</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        get the basepath where kas works in at your build host</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            @tbot.testcase</span>
+<span class="sd">            def try_kas_getbasepath(</span>
+<span class="sd">                lab: Optional[linux.LinuxShell] = None,</span>
+<span class="sd">                bh: Optional[linux.LinuxShell] = None,</span>
+<span class="sd">            ):</span>
+<span class="sd">                with tbot.ctx() as cx:</span>
+<span class="sd">                    if lab is None:</span>
+<span class="sd">                        lab = cx.request(tbot.role.LabHost)</span>
+
+<span class="sd">                    if bh is None:</span>
+<span class="sd">                        bh = cx.request(tbot.role.BuildHost)</span>
+
+<span class="sd">                    cfgkas[&quot;labhost&quot;] = lab</span>
+<span class="sd">                    cfgkas[&quot;buildhost&quot;] = bh</span>
+
+<span class="sd">                    kas = KAS(cfgkas)</span>
+<span class="sd">                    val = kas.kas_get_basepath()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">Workdir</span><span class="o">.</span><span class="n">static</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">workdir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">subdir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KAS.kas_get_buildpath"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.kas.KAS.kas_get_buildpath">[docs]</a>    <span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+    <span class="k">def</span> <span class="nf">kas_get_buildpath</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">linux</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        get the build path kas uses</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># we do not want to create this path</span>
+        <span class="c1"># this is done through yocto setup</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_get_basepath</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildsubpath</span></div>
+
+<div class="viewcode-block" id="KAS.kas_get_deploypath"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.kas.KAS.kas_get_deploypath">[docs]</a>    <span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+    <span class="k">def</span> <span class="nf">kas_get_deploypath</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">linux</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        get the deploypath kas uses</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># we do not want to create this path</span>
+        <span class="c1"># this is done through yocto setup</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">deploypath</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_get_buildpath</span><span class="p">()</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;tmp/deploy/images/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">build_machine</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_get_buildpath</span><span class="p">()</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">deploypath</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+    <span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+    <span class="k">def</span> <span class="nf">kas_env_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_inited</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_get_basepath</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bitbakeenvinit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildsubpath</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">envinit</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">env</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">envinit</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="n">env</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">kas_create_autoconf</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoconf</span><span class="p">:</span>
+            <span class="n">bp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_get_buildpath</span><span class="p">()</span>
+            <span class="n">cfgp</span> <span class="o">=</span> <span class="n">bp</span> <span class="o">/</span> <span class="s2">&quot;conf&quot;</span>
+            <span class="n">ret</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;ls&quot;</span><span class="p">,</span> <span class="s2">&quot;-al&quot;</span><span class="p">,</span> <span class="n">cfgp</span> <span class="o">/</span> <span class="s2">&quot;auto.conf&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s2">&quot;auto.conf exists, do not create it&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="mi">0</span>
+
+            <span class="n">op</span> <span class="o">=</span> <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;mkdir&quot;</span><span class="p">,</span> <span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="n">cfgp</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">autoconf</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;echo&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">cfgp</span> <span class="o">/</span> <span class="s2">&quot;auto.conf&quot;</span><span class="p">)</span>
+                <span class="n">op</span> <span class="o">=</span> <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="KAS.kas_checkout"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.kas.KAS.kas_checkout">[docs]</a>    <span class="k">def</span> <span class="nf">kas_checkout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        call &quot;kas checkout&quot; so kas checksout all the needed sources</span>
+<span class="sd">        for your ow build, and setup conf directory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">post</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kaslayername</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">post</span> <span class="o">=</span> <span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kaslayername</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;mkdir&quot;</span><span class="p">,</span> <span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kasconfigpath</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kasconfigpath</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+            <span class="s2">&quot;git&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;-C&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kaslayername</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pull&quot;</span><span class="p">,</span>
+            <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="s2">&quot;||&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;git&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;clone&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kaslayer</span><span class="p">,</span>
+            <span class="s2">&quot;-b&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kaslayerbranch</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">post</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">pre</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kas_ref_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">kas_ref_dir</span>
+            <span class="n">pre</span> <span class="o">=</span> <span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;KAS_REPO_REF_DIR=&quot;</span><span class="si">{</span><span class="n">kas_ref_dir</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)]</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">netrc_file</span><span class="p">:</span>
+            <span class="n">pre</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NETRC_FILE=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">netrc_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_get_basepath</span><span class="p">())</span>
+        <span class="c1"># do not execute in case we use docker</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+                <span class="o">*</span><span class="n">pre</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kascmd</span><span class="p">,</span> <span class="s2">&quot;checkout&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kasconfigpath</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">kasconfigfile</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kas_create_autoconf</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">kas_call_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pre</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">post</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kas_ref_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">kas_ref_dir</span>
+            <span class="n">pre</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;KAS_REPO_REF_DIR=&quot;</span><span class="si">{</span><span class="n">kas_ref_dir</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">pass</span>
+
+        <span class="n">kasarg</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">git_credential_store</span><span class="p">:</span>
+            <span class="n">kasarg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--git-credential-store&quot;</span><span class="p">)</span>
+            <span class="n">kasarg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">git_credential_store</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_runtime_args</span><span class="p">:</span>
+            <span class="n">kasarg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--runtime-args&quot;</span><span class="p">)</span>
+            <span class="n">kasarg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kas_runtime_args</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_ssh_dir</span><span class="p">:</span>
+            <span class="n">kasarg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--ssh-dir&quot;</span><span class="p">)</span>
+            <span class="n">kasarg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kas_ssh_dir</span><span class="p">)</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_get_basepath</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;pwd&quot;</span><span class="p">)</span>
+        <span class="c1"># setup task and target</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="s2">&quot;build&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;bitbake&quot;</span> <span class="ow">in</span> <span class="n">t</span> <span class="ow">and</span> <span class="s2">&quot;-c&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>
+            <span class="n">cmds</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">cmds</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s2">&quot;-c&quot;</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>
+            <span class="n">cmds</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">cmds</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">foundtask</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cmds</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">foundtask</span><span class="p">:</span>
+                    <span class="n">task</span> <span class="o">=</span> <span class="n">c</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="s2">&quot;-c&quot;</span> <span class="ow">in</span> <span class="n">c</span><span class="p">:</span>
+                    <span class="n">foundtask</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">foundtask</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;no task found, please set it with -c option&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">t</span>
+
+        <span class="c1"># set NETRC_FILE</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">netrc_file</span><span class="p">:</span>
+            <span class="n">pre</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NETRC_FILE=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">netrc_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># set KAS_TARGET</span>
+        <span class="n">pre</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;KAS_TARGET=&#39;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">))</span>
+        <span class="c1"># set KAS_TASK</span>
+        <span class="n">pre</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;KAS_TASK=</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bitbakeoptions</span><span class="p">:</span>
+            <span class="n">bitopt</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bitbakeoptions</span><span class="p">)</span>
+            <span class="n">post</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;-- </span><span class="si">{</span><span class="n">bitopt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">pre</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kascmd</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">kasarg</span><span class="p">,</span>
+            <span class="s2">&quot;build&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kasconfigpath</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">kasconfigfile</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">post</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">container_engine</span><span class="p">:</span>
+            <span class="n">kasarg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;KAS_CONTAINER_ENGINE=</span><span class="si">{self.container_engine}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">kas_call_bitbake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;bitbake&quot;</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>
+            <span class="c1"># TODO make this better</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;bitbake&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot; &quot;</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>
+                <span class="c1"># TODO make this better</span>
+                <span class="n">cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bitbakeoptions</span><span class="p">:</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="o">*</span><span class="n">cmd</span><span class="p">)</span>
+
+<div class="viewcode-block" id="KAS.kas_build"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.kas.KAS.kas_build">[docs]</a>    <span class="k">def</span> <span class="nf">kas_build</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">buildtargets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        build all `buildtargets`_.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">buildtargets</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">buildtargets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildtargets</span>
+            <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;please specify buildtargets (array of strings)&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kas_env_init</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">buildtargets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kas_call_container</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kas_call_bitbake</span><span class="p">(</span><span class="n">t</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KAS.kas_shell"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.kas.KAS.kas_shell">[docs]</a>    <span class="k">def</span> <span class="nf">kas_shell</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        enter kas shell</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kas_checkout</span><span class="p">()</span>
+        <span class="n">pre</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">post</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kas_ref_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">kas_ref_dir</span>
+            <span class="n">pre</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;KAS_REPO_REF_DIR=&quot;</span><span class="si">{</span><span class="n">kas_ref_dir</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+            <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">netrc_file</span><span class="p">:</span>
+            <span class="n">pre</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NETRC_FILE=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">netrc_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">kasarg</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">git_credential_store</span><span class="p">:</span>
+            <span class="n">kasarg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--git-credential-store&quot;</span><span class="p">)</span>
+            <span class="n">kasarg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">git_credential_store</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_runtime_args</span><span class="p">:</span>
+            <span class="n">kasarg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--runtime-args&quot;</span><span class="p">)</span>
+            <span class="n">kasarg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kas_runtime_args</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_ssh_dir</span><span class="p">:</span>
+            <span class="n">kasarg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--ssh-dir&quot;</span><span class="p">)</span>
+            <span class="n">kasarg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kas_ssh_dir</span><span class="p">)</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_get_basepath</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;pwd&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bitbakeoptions</span><span class="p">:</span>
+            <span class="n">bitopt</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bitbakeoptions</span><span class="p">)</span>
+            <span class="n">post</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;-- </span><span class="si">{</span><span class="n">bitopt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">pre</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pre</span><span class="p">)</span>
+
+        <span class="c1"># we always use the container command here, nevertheless what is setup</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kaspath</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span><span class="si">}</span><span class="s2">/kas/kas-container &quot;</span>
+        <span class="k">if</span> <span class="n">kasarg</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">kasarg</span><span class="p">)</span>
+
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; shell </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kasconfigpath</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kasconfigfile</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">log_event</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s2">&quot;kas-shell&quot;</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span> <span class="k">as</span> <span class="n">ev</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">ch</span><span class="o">.</span><span class="n">with_prompt</span><span class="p">(</span><span class="s2">&quot;build$ &quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">ch</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">read_back</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">ch</span><span class="o">.</span><span class="n">with_stream</span><span class="p">(</span><span class="n">ev</span><span class="p">,</span> <span class="n">show_prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">ch</span><span class="o">.</span><span class="n">read_until_prompt</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">ch</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Entering interactive kas shell (</span><span class="si">{</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="s1">&#39;CTRL+D to exit&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">bold</span><span class="si">}</span><span class="s2">) ...&quot;</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">ch</span><span class="o">.</span><span class="n">attach_interactive</span><span class="p">(</span><span class="n">ctrld_exit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KAS.kas_copy"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.kas.KAS.kas_copy">[docs]</a>    <span class="k">def</span> <span class="nf">kas_copy</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">resultimages</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">linux</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        copy all results to tftp path on lab host</span>
+
+<span class="sd">        resultimages is a list of image names, which should be created</span>
+<span class="sd">        from the oe build.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">resultimages</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">resultimages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultimages</span>
+            <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;please specify buildtargets (array of strings)&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resultimages</span><span class="p">:</span>
+            <span class="n">bhbasepath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kas_get_deploypath</span><span class="p">()</span>
+            <span class="n">bhf</span> <span class="o">=</span> <span class="n">bhbasepath</span> <span class="o">/</span> <span class="n">r</span>
+            <span class="n">labbasepath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lab</span><span class="o">.</span><span class="n">yocto_result_dir</span><span class="p">()</span>
+            <span class="n">shell_copy</span><span class="p">(</span><span class="n">bhf</span><span class="p">,</span> <span class="n">labbasepath</span><span class="p">,</span> <span class="n">remote_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">labbasepath</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.initconfig &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tbottest.initconfighelper" href="iniconfighelper.html" />
+    <link rel="prev" title="tbottest.tc - Testcases" href="tc.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#helper-functions">helper functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_get_config"><code class="docutils literal notranslate"><span class="pre">init_get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.generic_get_boardname"><code class="docutils literal notranslate"><span class="pre">generic_get_boardname()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.copy_file"><code class="docutils literal notranslate"><span class="pre">copy_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.replace_in_file"><code class="docutils literal notranslate"><span class="pre">replace_in_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.find_in_file_and_append"><code class="docutils literal notranslate"><span class="pre">find_in_file_and_append()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.find_in_file_and_delete"><code class="docutils literal notranslate"><span class="pre">find_in_file_and_delete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#classes">classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.IniTBotConfig"><code class="docutils literal notranslate"><span class="pre">IniTBotConfig</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.IniConfig"><code class="docutils literal notranslate"><span class="pre">IniConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.initconfig.IniConfig.get_config"><code class="docutils literal notranslate"><span class="pre">IniConfig.get_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.initconfig.IniConfig.get_config_int"><code class="docutils literal notranslate"><span class="pre">IniConfig.get_config_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.initconfig.IniConfig.get_default_config"><code class="docutils literal notranslate"><span class="pre">IniConfig.get_default_config()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/iniconfig.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <span class="target" id="module-tbottest.initconfig.py"></span><section id="tbottest-initconfig">
+<h1><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code><a class="headerlink" href="#tbottest-initconfig" title="Permalink to this heading">¶</a></h1>
+<section id="helper-functions">
+<span id="iniconfighelperfunctions"></span><h2>helper functions<a class="headerlink" href="#helper-functions" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_get_config">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfgp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.RawConfigParser" title="(in Python v3.14)"><span class="pre">RawConfigParser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns value of key name from configparser.</p>
+<p>Searches first for a “TC_BOARDNAME” section and if it there
+is not the key, search in section “TC”. If not found, return
+default value. If default value is “None” return None</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfgp</strong> – current config parser</p></li>
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – default value if key is not found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.generic_get_boardname">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">generic_get_boardname</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#generic_get_boardname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.generic_get_boardname" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the boards name in your lab setup</p>
+<p>setup the boardname through tbot.flag selectableboardname</p>
+<p>You can overwrite this by defining your own board_set_boardname()
+in boardspecific.py if you need another approach.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.copy_file">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">copy_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newfile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#copy_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.copy_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>copy file filename to newfile</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – full path and name of source file</p></li>
+<li><p><strong>newfile</strong> – full path and name of target file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.replace_in_file">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">replace_in_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newv</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#replace_in_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.replace_in_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>replace string in filename with string newv</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – full path and name of source file</p></li>
+<li><p><strong>string</strong> – searchstring</p></li>
+<li><p><strong>newv</strong> – new value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.find_in_file_and_append">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">find_in_file_and_append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substring</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#find_in_file_and_append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.find_in_file_and_append" title="Permalink to this definition">¶</a></dt>
+<dd><p>append in file filename to the string substring the string append</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – full path and name of source file</p></li>
+<li><p><strong>substring</strong> – string to which string append gets appended</p></li>
+<li><p><strong>append</strong> – appended string</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.find_in_file_and_delete">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">find_in_file_and_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substring</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#find_in_file_and_delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.find_in_file_and_delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete line in file filename when substring is found</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – full path and name of source file</p></li>
+<li><p><strong>substring</strong> – substring which get searched</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="classes">
+<h2>classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#tbottest.initconfig.IniTBotConfig" title="tbottest.initconfig.IniTBotConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">IniTBotConfig</span></code></a> - Init generic setup from tbot.ini.</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniTBotConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">IniTBotConfig</span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniTBotConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniTBotConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>reads common tbot config</p>
+<p>see: <a class="reference internal" href="generic.html#boardspecificruntimeadaption"><span class="std std-ref">boardspecfic runtime adaptions</span></a></p>
+</dd></dl>
+
+<ul class="simple">
+<li><p><a class="reference internal" href="#tbottest.initconfig.IniConfig" title="tbottest.initconfig.IniConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">IniConfig</span></code></a> - Init generic setup from BOARDNAME.ini.</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">IniConfig</span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>reads board config</p>
+<p>see: <a class="reference internal" href="generic.html#boardspecificruntimeadaption"><span class="std std-ref">boardspecfic runtime adaptions</span></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniConfig.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniConfig.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniConfig.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns value of key name from configparser.</p>
+<p>use internal function init_get_config</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – default value if key is not found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniConfig.get_config_int">
+<span class="sig-name descname"><span class="pre">get_config_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniConfig.get_config_int"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniConfig.get_config_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns int value of key name from configparser.</p>
+<p>use internal function init_get_config_int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – default value if key is not found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniConfig.get_default_config">
+<span class="sig-name descname"><span class="pre">get_default_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniConfig.get_default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniConfig.get_default_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>return value of key from “default” section with name “name”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – default value if key is not found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tc.html" class="btn btn-neutral float-left" title="tbottest.tc - Testcases" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="iniconfighelper.html" class="btn btn-neutral float-right" title="tbottest.initconfighelper" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

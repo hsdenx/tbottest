@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.tc.process &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.tc.process</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.tc.process</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tbot</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">linux</span>
+
+<span class="kn">from</span> <span class="nn">tbottest.common.utils</span> <span class="kn">import</span> <span class="n">string_to_dict</span>
+
+
+<div class="viewcode-block" id="process_get_gnuplot_work_and_configpath"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.process.process_get_gnuplot_work_and_configpath">[docs]</a><span class="k">def</span> <span class="nf">process_get_gnuplot_work_and_configpath</span><span class="p">(</span>
+    <span class="n">local</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    return config and workpath for gnuplot</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">workpath</span> <span class="o">=</span> <span class="n">local</span><span class="o">.</span><span class="n">workdir</span><span class="p">()</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+    <span class="n">sourcepath</span> <span class="o">=</span> <span class="n">local</span><span class="o">.</span><span class="n">sourcedir</span><span class="p">()</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+
+    <span class="n">gnuplotpath</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">workpath</span><span class="si">}</span><span class="s2">/tbottest/results/measurements/process&quot;</span>
+    <span class="n">gnuplotconfigpath</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sourcepath</span><span class="si">}</span><span class="s2">/tbottest/results/measurements/process&quot;</span>
+    <span class="n">local</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;mkdir&quot;</span><span class="p">,</span> <span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="n">gnuplotpath</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">gnuplotpath</span><span class="p">,</span> <span class="n">gnuplotconfigpath</span></div>
+
+
+<div class="viewcode-block" id="ps_parse_ps"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.process.ps_parse_ps">[docs]</a><span class="k">def</span> <span class="nf">ps_parse_ps</span><span class="p">(</span><span class="n">log</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    parse the log output from ps command</span>
+<span class="sd">    called with the options</span>
+
+<span class="sd">    ```pid,tid,pcpu,nice,priority,comm&quot;, &quot;H&quot;, &quot;-C&quot;, pname```</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">        This works not with the busybox version</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">log</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="n">first</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">log</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">first</span><span class="p">:</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">continue</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">string_to_dict</span><span class="p">(</span>
+                <span class="n">line</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{PID}</span><span class="s2">\s+</span><span class="si">{TID}</span><span class="s2">\s+</span><span class="si">{CPU}</span><span class="s2">\s+</span><span class="si">{NI}</span><span class="s2">\s+</span><span class="si">{PRI}</span><span class="s2">\s+</span><span class="si">{CMD}</span><span class="s2">&quot;</span>  <span class="c1"># noqa: W605</span>
+            <span class="p">)</span>  <span class="c1"># noqa: W605</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="ps_parse_top"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.process.ps_parse_top">[docs]</a><span class="k">def</span> <span class="nf">ps_parse_top</span><span class="p">(</span><span class="n">log</span><span class="p">,</span> <span class="n">busybox</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    parse the log output from top command</span>
+<span class="sd">    called with the options</span>
+
+<span class="sd">    top -b -n X -d X -c -H | awk &#39;($1==&quot;%Cpu(s):&quot;)||($8==&quot;R&quot;)||($1==&quot;MiB&quot;) {print}&#39;</span>
+
+<span class="sd">    .. bash:</span>
+
+<span class="sd">        %Cpu(s): 92.9 us,  6.2 sy,  0.0 ni,  0.9 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span>
+<span class="sd">        MiB Mem :    491.0 total,    164.2 free,    143.9 used,    182.9 buff/cache</span>
+<span class="sd">        MiB Swap:      0.0 total,      0.0 free,      0.0 used.    321.8 avail Mem</span>
+<span class="sd">          267 weston    20   0  243672  85304  13792 R  93.8  17.0  32:32.89 /usr/bin/weston --modules=systemd-notify.so</span>
+<span class="sd">         2119 root      20   0    4128   1944   1496 R   5.4   0.4   0:00.26 top -b -n 3 -d 1 -c -H</span>
+
+<span class="sd">    if busybox is True, we get log from busybox output, which is</span>
+
+<span class="sd">    .. bash:</span>
+
+<span class="sd">        CPU:   2% usr   2% sys   0% nic  95% idle   0% io   0% irq   0% sirq</span>
+<span class="sd">          PID  PPID USER     STAT   VSZ %VSZ %CPU COMMAND</span>
+
+<span class="sd">    You get back an arrray containing dictionary</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        {&quot;loop&quot;:&lt;loop&gt;, &quot;cpu_system&quot;:&lt;cpu dictionary&gt;, &quot;values&quot;,&lt;array of values&gt;}</span>
+
+<span class="sd">    cpu dictionary contains a dictionary of the form:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        {&#39;USER&#39;: &#39;93.8&#39;, &#39;SYSTEM&#39;: &#39;4.4&#39;, &#39;NICE&#39;: &#39;0.0&#39;, &#39;IDLE&#39;: &#39;1.8&#39;, &#39;WA&#39;: &#39;0.0&#39;, &#39;HI&#39;: &#39;0.0&#39;, &#39;SI&#39;: &#39;0.0&#39;, &#39;ST&#39;: &#39;0.0&#39;}</span>
+
+<span class="sd">    array of values contain dictionaries of the form:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        {&#39;PID&#39;: &#39;267&#39;, &#39;USER&#39;: &#39;weston&#39;, &#39;PR&#39;: &#39;20&#39;, &#39;NI&#39;: &#39;0&#39;, &#39;VIRT&#39;: &#39;243672&#39;, &#39;RES&#39;: &#39;85304&#39;, &#39;SHR&#39;: &#39;13792&#39;, &#39;S&#39;: &#39;R&#39;, &#39;CPU&#39;: &#39;62.5&#39;, &#39;MEM&#39;: &#39;17.0&#39;, &#39;TIME&#39;: &#39;93:29.61&#39;, &#39;CMD&#39;: &#39;/usr/bin/weston&#39;}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">log</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">loopresult</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cpu</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">log</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;Cpu(s)&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">loopresult</span><span class="p">):</span>
+                    <span class="n">new</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;loop&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;cpu_system&quot;</span><span class="p">:</span> <span class="n">cpu</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="n">loopresult</span><span class="p">}</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">loopresult</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="c1"># example top output</span>
+                <span class="c1"># %Cpu(s): 74.4 us, 20.5 sy,  0.0 ni,  0.0 id,  0.0 wa,  0.0 hi,  5.1 si,  0.0 st</span>
+                <span class="n">cpu</span> <span class="o">=</span> <span class="n">string_to_dict</span><span class="p">(</span>
+                    <span class="n">line</span><span class="p">,</span>
+                    <span class="s2">&quot;%Cpu\(s\):\s+</span><span class="si">{USER}</span><span class="s2">\s+us,\s+</span><span class="si">{SYSTEM}</span><span class="s2">\s+sy,\s+</span><span class="si">{NICE}</span><span class="s2">\s+ni,\s+</span><span class="si">{IDLE}</span><span class="s2">\s+id,\s+</span><span class="si">{WA}</span><span class="s2">\s+wa,\s+</span><span class="si">{HI}</span><span class="s2">\s+hi,\s+</span><span class="si">{SI}</span><span class="s2">\s+si,\s+</span><span class="si">{ST}</span><span class="s2">\s+st&quot;</span><span class="p">,</span>  <span class="c1"># noqa: W605</span>
+                <span class="p">)</span>  <span class="c1"># noqa: W605</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="s2">&quot;MiB Mem&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="c1"># ignore</span>
+                <span class="c1"># print(&quot;Found MiB mem&quot;)</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="s2">&quot;MiB Swap&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="c1"># ignore</span>
+                <span class="c1"># print(&quot;Found MiB Swap&quot;)</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="s2">&quot;CPU:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">loopresult</span><span class="p">):</span>
+                    <span class="n">new</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;loop&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;cpu_system&quot;</span><span class="p">:</span> <span class="n">cpu</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="n">loopresult</span><span class="p">}</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">loopresult</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="c1"># example top output</span>
+                <span class="c1"># CPU:   2% usr   2% sys   0% nic  95% idle   0% io   0% irq   0% sirq</span>
+                <span class="n">cpu</span> <span class="o">=</span> <span class="n">string_to_dict</span><span class="p">(</span>
+                    <span class="n">line</span><span class="p">,</span>
+                    <span class="s2">&quot;CPU:\s+</span><span class="si">{USER}</span><span class="s2">\%\s+usr\s+</span><span class="si">{SYSTEM}</span><span class="s2">\%\s+sys\s+</span><span class="si">{NIC}</span><span class="s2">\%\s+nic\s+</span><span class="si">{IDLE}</span><span class="s2">\%\s+idle\s+</span><span class="si">{IO}</span><span class="s2">\%\s+io\s+</span><span class="si">{IRQ}</span><span class="s2">\%\s+irq\s+</span><span class="si">{SI}</span><span class="s2">\%&quot;</span><span class="p">,</span>  <span class="c1"># noqa: W605</span>
+                <span class="p">)</span>  <span class="c1"># noqa: W605</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">busybox</span><span class="p">:</span>
+                <span class="c1">#   PID  PPID USER     STAT   VSZ %VSZ %CPU COMMAND</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">string_to_dict</span><span class="p">(</span>
+                    <span class="n">line</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="si">{PID}</span><span class="s2">\s+</span><span class="si">{PIDD}</span><span class="s2">\s+</span><span class="si">{USER}</span><span class="s2">\s+</span><span class="si">{STAT}</span><span class="s2">\s+</span><span class="si">{VSZ}</span><span class="s2">\s+</span><span class="si">{VSZP}</span><span class="s2">\%\s+</span><span class="si">{CPU}</span><span class="s2">\%\s+</span><span class="si">{CMD}</span><span class="s2">&quot;</span><span class="p">,</span>  <span class="c1"># noqa: W605</span>
+                <span class="p">)</span>  <span class="c1"># noqa: W605</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1">#   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">string_to_dict</span><span class="p">(</span>
+                    <span class="n">line</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="si">{PID}</span><span class="s2">\s+</span><span class="si">{USER}</span><span class="s2">\s+</span><span class="si">{PR}</span><span class="s2">\s+</span><span class="si">{NI}</span><span class="s2">\s+</span><span class="si">{VIRT}</span><span class="s2">\s+</span><span class="si">{RES}</span><span class="s2">\s+</span><span class="si">{SHR}</span><span class="s2">\s+</span><span class="si">{S}</span><span class="s2">\s+</span><span class="si">{CPU}</span><span class="s2">\s+</span><span class="si">{MEM}</span><span class="s2">\s+</span><span class="si">{TIME}</span><span class="s2">\s+</span><span class="si">{CMD}</span><span class="s2">&quot;</span><span class="p">,</span>  <span class="c1"># noqa: W605</span>
+                <span class="p">)</span>  <span class="c1"># noqa: W605</span>
+
+            <span class="n">loopresult</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="lnx_get_process_cpu_usage"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.process.lnx_get_process_cpu_usage">[docs]</a><span class="k">def</span> <span class="nf">lnx_get_process_cpu_usage</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">pname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get the current cpu usage of process with name ```pname```</span>
+
+<span class="sd">    you get back a dict of the following format:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        {&#39;PID&#39;: &#39;172&#39;, &#39;USER&#39;: &#39;root&#39;, &#39;PR&#39;: &#39;20&#39;, &#39;NI&#39;: &#39;0&#39;, &#39;VIRT&#39;: &#39;14720&#39;, &#39;RES&#39;: &#39;4340&#39;, &#39;SHR&#39;: &#39;3748&#39;, &#39;S&#39;: &#39;S&#39;, &#39;CPU&#39;: &#39;0.0&#39;, &#39;MEM&#39;: &#39;0.9&#39;, &#39;TIME&#39;: &#39;3:31.29&#39;, &#39;CMD&#39;: &#39;rngd&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">log</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;top -b -d 1 -n 1 | grep </span><span class="si">{</span><span class="n">pname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+            <span class="c1"># output of top command is</span>
+            <span class="c1"># PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND</span>
+            <span class="c1"># 172 root      20   0   14588   2344   1912 S  62.5   0.5   0:37.31 rngd</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">string_to_dict</span><span class="p">(</span>
+                <span class="n">log</span><span class="p">,</span>
+                <span class="s2">&quot;</span><span class="si">{PID}</span><span class="s2">\s+</span><span class="si">{USER}</span><span class="s2">\s+</span><span class="si">{PR}</span><span class="s2">\s+</span><span class="si">{NI}</span><span class="s2">\s+</span><span class="si">{VIRT}</span><span class="s2">\s+</span><span class="si">{RES}</span><span class="s2">\s+</span><span class="si">{SHR}</span><span class="s2">\s+</span><span class="si">{S}</span><span class="s2">\s+</span><span class="si">{CPU}</span><span class="s2">\s+</span><span class="si">{MEM}</span><span class="s2">\s+</span><span class="si">{TIME}</span><span class="s2">\s+</span><span class="si">{CMD}</span><span class="s2">&quot;</span><span class="p">,</span>  <span class="c1"># noqa: W605</span>
+            <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="lnx_get_cpu_stats"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.process.lnx_get_cpu_stats">[docs]</a><span class="k">def</span> <span class="nf">lnx_get_cpu_stats</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get cpu stats from top command</span>
+
+<span class="sd">    you get back a dict of the following format:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        {&#39;CPU&#39;: &#39;0.0&#39;, &#39;SYS&#39;: &#39;20.0&#39;, &#39;NI&#39;: &#39;0.0&#39;, &#39;IDLE&#39;: &#39;75.0&#39;, &#39;WA&#39;: &#39;0.0&#39;, &#39;HI&#39;: &#39;0.0&#39;, &#39;SI&#39;: &#39;5.0&#39;, &#39;ST&#39;: &#39;0.0&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="c1"># call top twice, as first has big cpu time from top itself</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="s1">&#39;top -b -d 0.5 -n 2 | grep &quot;%Cpu(s)&quot;&#39;</span><span class="p">))</span>
+        <span class="c1"># output of top command is</span>
+        <span class="c1"># %Cpu(s): 82.1 us, 17.9 sy,  0.0 ni,  0.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">log</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="c1"># ignore first line</span>
+            <span class="k">if</span> <span class="n">i</span><span class="p">:</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="s2">&quot;Cpu&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">res</span> <span class="o">=</span> <span class="n">string_to_dict</span><span class="p">(</span>
+                <span class="n">line</span><span class="p">,</span>
+                <span class="s2">&quot;\%Cpu\(s\)\:\s+</span><span class="si">{CPU}</span><span class="s2"> us,\s+</span><span class="si">{SYS}</span><span class="s2"> sy,\s+</span><span class="si">{NI}</span><span class="s2"> ni,\s+</span><span class="si">{IDLE}</span><span class="s2"> id,\s+</span><span class="si">{WA}</span><span class="s2"> wa,\s+</span><span class="si">{HI}</span><span class="s2"> hi,\s+</span><span class="si">{SI}</span><span class="s2"> si,\s+</span><span class="si">{ST}</span><span class="s2"> st&quot;</span><span class="p">,</span>  <span class="c1"># noqa: W605</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="lnx_measure_process"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.process.lnx_measure_process">[docs]</a><span class="k">def</span> <span class="nf">lnx_measure_process</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">pname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">intervall</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">loops</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    measure for a process with name ```pname``` the cpu usage</span>
+<span class="sd">    with ```intervall``` and ```loops```. If ```pname``` is</span>
+<span class="sd">    empty, measure all processes.</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">        This works not with the busybox version</span>
+
+<span class="sd">    you get back an array which contains a dictionary with</span>
+<span class="sd">    entry</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        {&quot;loop&quot;:&lt;loop&gt;, &quot;values&quot;,&lt;array of values&gt;}</span>
+
+<span class="sd">    Array of values contains a dictionary with, see</span>
+
+<span class="sd">    :py:func:`tbottest.tc.process.ps_parse_ps`</span>
+
+<span class="sd">    If there is no such process ```values``` entry is empty</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">loops</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pname</span><span class="p">):</span>
+                <span class="n">log</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+                    <span class="s2">&quot;ps&quot;</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;pid,tid,pcpu,nice,priority,comm&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;-C&quot;</span><span class="p">,</span> <span class="n">pname</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># log = lnx.exec0(&quot;ps&quot;, &quot;a&quot;, &quot;-o&quot;, &quot;pid,tid,pcpu,nice,priority,comm&quot;, &quot;H&quot;)</span>
+                <span class="n">log</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;ps&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;pid,tid,pcpu,nice,priority,comm&quot;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">log</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="n">resultnew</span> <span class="o">=</span> <span class="n">ps_parse_ps</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;loop&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="n">resultnew</span><span class="p">}</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
+
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">intervall</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="is_busybox"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.process.is_busybox">[docs]</a><span class="k">def</span> <span class="nf">is_busybox</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    detect if we have a busybox version of command ```cmd```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ret</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ls -al </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2"> | grep busybox&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="lnx_measure_top"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.process.lnx_measure_top">[docs]</a><span class="k">def</span> <span class="nf">lnx_measure_top</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">intervall</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">loops</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    call top with intervall ```intervall`` and ```loops``` and</span>
+<span class="sd">    analyse it</span>
+
+<span class="sd">    you get back an array which contains a dictionary described</span>
+<span class="sd">    in testcase</span>
+
+<span class="sd">    :py:func:`tbottest.tc.process.ps_parse_top`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># busybox</span>
+    <span class="c1"># CPU:   2% usr   2% sys   0% nic  95% idle   0% io   0% irq   0% sirq</span>
+    <span class="c1">#   PID  PPID USER     STAT   VSZ %VSZ %CPU COMMAND</span>
+    <span class="n">loop</span> <span class="o">=</span> <span class="n">loops</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">busybox</span> <span class="o">=</span> <span class="n">is_busybox</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="s2">&quot;/usr/bin/top&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">busybox</span><span class="p">:</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+            <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;top -b -n </span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s1"> -d </span><span class="si">{</span><span class="n">intervall</span><span class="si">}</span><span class="s1"> | awk </span><span class="se">\&#39;</span><span class="s1">($1==&quot;CPU:&quot;)||($4==&quot;R&quot;) </span><span class="se">{{</span><span class="s1">print</span><span class="se">}}\&#39;</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+            <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;top -b -n </span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s1"> -d </span><span class="si">{</span><span class="n">intervall</span><span class="si">}</span><span class="s1"> -c -H | awk </span><span class="se">\&#39;</span><span class="s1">($1==&quot;%Cpu(s):&quot;)||($8==&quot;R&quot;)||($1==&quot;MiB&quot;) </span><span class="se">{{</span><span class="s1">print</span><span class="se">}}\&#39;</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ps_parse_top</span><span class="p">(</span><span class="n">log</span><span class="p">,</span> <span class="n">busybox</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ps_create_measurement_png"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.process.ps_create_measurement_png">[docs]</a><span class="k">def</span> <span class="nf">ps_create_measurement_png</span><span class="p">(</span>
+    <span class="n">local</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">pname</span><span class="p">,</span>
+    <span class="n">intervall</span><span class="p">,</span>
+    <span class="n">loops</span><span class="p">,</span>
+    <span class="n">result</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    create a png on local host based on the results result</span>
+<span class="sd">    from testcase:</span>
+
+<span class="sd">    :py:func:`tbottest.tc.process.lnx_measure_process`</span>
+
+<span class="sd">    store the gnuplot data in</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">        tbottest/results/measurements/process/{loops}_{intervall}_{pname}.dat</span>
+
+<span class="sd">    call gnuplot with the config file</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">        tbottest/results/measurements/process/gnuplot-bar.gp</span>
+
+<span class="sd">    The output png is stored in ```process-usage.png```. Example for</span>
+<span class="sd">    viewing it:</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">        $ gwenview process-usage.png</span>
+
+<span class="sd">    example usage of this testcase:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        loops = 30</span>
+<span class="sd">        intervall = 1.0</span>
+<span class="sd">        pname = &quot;QtWebEngineProc&quot;</span>
+
+<span class="sd">        with tbot.ctx() as cx:</span>
+<span class="sd">            if lab is None:</span>
+<span class="sd">                lab = cx.request(tbot.role.LabHost)</span>
+
+<span class="sd">            if lnx is None:</span>
+<span class="sd">                lnx = cx.request(tbot.role.BoardLinux)</span>
+
+<span class="sd">            result = lnx_measure_process(lnx, pname, intervall, loops)</span>
+
+<span class="sd">            local = cx.request(tbot.role.LocalHost)</span>
+<span class="sd">            ps_create_measurement_png(local, pname, intervall, loops, result)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cpuvalues</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">pnamelist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+        <span class="n">loopval</span> <span class="o">=</span> <span class="n">loop</span><span class="p">[</span><span class="s2">&quot;loop&quot;</span><span class="p">]</span>
+
+        <span class="c1"># values maybe empty, happens if ps command does not find the process!</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">loop</span><span class="p">[</span><span class="s2">&quot;values&quot;</span><span class="p">]</span>
+
+        <span class="c1"># count same val[&quot;CMD&quot;] into one value</span>
+        <span class="n">cpu</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">val</span><span class="p">[</span><span class="s2">&quot;CMD&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">pnamelist</span><span class="p">:</span>
+                <span class="n">pnamelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="s2">&quot;CMD&quot;</span><span class="p">])</span>
+
+            <span class="n">curdict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cpu</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">val</span><span class="p">[</span><span class="s2">&quot;CMD&quot;</span><span class="p">]:</span>
+                    <span class="n">curdict</span> <span class="o">=</span> <span class="n">c</span>
+                    <span class="k">break</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">curdict</span><span class="p">):</span>
+                <span class="n">cpuval</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">]</span>
+                <span class="n">cpuval</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="s2">&quot;CPU&quot;</span><span class="p">])</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;val&quot;</span><span class="p">:</span> <span class="n">cpuval</span><span class="p">})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">newcpu</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">val</span><span class="p">[</span><span class="s2">&quot;CMD&quot;</span><span class="p">],</span> <span class="s2">&quot;val&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="s2">&quot;CPU&quot;</span><span class="p">])}</span>
+                <span class="n">cpu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newcpu</span><span class="p">)</span>
+
+        <span class="n">newentry</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;loop&quot;</span><span class="p">:</span> <span class="n">loopval</span><span class="p">,</span> <span class="s2">&quot;cpuvalues&quot;</span><span class="p">:</span> <span class="n">cpu</span><span class="p">}</span>
+        <span class="n">cpuvalues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newentry</span><span class="p">)</span>
+
+    <span class="n">gnuplotpath</span><span class="p">,</span> <span class="n">gnuplotconfigpath</span> <span class="o">=</span> <span class="n">process_get_gnuplot_work_and_configpath</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">loops</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">intervall</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">pname</span><span class="si">}</span><span class="s2">.dat&quot;</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">gnuplotpath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">filename</span>
+    <span class="n">outputfilename</span> <span class="o">=</span> <span class="n">gnuplotpath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="s2">&quot;process-usage.png&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;could not open </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">, May you create </span><span class="si">{</span><span class="n">gnuplotpath</span><span class="si">}</span><span class="s2">, if you want to use the results later&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">yellow</span>
+        <span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">headline</span> <span class="o">=</span> <span class="s2">&quot;loop &quot;</span>
+    <span class="k">for</span> <span class="n">pname</span> <span class="ow">in</span> <span class="n">pnamelist</span><span class="p">:</span>
+        <span class="n">headline</span> <span class="o">+=</span> <span class="n">pname</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+
+    <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">headline</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">cpuv</span> <span class="ow">in</span> <span class="n">cpuvalues</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">cpu</span> <span class="o">=</span> <span class="n">cpuv</span><span class="p">[</span><span class="s2">&quot;cpuvalues&quot;</span><span class="p">]</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="k">for</span> <span class="n">pname</span> <span class="ow">in</span> <span class="n">pnamelist</span><span class="p">:</span>
+            <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cpuv</span><span class="p">[</span><span class="s2">&quot;cpuvalues&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">pname</span> <span class="o">==</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span>
+                    <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">line</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">+=</span> <span class="s2">&quot;0.0 &quot;</span>
+
+        <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gnuplot dat file created in </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span>
+
+    <span class="c1"># create png image</span>
+    <span class="n">cmcount</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pnamelist</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">local</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+        <span class="s2">&quot;gnuplot&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-e&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;datafile=&#39;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-e&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;outputfile=&#39;</span><span class="si">{</span><span class="n">outputfilename</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-e&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;columcount=&#39;</span><span class="si">{</span><span class="n">cmcount</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gnuplotconfigpath</span><span class="si">}</span><span class="s2">/gnuplot-bar.gp&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gnuplot created png file </span><span class="si">{</span><span class="n">outputfilename</span><span class="si">}</span><span class="s2"> on local host&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span>
+    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;type there</span><span class="se">\n</span><span class="s2"> gwenview </span><span class="si">{</span><span class="n">outputfilename</span><span class="si">}</span><span class="se">\n</span><span class="s2">to show the image&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span></div>
+
+
+<div class="viewcode-block" id="top_create_measurement_png"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.process.top_create_measurement_png">[docs]</a><span class="k">def</span> <span class="nf">top_create_measurement_png</span><span class="p">(</span>
+    <span class="n">local</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">intervall</span><span class="p">,</span>
+    <span class="n">loops</span><span class="p">,</span>
+    <span class="n">result</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    create a png on local host based on the results result</span>
+<span class="sd">    from testcase:</span>
+
+<span class="sd">    :py:func:`tbottest.tc.process.lnx_measure_top`</span>
+
+<span class="sd">    store the gnuplot data in</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">        tbottest/results/measurements/process/{loops}_{intervall}_top.dat</span>
+
+<span class="sd">    call gnuplot with the config file</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">        tbottest/results/measurements/process/gnuplot-bar-cpustat.gp</span>
+
+<span class="sd">    The output png is stored in ```process-usage.png```. Example for</span>
+<span class="sd">    viewing it:</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">        $ gwenview process-usage.png</span>
+
+<span class="sd">    example usage of this testcase:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        loops = 30</span>
+<span class="sd">        intervall = 1.0</span>
+
+<span class="sd">        with tbot.ctx() as cx:</span>
+<span class="sd">            if lab is None:</span>
+<span class="sd">                lab = cx.request(tbot.role.LabHost)</span>
+
+<span class="sd">            if lnx is None:</span>
+<span class="sd">                lnx = cx.request(tbot.role.BoardLinux)</span>
+
+<span class="sd">            result = lnx_measure_top(lnx, intervall, loops)</span>
+
+<span class="sd">            local = cx.request(tbot.role.LocalHost)</span>
+<span class="sd">            top_create_measurement_png(local, intervall, loops, result)</span>
+
+<span class="sd">    example png:</span>
+
+<span class="sd">    .. image:: ../tbottest/results/measurements/process/process-usage.png</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cpuvalues</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">pnamelist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+        <span class="n">loopval</span> <span class="o">=</span> <span class="n">loop</span><span class="p">[</span><span class="s2">&quot;loop&quot;</span><span class="p">]</span>
+        <span class="n">cpusysval</span> <span class="o">=</span> <span class="n">loop</span><span class="p">[</span><span class="s2">&quot;cpu_system&quot;</span><span class="p">]</span>
+
+        <span class="c1"># values maybe empty, happens if ps command does not find the process!</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">loop</span><span class="p">[</span><span class="s2">&quot;values&quot;</span><span class="p">]</span>
+
+        <span class="c1"># count same val[&quot;CMD&quot;] into one value</span>
+        <span class="n">cpu</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">val</span><span class="p">[</span><span class="s2">&quot;CMD&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">pnamelist</span><span class="p">:</span>
+                <span class="n">pnamelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="s2">&quot;CMD&quot;</span><span class="p">])</span>
+
+            <span class="n">curdict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cpu</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">val</span><span class="p">[</span><span class="s2">&quot;CMD&quot;</span><span class="p">]:</span>
+                    <span class="n">curdict</span> <span class="o">=</span> <span class="n">c</span>
+                    <span class="k">break</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">curdict</span><span class="p">):</span>
+                <span class="n">cpuval</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">]</span>
+                <span class="n">cpuval</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="s2">&quot;CPU&quot;</span><span class="p">])</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;val&quot;</span><span class="p">:</span> <span class="n">cpuval</span><span class="p">})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">newcpu</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">val</span><span class="p">[</span><span class="s2">&quot;CMD&quot;</span><span class="p">],</span> <span class="s2">&quot;val&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="s2">&quot;CPU&quot;</span><span class="p">])}</span>
+                <span class="n">cpu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newcpu</span><span class="p">)</span>
+
+        <span class="c1"># add cpu and system time</span>
+        <span class="n">cputime</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">cpusysval</span><span class="p">[</span><span class="s2">&quot;USER&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">cpusysval</span><span class="p">[</span><span class="s2">&quot;SYSTEM&quot;</span><span class="p">])</span>
+        <span class="n">newcpu</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu_user&quot;</span><span class="p">,</span> <span class="s2">&quot;val&quot;</span><span class="p">:</span> <span class="n">cpusysval</span><span class="p">[</span><span class="s2">&quot;USER&quot;</span><span class="p">]}</span>
+        <span class="n">cpu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newcpu</span><span class="p">)</span>
+        <span class="n">newcpu</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu_system&quot;</span><span class="p">,</span> <span class="s2">&quot;val&quot;</span><span class="p">:</span> <span class="n">cpusysval</span><span class="p">[</span><span class="s2">&quot;SYSTEM&quot;</span><span class="p">]}</span>
+        <span class="n">cpu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newcpu</span><span class="p">)</span>
+        <span class="n">newcpu</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu_complete&quot;</span><span class="p">,</span> <span class="s2">&quot;val&quot;</span><span class="p">:</span> <span class="n">cputime</span><span class="p">}</span>
+        <span class="n">cpu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newcpu</span><span class="p">)</span>
+
+        <span class="n">newentry</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;loop&quot;</span><span class="p">:</span> <span class="n">loopval</span><span class="p">,</span> <span class="s2">&quot;cpuvalues&quot;</span><span class="p">:</span> <span class="n">cpu</span><span class="p">}</span>
+        <span class="n">cpuvalues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newentry</span><span class="p">)</span>
+
+    <span class="n">pnamelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;cpu_user&quot;</span><span class="p">)</span>
+    <span class="n">pnamelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;cpu_system&quot;</span><span class="p">)</span>
+    <span class="n">pnamelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;cpu_complete&quot;</span><span class="p">)</span>
+
+    <span class="n">gnuplotpath</span><span class="p">,</span> <span class="n">gnuplotconfigpath</span> <span class="o">=</span> <span class="n">process_get_gnuplot_work_and_configpath</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">loops</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">intervall</span><span class="si">}</span><span class="s2">_top.dat&quot;</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">gnuplotpath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">filename</span>
+    <span class="n">outputfilename</span> <span class="o">=</span> <span class="n">gnuplotpath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="s2">&quot;process-usage.png&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;could not open </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">, May you create </span><span class="si">{</span><span class="n">gnuplotpath</span><span class="si">}</span><span class="s2">, if you want to use the results later&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">yellow</span>
+        <span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">headline</span> <span class="o">=</span> <span class="s2">&quot;loop &quot;</span>
+    <span class="k">for</span> <span class="n">pname</span> <span class="ow">in</span> <span class="n">pnamelist</span><span class="p">:</span>
+        <span class="n">headline</span> <span class="o">+=</span> <span class="n">pname</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+
+    <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">headline</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">cpuv</span> <span class="ow">in</span> <span class="n">cpuvalues</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">cpu</span> <span class="o">=</span> <span class="n">cpuv</span><span class="p">[</span><span class="s2">&quot;cpuvalues&quot;</span><span class="p">]</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="k">for</span> <span class="n">pname</span> <span class="ow">in</span> <span class="n">pnamelist</span><span class="p">:</span>
+            <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cpuv</span><span class="p">[</span><span class="s2">&quot;cpuvalues&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">pname</span> <span class="o">==</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span>
+                    <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">line</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">+=</span> <span class="s2">&quot;0.0 &quot;</span>
+
+        <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gnuplot dat file created in </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span>
+
+    <span class="c1"># create png image</span>
+    <span class="n">cmcount</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pnamelist</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">local</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+        <span class="s2">&quot;gnuplot&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-e&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;datafile=&#39;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-e&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;outputfile=&#39;</span><span class="si">{</span><span class="n">outputfilename</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-e&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;columcount=&#39;</span><span class="si">{</span><span class="n">cmcount</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gnuplotconfigpath</span><span class="si">}</span><span class="s2">/gnuplot-bar-cpustat.gp&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gnuplot created png file </span><span class="si">{</span><span class="n">outputfilename</span><span class="si">}</span><span class="s2"> on local host&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span>
+    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;type there</span><span class="se">\n</span><span class="s2"> gwenview </span><span class="si">{</span><span class="n">outputfilename</span><span class="si">}</span><span class="se">\n</span><span class="s2">to show the image&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

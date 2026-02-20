@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.machineinit &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.machineinit</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.machineinit</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">tbot</span>
+<span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">machine</span>
+<span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">linux</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">tbottest.tc.common</span> <span class="kn">import</span> <span class="n">search_string_in_multiline</span>
+
+<span class="kn">import</span> <span class="nn">platform</span>
+
+<span class="kn">import</span> <span class="nn">ctypes</span>
+
+<span class="n">H</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="LauterbachLoad"><a class="viewcode-back" href="../../machineinit.html#tbottest.machineinit.LauterbachLoad">[docs]</a><span class="k">class</span> <span class="nc">LauterbachLoad</span><span class="p">(</span><span class="n">machine</span><span class="o">.</span><span class="n">Initializer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    BIG FAT WARNING:</span>
+
+<span class="sd">    I do not longer own a Lauterbach debugger, so may this class is broken</span>
+
+
+<span class="sd">    TRACE32&#39;s configuration file &quot;config.t32&quot; has to contain these lines:</span>
+<span class="sd">    RCL=NETASSIST</span>
+<span class="sd">    PORT=20000</span>
+<span class="sd">    The port value may be changed but has to match with the port number</span>
+<span class="sd">    used with this python script.</span>
+
+<span class="sd">    currently we use t32apicmd.py, but we used code from t32remotedo.py</span>
+<span class="sd">    which does not work ... so need more rework!</span>
+
+<span class="sd">    Also add in config.t32 the line</span>
+
+<span class="sd">    CONNECTIONMODE=AUTOCONNECT</span>
+
+<span class="sd">    so if you start trace32 and there is another running (or crashed)</span>
+<span class="sd">    instance running, it get killed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">T32_OK</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">trace32_execute_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">dllpath</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_trace32_install_path</span><span class="p">()</span><span class="si">}</span><span class="s2">/demo/api/python&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DLL PATH &quot;</span><span class="p">,</span> <span class="n">dllpath</span><span class="p">)</span>
+
+        <span class="c1"># auto-detect the correct library</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CYGWIN&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">sizeof</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_voidp</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="c1"># WINDOWS 32bit</span>
+                <span class="n">t32api</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">CDLL</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dllpath</span><span class="si">}</span><span class="s2">/t32api.dll&quot;</span><span class="p">)</span>
+                <span class="c1"># alternative using windows DLL search order:</span>
+                <span class="c1">#   t32api = ctypes.cdll.t32api</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># WINDOWS 64bit</span>
+                <span class="n">t32api</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">CDLL</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dllpath</span><span class="si">}</span><span class="s2">/t32api64.dll&quot;</span><span class="p">)</span>
+                <span class="c1"># alternative using windows DLL search order:</span>
+                <span class="c1">#   t32api = ctypes.cdll.t32api64</span>
+        <span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>
+            <span class="c1"># Mac OS X</span>
+            <span class="n">t32api</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">CDLL</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dllpath</span><span class="si">}</span><span class="s2">/t32api.dylib&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">sizeof</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_voidp</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="c1"># Linux 32bit</span>
+                <span class="n">t32api</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">CDLL</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dllpath</span><span class="si">}</span><span class="s2">/t32api.so&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Linux 64bit</span>
+                <span class="n">t32api</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">CDLL</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dllpath</span><span class="si">}</span><span class="s2">/t32api64.so&quot;</span><span class="p">)</span>
+
+        <span class="n">node</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;20000&quot;</span>
+        <span class="n">packlen</span> <span class="o">=</span> <span class="s2">&quot;1024&quot;</span>
+        <span class="k">if</span> <span class="n">t32api</span><span class="o">.</span><span class="n">T32_Config</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;NODE=&quot;</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;latin-1&quot;</span><span class="p">))</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T32_OK</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;invalid node: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">t32api</span><span class="o">.</span><span class="n">T32_Config</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;PACKLEN=&quot;</span><span class="p">,</span> <span class="n">packlen</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;latin-1&quot;</span><span class="p">))</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T32_OK</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;invalid packet length: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">packlen</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">t32api</span><span class="o">.</span><span class="n">T32_Config</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;PORT=&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;latin-1&quot;</span><span class="p">))</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T32_OK</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;port number </span><span class="si">%s</span><span class="s2"> not accepted&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">port</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Connecting...&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">t32api</span><span class="o">.</span><span class="n">T32_Init</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">T32_OK</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Init okay&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">t32api</span><span class="o">.</span><span class="n">T32_Attach</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">T32_OK</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Attach okay&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_commands</span><span class="p">(</span><span class="n">t32api</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T32_OK</span><span class="p">:</span>
+                    <span class="n">t32api</span><span class="o">.</span><span class="n">T32_Exit</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">t32api</span><span class="o">.</span><span class="n">T32_Exit</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">t32api</span><span class="o">.</span><span class="n">T32_Exit</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_send_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t32api</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_trace32_script</span><span class="p">():</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_trace32_verbose</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">t32api</span><span class="o">.</span><span class="n">T32_Cmd</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;latin-1&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">error</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T32_OK</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;command failed: &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">line</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">get_trace32_verbose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;1&quot;</span>
+
+    <span class="k">def</span> <span class="nf">get_trace32_install_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            def get_trace32_path(self) -&gt; str:</span>
+<span class="sd">                return &quot;/opt/t32&quot;</span>
+
+<span class="sd">        :rtype: str</span>
+<span class="sd">        :returns: Path to the trace32 directory on your Host</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;/opt/t32&quot;</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_trace32_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            def get_trace32_path(self) -&gt; str:</span>
+<span class="sd">                return &quot;/opt/t32/bin/pc_linux64/t32marm-qt&quot;</span>
+
+<span class="sd">        :rtype: str</span>
+<span class="sd">        :returns: Path to the trace32 directory on your Host</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="LauterbachLoad.get_trace32_config"><a class="viewcode-back" href="../../machineinit.html#tbottest.machineinit.LauterbachLoad.get_trace32_config">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_trace32_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            def get_trace32_path(self) -&gt; str:</span>
+<span class="sd">                return &quot;&lt;pathto&gt;/config.t32&quot;</span>
+
+<span class="sd">        :rtype: str</span>
+<span class="sd">        :returns: Path to the config.t32 file on your Host</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="LauterbachLoad.get_trace32_script"><a class="viewcode-back" href="../../machineinit.html#tbottest.machineinit.LauterbachLoad.get_trace32_script">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_trace32_script</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            def get_trace32_path(self) -&gt; str:</span>
+<span class="sd">                return &quot;&lt;pathto&gt;/autoboot.cmm&quot;</span>
+
+<span class="sd">        :rtype: str</span>
+<span class="sd">        :returns: Path to the cript file on your Host</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+    <span class="k">def</span> <span class="nf">get_host</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">linux</span><span class="o">.</span><span class="n">Bash</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            def get_trace32_path(self) -&gt; linux.Bash:</span>
+<span class="sd">                return self.host</span>
+
+<span class="sd">        :rtype: str</span>
+<span class="sd">        :returns: Host on which the trace32 tool is installed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span>
+
+    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span> <span class="nf">_init_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterator</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;lauterbachloader&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="kc">None</span>
+            <span class="k">return</span>
+
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="s2">&quot;Using Lauterbach debuggger for loading SPL/U-Boot&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span>
+        <span class="p">)</span>
+        <span class="c1"># cmd = self.get_trace32_cmd()</span>
+        <span class="c1"># config = self.get_trace32_config()</span>
+        <span class="n">script</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_trace32_script</span><span class="p">()</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_host</span><span class="p">()</span>
+
+        <span class="c1"># we use API to communicate with trace32</span>
+        <span class="c1"># so first start it</span>
+        <span class="c1"># Now we can start trace32, but this starts a gui ...</span>
+        <span class="c1"># and we get no info when script calls &quot;go&quot; ...</span>
+        <span class="c1"># and we cannot execute this in background, as</span>
+        <span class="c1"># if we execute it in  ssh machine, which may gets closed...</span>
+        <span class="c1"># host.exec0(cmd, &quot;-c&quot;, config, linux.Background)</span>
+        <span class="c1"># host.exec0(cmd, &quot;-c&quot;, config, &quot;-s&quot;, script)</span>
+
+        <span class="c1"># rework this, as not working</span>
+        <span class="c1"># self.trace32_execute_cmd()</span>
+        <span class="c1"># so use code from lauterbach installation...</span>
+        <span class="n">dllpath</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_trace32_install_path</span><span class="p">()</span><span class="si">}</span><span class="s2">/demo/api/python&quot;</span>
+        <span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span> <span class="n">dllpath</span><span class="p">)</span>
+        <span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;python3&quot;</span><span class="p">,</span> <span class="s2">&quot;t32apicmd.py&quot;</span><span class="p">,</span> <span class="s2">&quot;do&quot;</span><span class="p">,</span> <span class="n">script</span><span class="p">)</span>
+
+        <span class="c1"># how to clear now receive buffer in channel from serial console ?</span>
+
+        <span class="c1"># print(&quot;tbot.machine.channel.subprocess.SubprocessChannel &quot;, tbot.machine.channel.subprocess.SubprocessChannel)</span>
+        <span class="c1"># attrs = vars(tbot.machine.channel.subprocess.SubprocessChannel)</span>
+        <span class="c1"># print(&#39;, &#39;.join(&quot;%s: %s&quot; % item for item in attrs.items()))</span>
+        <span class="c1"># ub = tbot.selectable.Board</span>
+        <span class="c1"># ub.ch.read_until_prompt()</span>
+        <span class="k">yield</span> <span class="kc">None</span></div>
+
+
+<span class="k">class</span> <span class="nc">SeggerLoad</span><span class="p">(</span><span class="n">machine</span><span class="o">.</span><span class="n">Initializer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get the segger tools from</span>
+<span class="sd">    https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPack</span>
+
+<span class="sd">    This class uses JLinkExe.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">timeout</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Segger&quot;</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_segger_cmds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            def get_segger_cmds(self) -&gt; str:</span>
+<span class="sd">                return [{&quot;cmd&quot;:&quot;foo&quot;, &quot;prompt&quot;:&quot;pro1&quot;, {&quot;cmd&quot;:&quot;bar&quot;, &quot;prompt&quot;:&quot;por2&quot;}]</span>
+
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">get_host</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">linux</span><span class="o">.</span><span class="n">Bash</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            def get_host(self) -&gt; linux.Bash:</span>
+<span class="sd">                return self.host</span>
+
+<span class="sd">        :rtype: str</span>
+<span class="sd">        :returns: Host on which the segger tools are installed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span>
+
+    <span class="k">def</span> <span class="nf">_send_one_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">prompt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">host</span><span class="o">.</span><span class="n">ch</span><span class="o">.</span><span class="n">with_prompt</span><span class="p">(</span><span class="n">prompt</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">log_event</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span> <span class="k">as</span> <span class="n">ev</span><span class="p">:</span>
+                <span class="n">host</span><span class="o">.</span><span class="n">ch</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">read_back</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">with</span> <span class="n">host</span><span class="o">.</span><span class="n">ch</span><span class="o">.</span><span class="n">with_stream</span><span class="p">(</span><span class="n">ev</span><span class="p">,</span> <span class="n">show_prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                    <span class="n">out</span> <span class="o">=</span> <span class="n">host</span><span class="o">.</span><span class="n">ch</span><span class="o">.</span><span class="n">read_until_prompt</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="s2">&quot;go&quot;</span> <span class="ow">in</span> <span class="n">cmd</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                            <span class="c1"># give SPL some time</span>
+                            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">ev</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;stdout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span>
+
+        <span class="c1"># may we add here a check, if command was correct</span>
+        <span class="c1"># unfortunately Segger JLinkExe has no return code,</span>
+        <span class="c1"># so we need to check command output...</span>
+        <span class="c1">#</span>
+        <span class="c1"># we have command output now in ev.data[&quot;stdout&quot;]</span>
+        <span class="c1">#</span>
+        <span class="c1"># add a list of strings/regular expressions and check them?</span>
+        <span class="c1"># ToDo</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span> <span class="nf">_init_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterator</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;seggerloader&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="kc">None</span>
+            <span class="k">return</span>
+
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="s2">&quot;Using Segger debuggger for loading SPL/U-Boot&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span>
+        <span class="p">)</span>
+        <span class="n">cmds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_segger_cmds</span><span class="p">()</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_host</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">cmds</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_one_cmd</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">cmd</span><span class="p">[</span><span class="s2">&quot;cmd&quot;</span><span class="p">],</span> <span class="n">cmd</span><span class="p">[</span><span class="s2">&quot;prompt&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">ret</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;segger command </span><span class="si">{</span><span class="n">cmd</span><span class="p">[</span><span class="s1">&#39;cmd&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> failed&quot;</span><span class="p">)</span>
+
+        <span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;q&quot;</span><span class="p">)</span>
+
+        <span class="k">yield</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="UsbSdpLoad"><a class="viewcode-back" href="../../machineinit.html#tbottest.machineinit.UsbSdpLoad">[docs]</a><span class="k">class</span> <span class="nc">UsbSdpLoad</span><span class="p">(</span><span class="n">machine</span><span class="o">.</span><span class="n">Initializer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Machine-initializer for loading SPL/U-Boot image into</span>
+<span class="sd">    RAM with imx_usb_loader tool from NXP and using</span>
+<span class="sd">    Serial Download over USB</span>
+
+<span class="sd">    source:</span>
+<span class="sd">    https://github.com/boundarydevices/imx_usb_loader</span>
+
+<span class="sd">    installation of tool:</span>
+<span class="sd">    https://github.com/boundarydevices/imx_usb_loader/blob/master/README.md#installation</span>
+
+<span class="sd">    **Example**: (board config)</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from tbot.machine import board</span>
+<span class="sd">        from tbottest.powercontrol import SispmControl</span>
+<span class="sd">        from tbottest.machineinit import UsbSdpLoad</span>
+
+<span class="sd">        class MyControl(SispmControl, board.Board):</span>
+<span class="sd">            sispmctl_device = &quot;01:01:5c:29:39&quot;</span>
+<span class="sd">            sispmctl_port = &quot;2&quot;</span>
+
+<span class="sd">        class MyControlLoadUB(MyControl, UsbSdpLoad):</span>
+<span class="sd">            def get_imx_usb_loader(self):</span>
+<span class="sd">                p = self.host.toolsdir()</span>
+<span class="sd">                return p / &quot;imx_usb_loader&quot;</span>
+
+<span class="sd">            def usb_loader_bins(self):</span>
+<span class="sd">                p = self.host.yocto_result_dir()</span>
+<span class="sd">                return [ p / &quot;SPL.signed&quot;, p / &quot;u-boot-ivt.img.signed&quot;]</span>
+
+<span class="sd">    This class sets also a tbot flag &quot;usbloader&quot;</span>
+
+<span class="sd">    if passed to tbot, this class is active, if not passed</span>
+<span class="sd">    this class does nothing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="UsbSdpLoad.get_imx_usb_loader"><a class="viewcode-back" href="../../machineinit.html#tbottest.machineinit.UsbSdpLoad.get_imx_usb_loader">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_imx_usb_loader</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">linux</span><span class="o">.</span><span class="n">Path</span><span class="p">[</span><span class="n">H</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            def get_imx_usb_loader(self) -&gt; linux.Path:</span>
+<span class="sd">                return lh.workdir / &quot;tools&quot; / &quot;imx_usb_loader&quot;</span>
+
+<span class="sd">        :rtype: linux.Path</span>
+<span class="sd">        :returns: Path to the imx_usb_loader directory on your LabHost</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="UsbSdpLoad.usb_loader_bins"><a class="viewcode-back" href="../../machineinit.html#tbottest.machineinit.UsbSdpLoad.usb_loader_bins">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">usb_loader_bins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return list of linux.Path to usb loader binaries</span>
+
+<span class="sd">            def usb_loader_bins(self):</span>
+<span class="sd">                p = self.host.yocto_result_dir()</span>
+<span class="sd">                return [ p / &quot;SPL.signed&quot;, p / &quot;u-boot-ivt.img.signed&quot;]</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span></div>
+
+    <span class="n">usb_loader_retry</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;retry to load binary retry times&quot;&quot;&quot;</span>
+
+    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span> <span class="nf">_init_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterator</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;usbloader&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="kc">None</span>
+
+        <span class="n">imx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_imx_usb_loader</span><span class="p">()</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usb_loader_bins</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">bina</span> <span class="ow">in</span> <span class="n">bins</span><span class="p">:</span>
+            <span class="n">loop</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">while</span> <span class="n">loop</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span><span class="p">:</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">ret</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;sudo&quot;</span><span class="p">,</span> <span class="n">imx</span> <span class="o">/</span> <span class="s2">&quot;imx_usb&quot;</span><span class="p">,</span> <span class="n">bina</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;no matching USB device found&quot;</span> <span class="ow">in</span> <span class="n">out</span> <span class="ow">and</span> <span class="n">ret</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">ret</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;imx_usb loader failed with </span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;failed&quot;</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;imx_usb loader failed with </span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;jumping to&quot;</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+                    <span class="n">loop</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">usb_loader_retry</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;could not load </span><span class="si">{</span><span class="n">bina</span><span class="si">}</span><span class="s2"> with imx_usb_loader. retry </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">usb_loader_retry</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+
+        <span class="k">yield</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="DFUUTIL"><a class="viewcode-back" href="../../machineinit.html#tbottest.machineinit.DFUUTIL">[docs]</a><span class="k">class</span> <span class="nc">DFUUTIL</span><span class="p">(</span><span class="n">machine</span><span class="o">.</span><span class="n">Initializer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Machine-initializer for loading SPL/U-Boot image into</span>
+<span class="sd">    RAM with dfu-util tool</span>
+
+<span class="sd">    https://dfu-util.sourceforge.net/</span>
+<span class="sd">    https://sourceforge.net/p/dfu-util/dfu-util/ci/master/tree/</span>
+
+<span class="sd">    **Example**: (board config)</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from tbot.machine import board</span>
+<span class="sd">        from tbottest.powercontrol import SispmControl</span>
+<span class="sd">        from tbottest.machineinit import DFUUTIL</span>
+
+<span class="sd">        class MyControl(SispmControl, board.Board):</span>
+<span class="sd">            sispmctl_device = &quot;01:01:5c:29:39&quot;</span>
+<span class="sd">            sispmctl_port = &quot;2&quot;</span>
+
+<span class="sd">        class MyControlLoadUB(MyControl, DFUUTIL):</span>
+<span class="sd">            def dfuutil_loader_steps(self):</span>
+<span class="sd">                return [{&#39;a&#39;:&#39;@FSBL /0x01/1*1Me&#39;, &#39;D&#39;:&#39;/tftpdir/u-boot-spl.stm32&#39;, &#39;dmesgcheck&#39;:&#39;004900383232510630323432&#39;}, {&#39;a&#39;:&#39;u-boot.itb&#39;, &#39;D&#39;:&#39;/tftpdir/u-boot.itb&#39;}]</span>
+
+
+<span class="sd">    This class sets also a tbot flag &quot;dfuutilloader&quot;</span>
+
+<span class="sd">    if passed to tbot, this class is active, if not passed</span>
+<span class="sd">    this class does nothing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="DFUUTIL.dfuutil_loader_steps"><a class="viewcode-back" href="../../machineinit.html#tbottest.machineinit.DFUUTIL.dfuutil_loader_steps">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">dfuutil_loader_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return list of steps to do for dfu-util tool</span>
+
+<span class="sd">            def dfuutil_loader_steps(self):</span>
+<span class="sd">                return [{&quot;a&quot;:&quot;@FSBL /0x01/1*1Me&quot;, &quot;D&quot;:&quot;&lt;tftppath&gt;/u-boot-spl.stm32;dfu-util&quot;}, {&quot;a&quot;:&quot;u-boot.itb&quot;, &quot;D&quot;:&quot;&lt;tftppath&gt;/u-boot.itb&quot;}]</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DFUUTIL._init_machine"><a class="viewcode-back" href="../../machineinit.html#tbottest.machineinit.DFUUTIL._init_machine">[docs]</a>    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span> <span class="nf">_init_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterator</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;dfuutilloader&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="kc">None</span>
+            <span class="k">return</span>
+
+        <span class="n">cmds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dfuutil_loader_steps</span><span class="p">()</span>  <span class="c1"># type: List[str]</span>
+        <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">cmds</span><span class="p">:</span>
+            <span class="c1"># command fails... FixMe</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">dmesgcheck</span> <span class="o">=</span> <span class="n">cmd</span><span class="p">[</span><span class="s2">&quot;dmesgcheck&quot;</span><span class="p">]</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">dmesgcheck</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="n">dmesgcheck</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dmesg check&quot;</span><span class="p">,</span> <span class="n">dmesgcheck</span><span class="p">)</span>
+                <span class="k">while</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="n">log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;dmesg&quot;</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">),</span> <span class="s2">&quot;tail&quot;</span><span class="p">,</span> <span class="s2">&quot;-5&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">search_string_in_multiline</span><span class="p">(</span><span class="n">dmesgcheck</span><span class="p">,</span> <span class="n">log</span><span class="p">):</span>
+                        <span class="k">break</span>
+
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;dfu-util&quot;</span><span class="p">,</span> <span class="s2">&quot;-w&quot;</span><span class="p">,</span> <span class="s2">&quot;-a&quot;</span><span class="p">,</span> <span class="n">cmd</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">],</span> <span class="s2">&quot;-D&quot;</span><span class="p">,</span> <span class="n">cmd</span><span class="p">[</span><span class="s2">&quot;D&quot;</span><span class="p">])</span>  <span class="c1"># type: ignore</span>
+
+        <span class="k">yield</span> <span class="kc">None</span></div></div>
+
+
+<div class="viewcode-block" id="UUULoad"><a class="viewcode-back" href="../../machineinit.html#tbottest.machineinit.UUULoad">[docs]</a><span class="k">class</span> <span class="nc">UUULoad</span><span class="p">(</span><span class="n">machine</span><span class="o">.</span><span class="n">Initializer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Machine-initializer for loading SPL/U-Boot image into</span>
+<span class="sd">    RAM with uuu tool from NXP and using</span>
+<span class="sd">    Serial Download over USB</span>
+
+<span class="sd">    source:</span>
+<span class="sd">    https://github.com/NXPmicro/mfgtools.git</span>
+
+<span class="sd">    installation:</span>
+<span class="sd">    https://github.com/NXPmicro/mfgtools#how-to-build</span>
+
+<span class="sd">    We may can check if tool is installed and if not</span>
+<span class="sd">    install it automagically...</span>
+
+<span class="sd">    **Example**: (board config)</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from tbot.machine import board</span>
+<span class="sd">        from tbottest.powercontrol import SispmControl</span>
+<span class="sd">        from tbottest.machineinit import UUULoad</span>
+
+<span class="sd">        class MyControl(SispmControl, board.Board):</span>
+<span class="sd">            sispmctl_device = &quot;01:01:5c:29:39&quot;</span>
+<span class="sd">            sispmctl_port = &quot;2&quot;</span>
+
+<span class="sd">        class MyControlLoadUB(MyControl, UUULoad):</span>
+<span class="sd">            def get_uuu_tool(self):</span>
+<span class="sd">                return self.host.toolsdir()</span>
+
+<span class="sd">            def uuu_loader_steps(self):</span>
+<span class="sd">                p = self.host.yocto_result_dir()</span>
+<span class="sd">                return [linux.Raw(f&quot;SDP: boot -f /srv/tftpboot/SPL&quot;),</span>
+<span class="sd">                    linux.Raw(f&quot;SDPV: delay 100&quot;),</span>
+<span class="sd">                    linux.Raw(f&quot;SDPV: write -f /srv/tftpboot/u-boot-dtb.img -addr 0x877fffc0 -skipfhdr&quot;),</span>
+<span class="sd">                    linux.Raw(f&quot;SDPV: jump -addr 0x877fffc0&quot;),</span>
+<span class="sd">                    ]</span>
+
+<span class="sd">    This class sets also a tbot flag &quot;uuuloader&quot;</span>
+
+<span class="sd">    if passed to tbot, this class is active, if not passed</span>
+<span class="sd">    this class does nothing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="UUULoad.get_uuu_tool"><a class="viewcode-back" href="../../machineinit.html#tbottest.machineinit.UUULoad.get_uuu_tool">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_uuu_tool</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">linux</span><span class="o">.</span><span class="n">Path</span><span class="p">[</span><span class="n">H</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            def get_uuu_tool(self) -&gt; linux.Path:</span>
+<span class="sd">                return lh.workdir / &quot;tools&quot;</span>
+
+<span class="sd">        :rtype: linux.Path</span>
+<span class="sd">        :returns: Path to the uuu directory on your LabHost</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="UUULoad.uuu_loader_steps"><a class="viewcode-back" href="../../machineinit.html#tbottest.machineinit.UUULoad.uuu_loader_steps">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">uuu_loader_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return list of steps to do for uuu tool</span>
+
+<span class="sd">            def uuu_loader_steps(self):</span>
+<span class="sd">                p = self.host.yocto_result_dir()</span>
+<span class="sd">                return [linux.Raw(f&quot;SDP: boot -f /srv/tftpboot/SPL&quot;),</span>
+<span class="sd">                    linux.Raw(f&quot;SDPV: delay 100&quot;),</span>
+<span class="sd">                    linux.Raw(f&quot;SDPV: write -f /srv/tftpboot/u-boot-dtb.img -addr 0x877fffc0 -skipfhdr&quot;),</span>
+<span class="sd">                    linux.Raw(f&quot;SDPV: jump -addr 0x877fffc0&quot;),</span>
+<span class="sd">                    ]</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_check_uuu_tool</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        check if uuu tool is installed and can be used.</span>
+
+<span class="sd">        https://github.com/NXPmicro/mfgtools</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">uuu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_uuu_tool</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
+        <span class="n">ret</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;sudo&quot;</span><span class="p">,</span> <span class="s2">&quot;ls&quot;</span><span class="p">,</span> <span class="n">uuu</span> <span class="o">/</span> <span class="s2">&quot;mfgtools/build/uuu/uuu&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># uuu tool not installed try to install</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mfgtools not installed in </span><span class="si">{</span><span class="n">uuu</span><span class="si">}</span><span class="s2">. Try to install them&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span>
+            <span class="p">)</span>
+            <span class="n">curdir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;pwd&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span> <span class="n">uuu</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;clone&quot;</span><span class="p">,</span> <span class="s2">&quot;https://github.com/NXPmicro/mfgtools&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span> <span class="s2">&quot;mfgtools&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;mkdir&quot;</span><span class="p">,</span> <span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;build&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span> <span class="s2">&quot;build&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cmake&quot;</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;make&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span> <span class="n">curdir</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span> <span class="nf">_init_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterator</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;uuuloader&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="kc">None</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_uuu_tool</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="kc">None</span>
+            <span class="k">return</span>
+
+        <span class="n">uuu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_uuu_tool</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uuu_loader_steps</span><span class="p">()</span>  <span class="c1"># type: List[str]</span>
+        <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;sudo&quot;</span><span class="p">,</span> <span class="n">uuu</span> <span class="o">/</span> <span class="s2">&quot;mfgtools/build/uuu/uuu&quot;</span><span class="p">,</span> <span class="n">st</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+        <span class="k">yield</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="XMODEMLoad"><a class="viewcode-back" href="../../machineinit.html#tbottest.machineinit.XMODEMLoad">[docs]</a><span class="k">class</span> <span class="nc">XMODEMLoad</span><span class="p">(</span><span class="n">machine</span><span class="o">.</span><span class="n">Initializer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Machine-initializer for loading SPL/U-Boot image into</span>
+<span class="sd">    RAM with UART bootmode (for example on TI AM62x)</span>
+
+<span class="sd">    You need to install the lrzsz tools on your labhost, so</span>
+<span class="sd">    you have the sb tool.</span>
+
+<span class="sd">    We may can check if tool is installed and if not</span>
+<span class="sd">    install it automagically...</span>
+
+<span class="sd">    **Example**: (board config)</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from tbot.machine import board</span>
+<span class="sd">        from tbottest.powercontrol import SispmControl</span>
+<span class="sd">        from tbottest.machineinit import XMODEMLoad</span>
+
+<span class="sd">        class MyControl(SispmControl, board.Board):</span>
+<span class="sd">            sispmctl_device = &quot;01:01:5c:29:39&quot;</span>
+<span class="sd">            sispmctl_port = &quot;2&quot;</span>
+
+<span class="sd">        class MyControlLoadUB(MyControl, XMODEMLoad):</span>
+<span class="sd">            def xmodem_loader_device(self):</span>
+<span class="sd">                return &quot;/dev/ttyUSB0&quot;</span>
+
+<span class="sd">            def xmodem_loader_steps(self):</span>
+<span class="sd">                return [&quot;sb --xmodem TFTPDIR/tiboot3.bin &gt; SERDEV &lt; SERDEV&quot;,</span>
+<span class="sd">                        &quot;sb --ymodem TFTPDIR/tispl.bin &gt; SERDEV &lt; SERDEV&quot;,</span>
+<span class="sd">                        &quot;sb --ymodem TFTPDIR/u-boot.img &gt; SERDEV &lt; SERDEV&quot;,</span>
+<span class="sd">                        ]</span>
+
+<span class="sd">    This class sets also a tbot flag &quot;xmodemloader&quot;</span>
+
+<span class="sd">    if passed to tbot, this class is active, if not passed</span>
+<span class="sd">    this class does nothing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">toolchecked</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="XMODEMLoad.xmodem_loader_steps"><a class="viewcode-back" href="../../machineinit.html#tbottest.machineinit.XMODEMLoad.xmodem_loader_steps">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">xmodem_loader_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return list of steps send with sb tool</span>
+
+<span class="sd">            def xmodem_loader_steps(self):</span>
+<span class="sd">                return [&quot;sb --xmodem TFTPDIR/tiboot3.bin &gt; SERDEV &lt; SERDEV&quot;,</span>
+<span class="sd">                        &quot;sb --ymodem TFTPDIR/tispl.bin &gt; SERDEV &lt; SERDEV&quot;,</span>
+<span class="sd">                        &quot;sb --ymodem TFTPDIR/u-boot.img &gt; SERDEV &lt; SERDEV&quot;]</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="XMODEMLoad.xmodem_loader_device"><a class="viewcode-back" href="../../machineinit.html#tbottest.machineinit.XMODEMLoad.xmodem_loader_device">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">xmodem_loader_device</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return serial device</span>
+
+<span class="sd">            def xmodem_loader_steps(self):</span>
+<span class="sd">                return &quot;/dev/ttyUSB0&quot;</span>
+
+<span class="sd">        This property is **required**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;abstract method&quot;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_check_xmodem_tool</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        check if sb tool is installed and can be used.</span>
+<span class="sd">        It is contained in lrzsz package</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolchecked</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;sb&quot;</span><span class="p">,</span> <span class="s2">&quot;--help&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">toolchecked</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+
+    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span> <span class="nf">_init_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterator</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;xmodemloader&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="kc">None</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_xmodem_tool</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="kc">None</span>
+            <span class="k">return</span>
+
+        <span class="n">steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmodem_loader_steps</span><span class="p">()</span>  <span class="c1"># type: List[str]</span>
+        <span class="n">serialdev</span> <span class="o">=</span> <span class="n">serialdev</span> <span class="o">=</span> <span class="s2">&quot;/dev/serial/by-id/usb-FTDI_Dual_RS232-HS-if00-port0&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;stty&quot;</span><span class="p">,</span> <span class="s2">&quot;-F&quot;</span><span class="p">,</span>  <span class="n">serialdev</span><span class="p">,</span> <span class="s2">&quot;115200&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="n">st</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
+
+        <span class="k">yield</span> <span class="kc">None</span></div>
+
+
+
+<span class="n">FLAGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;dfuutilloader&quot;</span><span class="p">:</span> <span class="s2">&quot;load images with dfu-util tool&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lauterbachloader&quot;</span><span class="p">:</span> <span class="s2">&quot;load SPL/UBoot with Lauterbach TRACE32&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seggerloader&quot;</span><span class="p">:</span> <span class="s2">&quot;load SPL/UBoot with Segger JLinkExe&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;usbloader&quot;</span><span class="p">:</span> <span class="s2">&quot;load SPL / U-Boot images with imx_usb_loader&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;uuuloader&quot;</span><span class="p">:</span> <span class="s2">&quot;load images with uuu tool&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;xmodemloader&quot;</span><span class="p">:</span> <span class="s2">&quot;load images with xmodem/ymodem sb tool (lrszsz package)&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

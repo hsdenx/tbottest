@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.tbotconfig.boardspecific &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.tbotconfig.boardspecific</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.tbotconfig.boardspecific</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">configparser</span>
+<span class="kn">from</span> <span class="nn">configparser</span> <span class="kn">import</span> <span class="n">ExtendedInterpolation</span>
+
+<span class="kn">import</span> <span class="nn">tbot</span>
+
+<span class="kn">from</span> <span class="nn">tbottest.initconfig</span> <span class="kn">import</span> <span class="n">generic_get_boardname</span>
+<span class="kn">from</span> <span class="nn">tbottest.initconfig</span> <span class="kn">import</span> <span class="n">replace_in_file</span>
+<span class="kn">from</span> <span class="nn">tbottest.initconfig</span> <span class="kn">import</span> <span class="n">find_in_file_and_delete</span>
+
+<span class="n">TBOTFILE</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">SERVERIP</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="BOARDNAME_get_lab_serverip"><a class="viewcode-back" href="../../../boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_lab_serverip">[docs]</a><span class="k">def</span> <span class="nf">BOARDNAME_get_lab_serverip</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    helper to save ini file reads</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">SERVERIP</span>
+
+    <span class="k">if</span> <span class="n">SERVERIP</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">SERVERIP</span>
+
+    <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;serverip not setup&quot;</span><span class="p">)</span>
+
+    <span class="c1"># read from ini file</span>
+    <span class="n">config_parser</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">(</span><span class="n">interpolation</span><span class="o">=</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
+    <span class="n">config_parser</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s2">&quot;IPSETUP&quot;</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">dev</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">nm</span> <span class="o">==</span> <span class="n">generic_get_boardname</span><span class="p">()</span> <span class="ow">and</span> <span class="n">dev</span> <span class="o">==</span> <span class="s2">&quot;eth0&quot;</span><span class="p">:</span>
+                <span class="n">SERVERIP</span> <span class="o">=</span> <span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">&quot;serverip&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">SERVERIP</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;serverip setup not found&quot;</span><span class="p">)</span></div>
+
+
+<span class="n">IPADDR</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="BOARDNAME_get_board_ipaddr"><a class="viewcode-back" href="../../../boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_board_ipaddr">[docs]</a><span class="k">def</span> <span class="nf">BOARDNAME_get_board_ipaddr</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    helper to save ini file reads</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">IPADDR</span>
+
+    <span class="k">if</span> <span class="n">IPADDR</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">IPADDR</span>
+
+    <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;ipaddr not setup&quot;</span><span class="p">)</span>
+
+    <span class="c1"># read from ini file</span>
+    <span class="n">config_parser</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">(</span><span class="n">interpolation</span><span class="o">=</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
+    <span class="n">config_parser</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s2">&quot;IPSETUP&quot;</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">dev</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">nm</span> <span class="o">==</span> <span class="n">generic_get_boardname</span><span class="p">()</span> <span class="ow">and</span> <span class="n">dev</span> <span class="o">==</span> <span class="s2">&quot;eth0&quot;</span><span class="p">:</span>
+                <span class="n">IPADDR</span> <span class="o">=</span> <span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">&quot;ipaddr&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">IPADDR</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;ipaddr not found&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="board_set_boardname"><a class="viewcode-back" href="../../../boardspecific.html#tbottest.tbotconfig.boardspecific.board_set_boardname">[docs]</a><span class="k">def</span> <span class="nf">board_set_boardname</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    sample implementation as example how to set own boardname</span>
+
+<span class="sd">    This name is used for selecting the sections in the ini files</span>
+
+<span class="sd">    So you can have in one lab setup more than one boards</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># do not use selectableboardname flag</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SET BOARDNAME to BOARDNAME (This is only useful for documentation build!&quot;</span><span class="p">)</span>
+    <span class="n">BOARDNAME</span> <span class="o">=</span> <span class="s2">&quot;BOARDNAME&quot;</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;8G&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">BOARDNAME</span> <span class="o">=</span> <span class="s2">&quot;BOARDNAME8g&quot;</span>
+
+    <span class="k">return</span> <span class="n">BOARDNAME</span></div>
+
+
+<span class="n">ROOTFSNAME</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="BOARDNAME_get_rootfsname"><a class="viewcode-back" href="../../../boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_rootfsname">[docs]</a><span class="k">def</span> <span class="nf">BOARDNAME_get_rootfsname</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    helper to save ini file reads</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">ROOTFSNAME</span>
+
+    <span class="k">if</span> <span class="n">ROOTFSNAME</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ROOTFSNAME</span>
+
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;rootfsname&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">ROOTFSNAME</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">ROOTFSNAME</span>
+
+    <span class="n">ROOTFSNAME</span> <span class="o">=</span> <span class="s2">&quot;core-image-base&quot;</span>
+    <span class="k">return</span> <span class="n">ROOTFSNAME</span></div>
+
+
+<span class="n">MACHINENAME</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="BOARDNAME_get_machinename"><a class="viewcode-back" href="../../../boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_machinename">[docs]</a><span class="k">def</span> <span class="nf">BOARDNAME_get_machinename</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    helper to save ini file reads</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">MACHINENAME</span>
+
+    <span class="k">if</span> <span class="n">MACHINENAME</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">MACHINENAME</span>
+
+    <span class="n">MACHINENAME</span> <span class="o">=</span> <span class="s2">&quot;CUSTOMER-board&quot;</span>
+    <span class="k">return</span> <span class="n">MACHINENAME</span></div>
+
+
+<span class="k">def</span> <span class="nf">print_log</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">tbot</span><span class="o">.</span><span class="n">selectable</span><span class="o">.</span><span class="n">printed</span><span class="p">:</span>
+            <span class="k">return</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="set_ub_board_specific"><a class="viewcode-back" href="../../../boardspecific.html#tbottest.tbotconfig.boardspecific.set_ub_board_specific">[docs]</a><span class="k">def</span> <span class="nf">set_ub_board_specific</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># noqa: C901</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    sample implementation for U-Boot setup dependent on tbot.flags</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;silent&quot;</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;console&quot;</span><span class="p">,</span> <span class="s2">&quot;silent&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="set_board_cfg"><a class="viewcode-back" href="../../../boardspecific.html#tbottest.tbotconfig.boardspecific.set_board_cfg">[docs]</a><span class="k">def</span> <span class="nf">set_board_cfg</span><span class="p">(</span><span class="n">temp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>  <span class="c1"># noqa: C901</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    setup board specific stuff in ini files before they get parsed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># print big fat warning, that example is used</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You use example implementation of boardspecific.py&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You really should use your own implementation, as it is example only&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span><span class="p">)</span>
+    <span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TBOT.FLAGS </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;tbot.ini&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">TBOTFILE</span>
+
+        <span class="n">TBOTFILE</span> <span class="o">=</span> <span class="n">filename</span>
+
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@USERNAME@@&quot;</span><span class="p">,</span> <span class="s2">&quot;please set in boardspecific.py&quot;</span><span class="p">)</span>
+    <span class="c1"># Should come from selected build section, ToDo</span>
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@BUILDUSERNAME@@&quot;</span><span class="p">,</span> <span class="s2">&quot;please set in boardspecific.py&quot;</span><span class="p">)</span>
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@BUILDDOWNLOADSPATH@@&quot;</span><span class="p">,</span> <span class="s2">&quot;please set in boardspecific.py&quot;</span><span class="p">)</span>
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@BUILSTSTATEPATH@@&quot;</span><span class="p">,</span> <span class="s2">&quot;please set in boardspecific.py&quot;</span><span class="p">)</span>
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@TBOTDATE@@&quot;</span><span class="p">,</span> <span class="s2">&quot;20230406&quot;</span><span class="p">)</span>
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@TBOTMACHINE@@&quot;</span><span class="p">,</span> <span class="n">BOARDNAME_get_machinename</span><span class="p">())</span>
+    <span class="n">boardname</span> <span class="o">=</span> <span class="n">generic_get_boardname</span><span class="p">()</span>
+    <span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;boardname now </span><span class="si">{</span><span class="n">boardname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">kascontainer</span> <span class="o">=</span> <span class="s2">&quot;False&quot;</span>
+    <span class="n">sshkeypath</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">kasfilename</span> <span class="o">=</span> <span class="s2">&quot;please set in boardspecifc.py your yml file&quot;</span>
+    <span class="n">tftpsubdir</span> <span class="o">=</span> <span class="s2">&quot;$</span><span class="si">{board}</span><span class="s2">/$</span><span class="si">{date}</span><span class="s2">&quot;</span>
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@TBOTBOARD@@&quot;</span><span class="p">,</span> <span class="n">boardname</span><span class="p">)</span>
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@TFTPSUBDIR@@&quot;</span><span class="p">,</span> <span class="n">tftpsubdir</span><span class="p">)</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">BOARDNAME_get_rootfsname</span><span class="p">()</span>
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@ROOTFSNAME@@&quot;</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+    <span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using kas file </span><span class="si">{</span><span class="n">kasfilename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@KASFILENAME@@&quot;</span><span class="p">,</span> <span class="n">kasfilename</span><span class="p">)</span>
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@KASCONTAINER@@&quot;</span><span class="p">,</span> <span class="n">kascontainer</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sshkeypath</span><span class="p">:</span>
+        <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;/home/hs/.ssh&quot;</span><span class="p">,</span> <span class="n">sshkeypath</span><span class="p">)</span>
+
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@TBOTSERVERIP@@&quot;</span><span class="p">,</span> <span class="n">BOARDNAME_get_lab_serverip</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@TBOTIPADDR@@&quot;</span><span class="p">,</span> <span class="n">BOARDNAME_get_board_ipaddr</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+
+    <span class="c1"># only for creating docs!</span>
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@PICOCOMDELAY@@&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">)</span>
+
+    <span class="c1"># replace in board file setttings from tbot.ini</span>
+    <span class="k">if</span> <span class="s2">&quot;tbot.ini&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="n">config_parser</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">(</span>
+            <span class="n">interpolation</span><span class="o">=</span><span class="n">ExtendedInterpolation</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">config_parser</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">TBOTFILE</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">&quot;LABHOST&quot;</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">basepath</span> <span class="o">=</span> <span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">&quot;nfs_base_path&quot;</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Could not find &#39;nfs_base_path&#39; key in section &#39;default&#39; in </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+        <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@TBOTLABBASENFSPATH@@&quot;</span><span class="p">,</span> <span class="n">basepath</span><span class="p">)</span></div>
+
+
+<span class="n">FLAGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;selectableboardname&quot;</span><span class="p">:</span> <span class="s2">&quot;set value of tbot.selectable.boardname format selectableboardname:&lt;name&gt;&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.boardlocking &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tips" href="tips.html" />
+    <link rel="prev" title="tbottest.generic" href="generic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example-run">Example run</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#reserve-a-board-on-the-lab-host">reserve a board on the lab host</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#remove-the-reservation">remove the reservation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-0">Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.common.boardlocking.lab_get_lockname"><code class="docutils literal notranslate"><span class="pre">lab_get_lockname()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.common.boardlocking.lab_get_lock_info"><code class="docutils literal notranslate"><span class="pre">lab_get_lock_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.common.boardlocking.lab_get_lock"><code class="docutils literal notranslate"><span class="pre">lab_get_lock()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.common.boardlocking.lab_rm_lock"><code class="docutils literal notranslate"><span class="pre">lab_rm_lock()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/boardlocking.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <span class="target" id="module-tbottest.common.boardlocking"></span><section id="tbottest-boardlocking">
+<h1><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code><a class="headerlink" href="#tbottest-boardlocking" title="Permalink to this heading">¶</a></h1>
+<p>It is possible to lock a board in a lab, so only tbot
+calls with a valid <code class="docutils literal notranslate"><span class="pre">lockid</span></code> are started. A <code class="docutils literal notranslate"><span class="pre">lockid</span></code>
+is a simple string, passed to tbot with the tbot flag</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">lablockid</span><span class="o">:</span><span class="s">&lt;your locking ID&gt;</span>
+</pre></div>
+</div>
+<p>Enable this feature in <code class="docutils literal notranslate"><span class="pre">tbot.ini</span></code> file with</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[LABHOST]</span>
+<span class="na">uselocking</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">yes</span>
+</pre></div>
+</div>
+<p>default is <code class="docutils literal notranslate"><span class="pre">no</span></code>, so disabled.</p>
+<section id="example-run">
+<h2>Example run<a class="headerlink" href="#example-run" title="Permalink to this heading">¶</a></h2>
+<section id="reserve-a-board-on-the-lab-host">
+<h3>reserve a board on the lab host<a class="headerlink" href="#reserve-a-board-on-the-lab-host" title="Permalink to this heading">¶</a></h3>
+<p>reserve a board on a lab host with lockid <code class="docutils literal notranslate"><span class="pre">foobar</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tbottest/newtbot_starter.py<span class="w"> </span>@tbotconfig/foo/args/argsfoo-noeth<span class="w"> </span>-f<span class="w"> </span>lablockid:foobar<span class="w"> </span>tbotconfig.interactive.lab
+</pre></div>
+</div>
+<p>Now tbot created on your lab host the following lockfile <code class="docutils literal notranslate"><span class="pre">lab.tmpdir/boardname-lablock</span></code>
+which contains the lockid string.</p>
+<p>You can only access the board now with passing <code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">lablockid:foobar</span></code>, all
+other tbot calls will fail!</p>
+<p>start a tbot call with the wrong tbot flag</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tbottest/newtbot_starter.py<span class="w"> </span>@tbotconfig/foo/args/argsfoo-noeth<span class="w"> </span>-f<span class="w"> </span>lablockid:foo<span class="w"> </span>tbotconfig.interactive.lab
+<span class="w">     </span>tbot<span class="w"> </span>starting<span class="w"> </span>...
+<span class="w">     </span>├─TBOT.FLAGS<span class="w"> </span><span class="o">[</span><span class="s1">&#39;boardfile:tbotconfig/foo/foo.ini&#39;</span>,<span class="w"> </span><span class="s1">&#39;do_power&#39;</span>,<span class="w"> </span><span class="s1">&#39;inifile:tbotconfig/foo/tbot.ini&#39;</span>,<span class="w"> </span><span class="s1">&#39;lablockid:foo&#39;</span>,<span class="w"> </span><span class="s1">&#39;noboardethinit&#39;</span>,<span class="w"> </span><span class="s1">&#39;noethinit&#39;</span>,<span class="w"> </span><span class="s1">&#39;picocom&#39;</span>,<span class="w"> </span><span class="s1">&#39;useifconfig&#39;</span><span class="o">]</span>
+<span class="w">     </span>├─boardname<span class="w"> </span>now<span class="w"> </span>foo
+<span class="w">     </span><span class="o">[</span>...<span class="o">]</span>
+<span class="w">     </span>├─Calling<span class="w"> </span>lab<span class="w"> </span>...
+<span class="w">     </span><span class="o">[</span>...<span class="o">]</span>
+<span class="w">     </span>│<span class="w">   </span>│<span class="w">   </span>├─passed<span class="w"> </span>lockid<span class="w"> </span>foo<span class="w"> </span>is<span class="w"> </span>not<span class="w"> </span>the<span class="w"> </span>same<span class="w"> </span>as<span class="w"> </span>lockid<span class="w"> </span><span class="k">in</span><span class="w"> </span>file<span class="w"> </span>/tmp/tbot/pi/foo/foo-lablock.<span class="w"> </span>Boardname<span class="w"> </span>foo<span class="w"> </span>is<span class="w"> </span>locked<span class="w"> </span>through<span class="w"> </span>ID<span class="w"> </span>foobar
+<span class="w">     </span>│<span class="w">   </span>│<span class="w">   </span>└─Fail.<span class="w"> </span><span class="o">(</span><span class="m">0</span>.493s<span class="o">)</span>
+<span class="w">     </span><span class="o">[</span>...<span class="o">]</span>
+<span class="w">     </span>├─────────────────────────────────────────
+<span class="w">     </span>└─FAILURE<span class="w"> </span><span class="o">(</span><span class="m">3</span>.484s<span class="o">)</span>
+</pre></div>
+</div>
+<p>call tbot without lockid fails too:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tbottest/newtbot_starter.py<span class="w"> </span>@tbotconfig/foo/args/argsfoo-noeth<span class="w"> </span>tbotconfig.interactive.lab
+tbot<span class="w"> </span>starting<span class="w"> </span>...
+├─TBOT.FLAGS<span class="w"> </span><span class="o">[</span><span class="s1">&#39;boardfile:tbotconfig/foo/foo.ini&#39;</span>,<span class="w"> </span><span class="s1">&#39;do_power&#39;</span>,<span class="w"> </span><span class="s1">&#39;inifile:tbotconfig/foo/tbot.ini&#39;</span>,<span class="w"> </span><span class="s1">&#39;noboardethinit&#39;</span>,<span class="w"> </span><span class="s1">&#39;noethinit&#39;</span>,<span class="w"> </span><span class="s1">&#39;picocom&#39;</span>,<span class="w"> </span><span class="s1">&#39;useifconfig&#39;</span><span class="o">]</span>
+├─boardname<span class="w"> </span>now<span class="w"> </span>foo
+<span class="o">[</span>...<span class="o">]</span>
+├─Calling<span class="w"> </span>lab<span class="w"> </span>...
+<span class="o">[</span>...<span class="o">]</span>
+│<span class="w">   </span>├─Calling<span class="w"> </span>lab_get_lock<span class="w"> </span>...
+<span class="o">[</span>...<span class="o">]</span>
+│<span class="w">   </span>│<span class="w">   </span>│<span class="w">   </span>└─Done.<span class="w"> </span><span class="o">(</span><span class="m">0</span>.107s<span class="o">)</span>
+│<span class="w">   </span>│<span class="w">   </span>└─Fail.<span class="w"> </span><span class="o">(</span><span class="m">0</span>.496s<span class="o">)</span>
+│<span class="w">   </span>└─Fail.<span class="w"> </span><span class="o">(</span><span class="m">3</span>.154s<span class="o">)</span>
+├─Exception:
+│<span class="w">   </span>Traceback<span class="w"> </span><span class="o">(</span>most<span class="w"> </span>recent<span class="w"> </span>call<span class="w"> </span>last<span class="o">)</span>:
+<span class="o">[</span>...<span class="o">]</span>
+│<span class="w">   </span>RuntimeError:<span class="w"> </span>NO<span class="w"> </span>LABLOCKID<span class="w"> </span>passed,<span class="w"> </span>please<span class="w"> </span>pass<span class="w"> </span>tbot<span class="w"> </span>flag<span class="w"> </span><span class="s1">&#39;lablockid:&lt;yourlockid&gt;&#39;</span>
+├─────────────────────────────────────────
+└─FAILURE<span class="w"> </span><span class="o">(</span><span class="m">3</span>.329s<span class="o">)</span>
+</pre></div>
+</div>
+</section>
+<section id="remove-the-reservation">
+<h3>remove the reservation<a class="headerlink" href="#remove-the-reservation" title="Permalink to this heading">¶</a></h3>
+<p>delete the lock with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tbottest/newtbot_starter.py<span class="w"> </span>@tbotconfig/foo/args/argsfoo-noeth<span class="w"> </span>-f<span class="w"> </span>lablockid:foobar<span class="w"> </span>tbottest.common.boardlocking.lab_rm_lock
+<span class="w">     </span>tbot<span class="w"> </span>starting<span class="w"> </span>...
+<span class="w">     </span>├─TBOT.FLAGS<span class="w"> </span><span class="o">[</span><span class="s1">&#39;boardfile:tbotconfig/foo/foo.ini&#39;</span>,<span class="w"> </span><span class="s1">&#39;do_power&#39;</span>,<span class="w"> </span><span class="s1">&#39;inifile:tbotconfig/foo/tbot.ini&#39;</span>,<span class="w"> </span><span class="s1">&#39;lablockid:foobar&#39;</span>,<span class="w"> </span><span class="s1">&#39;noboardethinit&#39;</span>,<span class="w"> </span><span class="s1">&#39;noethinit&#39;</span>,<span class="w"> </span><span class="s1">&#39;picocom&#39;</span>,<span class="w"> </span><span class="s1">&#39;useifconfig&#39;</span><span class="o">]</span>
+<span class="w">     </span>├─boardname<span class="w"> </span>now<span class="w"> </span>foo
+<span class="w">     </span><span class="o">[</span>...<span class="o">]</span>
+<span class="w">     </span>├─Calling<span class="w"> </span>lab_rm_lock<span class="w"> </span>...
+<span class="w">     </span><span class="o">[</span>...<span class="o">]</span>
+<span class="w">     </span>│<span class="w">   </span>├─<span class="o">[</span>lab8<span class="o">]</span><span class="w"> </span>rm<span class="w"> </span>/tmp/tbot/pi/foo/foo-lablock
+<span class="w">     </span>│<span class="w">   </span>└─Done.<span class="w"> </span><span class="o">(</span><span class="m">5</span>.862s<span class="o">)</span>
+<span class="w">     </span>├─────────────────────────────────────────
+<span class="w">     </span>└─SUCCESS<span class="w"> </span><span class="o">(</span><span class="m">5</span>.916s<span class="o">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="module-0">
+<span id="functions"></span><h2>Functions<a class="headerlink" href="#module-0" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.common.boardlocking.lab_get_lockname">
+<span class="sig-prename descclassname"><span class="pre">tbottest.common.boardlocking.</span></span><span class="sig-name descname"><span class="pre">lab_get_lockname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lab</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference internal" href="_modules/tbottest/common/boardlocking.html#lab_get_lockname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.common.boardlocking.lab_get_lockname" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the lockfile name for the boardname on the lab lab</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.common.boardlocking.lab_get_lock_info">
+<span class="sig-prename descclassname"><span class="pre">tbottest.common.boardlocking.</span></span><span class="sig-name descname"><span class="pre">lab_get_lock_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/tbottest/common/boardlocking.html#lab_get_lock_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.common.boardlocking.lab_get_lock_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if the locking file for the boardname exists.</p>
+<p>If not it returns 1, “”</p>
+<p>If lockingfile for the board exists return</p>
+<p>0, lockid</p>
+<p>The lockid is a string, which is in the first line of the lockfile</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.common.boardlocking.lab_get_lock">
+<span class="sig-prename descclassname"><span class="pre">tbottest.common.boardlocking.</span></span><span class="sig-name descname"><span class="pre">lab_get_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/tbottest/common/boardlocking.html#lab_get_lock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.common.boardlocking.lab_get_lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries to get the lock for the boardname in the lab</p>
+<p>Therefore you must pass your locking ID (simple string
+with the tbot flag “lablockid:&lt;your locking ID&gt; when
+you start tbot.</p>
+<p>If there is no lockfile for the boardname in the lab,
+you get the lock for the boardname, until you call</p>
+<p><a class="reference internal" href="#tbottest.common.boardlocking.lab_rm_lock" title="tbottest.common.boardlocking.lab_rm_lock"><code class="xref py py-func docutils literal notranslate"><span class="pre">tbottest.common.boardlocking.lab_rm_lock()</span></code></a></p>
+<p>If there is a lockfile for the board already, you have
+to pass the correct locking ID, to get further. If you
+have not passed the correct locking ID, tbot will fail
+with an error!</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.common.boardlocking.lab_rm_lock">
+<span class="sig-prename descclassname"><span class="pre">tbottest.common.boardlocking.</span></span><span class="sig-name descname"><span class="pre">lab_rm_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">LinuxShell</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/tbottest/common/boardlocking.html#lab_rm_lock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.common.boardlocking.lab_rm_lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries to remove the lock for the boardname in the lab</p>
+<p>Therefore you must pass your locking ID (simple string
+with the tbot flag “lablockid:&lt;your locking ID&gt; when
+you start tbot.</p>
+<p>You must pass the correct lockid to remove the lock for
+the boardname in this lab.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="generic.html" class="btn btn-neutral float-left" title="tbottest.generic" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tips.html" class="btn btn-neutral float-right" title="Tips" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

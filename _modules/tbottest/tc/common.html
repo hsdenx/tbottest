@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.tc.common &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.tc.common</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.tc.common</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">tbot</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">linux</span>
+<span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">board</span>
+<span class="kn">from</span> <span class="nn">tbot.context</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">tbottest.initconfig</span> <span class="k">as</span> <span class="nn">ini</span>
+
+
+<div class="viewcode-block" id="escape_ansi"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.escape_ansi">[docs]</a><span class="k">def</span> <span class="nf">escape_ansi</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    helper for escaping ansi codes</span>
+
+<span class="sd">    :param line: string which should be escaped</span>
+<span class="sd">    :return: ansi escaped string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># or re.compile(r&#39;\x1b[^m]*m&#39;) ?</span>
+    <span class="n">ansi_escape</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ansi_escape</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="search_string_in_multiline"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.search_string_in_multiline">[docs]</a><span class="k">def</span> <span class="nf">search_string_in_multiline</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="n">lines</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    search string search in multiline lines</span>
+
+<span class="sd">    :param search: string to search</span>
+<span class="sd">    :param lines: multiline string, in which we search the string</span>
+<span class="sd">    :return: True if found else False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">search</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="search_multistring_in_multiline"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.search_multistring_in_multiline">[docs]</a><span class="k">def</span> <span class="nf">search_multistring_in_multiline</span><span class="p">(</span><span class="n">searches</span><span class="p">,</span> <span class="n">lines</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    search mutliple strings in mutli liner</span>
+
+<span class="sd">    :param search: array of strings to search in lines</span>
+<span class="sd">    :param lines: multiline string, in which we search the string</span>
+<span class="sd">    :return: True if all strings are found else False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">loop</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">while</span> <span class="n">loop</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">findstr</span> <span class="ow">in</span> <span class="n">searches</span><span class="p">:</span>
+            <span class="n">found</span> <span class="o">=</span> <span class="n">search_string_in_multiline</span><span class="p">(</span><span class="n">findstr</span><span class="p">,</span> <span class="n">lines</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">found</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">loop</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">break</span>
+
+        <span class="n">loop</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">found</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Not found all strings in log&quot;</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">found</span></div>
+
+
+<div class="viewcode-block" id="lx_cmd_exists"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lx_cmd_exists">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">lx_cmd_exists</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">cmd</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    check if command on linux machine exists</span>
+
+<span class="sd">    :param lnx: Linux machine we run on</span>
+<span class="sd">    :param cmd: command name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">((</span><span class="s2">&quot;command -v &quot;</span> <span class="o">+</span> <span class="n">cmd</span> <span class="o">+</span> <span class="s2">&quot; &gt;/dev/null 2&gt;&amp;1&quot;</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="lx_devmem2_get"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lx_devmem2_get">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">lx_devmem2_get</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">addr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">typ</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    use devmem2 to read value from addr</span>
+
+<span class="sd">    :param lnx: Linux machine we run on</span>
+<span class="sd">    :param addr: address we act on</span>
+<span class="sd">    :param type: | devmem2 type</span>
+<span class="sd">        | access operation type : [b]yte, [h]alfword, [w]ord, [l]ong</span>
+<span class="sd">    :return: value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">strings</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Value at address&quot;</span><span class="p">,</span> <span class="s2">&quot;Read at address&quot;</span><span class="p">]</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;devmem2&quot;</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="n">typ</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ret</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">s</span> <span class="ow">in</span> <span class="n">line</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">strings</span><span class="p">):</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">val</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;devmem2 unexpected output&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="lnx_check_revfile"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_check_revfile">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">lnx_check_revfile</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">revfile</span><span class="p">,</span>
+    <span class="n">difffile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    compare the register values defined in revfile with the values</span>
+<span class="sd">    read on Linux machine with devmem2</span>
+
+<span class="sd">    If difffile != None write differences found into this file.</span>
+
+<span class="sd">    see also:</span>
+<span class="sd">    :py:func:`tbottest.tc.generic_board.generic_lnx_check_dump_files`</span>
+
+<span class="sd">    :param lnx: Linux machine we run on</span>
+<span class="sd">    :param revfile: reference file we use</span>
+<span class="sd">    :param diffile: if not None, file in which testcase writes differences found</span>
+<span class="sd">    :param timeout: timeout between devmem2 calls</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># check if devmem exist</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">lx_cmd_exists</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="s2">&quot;devmem2&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ret</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">ret</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">revfile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Could not open: &quot;</span> <span class="o">+</span> <span class="n">revfile</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">difffile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fddiff</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">difffile</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Could not open diffile: &quot;</span> <span class="o">+</span> <span class="n">difffile</span><span class="p">)</span>
+
+    <span class="n">lnr</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fd</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+        <span class="n">lnr</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;#&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">val</span> <span class="o">=</span> <span class="n">lx_devmem2_get</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cols</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;diff args: </span><span class="si">{</span><span class="n">revfile</span><span class="si">}</span><span class="s2"> line: </span><span class="si">{</span><span class="n">lnr</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> &amp; </span><span class="si">{</span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="n">cols</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="nb">int</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">16</span><span class="p">))</span> <span class="o">!=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="nb">int</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">16</span><span class="p">)):</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">difffile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">fddiff</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">ret</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+
+    <span class="n">fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">difffile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fddiff</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<div class="viewcode-block" id="lnx_create_revfile"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_create_revfile">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">lnx_create_revfile</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">revfile</span><span class="p">,</span>
+    <span class="n">startaddr</span><span class="p">,</span>
+    <span class="n">endaddr</span><span class="p">,</span>
+    <span class="n">mask</span><span class="o">=</span><span class="s2">&quot;0xffffffff&quot;</span><span class="p">,</span>
+    <span class="n">readtype</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    create a reference file revfile with values read on Linux machine</span>
+<span class="sd">    with devmem2 from startaddr to endaddress, and readtype &quot;w&quot;</span>
+
+<span class="sd">    see also:</span>
+<span class="sd">    :py:func:`tbottest.tc.generic_board.generic_lnx_create_dump_files`</span>
+
+<span class="sd">    :param lnx: Linux machine we run on</span>
+<span class="sd">    :param revfile: created revfile</span>
+<span class="sd">    :param startaddr: address from which the testcase starts dumping</span>
+<span class="sd">    :param endaddr: address on which the testcase stops dumping</span>
+<span class="sd">    :param mask: written mask into revfile</span>
+<span class="sd">    :param readtype: used tpye for devmem2 call, default &quot;w&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># check if devmem exist</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">lx_cmd_exists</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="s2">&quot;devmem2&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ret</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">revfile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Could not open: &quot;</span> <span class="o">+</span> <span class="n">revfile</span><span class="p">)</span>
+
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;uname&quot;</span><span class="p">,</span> <span class="s2">&quot;-a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+    <span class="n">vers</span> <span class="o">=</span> <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">processor</span> <span class="o">=</span> <span class="s2">&quot;ToDo&quot;</span>
+    <span class="n">hw</span> <span class="o">=</span> <span class="s2">&quot;ToDo&quot;</span>
+
+    <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# pinmux</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# processor: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">processor</span><span class="p">)</span>
+    <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# hardware : </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">hw</span><span class="p">)</span>
+    <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# Linux    : </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">vers</span><span class="p">)</span>
+    <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# regaddr mask type defval</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">startaddr</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="n">stop</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">endaddr</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">readtype</span> <span class="o">==</span> <span class="s2">&quot;w&quot;</span><span class="p">:</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="k">if</span> <span class="n">readtype</span> <span class="o">==</span> <span class="s2">&quot;h&quot;</span><span class="p">:</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="n">readtype</span> <span class="o">==</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">)):</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">lx_devmem2_get</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="nb">hex</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">readtype</span><span class="p">)</span>
+        <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%-10s</span><span class="s2"> </span><span class="si">%10s</span><span class="s2"> </span><span class="si">%10s</span><span class="s2"> </span><span class="si">%10s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">mask</span><span class="p">,</span> <span class="n">readtype</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
+
+    <span class="n">fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="generic_machine_dump"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.generic_machine_dump">[docs]</a><span class="k">def</span> <span class="nf">generic_machine_dump</span><span class="p">(</span>
+    <span class="n">typ</span><span class="p">,</span>
+    <span class="n">machine</span><span class="p">,</span>
+    <span class="n">startaddr</span><span class="p">,</span>
+    <span class="n">endaddr</span><span class="p">,</span>
+    <span class="n">inc</span><span class="p">,</span>
+    <span class="n">gaps</span><span class="p">,</span>
+    <span class="n">filename</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    generate a generic register dump from a linux or U-Boot machine.</span>
+<span class="sd">    starting from startaddr until endaddr. Increment in each step</span>
+<span class="sd">    the current address with the value in inc.</span>
+
+<span class="sd">    machine contains a linux or U-Boot machine, simply the machine</span>
+<span class="sd">    from which you want to create the registerdump.</span>
+
+<span class="sd">    On Linux machine the value is read with devmem2 tool, in U-Boot</span>
+<span class="sd">    with the md command.</span>
+
+<span class="sd">    The testcase writes the address and the value into the file with</span>
+<span class="sd">    filename filename.</span>
+
+<span class="sd">    It is possible to define gaps (to prevent accessing registers which</span>
+<span class="sd">    create a core dump, or simply to not dump registers you are not</span>
+<span class="sd">    interested in!</span>
+
+<span class="sd">    With this approach you can dump register in linux and U-Boot and</span>
+<span class="sd">    simply compare the 2 resulting txt files. Or with testcase</span>
+<span class="sd">    generic_machine_dump_write write for example a register dump,</span>
+<span class="sd">    created on a linux machine to an U-Boot machine.</span>
+
+<span class="sd">    example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        lcdif2_gaps = [</span>
+<span class="sd">            {&quot;iaddr&quot;:&quot;0x32e9002c&quot;, &quot;naddr&quot;:&quot;0x32e90030&quot;},</span>
+<span class="sd">            {&quot;iaddr&quot;:&quot;0x32e90038&quot;, &quot;naddr&quot;:&quot;0x32e90200&quot;},</span>
+<span class="sd">            {&quot;iaddr&quot;:&quot;0x32e90204&quot;, &quot;naddr&quot;:&quot;0x32e90208&quot;},</span>
+<span class="sd">            {&quot;iaddr&quot;:&quot;0x32e90218&quot;, &quot;naddr&quot;:&quot;0x32e9021c&quot;},</span>
+<span class="sd">        ]</span>
+
+<span class="sd">    So if new address is equal to &quot;iaddr&quot;, it gets replaced</span>
+<span class="sd">    with the value in naddr.</span>
+
+<span class="sd">    :param type: values &quot;linux&quot; or &quot;u-boot&quot;, we should detect this from machine parameter</span>
+<span class="sd">    :param machine: machine we run on</span>
+<span class="sd">    :param startaddr: address from which the testcase starts dumping</span>
+<span class="sd">    :param endaddr: address on which the testcase stops dumping</span>
+<span class="sd">    :param inc: address increment for the next step</span>
+<span class="sd">    :param gaps: array if dictionary, see above example</span>
+<span class="sd">    :param filename: file to where register values get stored</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+    <span class="n">intval</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">startaddr</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="n">endval</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">endaddr</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">intval</span> <span class="o">&lt;</span> <span class="n">endval</span><span class="p">:</span>
+        <span class="n">newval</span> <span class="o">=</span> <span class="n">intval</span>
+        <span class="n">newvalhex</span> <span class="o">=</span> <span class="nb">hex</span><span class="p">(</span><span class="n">newval</span><span class="p">)</span>
+        <span class="c1"># fix gaps</span>
+        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gaps</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">newvalhex</span> <span class="o">==</span> <span class="n">g</span><span class="p">[</span><span class="s2">&quot;iaddr&quot;</span><span class="p">]:</span>
+                <span class="n">newvalhex</span> <span class="o">=</span> <span class="n">g</span><span class="p">[</span><span class="s2">&quot;naddr&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">typ</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">lx_devmem2_get</span><span class="p">(</span><span class="n">machine</span><span class="p">,</span> <span class="n">newvalhex</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">typ</span> <span class="o">==</span> <span class="s2">&quot;u-boot&quot;</span><span class="p">:</span>
+            <span class="n">log</span> <span class="o">=</span> <span class="n">machine</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;md&quot;</span><span class="p">,</span> <span class="n">newvalhex</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
+            <span class="n">rval</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">rval</span> <span class="o">=</span> <span class="n">rval</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;0x</span><span class="si">{</span><span class="n">rval</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;type </span><span class="si">{</span><span class="n">typ</span><span class="si">}</span><span class="s2"> not supported.&quot;</span><span class="p">)</span>
+
+        <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%-10s</span><span class="s2"> </span><span class="si">%10s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">newvalhex</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
+
+        <span class="n">intval</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">newvalhex</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">+</span> <span class="n">inc</span>
+
+    <span class="n">fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="generic_machine_dump_write"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.generic_machine_dump_write">[docs]</a><span class="k">def</span> <span class="nf">generic_machine_dump_write</span><span class="p">(</span>
+    <span class="n">typ</span><span class="p">,</span>
+    <span class="n">machine</span><span class="p">,</span>
+    <span class="n">filename</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write a created register dump in file filename, created with testcase</span>
+
+<span class="sd">    generic_machine_dump</span>
+
+<span class="sd">    to the machine machine.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fd</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;a: </span><span class="si">{</span><span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> v: </span><span class="si">{</span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;#&quot;</span><span class="p">:</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ignoring </span><span class="si">{</span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">typ</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;type </span><span class="si">{</span><span class="n">typ</span><span class="si">}</span><span class="s2"> not supported.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">typ</span> <span class="o">==</span> <span class="s2">&quot;u-boot&quot;</span><span class="p">:</span>
+            <span class="n">machine</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;mw&quot;</span><span class="p">,</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;type </span><span class="si">{</span><span class="n">typ</span><span class="si">}</span><span class="s2"> not supported.&quot;</span><span class="p">)</span>
+
+    <span class="n">fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="lnx_check_cmd"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_check_cmd">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">lnx_check_cmd</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">cmd_dict</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    check commands in list of dictionaries cmd_dict.</span>
+<span class="sd">    for each element in list execute command cmd_dict[&quot;cmd&quot;] and</span>
+<span class="sd">    if cmd_dict[&quot;val&quot;] != &quot;undef&quot; check if cmd_dict[&quot;val&quot;]</span>
+<span class="sd">    is in command output</span>
+
+<span class="sd">    :param machine lnx: machine on which commands are executed</span>
+<span class="sd">    :param dict cmd_dict: list of dictionary with command and return values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cmd_dict</span><span class="p">:</span>
+        <span class="n">cmdret</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;cmd&quot;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;undef&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cmdret</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; not found in &quot;</span> <span class="o">+</span> <span class="n">cmdret</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="lnx_create_random"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_create_random">[docs]</a><span class="k">def</span> <span class="nf">lnx_create_random</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="nb">len</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    create file f with len bytes and random content</span>
+
+<span class="sd">    :param lnx: linux machine on which the file gets created</span>
+<span class="sd">    :param f: full path and filename which gets reated</span>
+<span class="sd">    :param len: length of created file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;dd&quot;</span><span class="p">,</span> <span class="s2">&quot;if=/dev/urandom&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;of=</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;bs=1&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;count=</span><span class="si">{</span><span class="nb">len</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="lnx_compare_files"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_compare_files">[docs]</a><span class="k">def</span> <span class="nf">lnx_compare_files</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">f1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">o1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">f2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">o2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    compare the content of the 2 files f1 @ offset o1 and f2 @ o2</span>
+<span class="sd">    raise RuntimeError if they differ.</span>
+
+<span class="sd">    :param lnx: linux machine on which the files get compared</span>
+<span class="sd">    :param f1: full path to first file</span>
+<span class="sd">    :param o1: offset in first file</span>
+<span class="sd">    :param f2: full path to second file</span>
+<span class="sd">    :param o2: offset in first file</span>
+<span class="sd">    :param length: length (in bytes)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">option</span> <span class="o">=</span> <span class="s2">&quot;--skip&quot;</span>
+    <span class="c1"># busybox</span>
+    <span class="n">option</span> <span class="o">=</span> <span class="s2">&quot;-s&quot;</span>
+    <span class="n">out1</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;hexdump&quot;</span><span class="p">,</span> <span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;</span><span class="si">%03.2x</span><span class="s1">&quot;&#39;</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">o1</span><span class="p">),</span> <span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">length</span><span class="p">),</span> <span class="n">f1</span><span class="p">)</span>
+    <span class="n">out2</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;hexdump&quot;</span><span class="p">,</span> <span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;</span><span class="si">%03.2x</span><span class="s1">&quot;&#39;</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">o2</span><span class="p">),</span> <span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">length</span><span class="p">),</span> <span class="n">f2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">out1</span> <span class="o">!=</span> <span class="n">out2</span><span class="p">:</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;content differ:</span><span class="se">\n</span><span class="si">{</span><span class="n">f1</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="si">{</span><span class="n">out1</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">f2</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">out2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;files have not same content&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="lnx_get_hwaddr"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_get_hwaddr">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">lnx_get_hwaddr</span><span class="p">(</span><span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get MAC address from interface output</span>
+
+<span class="sd">    ToDo: add a cache if often called</span>
+
+<span class="sd">    :param lnx: linux machine from which we want to get the hwaddr</span>
+<span class="sd">    :param name: name of the interface</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;ifconfig&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;HWaddr&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="sa">r</span><span class="s2">&quot;.*HWaddr (?P&lt;hwaddr&gt;[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+)&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                <span class="n">line</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;hwaddr&quot;</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not get hwaddr for device </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">_lnx_get_ipaddr</span><span class="p">(</span><span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip6</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get ipaddr from ifconfig output</span>
+
+<span class="sd">    ToDo: add a cache if often called</span>
+
+<span class="sd">    :param lnx: linux machine from which we want to get the ipaddr</span>
+<span class="sd">    :param name: name of the interface</span>
+<span class="sd">    :param ip6: set to true if you want the ipv6 addr</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;ifconfig&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ip6</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;inet6&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;\s+inet6\s+addr:(?P&lt;ipaddr&gt;\d+.\d+.\d+.\d+)\s+&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                    <span class="n">line</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                        <span class="sa">r</span><span class="s2">&quot;\s+inet6\s(?P&lt;ipaddr&gt;\d+.\d+.\d+.\d+)\s+&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                        <span class="n">line</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;ipaddr&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;inet6&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="s2">&quot;inet&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;\s+inet\s+addr:(?P&lt;ipaddr&gt;\d+.\d+.\d+.\d+)\s+&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                    <span class="n">line</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                        <span class="sa">r</span><span class="s2">&quot;\s+inet\s(?P&lt;ipaddr&gt;\d+.\d+.\d+.\d+)\s+&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
+                        <span class="n">line</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;ipaddr&quot;</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not get ip for device </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="lnx_get_ipaddr"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_get_ipaddr">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">lnx_get_ipaddr</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip6</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">poll</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">sleep</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get ipaddr from ifconfig output</span>
+
+<span class="sd">    ToDo: add a cache if often called</span>
+
+<span class="sd">    :param lnx: linux machine from which we want to get the ipaddr</span>
+<span class="sd">    :param name: name of the interface</span>
+<span class="sd">    :param ip6: set to true if you want the ipv6 addr</span>
+<span class="sd">    :param poll: if != 0 poll n times to get the ip</span>
+<span class="sd">    :param sleep: sleep in seconds between polls</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">poll</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_lnx_get_ipaddr</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ip6</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sleep</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">sleep</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not get ip for device </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="lnx_start_bin_with_timeout"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_start_bin_with_timeout">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">lnx_start_bin_with_timeout</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">binary</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    start binary binary for n seconds</span>
+
+<span class="sd">    :param lnx: linux machine we work on</span>
+<span class="sd">    :param binary: name of the binary which get started</span>
+<span class="sd">    :param seconds: seconds it get executed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">binary</span><span class="si">}</span><span class="s2"> 2&gt;/dev/null 1&gt;/dev/null &amp;&quot;</span><span class="p">))</span>
+    <span class="n">pid</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">)</span>
+
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
+    <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;kill&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Then</span><span class="p">,</span> <span class="s2">&quot;wait&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span></div>
+
+
+<span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">linux_test_uname</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="n">lab</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;uname&quot;</span><span class="p">,</span> <span class="s2">&quot;-a&quot;</span><span class="p">)</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;uname&quot;</span><span class="p">,</span> <span class="s2">&quot;-a&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="lnx_wait_for_ip"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_wait_for_ip">[docs]</a><span class="k">def</span> <span class="nf">lnx_wait_for_ip</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">loops</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">ip6</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    wait until ip is set on device name</span>
+
+<span class="sd">    :param lnx: linux machine we run</span>
+<span class="sd">    :param name: name of the device for which we wait for the ip</span>
+<span class="sd">    :param ip6: set to True if you want to get ipv6 ipaddr</span>
+<span class="sd">    :param loops: maximal wait loops</span>
+<span class="sd">    :param timeout: timeout if process is not found</span>
+<span class="sd">    :return: ip addr</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">loop</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">loop</span> <span class="o">&lt;</span> <span class="n">loops</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">lnx_get_ipaddr</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ip6</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ret</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="n">loop</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ip on device </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="lnx_wait_for_file"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_wait_for_file">[docs]</a><span class="k">def</span> <span class="nf">lnx_wait_for_file</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">loops</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    wait until file with name name is found with &quot;ls -l&quot;</span>
+
+<span class="sd">    :param lnx: linux machine we run</span>
+<span class="sd">    :param name: name of the file for which we wait</span>
+<span class="sd">    :param loops: maximal wait loops</span>
+<span class="sd">    :param timeout: timeout if file is not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">loop</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">loop</span> <span class="o">&lt;</span> <span class="n">loops</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;ls&quot;</span><span class="p">,</span> <span class="s2">&quot;-l&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="n">loop</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;file </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="lnx_wait_for_module"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_wait_for_module">[docs]</a><span class="k">def</span> <span class="nf">lnx_wait_for_module</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">loops</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    wait until module with name is loaded</span>
+
+<span class="sd">    :param lnx: linux machine we run</span>
+<span class="sd">    :param name: name of the module for which we wait</span>
+<span class="sd">    :param loops: maximal wait loops</span>
+<span class="sd">    :param timeout: timeout if modulename is not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">loop</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">loop</span> <span class="o">&lt;</span> <span class="n">loops</span><span class="p">:</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;lsmod&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">log</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="n">loop</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;module </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> not loaded&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="lnx_wait_for_process"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_wait_for_process">[docs]</a><span class="k">def</span> <span class="nf">lnx_wait_for_process</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">loops</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    wait until process with name name is found with pidof</span>
+
+<span class="sd">    :param lnx: linux machine we run</span>
+<span class="sd">    :param name: name of the process for which we wait</span>
+<span class="sd">    :param loops: maximal wait loops</span>
+<span class="sd">    :param timeout: timeout if process is not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">loop</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">loop</span> <span class="o">&lt;</span> <span class="n">loops</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;pidof&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="n">loop</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;process </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="board_ub_delete_env"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.board_ub_delete_env">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">board_ub_delete_env</span><span class="p">(</span>
+    <span class="n">ub</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">board</span><span class="o">.</span><span class="n">UBootShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">mtdparts</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;env&quot;</span><span class="p">,</span> <span class="s2">&quot;env-red&quot;</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    erase the MTD partitions defined in mtdparts</span>
+
+<span class="sd">    :param ub: U-Boot machine we run on</span>
+<span class="sd">    :param mtdparts: List of dictionary with MTD parts we want to delete</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        mtdparts = [</span>
+<span class="sd">            {&quot;name&quot;:&quot;bootloader&quot;, &quot;size&quot;:&quot;180000&quot;},</span>
+<span class="sd">            {&quot;name&quot;:&quot;env&quot;, &quot;size&quot;:&quot;10000&quot;},</span>
+<span class="sd">            {&quot;name&quot;:&quot;env-red&quot;, &quot;size&quot;:&quot;10000&quot;},</span>
+<span class="sd">            {&quot;name&quot;:&quot;keys&quot;, &quot;size&quot;:&quot;10000&quot;},</span>
+<span class="sd">            {&quot;name&quot;:&quot;rescue&quot;, &quot;size&quot;:&quot;3e50000&quot;},</span>
+<span class="sd">        ]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ub</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ub</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardUBoot</span><span class="p">)</span>
+
+        <span class="n">ub</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;sf&quot;</span><span class="p">,</span> <span class="s2">&quot;probe&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">mtdparts</span><span class="p">:</span>
+            <span class="n">ub</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;sf&quot;</span><span class="p">,</span> <span class="s2">&quot;erase&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="board_ub_delete_emmc"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.board_ub_delete_emmc">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">board_ub_delete_emmc</span><span class="p">(</span>
+    <span class="n">ub</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">board</span><span class="o">.</span><span class="n">UBootShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">erasesz</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    delete the emmc device</span>
+
+<span class="sd">    :param ub: U-Boot machine we run on</span>
+<span class="sd">    :param device: U-Boots dev number for the mmc</span>
+<span class="sd">    :param erasesz: number of blocks which get erased (started from offset 0)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;please configure device&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">erasesz</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;please configure erasesize for device </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ub</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ub</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardUBoot</span><span class="p">)</span>
+
+        <span class="n">ub</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;echo&quot;</span><span class="p">,</span> <span class="s2">&quot;delete_emmc&quot;</span><span class="p">)</span>
+        <span class="n">ub</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;mmc&quot;</span><span class="p">,</span> <span class="s2">&quot;dev&quot;</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+        <span class="n">ub</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;mmc&quot;</span><span class="p">,</span> <span class="s2">&quot;info&quot;</span><span class="p">)</span>
+        <span class="n">ub</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;mmc&quot;</span><span class="p">,</span> <span class="s2">&quot;erase&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="n">erasesz</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="board_wait_for_device"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.board_wait_for_device">[docs]</a><span class="k">def</span> <span class="nf">board_wait_for_device</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">retry_timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    wait for device until it is up</span>
+
+<span class="sd">    :param lnx: linux machine we work on</span>
+<span class="sd">    :param device: path to device we wait for</span>
+<span class="sd">    :param retries: retry count</span>
+<span class="sd">    :param retry_timeout: float, sleep after device is not up</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;please configure device&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">retries</span><span class="p">:</span>
+        <span class="c1"># fix me how to use</span>
+        <span class="c1"># http://tbot.tools/modules/machine_linux.html?highlight=background#tbot.machine.linux.RedirBoth</span>
+        <span class="n">rcode</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ls -al </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2"> &amp;&gt; /dev/null&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">rcode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># also wait timeoutafter we detect the device, as at least</span>
+            <span class="c1"># on raspberry pi, device is not always writeable after</span>
+            <span class="c1"># device appears</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">retry_timeout</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">retry_timeout</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Device </span><span class="si">{device}</span><span class="s2"> does not come up&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="board_set_default"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.board_set_default">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">board_set_default</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ub</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">board</span><span class="o">.</span><span class="n">UBootShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">mtdparts</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;env&quot;</span><span class="p">,</span> <span class="s2">&quot;env-red&quot;</span><span class="p">],</span>
+    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">erasesz</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    set board into default state, so we have a clean base</span>
+<span class="sd">    for all our tests.</span>
+
+<span class="sd">    - delete SPI NOR</span>
+<span class="sd">    - delete emmc</span>
+
+<span class="sd">    :param lab: lab linux machine</span>
+<span class="sd">    :param ub: U-Boot machine we run on</span>
+<span class="sd">    :param lnx: board linux machine</span>
+<span class="sd">    :param mtdparts: List of MTD parts we want to delete</span>
+<span class="sd">    :param device: U-Boots dev number for the mmc</span>
+<span class="sd">    :param erasesz: number of blocks which get erased (started from offset 0)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ub</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ub</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardUBoot</span><span class="p">)</span>
+
+        <span class="n">board_ub_delete_env</span><span class="p">(</span><span class="n">ub</span><span class="p">,</span> <span class="n">mtdparts</span><span class="p">)</span>
+        <span class="n">board_ub_delete_emmc</span><span class="p">(</span><span class="n">ub</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">erasesz</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="lab_check_part_exists_and_create"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lab_check_part_exists_and_create">[docs]</a><span class="k">def</span> <span class="nf">lab_check_part_exists_and_create</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">partition</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    check if partition exists on device.</span>
+
+<span class="sd">    ToDo: create it if not</span>
+
+<span class="sd">    :param lab: linux machine we work on</span>
+<span class="sd">    :param device: device on which the partition must exist</span>
+<span class="sd">    :param partition: partition name</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;please configure device&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">partition</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;please configure partition for device </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+        <span class="n">rcode</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;sudo&quot;</span><span class="p">,</span> <span class="s2">&quot;fdisk&quot;</span><span class="p">,</span> <span class="s2">&quot;-l&quot;</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rcode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Create partition on </span><span class="si">{device}</span><span class="s2"> not implemented&quot;</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">board_prepare_tmpmnt</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">partition</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">retry_timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;please configure device&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">partition</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;please configure partition for device </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+        <span class="c1"># do not wait for automount</span>
+        <span class="c1"># if your OS automounts the sd card</span>
+        <span class="c1"># disable with</span>
+        <span class="c1"># $ cat /etc/udev/rules.d/80-udisks2-nosdcard.rules</span>
+        <span class="c1"># # do not automount sd card</span>
+        <span class="c1"># SUBSYSTEMS==&quot;usb&quot;, ENV{UDISKS_IGNORE}=&quot;1&quot;</span>
+        <span class="c1">#</span>
+        <span class="c1"># and execute &quot;systemctl restart udisks2.service&quot;</span>
+
+        <span class="c1"># wait for device</span>
+        <span class="n">board_wait_for_device</span><span class="p">(</span><span class="n">lab</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">1&quot;</span><span class="p">,</span> <span class="n">retries</span><span class="p">,</span> <span class="n">retry_timeout</span><span class="p">)</span>
+
+        <span class="n">tmpdev</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">device</span><span class="si">}{</span><span class="n">partition</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># check if tmp is mounted, if so unmount it</span>
+        <span class="n">tmppath</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">tmpmntdir</span><span class="p">(</span><span class="n">tmpdev</span><span class="p">)</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+        <span class="n">rcode</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;mount&quot;</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Pipe</span><span class="p">,</span> <span class="s2">&quot;grep&quot;</span><span class="p">,</span> <span class="n">tmppath</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rcode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">lab</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;sudo&quot;</span><span class="p">,</span> <span class="s2">&quot;umount&quot;</span><span class="p">,</span> <span class="n">tmppath</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lab</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;mkdir&quot;</span><span class="p">,</span> <span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="n">tmppath</span><span class="p">)</span>
+            <span class="c1"># check if part exists, if not create it</span>
+            <span class="n">lab_check_part_exists_and_create</span><span class="p">(</span><span class="n">lab</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">partition</span><span class="p">)</span>
+
+        <span class="c1"># mount tmpdir</span>
+        <span class="n">lab</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;sudo&quot;</span><span class="p">,</span> <span class="s2">&quot;mount&quot;</span><span class="p">,</span> <span class="n">tmpdev</span><span class="p">,</span> <span class="n">tmppath</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">tmppath</span>
+
+
+<span class="k">def</span> <span class="nf">board_lx_getbootcounter</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;bootcount&quot;</span><span class="p">,</span> <span class="s2">&quot;/sys/bus/nvmem/devices/rv3028_nvram0/nvmem&quot;</span><span class="p">,</span> <span class="s2">&quot;read&quot;</span><span class="p">)</span>
+    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bootcount linux </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">val</span>
+
+
+<span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">board_ub_bootcounter</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">board</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">board</span><span class="o">.</span><span class="n">Board</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ubx</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">board</span><span class="o">.</span><span class="n">UBootShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">lab</span> <span class="ow">or</span> <span class="n">tbot</span><span class="o">.</span><span class="n">acquire_lab</span><span class="p">()</span> <span class="k">as</span> <span class="n">lh</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">ExitStack</span><span class="p">()</span> <span class="k">as</span> <span class="n">bx</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">ExitStack</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">acquire_board</span><span class="p">(</span><span class="n">lh</span><span class="p">))</span>
+                <span class="n">ub</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">acquire_uboot</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+
+                <span class="n">bval</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">ub</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;bootcount&quot;</span><span class="p">)</span>
+                <span class="n">blimit</span> <span class="o">=</span> <span class="n">ub</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;bootlimit&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">(</span><span class="n">bval</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bootcount not 1 after power on </span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bootcount </span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s2"> after power on -&gt; OK&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span>
+                <span class="p">)</span>
+
+            <span class="c1"># power off the board</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">bx</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">acquire_board</span><span class="p">(</span><span class="n">lh</span><span class="p">))</span>
+            <span class="k">while</span> <span class="n">bval</span> <span class="o">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">blimit</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="c1"># do bval &lt; int(blimit) + 2 resets</span>
+                <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">ExitStack</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+                    <span class="n">ub</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">acquire_uboot</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+                    <span class="n">ret</span> <span class="o">=</span> <span class="n">ub</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;bootcount&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">(</span><span class="n">bval</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bootcount not </span><span class="si">{</span><span class="n">bval</span><span class="si">}</span><span class="s2"> after soft reset </span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">bval</span> <span class="o">&lt;=</span> <span class="nb">int</span><span class="p">(</span><span class="n">blimit</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="s2">&quot;Warning: Bootlimit&quot;</span> <span class="ow">in</span> <span class="n">ub</span><span class="o">.</span><span class="n">bootlog</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;bootlimit notreached, but U-Boot uses altbootcmd!</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">ub</span><span class="o">.</span><span class="n">bootlog</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="s2">&quot;Warning: Bootlimit&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ub</span><span class="o">.</span><span class="n">bootlog</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;bootlimit reached, but U-Boot uses not altbootcmd!</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">ub</span><span class="o">.</span><span class="n">bootlog</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="p">)</span>
+
+                    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;test bootcount bval </span><span class="si">{</span><span class="n">bval</span><span class="si">}</span><span class="s2"> blimit </span><span class="si">{</span><span class="n">blimit</span><span class="si">}</span><span class="s2"> Ok&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span>
+                    <span class="p">)</span>
+                    <span class="n">bval</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">ub</span><span class="o">.</span><span class="n">ch</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s2">&quot;res&quot;</span><span class="p">)</span>
+
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="s2">&quot;Now power off / on and test bootcounter.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">ExitStack</span><span class="p">()</span> <span class="k">as</span> <span class="n">bx</span><span class="p">:</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">bx</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">acquire_board</span><span class="p">(</span><span class="n">lh</span><span class="p">))</span>
+            <span class="n">ub</span> <span class="o">=</span> <span class="n">bx</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">acquire_uboot</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+
+            <span class="n">bval</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">ub</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;bootcount&quot;</span><span class="p">)</span>
+            <span class="n">blimit</span> <span class="o">=</span> <span class="n">ub</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;bootlimit&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">(</span><span class="n">bval</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bootcount not 1 after power on </span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bootcount </span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s2"> after power on -&gt; OK&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;Warning: Bootlimit&quot;</span> <span class="ow">in</span> <span class="n">ub</span><span class="o">.</span><span class="n">bootlog</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;bootlimit notreached, but U-Boot uses altbootcmd!</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">ub</span><span class="o">.</span><span class="n">bootlog</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+
+<div class="viewcode-block" id="ub_check_i2c_dump"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.ub_check_i2c_dump">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">ub_check_i2c_dump</span><span class="p">(</span><span class="n">ub</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">i2c_dump</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    check if i2c dump is correct</span>
+
+<span class="sd">    :param ub: U-Boot Machine we run</span>
+<span class="sd">    :param dev: i2c dev number</span>
+<span class="sd">    :param address: i2c addr</span>
+<span class="sd">    :param i2c_dump: list of dumped lines, see example below</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        sample_i2c_dump = [</span>
+<span class="sd">            &quot;0x00: 11 00 00 21 00 01 3f 01 00 7f 00 00 00 00 00 81&quot;,</span>
+<span class="sd">            &quot;0x10: 00 00 3f 00 00 00 00 00 00 00 00 10 ad de xx xx&quot;,</span>
+<span class="sd">        ]</span>
+
+<span class="sd">        before &quot;:&quot; start address, after list of values</span>
+<span class="sd">               &#39;xx&#39; ignore</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">retval</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">ub</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;i2c&quot;</span><span class="p">,</span> <span class="s2">&quot;dev&quot;</span><span class="p">,</span> <span class="n">dev</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">i2c_dump</span><span class="p">:</span>
+        <span class="n">addr</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">ad</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="s2">&quot;xx&quot;</span><span class="p">:</span>
+                <span class="n">ad</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+            <span class="n">adh</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="n">ad</span><span class="p">,</span> <span class="s2">&quot;02x&quot;</span><span class="p">)</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">ub</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;i2c&quot;</span><span class="p">,</span> <span class="s2">&quot;md&quot;</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">adh</span> <span class="o">+</span> <span class="s2">&quot;.1&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
+            <span class="n">rval</span> <span class="o">=</span> <span class="n">ret</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">rval</span> <span class="o">=</span> <span class="n">rval</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">rval</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;diff for device </span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2"> on bus </span><span class="si">{</span><span class="n">dev</span><span class="si">}</span><span class="s2"> found @</span><span class="si">{</span><span class="n">adh</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">rval</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">red</span>
+                <span class="p">)</span>
+                <span class="n">retval</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">ad</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">retval</span></div>
+
+
+<span class="c1"># test bootcounter with linux</span>
+<span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">board_bootcounter_with_linux</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">board</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">board</span><span class="o">.</span><span class="n">Board</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ubx</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">board</span><span class="o">.</span><span class="n">UBootShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">lab</span> <span class="ow">or</span> <span class="n">tbot</span><span class="o">.</span><span class="n">acquire_lab</span><span class="p">()</span> <span class="k">as</span> <span class="n">lh</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">ExitStack</span><span class="p">()</span> <span class="k">as</span> <span class="n">bx</span><span class="p">:</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">bx</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">acquire_board</span><span class="p">(</span><span class="n">lh</span><span class="p">))</span>
+            <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">ExitStack</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+                <span class="n">ub</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">acquire_uboot</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+
+                <span class="n">ubval</span> <span class="o">=</span> <span class="n">ub</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;bootcount&quot;</span><span class="p">)</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bootcount </span><span class="si">{</span><span class="n">ubval</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span><span class="p">)</span>
+
+                <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">acquire_linux</span><span class="p">(</span><span class="n">ub</span><span class="p">))</span>
+
+                <span class="n">val</span> <span class="o">=</span> <span class="n">board_lx_getbootcounter</span><span class="p">(</span><span class="n">lnx</span><span class="p">)</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bootcount linux </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;----- UB VAL </span><span class="si">{</span><span class="n">ubval</span><span class="si">}</span><span class="s2"> LX </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="n">lnx</span><span class="o">.</span><span class="n">ch</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="s2">&quot;reboot&quot;</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">ExitStack</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+                <span class="n">ub</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">acquire_uboot</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;----- UB VAL </span><span class="si">{</span><span class="n">ubval</span><span class="si">}</span><span class="s2"> LX </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">ubval</span> <span class="o">=</span> <span class="n">ub</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;bootcount&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;----- END UB VAL </span><span class="si">{</span><span class="n">ubval</span><span class="si">}</span><span class="s2"> LX </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># get bootcounter in u-boot</span>
+<span class="c1"># boot into linux</span>
+<span class="c1"># check if same</span>
+<span class="c1"># set bootcounter in linux</span>
+<span class="c1"># boot into ub</span>
+<span class="c1"># check if Ok</span>
+
+
+<div class="viewcode-block" id="lnx_check_beeper"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_check_beeper">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">lnx_check_beeper</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">beeper</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    check if dmesg output contains strings in dmesg_list</span>
+
+<span class="sd">    :param lnx: linux machine on which beeper command is executed</span>
+<span class="sd">    :param beeper: list of dictionwry with infos for beeper</span>
+
+<span class="sd">    beeper definition example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        beep = [</span>
+<span class="sd">            {&quot;freq&quot;:&quot;440&quot;, &quot;length&quot;:&quot;1000&quot;, &quot;device&quot;, &quot;/dev/input/by-path/platform-buzzer-event&quot;},</span>
+<span class="sd">        ]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">beeper</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;please configure beeper&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">beeper</span><span class="p">:</span>
+            <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;beep&quot;</span><span class="p">,</span> <span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="n">b</span><span class="p">[</span><span class="s2">&quot;freq&quot;</span><span class="p">],</span> <span class="s2">&quot;-l&quot;</span><span class="p">,</span> <span class="n">b</span><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">],</span> <span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="n">b</span><span class="p">[</span><span class="s2">&quot;device&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="lnx_check_dmesg"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_check_dmesg">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">lnx_check_dmesg</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">dmesg_strings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">dmesg_false_strings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    check if dmesg output contains strings in dmesg_list</span>
+
+<span class="sd">    :param lnx: linux machine on which dmesg command is executed</span>
+<span class="sd">    :param list dmesg_strings: list of strings which must be in dmesg</span>
+<span class="sd">    :param list dmesg_false_strings: list of strings which sould not occur in dmesg</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">dmesg_strings</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">dmesg_strings</span><span class="p">:</span>
+            <span class="n">r</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;dmesg&quot;</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Pipe</span><span class="p">,</span> <span class="s2">&quot;grep&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;String </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2"> not in dmesg output.&quot;</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">dmesg_false_strings</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">dmesg_false_strings</span><span class="p">:</span>
+            <span class="n">r</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;dmesg&quot;</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Pipe</span><span class="p">,</span> <span class="s2">&quot;grep&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;String </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2"> in dmesg output. Not allowed&quot;</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<div class="viewcode-block" id="lnx_create_file"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_create_file">[docs]</a><span class="k">def</span> <span class="nf">lnx_create_file</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="n">AnyStr</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">filedata</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="p">[],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    create a file with filename on linux machine lnx with lines</span>
+<span class="sd">    in array filedata.</span>
+
+<span class="sd">    example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">            scriptname = &quot;/tmp/cansend.sh&quot;</span>
+<span class="sd">            filedata = [&quot;#!/bin/sh&quot;,</span>
+<span class="sd">                &quot;&quot;,</span>
+<span class="sd">                &quot;while true;do&quot;,</span>
+<span class="sd">                &quot;    sleep 5&quot;,</span>
+<span class="sd">                &quot;&quot;,</span>
+<span class="sd">                &quot;    cansend can0 15a#1122334455667788&quot;,</span>
+<span class="sd">                &quot;done&quot;</span>
+
+<span class="sd">            lnx_create_file(lab, scriptname, filedata)</span>
+
+
+<span class="sd">    :param lnx: linux machine on which the file is created</span>
+<span class="sd">    :param filename: string of the created file</span>
+<span class="sd">    :param filedata: List of lines</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;only call with valid filename&quot;</span><span class="p">)</span>
+
+    <span class="n">act</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">filedata</span><span class="p">:</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;echo &#39;</span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">&#39; </span><span class="si">{</span><span class="n">act</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+        <span class="n">act</span> <span class="o">=</span> <span class="s2">&quot;&gt;&gt;&quot;</span></div>
+
+
+<span class="k">def</span> <span class="nf">common_install_debian</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">package</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="c1"># may convert package into real package name on OS</span>
+    <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;sudo&quot;</span><span class="p">,</span> <span class="s2">&quot;apt-get&quot;</span><span class="p">,</span> <span class="s2">&quot;-y&quot;</span><span class="p">,</span> <span class="s2">&quot;install&quot;</span><span class="p">,</span> <span class="n">package</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">common_install_fedora</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">package</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="c1"># may convert package into real package name on OS</span>
+    <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;sudo&quot;</span><span class="p">,</span> <span class="s2">&quot;dnf&quot;</span><span class="p">,</span> <span class="s2">&quot;-y&quot;</span><span class="p">,</span> <span class="s2">&quot;install&quot;</span><span class="p">,</span> <span class="n">package</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<div class="viewcode-block" id="lnx_install_package"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.lnx_install_package">[docs]</a><span class="k">def</span> <span class="nf">lnx_install_package</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">package</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    detect OS version installed on linux machine</span>
+<span class="sd">    and try to install package</span>
+
+<span class="sd">    :param lnx: linux machine on which the package is installed</span>
+<span class="sd">    :param package: Name of the package</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">os</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;/etc/os-release&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;debian&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">common_install_debian</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">package</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s2">&quot;Fedora&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">common_install_debian</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">package</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OS </span><span class="si">{</span><span class="n">os</span><span class="si">}</span><span class="s2"> not supported yet for automated installation&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="tbot_copy_file_to_board"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.tbot_copy_file_to_board">[docs]</a><span class="k">def</span> <span class="nf">tbot_copy_file_to_board</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">ethdevice</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    copy file filename from lab host in tmpdir</span>
+<span class="sd">    to board on tmpdir</span>
+
+<span class="sd">    :param lab: lab machine where the file can be found</span>
+<span class="sd">    :param lnx: linux machine to which the file gets copied</span>
+<span class="sd">    :param ethdevice: ethernet device which is used</span>
+<span class="sd">    :param filename: name of the file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ethdev</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">ethdevices</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()][</span><span class="n">ethdevice</span><span class="p">]</span>
+    <span class="n">ip</span> <span class="o">=</span> <span class="n">ethdev</span><span class="p">[</span><span class="s2">&quot;ipaddr&quot;</span><span class="p">]</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="s2">&quot;root&quot;</span>
+    <span class="c1"># logfile path on lab</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">tmpdir</span><span class="p">()</span> <span class="o">/</span> <span class="n">filename</span>
+    <span class="n">srclocal</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+
+    <span class="c1"># logfile path on board</span>
+    <span class="n">bp</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">tmpdir</span><span class="p">()</span> <span class="o">/</span> <span class="n">filename</span>
+    <span class="n">bplocal</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+
+    <span class="c1"># copy log from lab to board</span>
+    <span class="n">lab</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+        <span class="s2">&quot;scp&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;StrictHostKeyChecking=no&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;UserKnownHostsFile=/dev/null&quot;</span><span class="p">,</span>
+        <span class="n">srclocal</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">bplocal</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="tbot_start_script_on_board"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.tbot_start_script_on_board">[docs]</a><span class="k">def</span> <span class="nf">tbot_start_script_on_board</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">ethdevice</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">scriptname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    copy script scriptname from lab host in tftp dir</span>
+<span class="sd">    to board on tmpdir and execute it</span>
+
+<span class="sd">    :param lab: lab machine where the script can be found</span>
+<span class="sd">    :param lnx: linux machine to which the script gets copied</span>
+<span class="sd">    :param ethdevice: ethernet device which is used</span>
+<span class="sd">    :param scriptname: name of the script</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ethdev</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">ethdevices</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()][</span><span class="n">ethdevice</span><span class="p">]</span>
+    <span class="n">ip</span> <span class="o">=</span> <span class="n">ethdev</span><span class="p">[</span><span class="s2">&quot;ipaddr&quot;</span><span class="p">]</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="s2">&quot;root&quot;</span>
+    <span class="c1"># logfile path on lab</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">tftp_dir</span><span class="p">()</span> <span class="o">/</span> <span class="n">scriptname</span>
+    <span class="n">srclocal</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+
+    <span class="c1"># logfile path on board</span>
+    <span class="n">bp</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">tmpdir</span><span class="p">()</span> <span class="o">/</span> <span class="n">scriptname</span>
+    <span class="n">bplocal</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+
+    <span class="c1"># copy log from lab to board</span>
+    <span class="n">lab</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+        <span class="s2">&quot;scp&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;StrictHostKeyChecking=no&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;UserKnownHostsFile=/dev/null&quot;</span><span class="p">,</span>
+        <span class="n">srclocal</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">bplocal</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ret</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">bplocal</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ret</span><span class="p">,</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="tbot_start_script_on_lab"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.tbot_start_script_on_lab">[docs]</a><span class="k">def</span> <span class="nf">tbot_start_script_on_lab</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">ethdevice</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">logfilename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">scriptname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">labtbottestcasepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    copy an log file to labhost and start script scriptname, which should</span>
+<span class="sd">    check, if logfile is Ok.</span>
+
+<span class="sd">    :param lab: lab machine where the script can be found</span>
+<span class="sd">    :param lnx: linux machine to which the script gets copied</span>
+<span class="sd">    :param ethdevice: ethernet device which is used</span>
+<span class="sd">    :param logfilename: logfilename</span>
+<span class="sd">    :param scriptname: name of the script</span>
+<span class="sd">    :param labtbottestcasepath: path where the script can be found on lab</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ethdev</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">ethdevices</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()][</span><span class="n">ethdevice</span><span class="p">]</span>
+    <span class="n">ip</span> <span class="o">=</span> <span class="n">ethdev</span><span class="p">[</span><span class="s2">&quot;ipaddr&quot;</span><span class="p">]</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="s2">&quot;root&quot;</span>
+    <span class="c1"># logfile path on lab</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">tmpdir</span><span class="p">()</span>
+    <span class="n">labtmppath</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">/</span> <span class="n">logfilename</span>
+    <span class="n">lfp</span> <span class="o">=</span> <span class="n">labtmppath</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+    <span class="n">scrpath</span> <span class="o">=</span> <span class="n">labtmppath</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">/</span> <span class="n">scriptname</span>
+    <span class="n">scrp</span> <span class="o">=</span> <span class="n">scrpath</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+
+    <span class="c1"># logfile path on board</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">tmpdir</span><span class="p">()</span>
+    <span class="n">boardtmppath</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">/</span> <span class="n">logfilename</span>
+    <span class="n">bfp</span> <span class="o">=</span> <span class="n">boardtmppath</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+
+    <span class="c1"># copy log to lab</span>
+    <span class="n">lab</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+        <span class="s2">&quot;scp&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;StrictHostKeyChecking=no&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;UserKnownHostsFile=/dev/null&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">bfp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">lfp</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># check if script is on lab</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LocalHost</span><span class="p">)</span>
+        <span class="n">copy</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">ret</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;ls&quot;</span><span class="p">,</span> <span class="s2">&quot;-1&quot;</span><span class="p">,</span> <span class="n">scrp</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">labtbottestcasepath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;could not install </span><span class="si">{</span><span class="n">scriptname</span><span class="si">}</span><span class="s2">, please set labtbottestcasepath&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># if not try to copy</span>
+                <span class="n">copy</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># check md5sum, if different copy</span>
+            <span class="n">sumorg</span> <span class="o">=</span> <span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+                <span class="s2">&quot;md5sum&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">labtbottestcasepath</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">scriptname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">linux</span><span class="o">.</span><span class="n">Pipe</span><span class="p">,</span>
+                <span class="s2">&quot;cut&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;-d&quot;</span><span class="p">,</span>
+                <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="s1">&#39;&quot; &quot;&#39;</span><span class="p">),</span>
+                <span class="s2">&quot;-f&quot;</span><span class="p">,</span>
+                <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="s1">&#39;&quot;1&quot;&#39;</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">sumlab</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+                <span class="s2">&quot;md5sum&quot;</span><span class="p">,</span>
+                <span class="n">scrp</span><span class="p">,</span>
+                <span class="n">linux</span><span class="o">.</span><span class="n">Pipe</span><span class="p">,</span>
+                <span class="s2">&quot;cut&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;-d&quot;</span><span class="p">,</span>
+                <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="s1">&#39;&quot; &quot;&#39;</span><span class="p">),</span>
+                <span class="s2">&quot;-f&quot;</span><span class="p">,</span>
+                <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="s1">&#39;&quot;1&quot;&#39;</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">sumorg</span> <span class="o">!=</span> <span class="n">sumlab</span><span class="p">:</span>
+                <span class="n">copy</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">copy</span><span class="p">:</span>
+            <span class="n">host</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+                <span class="s2">&quot;scp&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;StrictHostKeyChecking=no&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;UserKnownHostsFile=/dev/null&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">labtbottestcasepath</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">scriptname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">lab</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">lab</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">scrp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="n">ret</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">scrp</span><span class="p">,</span> <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="n">lfp</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">ret</span><span class="p">,</span> <span class="n">out</span></div>
+
+
+<span class="n">THREADS</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<div class="viewcode-block" id="tbot_start_thread"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.tbot_start_thread">[docs]</a><span class="k">def</span> <span class="nf">tbot_start_thread</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    start linux command in thread and return an id</span>
+
+<span class="sd">    output of the command gets stored in</span>
+
+<span class="sd">    .. code-block::</span>
+
+<span class="sd">        stdout : f&quot;/tmp/thread_1_{tid}&quot;</span>
+<span class="sd">        stderr : f&quot;/tmp/thread_2_{tid}&quot;</span>
+
+<span class="sd">    :param lnx: linux machine where the command **cmd** is started in background</span>
+<span class="sd">    :param cmd: command which gets started in background</span>
+<span class="sd">    :return: uuid.UUID id</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tid</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span>
+
+    <span class="n">logfile_stdout</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/tmp/thread_1_</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">logfile_stderr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/tmp/thread_2_</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2"> 2&gt;</span><span class="si">{</span><span class="n">logfile_stderr</span><span class="si">}</span><span class="s2"> 1&gt;</span><span class="si">{</span><span class="n">logfile_stdout</span><span class="si">}</span><span class="s2"> &amp;&quot;</span><span class="p">))</span>
+    <span class="n">pid</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">)</span>
+
+    <span class="n">newt</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;lnx&quot;</span><span class="p">:</span> <span class="n">lnx</span><span class="p">,</span>
+        <span class="s2">&quot;pid&quot;</span><span class="p">:</span> <span class="n">pid</span><span class="p">,</span>
+        <span class="s2">&quot;cmd&quot;</span><span class="p">:</span> <span class="n">cmd</span><span class="p">,</span>
+        <span class="s2">&quot;stdout&quot;</span><span class="p">:</span> <span class="n">logfile_stdout</span><span class="p">,</span>
+        <span class="s2">&quot;stderr&quot;</span><span class="p">:</span> <span class="n">logfile_stderr</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">tmpdict</span> <span class="o">=</span> <span class="n">THREADS</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span>  <span class="c1"># noqa: F841</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;threadid </span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2"> already in use&quot;</span><span class="p">)</span>
+
+    <span class="n">THREADS</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">=</span> <span class="n">newt</span>
+
+    <span class="k">return</span> <span class="n">tid</span></div>
+
+
+<div class="viewcode-block" id="tbot_stop_thread"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.tbot_stop_thread">[docs]</a><span class="k">def</span> <span class="nf">tbot_stop_thread</span><span class="p">(</span>
+    <span class="n">tid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">signal</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    stop linux command with tid</span>
+
+<span class="sd">    :param lnx: linux machine where the command **cmd** is started in background</span>
+<span class="sd">    :param tid: id got from tbot_start_thread</span>
+<span class="sd">    :param signal: may you need to kill the process with an special signal number</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">THREADS</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span>
+    <span class="n">lnx</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;lnx&quot;</span><span class="p">]</span>
+    <span class="n">pid</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;pid&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">signal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;kill&quot;</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Then</span><span class="p">,</span> <span class="s2">&quot;wait&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;kill&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Then</span><span class="p">,</span> <span class="s2">&quot;wait&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">THREADS</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">tid</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sudo_subshell"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.common.sudo_subshell">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">sudo_subshell</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cmds</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="n">password</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    execute in a sudo subshell the commands in cmds</span>
+
+<span class="sd">    Best you use a passwordless sudo approach, for example</span>
+<span class="sd">    add in /etc/sudoers</span>
+
+<span class="sd">    .. code-block::</span>
+
+<span class="sd">        &lt;username&gt;     ALL=(ALL) NOPASSWD: ALL</span>
+
+<span class="sd">    If not possible pass the sudo password to this function.</span>
+
+<span class="sd">    This function is more or less just an example how to</span>
+<span class="sd">    execute commands under sudo, because the commands are</span>
+<span class="sd">    only executed without any possibility to check the output.</span>
+
+<span class="sd">    If you need this, see this as an example how to!</span>
+
+<span class="sd">    :param lnx: linux machine where the command **cmd** is started in background</span>
+<span class="sd">    :param str: sudo password, pass None (default) if not needed</span>
+<span class="sd">    :param list cmds: list of commands (strings), which are run under sudo</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="k">if</span> <span class="n">password</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">lnx</span><span class="o">.</span><span class="n">subshell</span><span class="p">(</span><span class="s2">&quot;sudo&quot;</span><span class="p">,</span> <span class="s2">&quot;-ni&quot;</span><span class="p">,</span> <span class="s2">&quot;bash&quot;</span><span class="p">,</span> <span class="s2">&quot;--norc&quot;</span><span class="p">,</span> <span class="s2">&quot;--noprofile&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">root</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">cmds</span><span class="p">:</span>
+                <span class="n">log</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
+                <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># create askpass file&quot;</span>
+        <span class="n">tmpfile</span> <span class="o">=</span> <span class="s2">&quot;/tmp/sendpass.sh&quot;</span>
+
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;echo &quot;#!/bin/sh</span><span class="se">\n\n</span><span class="s1">echo </span><span class="si">{</span><span class="n">password</span><span class="si">}</span><span class="s1">&quot; &gt; </span><span class="si">{</span><span class="n">tmpfile</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;chmod&quot;</span><span class="p">,</span> <span class="s2">&quot;777&quot;</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">)</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="n">tmpfile</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">lnx</span><span class="o">.</span><span class="n">subshell</span><span class="p">(</span>
+            <span class="s2">&quot;export&quot;</span><span class="p">,</span>
+            <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SUDO_ASKPASS=</span><span class="si">{</span><span class="n">tmpfile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
+            <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;sudo&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;-A&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bash&quot;</span><span class="p">,</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">root</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">cmds</span><span class="p">:</span>
+                <span class="n">root</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">ret</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

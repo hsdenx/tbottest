@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.tc.generic_board &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.tc.generic_board</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.tc.generic_board</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tbot</span>
+<span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">linux</span>
+<span class="kn">from</span> <span class="nn">tbot.context</span> <span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">tbottest.boardgeneric</span> <span class="kn">import</span> <span class="n">cfggeneric</span>
+<span class="kn">from</span> <span class="nn">tbottest.tc.common</span> <span class="kn">import</span> <span class="n">lnx_check_beeper</span>
+<span class="kn">from</span> <span class="nn">tbottest.tc.common</span> <span class="kn">import</span> <span class="n">lnx_check_cmd</span>
+<span class="kn">from</span> <span class="nn">tbottest.tc.common</span> <span class="kn">import</span> <span class="n">lnx_check_dmesg</span>
+<span class="kn">from</span> <span class="nn">tbottest.tc.common</span> <span class="kn">import</span> <span class="n">lnx_check_revfile</span>
+<span class="kn">from</span> <span class="nn">tbottest.tc.common</span> <span class="kn">import</span> <span class="n">lnx_create_revfile</span>
+<span class="kn">from</span> <span class="nn">tbottest.tc.common</span> <span class="kn">import</span> <span class="n">lx_devmem2_get</span>
+<span class="kn">from</span> <span class="nn">tbottest.tc.cpu</span> <span class="kn">import</span> <span class="n">generic_get_socname</span>
+<span class="kn">from</span> <span class="nn">tbottest.tc.network</span> <span class="kn">import</span> <span class="n">lnx_network_ping</span>
+<span class="kn">from</span> <span class="nn">tbottest.tc.network</span> <span class="kn">import</span> <span class="n">network_linux_iperf</span>
+<span class="kn">from</span> <span class="nn">tbottest.tc.kas</span> <span class="kn">import</span> <span class="n">KAS</span>
+<span class="kn">from</span> <span class="nn">tbottest.tc.leds</span> <span class="kn">import</span> <span class="n">lnx_test_led_simple</span>
+<span class="kn">from</span> <span class="nn">tbottest.tc.generictestdef</span> <span class="kn">import</span> <span class="n">TC_SKIP</span><span class="p">,</span> <span class="n">TC_FAIL</span><span class="p">,</span> <span class="n">TC_OKAY</span><span class="p">,</span> <span class="n">require_cfg</span>
+<span class="kn">from</span> <span class="nn">tbottest.tc.registermap</span> <span class="kn">import</span> <span class="n">REGISTERMAP</span>
+
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">cfggeneric</span>
+
+
+<div class="viewcode-block" id="generic_lnx_check_dump_files"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_check_dump_files">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">generic_lnx_check_dump_files</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    prerequisite: Board boots into linux</span>
+
+<span class="sd">    compares for all register dumped into ``revfile`` if they have the</span>
+<span class="sd">    same value on linux machine lnx. Register values are read with devmem2 tool.</span>
+
+<span class="sd">    You can configure a ``difffile`` to which found differences are written.</span>
+
+<span class="sd">    :param lnx: linux machine where we run</span>
+
+<span class="sd">    Uses config variable lnx_dump_files from section TC_DUMPFILES_BOARDNAME in BOARDNAME.ini</span>
+
+<span class="sd">    lnx_dump_files -- array of dictionary with configuration for lnx_check_revfile, see</span>
+
+<span class="sd">    :py:func:`tbottest.tc.generic_board.generic_lnx_create_dump_files`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">lnx_dump_files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">lnx_dump_files</span><span class="p">:</span>
+            <span class="n">lnx_check_revfile</span><span class="p">(</span>
+                <span class="n">lnx</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;revfile&quot;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;difffile&quot;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;timeout&quot;</span><span class="p">]</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="generic_lnx_create_dump_files"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_create_dump_files">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">generic_lnx_create_dump_files</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    prerequisite: Board boots into linux</span>
+
+<span class="sd">    create a register dump file with name ``revfile`` from ``startaddr`` to ``endaddr``</span>
+<span class="sd">    with the devmem2 tool. You find the register file in subdir ``tbotconfig/BOARDNAME/files/dumpfiles``</span>
+
+<span class="sd">    You need to create this subdir before starting this testcase</span>
+
+<span class="sd">    Once created this register dump file it can be used with testcase</span>
+
+<span class="sd">    :py:func:`tbottest.tc.generic_board.generic_lnx_check_dump_files`</span>
+
+<span class="sd">    which will check if all register still have the same value. so for example</span>
+<span class="sd">    dump for your current linux kernel the pinmux registers into a dump file</span>
+<span class="sd">    and after upgrading to a new linux kernel you can be sure that all pinmux</span>
+<span class="sd">    registers stil have the same value!</span>
+
+<span class="sd">    :param lnx: linux machine where we run</span>
+
+<span class="sd">    Uses config variable lnx_dump_files from section TC_DUMPFILES_BOARDNAME in BOARDNAME.ini</span>
+
+<span class="sd">    lnx_dump_files -- array of dictionary with configuration for lnx_check_revfile</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        lnx_dump_files = [{&quot;revfile&quot;:&quot;name of revfile&quot;, \n</span>
+<span class="sd">                &quot;startaddr&quot;:&quot;startaddress of dump&quot;, \n</span>
+<span class="sd">                &quot;endaddr&quot;:&quot;endaddress of dump&quot;, \n</span>
+<span class="sd">                &quot;mask&quot;:&quot;0xffffffff&quot;, \n</span>
+<span class="sd">                &quot;readtype&quot;:&quot;readtype of devmem2 command&quot;, \n</span>
+<span class="sd">                &quot;difffile&quot;:&quot;file which gets created when there are differences (Set to None to disable it)&quot;, \n</span>
+<span class="sd">                &quot;timeout&quot;:&quot;timeout between devmem2 calls (set to None to disable it)&quot; \n</span>
+<span class="sd">                }]</span>
+
+<span class="sd">    example:</span>
+
+<span class="sd">    .. code-block:: ini</span>
+
+<span class="sd">        [TC_DUMPFILES_BOARDNAME]</span>
+<span class="sd">        lnx_dump_files = [{&quot;revfile&quot;:&quot;control_module.reg&quot;, &quot;startaddr&quot;:&quot;0x44e10800&quot;, &quot;endaddr&quot;:&quot;0x44e10808&quot;, &quot;mask&quot;:&quot;0xffffffff&quot;, &quot;readtype&quot;:&quot;w&quot;, &quot;difffile&quot;:&quot;None&quot;, &quot;timeout&quot;:&quot;None&quot;}]</span>
+
+<span class="sd">    creates in tbotconfig/BOARDNAME/files/dump the file control_module.reg with content</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">        $ cat tbotconfig/BOARDNAME/files/dumpfiles/control_module.reg</span>
+<span class="sd">        # pinmux</span>
+<span class="sd">        # processor: ToDo</span>
+<span class="sd">        # hardware : ToDo</span>
+<span class="sd">        # Linux    : Linux xxx-board 5.15.105-stable-standard #1 PREEMPT Thu Mar 30 10:48:01 UTC 2023 armv7l armv7l armv7l GNU/Linux</span>
+<span class="sd">        # regaddr mask type defval</span>
+<span class="sd">        0x44e10800 0xffffffff          w 0x00000031</span>
+<span class="sd">        0x44e10804 0xffffffff          w 0x00000031</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">lnx_dump_files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">lnx_dump_files</span><span class="p">:</span>
+            <span class="n">lnx_create_revfile</span><span class="p">(</span>
+                <span class="n">lnx</span><span class="p">,</span>
+                <span class="n">config</span><span class="p">[</span><span class="s2">&quot;revfile&quot;</span><span class="p">],</span>
+                <span class="n">config</span><span class="p">[</span><span class="s2">&quot;startaddr&quot;</span><span class="p">],</span>
+                <span class="n">config</span><span class="p">[</span><span class="s2">&quot;endaddr&quot;</span><span class="p">],</span>
+                <span class="n">config</span><span class="p">[</span><span class="s2">&quot;mask&quot;</span><span class="p">],</span>
+                <span class="n">config</span><span class="p">[</span><span class="s2">&quot;readtype&quot;</span><span class="p">],</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="generic_lx_dump_register"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_lx_dump_register">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="nd">@require_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">regdump</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">generic_lx_dump_register</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a register dump on lnx machine, and</span>
+<span class="sd">    save it on local hosts workdir in file &quot;generic_registerdump.txt&quot;</span>
+
+<span class="sd">    :param lnx: Linux machine we run on</span>
+
+<span class="sd">    Uses config variables:</span>
+
+<span class="sd">    regdump -- list of dictionary</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        regdump = [{&quot;address&quot;:&quot;0x30340004&quot;}, {&quot;address&quot;:&quot;0x30330070&quot;}]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="n">local</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LocalHost</span><span class="p">)</span>
+        <span class="n">sourcepath</span> <span class="o">=</span> <span class="n">local</span><span class="o">.</span><span class="n">sourcedir</span><span class="p">()</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+        <span class="n">workpath</span> <span class="o">=</span> <span class="n">local</span><span class="o">.</span><span class="n">workdir</span><span class="p">()</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+        <span class="n">socname</span> <span class="o">=</span> <span class="n">generic_get_socname</span><span class="p">(</span><span class="n">lnx</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;not detected&quot;</span> <span class="ow">in</span> <span class="n">socname</span><span class="p">:</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SoC not detected, please add in generic_get_socname&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">TC_SKIP</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">socname</span><span class="si">}</span><span class="s2">_registers.json&quot;</span>
+        <span class="n">registerfilepath</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sourcepath</span><span class="si">}</span><span class="s2">/scripts/registermap/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">regmap</span> <span class="o">=</span> <span class="n">REGISTERMAP</span><span class="p">(</span><span class="n">registerfilepath</span><span class="p">)</span>
+        <span class="n">outputpath</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">workpath</span><span class="si">}</span><span class="s2">/generic_registerdump.txt&quot;</span>
+        <span class="n">local</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;rm&quot;</span><span class="p">,</span> <span class="s2">&quot;-rf&quot;</span><span class="p">,</span> <span class="n">outputpath</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">dump</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">regdump</span><span class="p">:</span>
+            <span class="n">address</span> <span class="o">=</span> <span class="n">dump</span><span class="p">[</span><span class="s2">&quot;address&quot;</span><span class="p">]</span>
+            <span class="c1">#val = ub_read_register(ub, address)</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">lx_devmem2_get</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+            <span class="n">regmap</span><span class="o">.</span><span class="n">registermap_dump_register_file</span><span class="p">(</span><span class="n">outputpath</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Register dumped to file </span><span class="si">{</span><span class="n">outputpath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="generic_lnx_network_iperf"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_network_iperf">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="nd">@require_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">iperf</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">generic_lnx_network_iperf</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    prerequisite: Board boots into linux</span>
+
+<span class="sd">    wrapper for network_linux_iperf with ini file configuration</span>
+
+<span class="sd">    :param lnx: linux machine where we run</span>
+
+<span class="sd">    iperf -- array of dictionary with infos for network_linux_iperf test</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        ping = [{&quot;ip&quot;:&quot;${default:serverip}&quot;,&quot;retry&quot;:&quot;10&quot;}]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="n">si</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get_default_config</span><span class="p">(</span><span class="s2">&quot;serverip&quot;</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">)</span>
+        <span class="n">ipaddr</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">get_default_config</span><span class="p">(</span><span class="s2">&quot;ipaddr&quot;</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">iperf</span><span class="p">:</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;---- start iperf test with server on lab host ----&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span><span class="p">)</span>
+            <span class="n">network_linux_iperf</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">lab</span><span class="p">,</span> <span class="n">si</span><span class="p">,</span><span class="n">run</span><span class="p">[</span><span class="s2">&quot;intervall&quot;</span><span class="p">],</span> <span class="n">run</span><span class="p">[</span><span class="s2">&quot;cycles&quot;</span><span class="p">],</span> <span class="n">run</span><span class="p">[</span><span class="s2">&quot;minval&quot;</span><span class="p">])</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;---- start iperf test with server on board ----&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span><span class="p">)</span>
+            <span class="n">network_linux_iperf</span><span class="p">(</span><span class="n">lab</span><span class="p">,</span> <span class="n">lnx</span><span class="p">,</span> <span class="n">ipaddr</span><span class="p">,</span> <span class="n">run</span><span class="p">[</span><span class="s2">&quot;intervall&quot;</span><span class="p">],</span> <span class="n">run</span><span class="p">[</span><span class="s2">&quot;cycles&quot;</span><span class="p">],</span> <span class="n">run</span><span class="p">[</span><span class="s2">&quot;minval&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="generic_lnx_network_ping"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_network_ping">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="nd">@require_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">ping</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">generic_lnx_network_ping</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    prerequisite: Board boots into linux</span>
+
+<span class="sd">    simple ping test</span>
+
+<span class="sd">    :param lnx: linux machine where we run</span>
+
+<span class="sd">    ping -- array of dictionary with infos for ping</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        ping = [{&quot;ip&quot;:&quot;${default:serverip}&quot;,&quot;retry&quot;:&quot;10&quot;}]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">pings</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">ping</span><span class="p">:</span>
+            <span class="n">lnx_network_ping</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">pings</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">pings</span><span class="p">[</span><span class="s2">&quot;retry&quot;</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="generic_lnx_test_beep"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_test_beep">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="nd">@require_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">beep</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">generic_lnx_test_beep</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    prerequisite: Board boots into linux</span>
+
+<span class="sd">    make a beep</span>
+
+<span class="sd">    :param lnx: linux machine where we run</span>
+
+<span class="sd">    Uses config variable beep from BOARDNAME.ini</span>
+
+<span class="sd">    beep -- array of dictionary with infos for beeping</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        beep = [{&quot;freq&quot;: &quot;440&quot;, &quot;length&quot;:&quot;1000&quot;}]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="n">lnx_check_beeper</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">beep</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="generic_lnx_commands"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_commands">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="nd">@require_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">lnx_commands</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">generic_lnx_commands</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    prerequisite: Board boots into linux</span>
+
+<span class="sd">    :param lnx: Linux machine we run on</span>
+
+<span class="sd">    Uses config variables:</span>
+
+<span class="sd">    lnx_commands -- list of dictionary, see below</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        lnx_commands = [</span>
+<span class="sd">           {&quot;cmd&quot;:&quot;linux command&quot;, &quot;val&quot;:&quot;string commandoutput, &#39;undef&#39; if none&quot;},</span>
+<span class="sd">           ]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">lnx_check_cmd</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">lnx_commands</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Error in dmesg output&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="generic_lnx_test_dmesg"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_test_dmesg">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="nd">@require_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">dmesg</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">generic_lnx_test_dmesg</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    prerequisite: Board boots into linux</span>
+
+<span class="sd">    call lnx_check_dmesg() which checks dmesg output.</span>
+
+<span class="sd">    :param lnx: Linux machine we run on</span>
+
+<span class="sd">    Uses config variables:</span>
+
+<span class="sd">    dmesg       -- list of strings which must be in dmesg output</span>
+<span class="sd">    dmesg_false -- list of strings which does not appear in dmesg output</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        dmesg = [</span>
+<span class="sd">            &quot;remoteproc remoteproc0: remote processor wkup_m3 is now up&quot;,</span>
+<span class="sd">           ]</span>
+
+<span class="sd">        dmesg_false = [</span>
+<span class="sd">           &quot;crash&quot;,</span>
+<span class="sd">           ]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">lnx_check_dmesg</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">dmesg</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">dmesg_false</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Error in dmesg output&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">TC_OKAY</span></div>
+
+<div class="viewcode-block" id="generic_lnx_test_led"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_test_led">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="nd">@require_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">leds</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">generic_lnx_test_led</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    prerequisite: Board boots into linux</span>
+
+<span class="sd">    switch on and off all leds in list cfg.leds</span>
+
+<span class="sd">    uses lnx_test_led_simple(), see more info there</span>
+
+<span class="sd">    :param lnx: Linux machine we run on</span>
+
+<span class="sd">    Uses config variables:</span>
+<span class="sd">    leds -- array of dictionary with infos for leds</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        leds = [</span>
+<span class="sd">            {&quot;path&quot;:&quot;/sys/class/leds/led-orange&quot;, &quot;bootval&quot;:&quot;0&quot;, &quot;onval&quot;:&quot;1&quot;},</span>
+<span class="sd">        ]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="n">lnx_test_led_simple</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">leds</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">TC_OKAY</span></div>
+
+<span class="n">lnxtestcases</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;generic_lx_dump_register&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;generic_lnx_network_iperf&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;generic_lnx_network_ping&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;generic_lnx_test_beep&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;generic_lnx_commands&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;generic_lnx_test_dmesg&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;generic_lnx_test_led&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="generic_lnx_all"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_all">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">generic_lnx_all</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    start all configured linux testcases</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">failed</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">success</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">skipped</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">tc</span> <span class="ow">in</span> <span class="n">lnxtestcases</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;start tc </span><span class="si">{</span><span class="n">tc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">tc</span><span class="p">)</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">func</span><span class="p">()</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tc </span><span class="si">{</span><span class="n">tc</span><span class="si">}</span><span class="s2"> return </span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="n">TC_SKIP</span><span class="p">:</span>
+                <span class="n">skipped</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tc</span><span class="p">)</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tc </span><span class="si">{</span><span class="n">tc</span><span class="si">}</span><span class="s2"> skipped&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">success</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tc</span><span class="p">)</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tc </span><span class="si">{</span><span class="n">tc</span><span class="si">}</span><span class="s2"> success&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">failed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tc</span><span class="p">)</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tc </span><span class="si">{</span><span class="n">tc</span><span class="si">}</span><span class="s2"> failed&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+
+    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tc count </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> success </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">success</span><span class="p">)</span><span class="si">}</span><span class="s2"> skipped </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">skipped</span><span class="p">)</span><span class="si">}</span><span class="s2"> failed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">failed</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">skipped</span><span class="p">):</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;skipped </span><span class="si">{</span><span class="n">skipped</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">failed</span><span class="p">):</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;failed </span><span class="si">{</span><span class="n">failed</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">red</span><span class="p">)</span></div>
+
+<span class="c1">##############################################################</span>
+<span class="c1"># kas</span>
+<span class="c1">##############################################################</span>
+<div class="viewcode-block" id="generic_kas_get_config"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_kas_get_config">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">generic_kas_get_config</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">bh</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    return current kas configuration</span>
+
+<span class="sd">    :param lab: Lab Linux machine</span>
+<span class="sd">    :param bh: Build host machine</span>
+<span class="sd">    :return: KAS config</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bh</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BuildHost</span><span class="p">)</span>
+
+        <span class="n">cfg</span><span class="o">.</span><span class="n">kas</span><span class="p">[</span><span class="s2">&quot;labhost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lab</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">kas</span><span class="p">[</span><span class="s2">&quot;buildhost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bh</span>
+
+        <span class="n">kas</span> <span class="o">=</span> <span class="n">KAS</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">kas</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">kas</span></div>
+
+
+<div class="viewcode-block" id="generic_kas_checkout"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_kas_checkout">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">generic_kas_checkout</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">bh</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    checks out all yocto layer we need for our yocto build</span>
+<span class="sd">    with the help of the kas tool.</span>
+
+<span class="sd">    See more in KAS class for configuration.</span>
+
+<span class="sd">    :param lab: Lab Linux machine</span>
+<span class="sd">    :param bh: Build host machine</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;kasskipcheckout&quot;</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="s2">&quot;skip kas checkout step&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">green</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bh</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BuildHost</span><span class="p">)</span>
+
+        <span class="n">cfg</span><span class="o">.</span><span class="n">kas</span><span class="p">[</span><span class="s2">&quot;labhost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lab</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">kas</span><span class="p">[</span><span class="s2">&quot;buildhost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bh</span>
+
+        <span class="n">kas</span> <span class="o">=</span> <span class="n">KAS</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">kas</span><span class="p">)</span>
+        <span class="n">kas</span><span class="o">.</span><span class="n">kas_checkout</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="generic_kas_build"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_kas_build">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">generic_kas_build</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">bh</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    build all targets defined in kas configuration</span>
+
+<span class="sd">    See more in KAS class for configuration.</span>
+
+<span class="sd">    :param lab: Lab Linux machine</span>
+<span class="sd">    :param bh: Build host machine</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bh</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BuildHost</span><span class="p">)</span>
+
+        <span class="n">cfg</span><span class="o">.</span><span class="n">kas</span><span class="p">[</span><span class="s2">&quot;labhost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lab</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">kas</span><span class="p">[</span><span class="s2">&quot;buildhost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bh</span>
+        <span class="n">kas</span> <span class="o">=</span> <span class="n">KAS</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">kas</span><span class="p">)</span>
+
+        <span class="c1"># build all targets</span>
+        <span class="n">kas</span><span class="o">.</span><span class="n">kas_build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="generic_kas_check_build"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_kas_check_build">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">generic_kas_check_build</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">bh</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    check if oe build finished, if all files listed in kas_check_files</span>
+<span class="sd">    exist in deploypath</span>
+
+<span class="sd">    :param lab: Lab Linux machine</span>
+<span class="sd">    :param bh: Build host machine</span>
+
+<span class="sd">    Uses config variables:</span>
+<span class="sd">    kas_check_files    -- array of files which must exist</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        kas_check_files = [</span>
+<span class="sd">           &quot;tmp/deploy/images/${default:machine}/SPL&quot;,</span>
+<span class="sd">           &quot;tmp/deploy/images/${default:machine}/u-boot.img&quot;,</span>
+<span class="sd">           &quot;tmp/deploy/images/${default:machine}/fitImage&quot;,</span>
+<span class="sd">           &quot;tmp/deploy/sdk/${default:sdk_bin}&quot;,</span>
+<span class="sd">           ]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bh</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BuildHost</span><span class="p">)</span>
+
+        <span class="n">cfg</span><span class="o">.</span><span class="n">kas</span><span class="p">[</span><span class="s2">&quot;labhost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lab</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">kas</span><span class="p">[</span><span class="s2">&quot;buildhost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bh</span>
+        <span class="n">kas</span> <span class="o">=</span> <span class="n">KAS</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">kas</span><span class="p">)</span>
+
+        <span class="n">bp</span> <span class="o">=</span> <span class="n">kas</span><span class="o">.</span><span class="n">kas_get_buildpath</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">kas_check_files</span><span class="p">:</span>
+            <span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">&quot;ls&quot;</span><span class="p">,</span> <span class="n">bp</span> <span class="o">/</span> <span class="n">f</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="generic_kas_copy"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_kas_copy">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">generic_kas_copy</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">bh</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">linux</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    simply copy all files listed in kas_results from our build host</span>
+<span class="sd">    to our lab host.</span>
+
+<span class="sd">    :param lab: Lab Linux machine</span>
+<span class="sd">    :param bh: Build host machine</span>
+
+<span class="sd">    Uses config variables:</span>
+<span class="sd">    kas_results -- list of files</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        kas_results = [</span>
+<span class="sd">           &quot;tmp/deploy/images/${default:machine}/SPL&quot;,</span>
+<span class="sd">           &quot;tmp/deploy/images/${default:machine}/u-boot.img&quot;,</span>
+<span class="sd">           &quot;tmp/deploy/images/${default:machine}/fitImage&quot;,</span>
+<span class="sd">        ]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bh</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BuildHost</span><span class="p">)</span>
+
+        <span class="n">cfg</span><span class="o">.</span><span class="n">kas</span><span class="p">[</span><span class="s2">&quot;labhost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lab</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">kas</span><span class="p">[</span><span class="s2">&quot;buildhost&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bh</span>
+        <span class="n">kas</span> <span class="o">=</span> <span class="n">KAS</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">kas</span><span class="p">)</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="n">kas</span><span class="o">.</span><span class="n">kas_copy</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">kas_results</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">path</span></div>
+
+
+<div class="viewcode-block" id="generic_kas_all"><a class="viewcode-back" href="../../../tc.html#tbottest.tc.generic_board.generic_kas_all">[docs]</a><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span> <span class="nf">generic_kas_all</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">bh</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    simply do all build task in one testcase</span>
+
+<span class="sd">    Calls:</span>
+
+<span class="sd">        | generic_kas_checkout(lab, bh)</span>
+<span class="sd">        | generic_kas_build(lab, bh)</span>
+<span class="sd">        | generic_kas_check_build(lab, bh)</span>
+<span class="sd">        | generic_kas_copy(lab, bh)</span>
+
+<span class="sd">    :param lab: Lab Linux machine</span>
+<span class="sd">    :param bh: Build host machine</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bh</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BuildHost</span><span class="p">)</span>
+
+        <span class="n">generic_kas_checkout</span><span class="p">(</span><span class="n">lab</span><span class="p">,</span> <span class="n">bh</span><span class="p">)</span>
+        <span class="n">generic_kas_build</span><span class="p">(</span><span class="n">lab</span><span class="p">,</span> <span class="n">bh</span><span class="p">)</span>
+        <span class="n">generic_kas_check_build</span><span class="p">(</span><span class="n">lab</span><span class="p">,</span> <span class="n">bh</span><span class="p">)</span>
+        <span class="n">generic_kas_copy</span><span class="p">(</span><span class="n">lab</span><span class="p">,</span> <span class="n">bh</span><span class="p">)</span></div>
+
+
+<span class="n">FLAGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;kasskipcheckout&quot;</span><span class="p">:</span> <span class="s2">&quot;skip kas checkout step&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

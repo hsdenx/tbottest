@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.connector &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tbottest.decorators" href="decorators.html" />
+    <link rel="prev" title="tbottest.machineinit" href="machineinit.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.connector.KermitConnector"><code class="docutils literal notranslate"><span class="pre">KermitConnector</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.connector.KermitConnector.kermit_cfg_file"><code class="docutils literal notranslate"><span class="pre">KermitConnector.kermit_cfg_file</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.connector.PicocomConnector"><code class="docutils literal notranslate"><span class="pre">PicocomConnector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.connector.ScriptConnector"><code class="docutils literal notranslate"><span class="pre">ScriptConnector</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/connector.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <span class="target" id="module-tbottest.connector"></span><section id="tbottest-connector">
+<h1><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code><a class="headerlink" href="#tbottest-connector" title="Permalink to this heading">¶</a></h1>
+<p>A module containing various additional connectors:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#tbottest.connector.KermitConnector" title="tbottest.connector.KermitConnector"><code class="xref py py-class docutils literal notranslate"><span class="pre">KermitConnector</span></code></a> - Console on localhost using <a class="reference external" href="http://www.kermitproject.org/">kermit</a>.</p></li>
+<li><p><a class="reference internal" href="#tbottest.connector.PicocomConnector" title="tbottest.connector.PicocomConnector"><code class="xref py py-class docutils literal notranslate"><span class="pre">PicocomConnector</span></code></a> - Console on localhost using <a class="reference external" href="https://github.com/npat-efault/picocom">picocom</a>.</p></li>
+<li><p><a class="reference internal" href="#tbottest.connector.ScriptConnector" title="tbottest.connector.ScriptConnector"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptConnector</span></code></a> - Console on localhost using a script.</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.connector.KermitConnector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.connector.</span></span><span class="sig-name descname"><span class="pre">KermitConnector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mach</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/connector.html#KermitConnector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.connector.KermitConnector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ConsoleConnector</span></code></p>
+<p>Connect to a serial console using kermit</p>
+<p>You can configure the device name using the <code class="docutils literal notranslate"><span class="pre">kermit_cfg_file</span></code> property.</p>
+<p><strong>Example</strong>: (board config)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">board</span>
+<span class="kn">from</span> <span class="nn">tbottest.connector</span> <span class="kn">import</span> <span class="n">KermitConnector</span>
+
+<span class="k">class</span> <span class="nc">MyBoard</span><span class="p">(</span><span class="n">KermitConnector</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">Board</span><span class="p">):</span>
+    <span class="n">kermit_cfg_file</span> <span class="o">=</span> <span class="s2">&quot;path to config file&quot;</span>
+
+<span class="n">BOARD</span> <span class="o">=</span> <span class="n">MyBoard</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mach</strong> (<em>LinuxShell</em>) – A cloneable lab-host machine.  The
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ConsoleConnector</span></code> will try to clone this machine’s
+connection and use that to connect to the board.  This means that
+you have to make sure you give the correct lab-host for your
+respecitive board to the constructor here.</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="tbottest.connector.KermitConnector.kermit_cfg_file">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kermit_cfg_file</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#tbottest.connector.KermitConnector.kermit_cfg_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>kermit config file</p>
+<p>This property is <strong>required</strong>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.connector.PicocomConnector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.connector.</span></span><span class="sig-name descname"><span class="pre">PicocomConnector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mach</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/connector.html#PicocomConnector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.connector.PicocomConnector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ConsoleConnector</span></code></p>
+<p>Connect to a serial console using picocom</p>
+<p><strong>Example</strong>: (board config)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">board</span>
+<span class="kn">from</span> <span class="nn">tbottest.connector</span> <span class="kn">import</span> <span class="n">PicocomConnector</span>
+
+<span class="k">class</span> <span class="nc">MyBoard</span><span class="p">(</span><span class="n">PicocomConnector</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">Board</span><span class="p">):</span>
+    <span class="n">baudrate</span> <span class="o">=</span> <span class="mi">115200</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">serial</span><span class="o">/</span><span class="n">by</span><span class="o">-</span><span class="nb">id</span><span class="o">/</span><span class="n">usb</span><span class="o">-</span><span class="n">Prolific_Technology_Inc</span><span class="o">.</span><span class="n">_USB</span><span class="o">-</span><span class="n">Serial_Controller</span><span class="o">-</span><span class="n">if00</span><span class="o">-</span><span class="n">port0</span>
+    <span class="n">noreset</span>
+
+<span class="n">BOARD</span> <span class="o">=</span> <span class="n">MyBoard</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mach</strong> (<em>LinuxShell</em>) – A cloneable lab-host machine.  The
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ConsoleConnector</span></code> will try to clone this machine’s
+connection and use that to connect to the board.  This means that
+you have to make sure you give the correct lab-host for your
+respecitive board to the constructor here.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.connector.ScriptConnector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.connector.</span></span><span class="sig-name descname"><span class="pre">ScriptConnector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mach</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LinuxShell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/connector.html#ScriptConnector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.connector.ScriptConnector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ConsoleConnector</span></code></p>
+<p>Connect to a serial console using a script</p>
+<p><strong>Example</strong>: (board config)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">board</span>
+<span class="kn">from</span> <span class="nn">tbottest.connector</span> <span class="kn">import</span> <span class="n">PicocomConnector</span>
+
+<span class="k">class</span> <span class="nc">MyBoard</span><span class="p">(</span><span class="n">ScriptConnector</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">Board</span><span class="p">):</span>
+    <span class="n">scriptname</span> <span class="o">=</span> <span class="s2">&quot;connect&quot;</span>
+    <span class="n">exitstring</span> <span class="o">=</span> <span class="o">~~.</span>
+    <span class="n">boardname</span> <span class="o">=</span> <span class="n">wandboard</span>
+
+<span class="n">BOARD</span> <span class="o">=</span> <span class="n">MyBoard</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mach</strong> (<em>LinuxShell</em>) – A cloneable lab-host machine.  The
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ConsoleConnector</span></code> will try to clone this machine’s
+connection and use that to connect to the board.  This means that
+you have to make sure you give the correct lab-host for your
+respecitive board to the constructor here.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="machineinit.html" class="btn btn-neutral float-left" title="tbottest.machineinit" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="decorators.html" class="btn btn-neutral float-right" title="tbottest.decorators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

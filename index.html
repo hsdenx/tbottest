@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<meta content="tbot-test - generic ini file based approach for tbot" name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbot-test Documentation &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Quick Start" href="quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#">
+            
+              <img src="_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">tbot-test Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tbot-test-documentation">
+<h1>tbot-test Documentation<a class="headerlink" href="#tbot-test-documentation" title="Permalink to this heading">¶</a></h1>
+<p>Welcome to <em>tbot-test</em>!</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.common">Common Testcases</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.escape_ansi"><code class="docutils literal notranslate"><span class="pre">escape_ansi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.search_string_in_multiline"><code class="docutils literal notranslate"><span class="pre">search_string_in_multiline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.search_multistring_in_multiline"><code class="docutils literal notranslate"><span class="pre">search_multistring_in_multiline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lx_cmd_exists"><code class="docutils literal notranslate"><span class="pre">lx_cmd_exists()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lx_devmem2_get"><code class="docutils literal notranslate"><span class="pre">lx_devmem2_get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_check_revfile"><code class="docutils literal notranslate"><span class="pre">lnx_check_revfile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_create_revfile"><code class="docutils literal notranslate"><span class="pre">lnx_create_revfile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.generic_machine_dump"><code class="docutils literal notranslate"><span class="pre">generic_machine_dump()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.generic_machine_dump_write"><code class="docutils literal notranslate"><span class="pre">generic_machine_dump_write()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_check_cmd"><code class="docutils literal notranslate"><span class="pre">lnx_check_cmd()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_create_random"><code class="docutils literal notranslate"><span class="pre">lnx_create_random()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_compare_files"><code class="docutils literal notranslate"><span class="pre">lnx_compare_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_get_hwaddr"><code class="docutils literal notranslate"><span class="pre">lnx_get_hwaddr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_get_ipaddr"><code class="docutils literal notranslate"><span class="pre">lnx_get_ipaddr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_start_bin_with_timeout"><code class="docutils literal notranslate"><span class="pre">lnx_start_bin_with_timeout()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_wait_for_ip"><code class="docutils literal notranslate"><span class="pre">lnx_wait_for_ip()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_wait_for_file"><code class="docutils literal notranslate"><span class="pre">lnx_wait_for_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_wait_for_module"><code class="docutils literal notranslate"><span class="pre">lnx_wait_for_module()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_wait_for_process"><code class="docutils literal notranslate"><span class="pre">lnx_wait_for_process()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.board_ub_delete_env"><code class="docutils literal notranslate"><span class="pre">board_ub_delete_env()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.board_ub_delete_emmc"><code class="docutils literal notranslate"><span class="pre">board_ub_delete_emmc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.board_wait_for_device"><code class="docutils literal notranslate"><span class="pre">board_wait_for_device()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.board_set_default"><code class="docutils literal notranslate"><span class="pre">board_set_default()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lab_check_part_exists_and_create"><code class="docutils literal notranslate"><span class="pre">lab_check_part_exists_and_create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.ub_check_i2c_dump"><code class="docutils literal notranslate"><span class="pre">ub_check_i2c_dump()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_check_beeper"><code class="docutils literal notranslate"><span class="pre">lnx_check_beeper()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_check_dmesg"><code class="docutils literal notranslate"><span class="pre">lnx_check_dmesg()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_create_file"><code class="docutils literal notranslate"><span class="pre">lnx_create_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.lnx_install_package"><code class="docutils literal notranslate"><span class="pre">lnx_install_package()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.tbot_copy_file_to_board"><code class="docutils literal notranslate"><span class="pre">tbot_copy_file_to_board()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.tbot_start_script_on_board"><code class="docutils literal notranslate"><span class="pre">tbot_start_script_on_board()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.tbot_start_script_on_lab"><code class="docutils literal notranslate"><span class="pre">tbot_start_script_on_lab()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.tbot_start_thread"><code class="docutils literal notranslate"><span class="pre">tbot_start_thread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.tbot_stop_thread"><code class="docutils literal notranslate"><span class="pre">tbot_stop_thread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common.sudo_subshell"><code class="docutils literal notranslate"><span class="pre">sudo_subshell()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#common-generic-testcases">Common generic Testcases</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.common_generic.get_bit_range"><code class="docutils literal notranslate"><span class="pre">get_bit_range()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.can">CAN Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.can.board_setup_can"><code class="docutils literal notranslate"><span class="pre">board_setup_can()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.can.lnx_can_write_dump_compare"><code class="docutils literal notranslate"><span class="pre">lnx_can_write_dump_compare()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.can.board_lnx_cangen"><code class="docutils literal notranslate"><span class="pre">board_lnx_cangen()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.cpu">CPU Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.cpu.board_lnx_cpufreq"><code class="docutils literal notranslate"><span class="pre">board_lnx_cpufreq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.cpu.generic_get_socname"><code class="docutils literal notranslate"><span class="pre">generic_get_socname()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.generic_board">generic board test</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_lnx_check_dump_files"><code class="docutils literal notranslate"><span class="pre">generic_lnx_check_dump_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_lnx_create_dump_files"><code class="docutils literal notranslate"><span class="pre">generic_lnx_create_dump_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_lx_dump_register"><code class="docutils literal notranslate"><span class="pre">generic_lx_dump_register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_lnx_network_iperf"><code class="docutils literal notranslate"><span class="pre">generic_lnx_network_iperf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_lnx_network_ping"><code class="docutils literal notranslate"><span class="pre">generic_lnx_network_ping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_lnx_test_beep"><code class="docutils literal notranslate"><span class="pre">generic_lnx_test_beep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_lnx_commands"><code class="docutils literal notranslate"><span class="pre">generic_lnx_commands()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_lnx_test_dmesg"><code class="docutils literal notranslate"><span class="pre">generic_lnx_test_dmesg()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_lnx_test_led"><code class="docutils literal notranslate"><span class="pre">generic_lnx_test_led()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_lnx_all"><code class="docutils literal notranslate"><span class="pre">generic_lnx_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_kas_get_config"><code class="docutils literal notranslate"><span class="pre">generic_kas_get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_kas_checkout"><code class="docutils literal notranslate"><span class="pre">generic_kas_checkout()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_kas_build"><code class="docutils literal notranslate"><span class="pre">generic_kas_build()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_kas_check_build"><code class="docutils literal notranslate"><span class="pre">generic_kas_check_build()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_kas_copy"><code class="docutils literal notranslate"><span class="pre">generic_kas_copy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_kas_all"><code class="docutils literal notranslate"><span class="pre">generic_kas_all()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.hab">HAB (imx specific)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.hab.ub_check_hab_state"><code class="docutils literal notranslate"><span class="pre">ub_check_hab_state()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.kas">KAS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.kas.KAS"><code class="docutils literal notranslate"><span class="pre">KAS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.tc.kas.KAS.kas_get_basepath"><code class="docutils literal notranslate"><span class="pre">KAS.kas_get_basepath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.tc.kas.KAS.kas_get_buildpath"><code class="docutils literal notranslate"><span class="pre">KAS.kas_get_buildpath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.tc.kas.KAS.kas_get_deploypath"><code class="docutils literal notranslate"><span class="pre">KAS.kas_get_deploypath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.tc.kas.KAS.kas_checkout"><code class="docutils literal notranslate"><span class="pre">KAS.kas_checkout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.tc.kas.KAS.kas_build"><code class="docutils literal notranslate"><span class="pre">KAS.kas_build()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.tc.kas.KAS.kas_shell"><code class="docutils literal notranslate"><span class="pre">KAS.kas_shell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.tc.kas.KAS.kas_copy"><code class="docutils literal notranslate"><span class="pre">KAS.kas_copy()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.leds">LED</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.leds.lnx_test_led_simple"><code class="docutils literal notranslate"><span class="pre">lnx_test_led_simple()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.mtd">MTD</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.mtd.lnx_mtd_nvram"><code class="docutils literal notranslate"><span class="pre">lnx_mtd_nvram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.mtd.lnx_mtd_nvram_reboot"><code class="docutils literal notranslate"><span class="pre">lnx_mtd_nvram_reboot()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.network">network</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.network.network_linux_iperf"><code class="docutils literal notranslate"><span class="pre">network_linux_iperf()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.process">process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.process.process_get_gnuplot_work_and_configpath"><code class="docutils literal notranslate"><span class="pre">process_get_gnuplot_work_and_configpath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.process.ps_parse_ps"><code class="docutils literal notranslate"><span class="pre">ps_parse_ps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.process.ps_parse_top"><code class="docutils literal notranslate"><span class="pre">ps_parse_top()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.process.lnx_get_process_cpu_usage"><code class="docutils literal notranslate"><span class="pre">lnx_get_process_cpu_usage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.process.lnx_get_cpu_stats"><code class="docutils literal notranslate"><span class="pre">lnx_get_cpu_stats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.process.lnx_measure_process"><code class="docutils literal notranslate"><span class="pre">lnx_measure_process()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.process.is_busybox"><code class="docutils literal notranslate"><span class="pre">is_busybox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.process.lnx_measure_top"><code class="docutils literal notranslate"><span class="pre">lnx_measure_top()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.process.ps_create_measurement_png"><code class="docutils literal notranslate"><span class="pre">ps_create_measurement_png()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.process.top_create_measurement_png"><code class="docutils literal notranslate"><span class="pre">top_create_measurement_png()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.registermap">register map</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.registermap.REGISTERMAP"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.tc.registermap.REGISTERMAP.get_registername_from_dict"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.get_registername_from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.tc.registermap.REGISTERMAP.registername_to_address"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.registername_to_address()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.tc.registermap.REGISTERMAP.register_load_map"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.register_load_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_nxp_search_address"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.registermap_nxp_search_address()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_stm32mp1_search_address"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.registermap_stm32mp1_search_address()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_search_address"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.registermap_search_address()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_dump_register"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.registermap_dump_register()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_dump_register_file"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.registermap_dump_register_file()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.rs485">RS485</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.rs485.board_lnx_rs485"><code class="docutils literal notranslate"><span class="pre">board_lnx_rs485()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.sensors">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.sensors.board_lnx_tempsensors"><code class="docutils literal notranslate"><span class="pre">board_lnx_tempsensors()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#swupdate">SWUpdate</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.swu.board_lnx_check_swu"><code class="docutils literal notranslate"><span class="pre">board_lnx_check_swu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.swu.board_lnx_swu"><code class="docutils literal notranslate"><span class="pre">board_lnx_swu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.swu.swu_swupdate_from_file"><code class="docutils literal notranslate"><span class="pre">swu_swupdate_from_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.systemd">SystemD</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.systemd.systemd_stop_service"><code class="docutils literal notranslate"><span class="pre">systemd_stop_service()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.systemd.systemd_get_log_from_service"><code class="docutils literal notranslate"><span class="pre">systemd_get_log_from_service()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.systemd.systemd_active"><code class="docutils literal notranslate"><span class="pre">systemd_active()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.tpm">TPM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.tpm.board_lnx_tpm2"><code class="docutils literal notranslate"><span class="pre">board_lnx_tpm2()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.common.ubootbuild">U-Boot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.common.ubootbuild.UBBUILDMAN"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_get_uboot_patches"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN.bm_get_uboot_patches()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_apply_uboot_patches"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN.bm_apply_uboot_patches()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_build_prepare"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN.bm_build_prepare()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_build_board"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN.bm_build_board()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_copy_results2lab"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN.bm_copy_results2lab()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.uboot.ub_read_register"><code class="docutils literal notranslate"><span class="pre">ub_read_register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.uboot.board_ub_unit_test"><code class="docutils literal notranslate"><span class="pre">board_ub_unit_test()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tc.html#module-tbottest.tc.yocto">Yocto</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.yocto.check_yocto_build_install_sdk"><code class="docutils literal notranslate"><span class="pre">check_yocto_build_install_sdk()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tc.html#tbottest.tc.yocto.check_yocto_sdk_get_scriptname"><code class="docutils literal notranslate"><span class="pre">check_yocto_sdk_get_scriptname()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="iniconfig.html#helper-functions">helper functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="iniconfig.html#tbottest.initconfig.init_get_config"><code class="docutils literal notranslate"><span class="pre">init_get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="iniconfig.html#tbottest.initconfig.generic_get_boardname"><code class="docutils literal notranslate"><span class="pre">generic_get_boardname()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="iniconfig.html#tbottest.initconfig.copy_file"><code class="docutils literal notranslate"><span class="pre">copy_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="iniconfig.html#tbottest.initconfig.replace_in_file"><code class="docutils literal notranslate"><span class="pre">replace_in_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="iniconfig.html#tbottest.initconfig.find_in_file_and_append"><code class="docutils literal notranslate"><span class="pre">find_in_file_and_append()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="iniconfig.html#tbottest.initconfig.find_in_file_and_delete"><code class="docutils literal notranslate"><span class="pre">find_in_file_and_delete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="iniconfig.html#classes">classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="iniconfig.html#tbottest.initconfig.IniTBotConfig"><code class="docutils literal notranslate"><span class="pre">IniTBotConfig</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="iniconfig.html#tbottest.initconfig.IniConfig"><code class="docutils literal notranslate"><span class="pre">IniConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="iniconfig.html#tbottest.initconfig.IniConfig.get_config"><code class="docutils literal notranslate"><span class="pre">IniConfig.get_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="iniconfig.html#tbottest.initconfig.IniConfig.get_config_int"><code class="docutils literal notranslate"><span class="pre">IniConfig.get_config_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="iniconfig.html#tbottest.initconfig.IniConfig.get_default_config"><code class="docutils literal notranslate"><span class="pre">IniConfig.get_default_config()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="iniconfighelper.html#libhelper-functions">libhelper functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="iniconfighelper.html#tbottest.initconfighelper.inifile_get_tbotfilename"><code class="docutils literal notranslate"><span class="pre">inifile_get_tbotfilename()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="iniconfighelper.html#tbottest.initconfighelper.inifile_get_tbotboardfilename"><code class="docutils literal notranslate"><span class="pre">inifile_get_tbotboardfilename()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="machineinit.html#tbottest.machineinit.DFUUTIL"><code class="docutils literal notranslate"><span class="pre">DFUUTIL</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="machineinit.html#tbottest.machineinit.DFUUTIL.dfuutil_loader_steps"><code class="docutils literal notranslate"><span class="pre">DFUUTIL.dfuutil_loader_steps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="machineinit.html#tbottest.machineinit.DFUUTIL._init_machine"><code class="docutils literal notranslate"><span class="pre">DFUUTIL._init_machine()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="machineinit.html#tbottest.machineinit.UsbSdpLoad"><code class="docutils literal notranslate"><span class="pre">UsbSdpLoad</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="machineinit.html#tbottest.machineinit.UsbSdpLoad.get_imx_usb_loader"><code class="docutils literal notranslate"><span class="pre">UsbSdpLoad.get_imx_usb_loader()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="machineinit.html#tbottest.machineinit.UsbSdpLoad.usb_loader_bins"><code class="docutils literal notranslate"><span class="pre">UsbSdpLoad.usb_loader_bins()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="machineinit.html#tbottest.machineinit.UUULoad"><code class="docutils literal notranslate"><span class="pre">UUULoad</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="machineinit.html#tbottest.machineinit.UUULoad.get_uuu_tool"><code class="docutils literal notranslate"><span class="pre">UUULoad.get_uuu_tool()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="machineinit.html#tbottest.machineinit.UUULoad.uuu_loader_steps"><code class="docutils literal notranslate"><span class="pre">UUULoad.uuu_loader_steps()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="machineinit.html#tbottest.machineinit.LauterbachLoad"><code class="docutils literal notranslate"><span class="pre">LauterbachLoad</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="machineinit.html#tbottest.machineinit.LauterbachLoad.get_trace32_config"><code class="docutils literal notranslate"><span class="pre">LauterbachLoad.get_trace32_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="machineinit.html#tbottest.machineinit.LauterbachLoad.get_trace32_script"><code class="docutils literal notranslate"><span class="pre">LauterbachLoad.get_trace32_script()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="machineinit.html#tbottest.machineinit.XMODEMLoad"><code class="docutils literal notranslate"><span class="pre">XMODEMLoad</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="machineinit.html#tbottest.machineinit.XMODEMLoad.xmodem_loader_steps"><code class="docutils literal notranslate"><span class="pre">XMODEMLoad.xmodem_loader_steps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="machineinit.html#tbottest.machineinit.XMODEMLoad.xmodem_loader_device"><code class="docutils literal notranslate"><span class="pre">XMODEMLoad.xmodem_loader_device()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="connector.html#tbottest.connector.KermitConnector"><code class="docutils literal notranslate"><span class="pre">KermitConnector</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="connector.html#tbottest.connector.KermitConnector.kermit_cfg_file"><code class="docutils literal notranslate"><span class="pre">KermitConnector.kermit_cfg_file</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="connector.html#tbottest.connector.PicocomConnector"><code class="docutils literal notranslate"><span class="pre">PicocomConnector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="connector.html#tbottest.connector.ScriptConnector"><code class="docutils literal notranslate"><span class="pre">ScriptConnector</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="decorators.html#tbottest.decorators.tbot_save_flags"><code class="docutils literal notranslate"><span class="pre">tbot_save_flags()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="powercontrol.html#tbottest.powercontrol.GpiopmControl"><code class="docutils literal notranslate"><span class="pre">GpiopmControl</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="powercontrol.html#tbottest.powercontrol.PowerShellScriptControl"><code class="docutils literal notranslate"><span class="pre">PowerShellScriptControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="powercontrol.html#tbottest.powercontrol.PowerShellScriptControl.shell_script"><code class="docutils literal notranslate"><span class="pre">PowerShellScriptControl.shell_script</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="powercontrol.html#tbottest.powercontrol.SispmControl"><code class="docutils literal notranslate"><span class="pre">SispmControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="powercontrol.html#tbottest.powercontrol.SispmControl.sispmctl_device"><code class="docutils literal notranslate"><span class="pre">SispmControl.sispmctl_device</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="powercontrol.html#tbottest.powercontrol.SispmControl.sispmctl_port"><code class="docutils literal notranslate"><span class="pre">SispmControl.sispmctl_port</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="powercontrol.html#tbottest.powercontrol.TinkerforgeControl"><code class="docutils literal notranslate"><span class="pre">TinkerforgeControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="powercontrol.html#tbottest.powercontrol.TinkerforgeControl.channel"><code class="docutils literal notranslate"><span class="pre">TinkerforgeControl.channel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="powercontrol.html#tbottest.powercontrol.TinkerforgeControl.uid"><code class="docutils literal notranslate"><span class="pre">TinkerforgeControl.uid</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="powercontrol.html#tbottest.powercontrol.TM021Control"><code class="docutils literal notranslate"><span class="pre">TM021Control</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="labgeneric.html">Generic tbot config implementation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardPicocomConnector"><code class="docutils literal notranslate"><span class="pre">boardPicocomConnector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardScriptConnector"><code class="docutils literal notranslate"><span class="pre">boardScriptConnector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardKermitConnector"><code class="docutils literal notranslate"><span class="pre">boardKermitConnector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardSSHConnector"><code class="docutils literal notranslate"><span class="pre">boardSSHConnector</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardSSHConnector.authenticator"><code class="docutils literal notranslate"><span class="pre">boardSSHConnector.authenticator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardGpioControl"><code class="docutils literal notranslate"><span class="pre">boardGpioControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardGpioControl.power_check"><code class="docutils literal notranslate"><span class="pre">boardGpioControl.power_check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardGpioControl.ch"><code class="docutils literal notranslate"><span class="pre">boardGpioControl.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardPowerShellControl"><code class="docutils literal notranslate"><span class="pre">boardPowerShellControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardPowerShellControl.power_check"><code class="docutils literal notranslate"><span class="pre">boardPowerShellControl.power_check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardPowerShellControl.ch"><code class="docutils literal notranslate"><span class="pre">boardPowerShellControl.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardSisControl"><code class="docutils literal notranslate"><span class="pre">boardSisControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardSisControl.power_check"><code class="docutils literal notranslate"><span class="pre">boardSisControl.power_check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardSisControl.ch"><code class="docutils literal notranslate"><span class="pre">boardSisControl.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardTMControl"><code class="docutils literal notranslate"><span class="pre">boardTMControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardTMControl.power_check"><code class="docutils literal notranslate"><span class="pre">boardTMControl.power_check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardTMControl.ch"><code class="docutils literal notranslate"><span class="pre">boardTMControl.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardTFControl"><code class="docutils literal notranslate"><span class="pre">boardTFControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardTFControl.ch"><code class="docutils literal notranslate"><span class="pre">boardTFControl.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.BOARDCTL"><code class="docutils literal notranslate"><span class="pre">BOARDCTL</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlUUU"><code class="docutils literal notranslate"><span class="pre">boardControlUUU</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlUUU.get_uuu_tool"><code class="docutils literal notranslate"><span class="pre">boardControlUUU.get_uuu_tool()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlUUU.uuu_loader_steps"><code class="docutils literal notranslate"><span class="pre">boardControlUUU.uuu_loader_steps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlUUU.ch"><code class="docutils literal notranslate"><span class="pre">boardControlUUU.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlXmodem"><code class="docutils literal notranslate"><span class="pre">boardControlXmodem</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlXmodem.xmodem_loader_device"><code class="docutils literal notranslate"><span class="pre">boardControlXmodem.xmodem_loader_device()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlXmodem.xmodem_loader_steps"><code class="docutils literal notranslate"><span class="pre">boardControlXmodem.xmodem_loader_steps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlXmodem.ch"><code class="docutils literal notranslate"><span class="pre">boardControlXmodem.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlDFUUTIL"><code class="docutils literal notranslate"><span class="pre">boardControlDFUUTIL</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlDFUUTIL.dfuutil_loader_steps"><code class="docutils literal notranslate"><span class="pre">boardControlDFUUTIL.dfuutil_loader_steps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlDFUUTIL.ch"><code class="docutils literal notranslate"><span class="pre">boardControlDFUUTIL.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlLauterbach"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlLauterbach.get_host"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.get_host()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlLauterbach.get_trace32_install_path"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.get_trace32_install_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlLauterbach.get_trace32_cmd"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.get_trace32_cmd()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlLauterbach.get_trace32_config"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.get_trace32_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlLauterbach.get_trace32_script"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.get_trace32_script()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlLauterbach.ch"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlSegger"><code class="docutils literal notranslate"><span class="pre">boardControlSegger</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlSegger.get_host"><code class="docutils literal notranslate"><span class="pre">boardControlSegger.get_host()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlSegger.get_segger_cmds"><code class="docutils literal notranslate"><span class="pre">boardControlSegger.get_segger_cmds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlSegger.ch"><code class="docutils literal notranslate"><span class="pre">boardControlSegger.ch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.BOARDCTRL"><code class="docutils literal notranslate"><span class="pre">BOARDCTRL</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.BOARDCON"><code class="docutils literal notranslate"><span class="pre">BOARDCON</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardControlFull"><code class="docutils literal notranslate"><span class="pre">boardControlFull</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.boardExtPower"><code class="docutils literal notranslate"><span class="pre">boardExtPower</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab"><code class="docutils literal notranslate"><span class="pre">GenericLab</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.ssh_config"><code class="docutils literal notranslate"><span class="pre">GenericLab.ssh_config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.authenticator"><code class="docutils literal notranslate"><span class="pre">GenericLab.authenticator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.tftp_root_path"><code class="docutils literal notranslate"><span class="pre">GenericLab.tftp_root_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.tftp_dir_board"><code class="docutils literal notranslate"><span class="pre">GenericLab.tftp_dir_board()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.workdir"><code class="docutils literal notranslate"><span class="pre">GenericLab.workdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.tmpdir"><code class="docutils literal notranslate"><span class="pre">GenericLab.tmpdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.tmpmntdir"><code class="docutils literal notranslate"><span class="pre">GenericLab.tmpmntdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.nfsbasedir"><code class="docutils literal notranslate"><span class="pre">GenericLab.nfsbasedir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.nfsboardbasedir"><code class="docutils literal notranslate"><span class="pre">GenericLab.nfsboardbasedir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.toolsdir"><code class="docutils literal notranslate"><span class="pre">GenericLab.toolsdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.yocto_result_dir"><code class="docutils literal notranslate"><span class="pre">GenericLab.yocto_result_dir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.toolchains"><code class="docutils literal notranslate"><span class="pre">GenericLab.toolchains</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.lab_set_sd_mux_mode"><code class="docutils literal notranslate"><span class="pre">GenericLab.lab_set_sd_mux_mode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.set_bootmode"><code class="docutils literal notranslate"><span class="pre">GenericLab.set_bootmode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.init"><code class="docutils literal notranslate"><span class="pre">GenericLab.init()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.SSHMachine"><code class="docutils literal notranslate"><span class="pre">SSHMachine</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.SSHMachine.workdir"><code class="docutils literal notranslate"><span class="pre">SSHMachine.workdir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.SSHMachine.init"><code class="docutils literal notranslate"><span class="pre">SSHMachine.init()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.LocalHostTest"><code class="docutils literal notranslate"><span class="pre">LocalHostTest</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.LocalHostTest.workdir"><code class="docutils literal notranslate"><span class="pre">LocalHostTest.workdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.LocalHostTest.sourcedir"><code class="docutils literal notranslate"><span class="pre">LocalHostTest.sourcedir()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="boardspecific.html#module-tbottest.tbotconfig.boardspecific">boardspecific setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_lab_serverip"><code class="docutils literal notranslate"><span class="pre">BOARDNAME_get_lab_serverip()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_board_ipaddr"><code class="docutils literal notranslate"><span class="pre">BOARDNAME_get_board_ipaddr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="boardspecific.html#tbottest.tbotconfig.boardspecific.board_set_boardname"><code class="docutils literal notranslate"><span class="pre">board_set_boardname()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_rootfsname"><code class="docutils literal notranslate"><span class="pre">BOARDNAME_get_rootfsname()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_machinename"><code class="docutils literal notranslate"><span class="pre">BOARDNAME_get_machinename()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="boardspecific.html#tbottest.tbotconfig.boardspecific.set_ub_board_specific"><code class="docutils literal notranslate"><span class="pre">set_ub_board_specific()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="boardspecific.html#tbottest.tbotconfig.boardspecific.set_board_cfg"><code class="docutils literal notranslate"><span class="pre">set_board_cfg()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quick Start" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

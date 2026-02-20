@@ -1,0 +1,2269 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.generic &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tbottest.boardlocking" href="boardlocking.html" />
+    <link rel="prev" title="Quick Start" href="quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements-for-lab-host">requirements for lab host</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#supported-hardware-tools">supported hardware/tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration">configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#start-script">start script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbotconfig">tbotconfig</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#readme">README</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#file-directory-overview">file/directory overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbot-ini-file-tbot-ini">tbot ini file (tbot.ini)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#boardspecfic-runtime-adaptions">boardspecfic runtime adaptions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#set-board-cfg-temp-str-none-filename-str-none">set_board_cfg(temp: str = None, filename: str = None)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#board-set-boardname">board_set_boardname</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#set-ub-board-specific">set_ub_board_specific</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#tbot-ini-sections">tbot.ini sections</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#labhost">[LABHOST]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buildhost">[BUILDHOST]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bootmode-boardname">[BOOTMODE_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#picocom-boardname">[PICOCOM_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kermit-boardname">[KERMIT_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#scriptcom-boardname">[SCRIPTCOM_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gpiopmctrl-boardname">[GPIOPMCTRL_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#powershellscript-boardname">[POWERSHELLSCRIPT_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sispmctrl-boardname">[SISPMCTRL_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tm021-boardname">[TM021_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tf-boardname">[TF_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ethernet-config">ethernet config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setup-for-dfu-util-tool">setup for dfu-util tool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setup-for-uuu-tool">setup for uuu tool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setup-for-sb-tool">setup for sb tool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setup-for-lauterbacher-debugger">setup for Lauterbacher debugger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setup-for-segger-debugger">setup for Segger debugger</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#boardconfiguration-file">boardconfiguration file</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#common-settings">common settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#u-boot-settings">u-boot settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#linux-settings">linux settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swupdate-settings">swupdate settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kas-settings">kas settings</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#argumentfiles">argumentfiles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#argumentfile-for-ssh-login">Argumentfile for ssh login</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbot-flags">tbot flags</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/generic.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <span class="target" id="module-tbottest.generic"></span><section id="tbottest-generic">
+<h1><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code><a class="headerlink" href="#tbottest-generic" title="Permalink to this heading">¶</a></h1>
+<p>This is an example approach for a hopefully easy to use lab and board support.</p>
+<p>Therefore we use ini file based configuration, based on</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/configparser.html">https://docs.python.org/3/library/configparser.html</a></p>
+<p>with all its limitiations.</p>
+<p>But it showed, that for a first use of tbot, it is easier to explain
+to edit a tbot.ini file and start!</p>
+<section id="requirements-for-lab-host">
+<span id="requirementslabhost"></span><h2>requirements for lab host<a class="headerlink" href="#requirements-for-lab-host" title="Permalink to this heading">¶</a></h2>
+<p>sudo command should work without entering a password (or add support for this
+in tbot!)</p>
+<p>You should be able to ssh between lab host, build host and board
+without entering a password or something else!</p>
+</section>
+<section id="supported-hardware-tools">
+<h2>supported hardware/tools<a class="headerlink" href="#supported-hardware-tools" title="Permalink to this heading">¶</a></h2>
+<p>serial console access with:</p>
+<ul class="simple">
+<li><p>piccom</p></li>
+<li><p>kermit</p></li>
+</ul>
+<p>Powercontrol:</p>
+<ul class="simple">
+<li><p>sispmctl</p></li>
+<li><p>TinkerForge</p></li>
+<li><p>simple GPIO</p></li>
+</ul>
+<p>It should be easy to extend this! tbot does not prevent you to use
+other hardware (nor to make stupid stuff)!</p>
+</section>
+<section id="configuration">
+<span id="genericconfiguration"></span><h2>configuration<a class="headerlink" href="#configuration" title="Permalink to this heading">¶</a></h2>
+<p>Best, use the following directory structure:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tree<span class="w"> </span>.
+tbotconfig
+tbot<span class="w"> </span><span class="o">(</span>checkout<span class="w"> </span>from<span class="w"> </span>https://github.com/Rahix/tbot<span class="o">)</span>
+tbottest<span class="w"> </span><span class="o">(</span>this<span class="w"> </span>repo,<span class="w"> </span>checkout<span class="w"> </span>from<span class="w"> </span>github<span class="o">)</span>
+</pre></div>
+</div>
+<p>Create for your tbot configuration and own testcases your own repo
+<strong>tbotconfig</strong> and use the following directory structure there:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tree<span class="w"> </span>-I<span class="w"> </span>log*
+newtbot_starter.py
+tbotconfig
+└──<span class="w"> </span>BOARDNAME
+<span class="w">    </span>├──<span class="w"> </span>args
+<span class="w">    </span>│<span class="w">   </span>├──<span class="w"> </span>argsbase<span class="w"> </span><span class="o">(</span>from<span class="w"> </span>tbottest/tbotconfig/BOARDNAME/args/argsbase,<span class="w"> </span>replace<span class="w"> </span>BOARDNAME<span class="w"> </span>with<span class="w"> </span>real<span class="w"> </span>name<span class="o">)</span>
+<span class="w">    </span>│<span class="w">   </span>├──<span class="w"> </span>argsBOARDNAME
+<span class="w">    </span>│<span class="w">   </span>└──<span class="w"> </span><span class="o">[</span>...<span class="o">]</span>
+<span class="w">    </span>├──<span class="w"> </span>boardspecific.py
+<span class="w">    </span>├──<span class="w"> </span>README.BOARDNAME
+<span class="w">    </span>├──<span class="w"> </span>tbot.ini
+<span class="w">    </span>├──<span class="w"> </span>BOARDNAME.ini
+</pre></div>
+</div>
+<p>see example in tbottest/tbotconfig.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can simply use the script <strong>create_setup.sh</strong> in scripts, which
+will create all files and directories. Start it with the option “–inter”
+and you get asked some questions, which help to make a better basic setup.</p>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./scripts/create_setup.sh<span class="w"> </span>--inter
+</pre></div>
+</div>
+<section id="start-script">
+<h3>start script<a class="headerlink" href="#start-script" title="Permalink to this heading">¶</a></h3>
+<p>with the newbot_starter.py script you can start tbot and your setup
+without the need to install tbot and tbottest.</p>
+</section>
+<section id="tbotconfig">
+<h3>tbotconfig<a class="headerlink" href="#tbotconfig" title="Permalink to this heading">¶</a></h3>
+<p>contains the whole lab and board configuration.</p>
+</section>
+<section id="readme">
+<h3>README<a class="headerlink" href="#readme" title="Permalink to this heading">¶</a></h3>
+<p>README.BOARDNAME is not mandatory, but it is helpfull to collect/document at least some tbot usecases/commands.</p>
+</section>
+<section id="file-directory-overview">
+<h3>file/directory overview<a class="headerlink" href="#file-directory-overview" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">subdirectories</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>content</p></th>
+<th class="head"><p>fastlink to documentation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>args</p></td>
+<td><p>contains tbot arguments files, for easier usage</p></td>
+<td><p><a class="reference internal" href="#argumentfiles">argumentfiles</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>tbot.ini</p></td>
+<td><p>init file for easy configuration</p></td>
+<td><p><a class="reference internal" href="#tbot-ini-file-tbot-ini">tbot ini file (tbot.ini)</a></p></td>
+</tr>
+<tr class="row-even"><td><p>BOARDNAME.ini</p></td>
+<td><p>init file with boardspecific onfigs for generic testcases</p></td>
+<td><p>boardconfiguration file</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tbot-ini-file-tbot-ini">
+<h3>tbot ini file (tbot.ini)<a class="headerlink" href="#tbot-ini-file-tbot-ini" title="Permalink to this heading">¶</a></h3>
+<p>we use for configuring lab and board settings with:</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/configparser.html">https://docs.python.org/3/library/configparser.html</a></p>
+<p>Find an example file here: tbottest:/tbottest/tbotconfig/BOARDNAME/tbot.ini</p>
+</section>
+<section id="boardspecfic-runtime-adaptions">
+<span id="boardspecificruntimeadaption"></span><h3>boardspecfic runtime adaptions<a class="headerlink" href="#boardspecfic-runtime-adaptions" title="Permalink to this heading">¶</a></h3>
+<p>The ini file approach is static, which means we cannot change
+configuration &#64;runtime. This generic approach searches in <strong>tbotconfig</strong>
+for a <strong>boardspecific.py</strong> file, which can contains several
+functions, the generic approach tries to call.</p>
+<p>In this functions you can adapt settings dependend on the usecase.
+Or may do special stuff in machine shells.</p>
+<p>In the default ini files there are placeholders beginning with <strong>&#64;&#64;</strong>
+and ending with <strong>&#64;&#64;</strong>. You can easily replace them with
+<a class="reference internal" href="iniconfig.html#iniconfighelperfunctions"><span class="std std-ref">helper functions</span></a>.</p>
+<p>Therefore the following functions are used:</p>
+<section id="set-board-cfg-temp-str-none-filename-str-none">
+<h4>set_board_cfg(temp: str = None, filename: str = None)<a class="headerlink" href="#set-board-cfg-temp-str-none-filename-str-none" title="Permalink to this heading">¶</a></h4>
+<p>This file is called early in bootup before any ini file
+is parsed. So you can adapt the ini files for your needs</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tbot</span>
+<span class="kn">from</span> <span class="nn">tbottest.generic.iniconfig</span> <span class="kn">import</span> <span class="n">replace_in_file</span>
+
+<span class="n">tbot</span><span class="o">.</span><span class="n">selectable</span><span class="o">.</span><span class="n">printed</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">def</span> <span class="nf">print_log</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+     <span class="k">if</span> <span class="n">tbot</span><span class="o">.</span><span class="n">selectable</span><span class="o">.</span><span class="n">printed</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">set_board_cfg</span><span class="p">(</span><span class="n">temp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    setup board specific stuff in ini files before they get parsed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># print tbot.flags, as tbot prints them not longer</span>
+    <span class="n">print_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TBOT.FLAGS </span><span class="si">{</span><span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@TBOTBOARD@@&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;boardname in your lab setup&gt;&quot;</span><span class="p">)</span>
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@TBOTDATE@@&quot;</span><span class="p">,</span> <span class="s2">&quot;20230221&quot;</span><span class="p">)</span>
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;@@TBOTMACHINE@@&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;yocto machine name&gt;&quot;</span><span class="p">)</span>
+
+    <span class="n">tbot</span><span class="o">.</span><span class="n">selectable</span><span class="o">.</span><span class="n">boardname</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;selectableboardname&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">selectable</span><span class="o">.</span><span class="n">boardname</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">tbot</span><span class="o">.</span><span class="n">selectable</span><span class="o">.</span><span class="n">boardname</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">selectable</span><span class="o">.</span><span class="n">boardname</span> <span class="o">=</span> <span class="s2">&quot;wandboard&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="board-set-boardname">
+<h4>board_set_boardname<a class="headerlink" href="#board-set-boardname" title="Permalink to this heading">¶</a></h4>
+<p>called from initconfig.py generic_get_boardname()</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tbot</span>
+
+
+<span class="k">def</span> <span class="nf">board_set_boardname</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="c1"># do not use selectableboardname flag</span>
+    <span class="n">BOARDNAME</span> <span class="o">=</span> <span class="s2">&quot;foo&quot;</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;8G&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">BOARDNAME</span> <span class="o">=</span> <span class="s2">&quot;foo-8G&quot;</span>
+
+    <span class="k">return</span> <span class="n">BOARDNAME</span>
+</pre></div>
+</div>
+</section>
+<section id="set-ub-board-specific">
+<h4>set_ub_board_specific<a class="headerlink" href="#set-ub-board-specific" title="Permalink to this heading">¶</a></h4>
+<p>called from boardgeneric.py in init function.</p>
+<p>setup U-Boot specific parts after entering the U-Boot shell</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">set_ub_board_specific</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">optargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;optargs&quot;</span><span class="p">)</span>
+    <span class="n">optupd</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="s2">&quot;bootchartd&quot;</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+        <span class="n">optargs</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">optargs</span><span class="si">}</span><span class="s2"> init=/lib/systemd/systemd-bootchart&quot;</span>
+        <span class="n">optupd</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="s2">&quot;debug_initcalls&quot;</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+        <span class="n">optargs</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">optargs</span><span class="si">}</span><span class="s2"> initcall_debug&quot;</span>
+        <span class="n">optupd</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="n">optupd</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;optargs&quot;</span><span class="p">,</span> <span class="n">optargs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;silent&quot;</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">&quot;console&quot;</span><span class="p">,</span> <span class="s2">&quot;silent&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Currently there are the following sections in tbot.ini:</p>
+</section>
+</section>
+<section id="tbot-ini-sections">
+<h3>tbot.ini sections<a class="headerlink" href="#tbot-ini-sections" title="Permalink to this heading">¶</a></h3>
+<section id="labhost">
+<h4>[LABHOST]<a class="headerlink" href="#labhost" title="Permalink to this heading">¶</a></h4>
+<p>here you configure common lab host setting. Mandatory.</p>
+<p>You can select between ssh key login or password login
+into the lab host.</p>
+<p>For login with ssh key set key ‘sshkeyfile’, for password login set key ‘password’.</p>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">[LABHOST]</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>labname</p></td>
+<td><p>name of your lab</p></td>
+<td><p>lab7</p></td>
+</tr>
+<tr class="row-odd"><td><p>hostname</p></td>
+<td><p>hostname of lab host</p></td>
+<td><p>192.168.1.123</p></td>
+</tr>
+<tr class="row-even"><td><p>username</p></td>
+<td><p>username on lab host</p></td>
+<td><p>pi</p></td>
+</tr>
+<tr class="row-odd"><td><p>port</p></td>
+<td><p>ssh port number</p></td>
+<td><p>22</p></td>
+</tr>
+<tr class="row-even"><td><p>sshkeyfile</p></td>
+<td><p>path to the ssh keyfile, tbot uses</p></td>
+<td><p>/home/USERNAME/.ssh/id_rsa</p></td>
+</tr>
+<tr class="row-odd"><td><p>password</p></td>
+<td><p>set password to login into lab host</p></td>
+<td><p>FooBar</p></td>
+</tr>
+<tr class="row-even"><td><p>date</p></td>
+<td><p>subdirectory in boards tftp path</p></td>
+<td><p>20210803-ml</p></td>
+</tr>
+<tr class="row-odd"><td><p>shelltype</p></td>
+<td><p>type of the linux shell (bash|ash)</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>toolsdir</p></td>
+<td><p>where does tbot find tools installed on lab host</p></td>
+<td><p>/home/USERNAME/source</p></td>
+</tr>
+<tr class="row-odd"><td><p>tftproot</p></td>
+<td><p>rootpath to tftp directory on lab host. tbot stores there build results.</p></td>
+<td><p>/srv/tftpboot</p></td>
+</tr>
+<tr class="row-even"><td><p>tftpsubdir</p></td>
+<td><p>boards subdir in tftproot</p></td>
+<td><p>BOARD/DATE</p></td>
+</tr>
+<tr class="row-odd"><td><p>workdir</p></td>
+<td><p>tbots workdirectory on lab host</p></td>
+<td><p>/work/USERNAME/tbot-workdir/BOARD</p></td>
+</tr>
+<tr class="row-even"><td><p>tmpdir</p></td>
+<td><p>path to where tbot stores temporary data</p></td>
+<td><p>/tmp/tbot/USERNAME/BOARD</p></td>
+</tr>
+<tr class="row-odd"><td><p>proxyjump</p></td>
+<td><p>if set, proxyjump settings for ssh login on lab host</p></td>
+<td><p><a class="reference external" href="mailto:pi&#37;&#52;&#48;xeidos&#46;ddns&#46;net">pi<span>&#64;</span>xeidos<span>&#46;</span>ddns<span>&#46;</span>net</a></p></td>
+</tr>
+<tr class="row-even"><td><p>labinit</p></td>
+<td><p>array of strings which contains commands, executed when you init the lab</p></td>
+<td><p>[‘sudo systemctl –all –no-pager restart tftpd-hpa’]</p></td>
+</tr>
+<tr class="row-odd"><td><p>nfs_base_path</p></td>
+<td><p>base path to nfs share on lab host. !! May you have board specific subdir, so use placeholder &#64;&#64;TBOTLABBASENFSPATH&#64;&#64; in board ini file and replace it in set_board_cfg</p></td>
+<td><p>/srv/nfs</p></td>
+</tr>
+<tr class="row-even"><td><p>uselocking</p></td>
+<td><p>use board locking mechanism. You must pass correct locking id for the board with tbot flag lablocking:&lt;lockingid&gt; else tbot will fail.</p></td>
+<td><p>yes|no</p></td>
+</tr>
+</tbody>
+</table>
+<p>The above labhost defintion is the default one, You can add more than
+one labhost, simply add them with the following section naming</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[LABHOST_&lt;NAME_OF_LAB&gt;]</span>
+</pre></div>
+</div>
+<p>You can now select this lab by adding tbot flag</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-f<span class="w"> </span>labname:&lt;NAME_OF_LAB&gt;
+</pre></div>
+</div>
+<p>on start of tbot.</p>
+</section>
+<section id="buildhost">
+<h4>[BUILDHOST]<a class="headerlink" href="#buildhost" title="Permalink to this heading">¶</a></h4>
+<p>here you configure common build host setting. Only used, if you use a buildhost.</p>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">[BUILDHOST]</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>name</p></td>
+<td><p>name of your build host</p></td>
+<td><p>threadripper-big-build</p></td>
+</tr>
+<tr class="row-odd"><td><p>username</p></td>
+<td><p>username on your build host</p></td>
+<td><p>hs</p></td>
+</tr>
+<tr class="row-even"><td><p>hostname</p></td>
+<td><p>hostname of your build machine</p></td>
+<td><p>192.168.1.120</p></td>
+</tr>
+<tr class="row-odd"><td><p>port</p></td>
+<td><p>portnumber of your build machine</p></td>
+<td><p>12004</p></td>
+</tr>
+<tr class="row-even"><td><p>docker</p></td>
+<td><p>porxy jump configuration</p></td>
+<td><p><a class="reference external" href="mailto:hs&#37;&#52;&#48;192&#46;168&#46;1&#46;120">hs<span>&#64;</span>192<span>&#46;</span>168<span>&#46;</span>1<span>&#46;</span>120</a>:22</p></td>
+</tr>
+<tr class="row-odd"><td><p>dl_dir</p></td>
+<td><p>for yocto builds, sets DL_DIR</p></td>
+<td><p>/work/downloads</p></td>
+</tr>
+<tr class="row-even"><td><p>sstate_dir</p></td>
+<td><p>for yocto builds, set SSTATE_DIR</p></td>
+<td><p>/work2/hs/tbot2go/yocto-sstate</p></td>
+</tr>
+<tr class="row-odd"><td><p>kas_ref_dir</p></td>
+<td><p>when using kas, path where kas finds git trees for reference cloning</p></td>
+<td><p>/work/hs/src</p></td>
+</tr>
+<tr class="row-even"><td><p>workdir</p></td>
+<td><p>path to directory where tbot can work on</p></td>
+<td><p>/work/big/hs/tbot2go</p></td>
+</tr>
+<tr class="row-odd"><td><p>authenticator</p></td>
+<td><p>path to ssh id key file</p></td>
+<td><p>/home/hs/.ssh/id_rsa</p></td>
+</tr>
+<tr class="row-even"><td><p>password</p></td>
+<td><p>password for ssh login. Unsure!</p></td>
+<td><p>CrazyPassword</p></td>
+</tr>
+<tr class="row-odd"><td><p>initcmd</p></td>
+<td><p>list of commands executed after login</p></td>
+<td><p>[“uname -a”, “cat /etc/os-release”]</p></td>
+</tr>
+</tbody>
+</table>
+<p>If you do not add <strong>authenticator</strong> or <strong>password</strong>, tbot uses
+<strong>NoneAuthenticator</strong> for ssh login. Hopefully than your ssh config
+is correct.</p>
+<p>The above buidlhost defintion is the default one, You can add more than
+one buildhost, simply add them with the following section naming</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[BUILDHOST_&lt;NAME_OF_BUILDER&gt;]</span>
+</pre></div>
+</div>
+<p>You can now select this builder by adding tbot flag</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-f<span class="w"> </span>buildname:&lt;NAME_OF_BUILDER&gt;
+</pre></div>
+</div>
+<p>on start of tbot.</p>
+<p>The next sections depend on your board configuration</p>
+</section>
+<section id="bootmode-boardname">
+<h4>[BOOTMODE_BOARDNAME]<a class="headerlink" href="#bootmode-boardname" title="Permalink to this heading">¶</a></h4>
+<p>if you need to set a bootmode for your board, you can add this section.</p>
+<p>You can give each bootmode a name and if you pass this name
+to tbot with the “-f” flag, the lab approach first
+sets all gpios you have defined for this bootmode to the
+respective states, before it powers on the board.</p>
+<p>Find more information in</p>
+<p><a class="reference internal" href="labgeneric.html#tbottest.labgeneric.GenericLab.set_bootmode" title="tbottest.labgeneric.GenericLab.set_bootmode"><code class="xref py py-meth docutils literal notranslate"><span class="pre">tbottest.labgeneric.GenericLab.set_bootmode()</span></code></a></p>
+</section>
+<section id="picocom-boardname">
+<h4>[PICOCOM_BOARDNAME]<a class="headerlink" href="#picocom-boardname" title="Permalink to this heading">¶</a></h4>
+<p>if you want to use picocom for connecting to your boards console.</p>
+<p><a class="reference internal" href="connector.html#tbottest.connector.PicocomConnector" title="tbottest.connector.PicocomConnector"><code class="xref py py-meth docutils literal notranslate"><span class="pre">tbottest.connector.PicocomConnector()</span></code></a></p>
+<p>replace BOARDNAME with the name of your board!
+Here as example wandboard.</p>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">[PICOCOM_wandboard]</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>baudrate</p></td>
+<td><p>baudrate of the boards console</p></td>
+<td><p>115200</p></td>
+</tr>
+<tr class="row-odd"><td><p>device</p></td>
+<td><p>linux device name for the serial device on lab host</p></td>
+<td><p>/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller-if00-port0</p></td>
+</tr>
+<tr class="row-even"><td><p>delay</p></td>
+<td><p>delay for power off</p></td>
+<td><p>3</p></td>
+</tr>
+<tr class="row-odd"><td><p>noreset</p></td>
+<td><p>set picocom noreset parameter</p></td>
+<td><p>True</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="kermit-boardname">
+<h4>[KERMIT_BOARDNAME]<a class="headerlink" href="#kermit-boardname" title="Permalink to this heading">¶</a></h4>
+<p>if you want to use kermit for connecting to your boards console</p>
+<p><a class="reference internal" href="connector.html#tbottest.connector.KermitConnector" title="tbottest.connector.KermitConnector"><code class="xref py py-meth docutils literal notranslate"><span class="pre">tbottest.connector.KermitConnector()</span></code></a></p>
+<p>replace BOARDNAME with the name of your board!
+Here as example wandboard.</p>
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text">[KERMIT_wandboard]</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>cfgfile</p></td>
+<td><p>path to kermit config file, which is passed to kermit when starting</p></td>
+<td><p>/home/pi/kermrc_wandboard</p></td>
+</tr>
+<tr class="row-odd"><td><p>delay</p></td>
+<td><p>delay for poweroff</p></td>
+<td><p>3</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="scriptcom-boardname">
+<h4>[SCRIPTCOM_BOARDNAME]<a class="headerlink" href="#scriptcom-boardname" title="Permalink to this heading">¶</a></h4>
+<p>if you want to use a script for connecting to your boards console.</p>
+<p><a class="reference internal" href="connector.html#tbottest.connector.ScriptConnector" title="tbottest.connector.ScriptConnector"><code class="xref py py-meth docutils literal notranslate"><span class="pre">tbottest.connector.ScriptConnector()</span></code></a></p>
+<p>replace BOARDNAME with the name of your board!
+Here as example wandboard.</p>
+<table class="docutils align-default" id="id6">
+<caption><span class="caption-text">[SCRIPTCOM_wandboard]</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>scriptname</p></td>
+<td><p>Name of the script</p></td>
+<td><p>connect</p></td>
+</tr>
+<tr class="row-odd"><td><p>exitstring</p></td>
+<td><p>string send to exit</p></td>
+<td><p>~~.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="gpiopmctrl-boardname">
+<h4>[GPIOPMCTRL_BOARDNAME]<a class="headerlink" href="#gpiopmctrl-boardname" title="Permalink to this heading">¶</a></h4>
+<p>If you want to control boards power with gpio pins</p>
+<p>replace BOARDNAME with the name of your board!
+Here as example wandboard.</p>
+<table class="docutils align-default" id="id7">
+<caption><span class="caption-text">[GPIOPMCTRL_wandboard]</span><a class="headerlink" href="#id7" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>pin</p></td>
+<td><p>pin number of gpio pin</p></td>
+<td><p>17</p></td>
+</tr>
+<tr class="row-odd"><td><p>state</p></td>
+<td><p>on state</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="powershellscript-boardname">
+<h4>[POWERSHELLSCRIPT_BOARDNAME]<a class="headerlink" href="#powershellscript-boardname" title="Permalink to this heading">¶</a></h4>
+<p>If you want to control boards power with a shell script</p>
+<p><a class="reference internal" href="powercontrol.html#tbottest.powercontrol.PowerShellScriptControl" title="tbottest.powercontrol.PowerShellScriptControl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">tbottest.powercontrol.PowerShellScriptControl()</span></code></a></p>
+<p>replace BOARDNAME with the name of your board!
+Here as example wandboard.</p>
+<table class="docutils align-default" id="id8">
+<caption><span class="caption-text">[POWERSHELLSCRIPT_wandboard]</span><a class="headerlink" href="#id8" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>script</p></td>
+<td><p>Name of shell script used to control board power</p></td>
+<td><p>/tmp/power.sh</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="sispmctrl-boardname">
+<h4>[SISPMCTRL_BOARDNAME]<a class="headerlink" href="#sispmctrl-boardname" title="Permalink to this heading">¶</a></h4>
+<p>If you want to control boards power with sispmctl</p>
+<p><a class="reference internal" href="powercontrol.html#tbottest.powercontrol.SispmControl" title="tbottest.powercontrol.SispmControl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">tbottest.powercontrol.SispmControl()</span></code></a></p>
+<p>replace BOARDNAME with the name of your board!
+Here as example wandboard.</p>
+<table class="docutils align-default" id="id9">
+<caption><span class="caption-text">[SISPMCTRL_wandboard]</span><a class="headerlink" href="#id9" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>device</p></td>
+<td><p>id of sispmctl device</p></td>
+<td><p>01:01:4f:d4:b1</p></td>
+</tr>
+<tr class="row-odd"><td><p>port</p></td>
+<td><p>sispmctl port used for the boards power</p></td>
+<td><p>3</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tm021-boardname">
+<h4>[TM021_BOARDNAME]<a class="headerlink" href="#tm021-boardname" title="Permalink to this heading">¶</a></h4>
+<p>Set this section, If you want to control boards power with DH electronics
+“TM-021 4-fach Relaismodul”.</p>
+<p><a class="reference internal" href="powercontrol.html#tbottest.powercontrol.TM021Control" title="tbottest.powercontrol.TM021Control"><code class="xref py py-meth docutils literal notranslate"><span class="pre">tbottest.powercontrol.TM021Control()</span></code></a></p>
+<p>replace BOARDNAME with the name of your board!
+Here as example wandboard.</p>
+<table class="docutils align-default" id="id10">
+<caption><span class="caption-text">[TM021_wandboard]</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>device</p></td>
+<td><p>device node of used linux device</p></td>
+<td><p>/dev/relais</p></td>
+</tr>
+<tr class="row-odd"><td><p>baudrate</p></td>
+<td><p>baudrate for the linux device</p></td>
+<td><p>500000</p></td>
+</tr>
+<tr class="row-even"><td><p>timeout</p></td>
+<td><p>timeout in seconds for one command</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-odd"><td><p>address</p></td>
+<td><p>address of the relais</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>port</p></td>
+<td><p>port of the relais</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>debug</p></td>
+<td><p>if you want to have debug traces set this to True</p></td>
+<td><p>False</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tf-boardname">
+<h4>[TF_BOARDNAME]<a class="headerlink" href="#tf-boardname" title="Permalink to this heading">¶</a></h4>
+<p>If you want to control boards power with tinkerforge</p>
+<p><a class="reference internal" href="powercontrol.html#tbottest.powercontrol.TinkerforgeControl" title="tbottest.powercontrol.TinkerforgeControl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">tbottest.powercontrol.TinkerforgeControl()</span></code></a></p>
+<p>replace BOARDNAME with the name of your board!
+Here as example wandboard.</p>
+<table class="docutils align-default" id="id11">
+<caption><span class="caption-text">[TF_wandboard]</span><a class="headerlink" href="#id11" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>uid</p></td>
+<td><p>tinkerforges uid</p></td>
+<td><p>Nt2</p></td>
+</tr>
+<tr class="row-odd"><td><p>channel</p></td>
+<td><p>channel</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ethernet-config">
+<h4>ethernet config<a class="headerlink" href="#ethernet-config" title="Permalink to this heading">¶</a></h4>
+<p>ipsetup for an ethernetdevice on board, add section</p>
+<section id="ipsetup-boardname-ethdevice-board">
+<h5>[IPSETUP_BOARDNAME_&lt;ethdevice_board&gt;]<a class="headerlink" href="#ipsetup-boardname-ethdevice-board" title="Permalink to this heading">¶</a></h5>
+<p>replace BOARDNAME with the name of your board!
+Here as example for setup eth0 on wandboard.</p>
+<table class="docutils align-default" id="id12">
+<caption><span class="caption-text">[IPSETUP_wandboard_eth0]</span><a class="headerlink" href="#id12" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>labdevice</p></td>
+<td><p>device which is connected to eth0 on board</p></td>
+<td><p>eth0</p></td>
+</tr>
+<tr class="row-odd"><td><p>netmask</p></td>
+<td><p>netmask</p></td>
+<td><p>255.255.255.0</p></td>
+</tr>
+<tr class="row-even"><td><p>ethaddr</p></td>
+<td><p>ethaddr (MAC) of the device on board</p></td>
+<td><p>00:1f:7b:b2:00:0e</p></td>
+</tr>
+<tr class="row-odd"><td><p>ipaddr</p></td>
+<td><p>ipaddr of the board for device on board</p></td>
+<td><p>192.168.3.21</p></td>
+</tr>
+<tr class="row-even"><td><p>serverip</p></td>
+<td><p>server ip, ip address of lab host</p></td>
+<td><p>192.168.3.1</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ubcfg-boardname">
+<h5>[UBCFG_BOARDNAME]<a class="headerlink" href="#ubcfg-boardname" title="Permalink to this heading">¶</a></h5>
+<p>if you need to specifiy in U-Boot which lab host ethernetinterface is should use, define
+this section.</p>
+<p>replace BOARDNAME with the name of your board!
+Here as example for setup eth0 on wandboard.</p>
+<table class="docutils align-default" id="id13">
+<caption><span class="caption-text">[UBCFG__wandboard]</span><a class="headerlink" href="#id13" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ethintf</p></td>
+<td><p>ethernetinterface used on lab host for u-boot, default is eth0</p></td>
+<td><p>eth0</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="setup-for-dfu-util-tool">
+<h4>setup for dfu-util tool<a class="headerlink" href="#setup-for-dfu-util-tool" title="Permalink to this heading">¶</a></h4>
+<p>if you need to load U-Boot binaries with dfu-util tool, use</p>
+<p><a class="reference internal" href="machineinit.html#tbottest.machineinit.DFUUTIL" title="tbottest.machineinit.DFUUTIL"><code class="xref py py-meth docutils literal notranslate"><span class="pre">tbottest.machineinit.DFUUTIL()</span></code></a></p>
+<p>define the section</p>
+<table class="docutils align-default" id="id14">
+<caption><span class="caption-text">[DFUUTIL_CONFIG_&lt;BOARDNAME&gt;]</span><a class="headerlink" href="#id14" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>cmds</p></td>
+<td><p>array of dictionary, format see example</p></td>
+<td><p>[{‘a’:<a class="reference external" href="mailto:'&#37;&#52;&#48;FSBL">’<span>&#64;</span>FSBL</a> /0x01/1*1Me’, ‘D’:’${LABHOST:tftproot}/${LABHOST:tftpsubdir}/u-boot-spl.stm32’}, {‘a’:’u-boot.itb’, ‘D’:’${LABHOST:tftproot}/${LABHOST:tftpsubdir}/u-boot.itb’}]</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="setup-for-uuu-tool">
+<h4>setup for uuu tool<a class="headerlink" href="#setup-for-uuu-tool" title="Permalink to this heading">¶</a></h4>
+<p>if you want to use NXPs uuu tool with class</p>
+<p><a class="reference internal" href="machineinit.html#tbottest.machineinit.UUULoad" title="tbottest.machineinit.UUULoad"><code class="xref py py-meth docutils literal notranslate"><span class="pre">tbottest.machineinit.UUULoad()</span></code></a></p>
+<p>define the section</p>
+<table class="docutils align-default" id="id15">
+<caption><span class="caption-text">[UUU_CONFIG__wandboard]</span><a class="headerlink" href="#id15" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>cmd</p></td>
+<td><p>comma seperated list of uuu commands to load SPL/U-Boot with uuu tool.</p></td>
+<td><p>LBD/SPL,SDPV: delay 100,SDPV: write -f LBD/u-boot.img -addr 0x877fffc0,SDPV: jump -addr 0x877fffc0</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="setup-for-sb-tool">
+<h4>setup for sb tool<a class="headerlink" href="#setup-for-sb-tool" title="Permalink to this heading">¶</a></h4>
+<p>if you need to use UART boot and xmodem / ymodem transfer
+for loading the bootloader onto the hardware use this class</p>
+<p><a class="reference internal" href="machineinit.html#tbottest.machineinit.XMODEMLoad" title="tbottest.machineinit.XMODEMLoad"><code class="xref py py-meth docutils literal notranslate"><span class="pre">tbottest.machineinit.XMODEMLoad()</span></code></a></p>
+<p>define the section</p>
+<table class="docutils align-default" id="id16">
+<caption><span class="caption-text">[XMODEM_CONFIG__wandboard]</span><a class="headerlink" href="#id16" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>device</p></td>
+<td><p>serial device sb tool uses</p></td>
+<td><p>/dev/ttyUSB0</p></td>
+</tr>
+<tr class="row-odd"><td><p>cmd</p></td>
+<td><p>list of commands to load SPL/U-Boot with sb tool.</p></td>
+<td><p>[“sb –xmodem TFTPDIR/tiboot3.bin &gt; SERDEV &lt; SERDEV”]</p></td>
+</tr>
+</tbody>
+</table>
+<p>SERDEV is replaced before executing the command with the value in device
+and TFTPDIR is replaced with the boards current tftp path.</p>
+</section>
+<section id="setup-for-lauterbacher-debugger">
+<h4>setup for Lauterbacher debugger<a class="headerlink" href="#setup-for-lauterbacher-debugger" title="Permalink to this heading">¶</a></h4>
+<p>if you want to use Lauterbacher debugger use this class</p>
+<p>Currently we use the python script t32apicmd.py
+from lauterbach installation directory “install_path” in
+subdir “demo/api/python”. Later we will use this api directly.</p>
+<p><a class="reference internal" href="machineinit.html#tbottest.machineinit.LauterbachLoad" title="tbottest.machineinit.LauterbachLoad"><code class="xref py py-meth docutils literal notranslate"><span class="pre">tbottest.machineinit.LauterbachLoad()</span></code></a></p>
+<p>define the section</p>
+<table class="docutils align-default" id="id17">
+<caption><span class="caption-text">[LAUTERBACH_CONFIG_wandboard]</span><a class="headerlink" href="#id17" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>verbose</p></td>
+<td><p>1 = verbose output</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>cmd</p></td>
+<td></td>
+<td><p>/opt/t32/bin/pc_linux64/t32marm-qt</p></td>
+</tr>
+<tr class="row-even"><td><p>install_path</p></td>
+<td><p>path to your installation of Lauterbacher tools</p></td>
+<td><p>/opt/t32</p></td>
+</tr>
+<tr class="row-odd"><td><p>config</p></td>
+<td><p>path to config.t32 file</p></td>
+<td><p>/from_ftp/lauterbach-scripts/hsconfig.t32</p></td>
+</tr>
+<tr class="row-even"><td><p>script</p></td>
+<td><p>path to script which gets executed</p></td>
+<td><p>/from_ftp/lauterbach-scripts/autostart.cmm</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="setup-for-segger-debugger">
+<h4>setup for Segger debugger<a class="headerlink" href="#setup-for-segger-debugger" title="Permalink to this heading">¶</a></h4>
+<p>if you want to use Segger debugger use this class</p>
+<p><code class="xref py py-meth docutils literal notranslate"><span class="pre">tbottest.machineinit.SeggerLoad()</span></code></p>
+<p>define the section</p>
+<table class="docutils align-default" id="id18">
+<caption><span class="caption-text">[SEGGER_CONFIG_wandboard]</span><a class="headerlink" href="#id18" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>install_path</p></td>
+<td><p>path to your installation of the Segger tools</p></td>
+<td><p>/opt/segger</p></td>
+</tr>
+<tr class="row-odd"><td><p>cmds</p></td>
+<td><p>list of commands executed in JLinkExe shell to bring up U-Boot</p></td>
+<td><p>[{‘cmd’:’go’, ‘prompt’:’J-Link&gt;’}]</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="boardconfiguration-file">
+<h3>boardconfiguration file<a class="headerlink" href="#boardconfiguration-file" title="Permalink to this heading">¶</a></h3>
+<p>we use for configuring for boardspecific testcasesettings with:</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/configparser.html">https://docs.python.org/3/library/configparser.html</a></p>
+<p>add therefore a BOARDNAME.ini file must exist in tbotconfig/BOARDNAME</p>
+<p>It contains two sections:</p>
+<p><code class="docutils literal notranslate"><span class="pre">`TC_BOARDNAME`</span></code> and <code class="docutils literal notranslate"><span class="pre">`TC`</span></code></p>
+<p>see also:
+<a class="reference internal" href="iniconfig.html#tbottest.initconfig.init_get_config" title="tbottest.initconfig.init_get_config"><code class="xref py py-func docutils literal notranslate"><span class="pre">tbottest.initconfig.init_get_config()</span></code></a></p>
+<p>from where the generic board testcase approach boardgeneric.py
+takes the config to generate the class GenericBoardConfig,
+used from generic testcases.</p>
+<section id="common-settings">
+<h4>common settings<a class="headerlink" href="#common-settings" title="Permalink to this heading">¶</a></h4>
+<p>common settings for your board.</p>
+<table class="docutils align-default" id="id19">
+<caption><span class="caption-text">[TC]</span><a class="headerlink" href="#id19" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>description</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>tmpdir</p></td>
+<td><p>path to place on board, which could be used for temporary data testcases need.</p></td>
+<td><p>/tmp</p></td>
+<td><p>/tmp/tbot</p></td>
+</tr>
+<tr class="row-odd"><td><p>death_strings</p></td>
+<td><p>array of strings, which should not ocur in stream</p></td>
+<td><p>[]</p></td>
+<td><p>[‘Kernel panic’]</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="u-boot-settings">
+<h4>u-boot settings<a class="headerlink" href="#u-boot-settings" title="Permalink to this heading">¶</a></h4>
+<p>settings needed for U-Boot testcases.</p>
+<table class="docutils align-default" id="id20">
+<caption><span class="caption-text">[TC]</span><a class="headerlink" href="#id20" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>description</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>example</p></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>uboot_boot_timeout</p></td>
+<td><p>config boot_timeout, set None if None</p></td>
+<td><p>90</p></td>
+<td><p>None</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>uboot_autoboot_keys</p></td>
+<td><p>string with which U-Boot boot is interrupted. It is possible to set also a bytearray</p></td>
+<td><p>SPACE</p></td>
+<td><p>None</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>autoboot_prompt</p></td>
+<td><p>set autoboot_prompt, None if None</p></td>
+<td><p>b”autoboot:\s{0</p></td>
+<td><p>5}\d{0</p></td>
+<td><p>3}\s{0</p></td>
+<td><p>3}.{0</p></td>
+<td><p>80}”</p></td>
+<td><p>None</p></td>
+</tr>
+<tr class="row-odd"><td><p>autoboot_timeout</p></td>
+<td><p>UBootAutobootInterceptSimple timeout for waiting for U-Boot prompt</p></td>
+<td><p>0.05, “0.1”</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>rescueimage</p></td>
+<td><p>name of rescueimage</p></td>
+<td><p>None</p></td>
+<td><p>rescueimage-fit.itb</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>qspiheader</p></td>
+<td><p>name of qspi header</p></td>
+<td><p>None</p></td>
+<td><p>qspiheader.bin</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>splimage</p></td>
+<td><p>name of spl image</p></td>
+<td><p>None</p></td>
+<td><p>SPL</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fb_res_setup</p></td>
+<td><p>u-boot commands for setting up rescue image boot with fastboot and uuu tool</p></td>
+<td><p>None</p></td>
+<td><p>run ramargs addcon addmtd addopt</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>fb_res_boot</p></td>
+<td><p>u-boot command for booting rescue image with fastboot and uuu tool</p></td>
+<td><p>None</p></td>
+<td><p>bootm 94000000</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>fb_cmd</p></td>
+<td><p>fastboot init command</p></td>
+<td><p>None</p></td>
+<td><p>fastboot usb 0</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>ub_env</p></td>
+<td><p>list dict of u-boot environment variables which get set after login into u-boot</p></td>
+<td><p>[]</p></td>
+<td><p>[{“name”:”optargs”, “val”:”earlycon clk_ignore_unused”}]</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id21">
+<caption><span class="caption-text">uboot_autoboot_keys example</span><a class="headerlink" href="#id21" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>configuration string</p></th>
+<th class="head"><p>sended bytes to console</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>K</p></td>
+<td><p>x4b</p></td>
+</tr>
+<tr class="row-odd"><td><p>SPACE</p></td>
+<td><p>x03</p></td>
+</tr>
+<tr class="row-even"><td><p>bytearray:1b1b</p></td>
+<td><p>x1bx1b</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="linux-settings">
+<h4>linux settings<a class="headerlink" href="#linux-settings" title="Permalink to this heading">¶</a></h4>
+<p>settings needed for linux testcases.</p>
+<table class="docutils align-default" id="id22">
+<caption><span class="caption-text">[TC]</span><a class="headerlink" href="#id22" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>description</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>example</p></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>linux_user</p></td>
+<td><p>username for linux login</p></td>
+<td><p>root</p></td>
+<td><p>root</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>linux_password</p></td>
+<td><p>password for linux login, None for no password required</p></td>
+<td><p>None</p></td>
+<td><p>None</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>linux_login_delay</p></td>
+<td><p>login delay in seconds</p></td>
+<td><p>5</p></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>linux_boot_timeout</p></td>
+<td><p>Maximum time for Linux to reach the login prompt.</p></td>
+<td><p>None</p></td>
+<td><p>30</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>linux_init_timeout</p></td>
+<td><p>If not None, timeout in seconds after ethernetconfig</p></td>
+<td><p>None</p></td>
+<td><p>2.0</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>linux_init</p></td>
+<td><p>list of commands send after login. mode = exec or exec0</p></td>
+<td><p>[]</p></td>
+<td><p>[{“mode”:”exec0”, “cmd”:”echo Hallo”}]</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>shelltype</p></td>
+<td><p>linux login shell type (bash|ash)</p></td>
+<td><p>ash</p></td>
+<td><p>bash</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>beep</p></td>
+<td><p>list of dictionary of commands for beep command</p></td>
+<td><p>[]</p></td>
+<td><p>[{“freq”: “440”, “length”:”1000”}]</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>cyclictestmaxvalue</p></td>
+<td><p>maximum allowed value from stress-ng Max colum</p></td>
+<td><p>100</p></td>
+<td><p>cyclictestmaxvalue = 100</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>dmesg</p></td>
+<td><p>list of strings, which should be in dmesg output</p></td>
+<td><p>[]</p></td>
+<td><p>dmesg = [“OF: fdt: Machine model:”, “gpio-193 (eeprom-wc): hogged as output/low”,]</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>dmesg_false</p></td>
+<td><p>list of strings, which should be not in dmesg output</p></td>
+<td><p>[]</p></td>
+<td><p>dmesg = [“crash”]</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>iperf</p></td>
+<td><p>list of dictionary for iperf test</p></td>
+<td><p>[]</p></td>
+<td><p>iperf = [{“intervall”:”1”</p></td>
+<td><p>minval:”290000000”</p></td>
+<td><p>cycles:”30”}]
+“leds”</p></td>
+<td><p>list of dictionary for checking leds</p></td>
+<td><p>[]</p></td>
+<td><p>leds = [{“path”:”/sys/class/leds/led-orange”, #bootval”:”0”, “onval”:”1},]</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>lnx_commands</p></td>
+<td><p>list of dictionary for checking linux commands</p></td>
+<td><p>[]</p></td>
+<td><p>lnx_commands = [{“cmd”:”&lt;your linux command”, “val”:”&lt;string which is in output of command&gt; or undef”},]</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>network_iperf_intervall</p></td>
+<td><p>iperf intervall</p></td>
+<td><p>1</p></td>
+<td><p>network_iperf_intervall = 1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>network_iperf_minval</p></td>
+<td><p>iperf minimum network throughput</p></td>
+<td><p>1</p></td>
+<td><p>network_iperf_minval = 9000000</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>network_iperf_cylces</p></td>
+<td><p>iperf cycles</p></td>
+<td><p>1</p></td>
+<td><p>network_iperf_cycles = 30</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>nvramdev</p></td>
+<td><p>nvram device</p></td>
+<td><p>6</p></td>
+<td><p>nvramdev = 6</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>nvramcomp</p></td>
+<td><p>compatibility string of nvram device</p></td>
+<td><p>microchip,48l640</p></td>
+<td><p>nvramcomp = microchip,48l640”
+nvramsz”</p></td>
+<td><p>size of nvram device</p></td>
+<td><p>8192</p></td>
+<td><p>nvramsz = 8192</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>ping</p></td>
+<td><p>list of dict for ping config.</p></td>
+<td><p>[]</p></td>
+<td><p>ping = [{“ip”:”${default:serverip}”</p></td>
+<td><p>retry:”10”}]
+“regdump”</p></td>
+<td><p>list of dict for generic regdump</p></td>
+<td><p>[]</p></td>
+<td><p>regdump = [{“address”:”0x30340004”}</p></td>
+<td><p>{“address”:”0x30330070”}]
+“rs485labdev”</p></td>
+<td><p>path to device</p></td>
+<td><p>/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0</p></td>
+<td><p>rs485labdev = “/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0”
+“rs485baud”</p></td>
+<td><p>baudrate used for test</p></td>
+<td><p>115200</p></td>
+<td><p>rs485baud = “115200”
+“rs485boarddev”</p></td>
+<td><p>list of strings, each string contains a path to device which used in test</p></td>
+<td><p>[“/dev/ttymxc2”], rs485boarddev = [“/dev/ttymxc2”]
+“rs485lengths”</p></td>
+<td><p>list of strings. Each string is a length of data send over rs485 line</p></td>
+<td><p>[“20”</p></td>
+<td><p>100</p></td>
+<td><p>1024], rs485lengths = [“20”</p></td>
+<td><p>100</p></td>
+<td><p>1024]
+“sensors”</p></td>
+<td><p>list of dictionary for checking temperature sensors</p></td>
+<td><p>[]</p></td>
+<td><p>sensors = [{path:’/sys/class/hwmon/hwmon0, name”:”tmp102”</p></td>
+<td><p>tmpvalues:[{“valname” : “temp1_input”</p></td>
+<td><p>min:”0”</p></td>
+<td><p>max : “100000” }]}</p></td>
+<td><p>]”</p></td>
+</tr>
+<tr class="row-odd"><td><p>mtd_parts</p></td>
+<td><p>list of dictionary for MTD parts definition</p></td>
+<td><p>[]</p></td>
+<td><p>leds = [{name:SPL, size:10000},]</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>ub_mtd_delete</p></td>
+<td><p>list of strings with MTD names which are allowed to delete</p></td>
+<td><p>[]</p></td>
+<td><p>ub_mtd_delete = [SPL</p></td>
+<td><p>uboot]”</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>ssh_keyfile; “ssh setup: authentication using private key file ssh_keyfile”</p></td>
+<td><p>None</p></td>
+<td><p>/home/{user}/.ssh/id_rsa</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>ssh_password; “ssh setup: set password for password ssh login”</p></td>
+<td><p>None</p></td>
+<td><p>foobar</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="swupdate-settings">
+<h4>swupdate settings<a class="headerlink" href="#swupdate-settings" title="Permalink to this heading">¶</a></h4>
+<p>settings needed for swupdate testcases.</p>
+<table class="docutils align-default" id="id23">
+<caption><span class="caption-text">[TC]</span><a class="headerlink" href="#id23" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>description</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>swuethdevice</p></td>
+<td><p>device which is used for getting ethernetconfiguration on lab host</p></td>
+<td><p>eth0</p></td>
+<td><p>eth0</p></td>
+</tr>
+<tr class="row-odd"><td><p>swuimage</p></td>
+<td><p>Name of swu image name which get installed on board</p></td>
+<td><p>mandatory, no fallback</p></td>
+<td><p>swu-image.swu</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="kas-settings">
+<h4>kas settings<a class="headerlink" href="#kas-settings" title="Permalink to this heading">¶</a></h4>
+<p>settings needed for yocto build with kas tool.</p>
+<table class="docutils align-default" id="id24">
+<caption><span class="caption-text">[TC]</span><a class="headerlink" href="#id24" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>description</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>kas</p></td>
+<td><p>dictionary with values need for class KAS, see <a class="reference internal" href="tc.html#tbottest.tc.kas.KAS" title="tbottest.tc.kas.KAS"><code class="xref py py-class docutils literal notranslate"><span class="pre">tbottest.tc.kas.KAS</span></code></a></p></td>
+<td><p>mandatory, no default</p></td>
+<td><p>see: tbottest/tbotconfig/BOARDNAME.ini</p></td>
+</tr>
+<tr class="row-odd"><td><p>kas_check_files</p></td>
+<td><p>list of files, which must exist after building</p></td>
+<td><p>[]</p></td>
+<td><p>[‘tmp/deploy/images/wandboard/SPL’]</p></td>
+</tr>
+<tr class="row-even"><td><p>kas_results</p></td>
+<td><p>list of files, which get copied from build host to lab host for later use. Basepath is machine directory in tmp/deploy/images</p></td>
+<td><p>[]</p></td>
+<td><p>[‘SPL’]</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="argumentfiles">
+<h3>argumentfiles<a class="headerlink" href="#argumentfiles" title="Permalink to this heading">¶</a></h3>
+<p>it is convenient to collect tbot arguments in argumentsfile. As you
+will have a lot of tbot arguments. We start in this example with
+a base “argsBOARDNAME” file, which than other files include.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can use shell variables also in argumentfiles!</p>
+</div>
+<p>The following example uses piccom for accessing serial console and
+sispmctl for boards power control.</p>
+<p>If you have another setup, adapt this “base” argument file accordingly.</p>
+<p>For example, if you want to use kermit for accessing console, remove the
+tbot flag piccom (as kermit is default).</p>
+<p>If you want to use Tinkerforge for controlling boards power, add flag “tinkerforge”</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>tbotconfig/BOARDNAME/args/argsBOARDNAME
+@tbotconfig/BOARDNAME/args/argsbase
+-fpicocom
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>argsbase is a simple copy from tbottest/tbotconfig/BOARDNAME/argsfiles/argsbase</p>
+</div>
+<p>With executing tbot on lab host, you do not need to ssh to lab host,
+so use local flag.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>config/BOARDNAME/args/argsBOARDNAME-local
+@config/BOARDNAME/args/argsBOARDNAME
+-flocal
+</pre></div>
+</div>
+<p>If you do not want that tbot always initialize ethernet configuration
+on your lab host, use</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>config/BOARDNAME/args/argsBOARDNAME-local-noeth
+@config/BOARDNAME/args/argsBOARDNAME-local
+-fnoethinit
+</pre></div>
+</div>
+<p>If you want to login to a board, which is already on and runs linux</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>config/BOARDNAME/args/argsBOARDNAME-local-noeth-on
+@config/BOARDNAME/args/argsBOARDNAME-local-noeth
+-falways-on
+-fnouboot
+-fnopoweroff
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>start tbot with flag “always-on” and tbot will not poweroff
+the board when ending, so if you have bootet into linux, and
+logout, linux will remain and tbot can logon again!</p>
+<p>This helps a lot when developing testcases!</p>
+</div>
+<section id="argumentfile-for-ssh-login">
+<span id="argumentfilesshlogin"></span><h4>Argumentfile for ssh login<a class="headerlink" href="#argumentfile-for-ssh-login" title="Permalink to this heading">¶</a></h4>
+<p>If you want to login per ssh into an already running linux on the board</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>config/BOARDNAME/args/argsBOARDNAME-local-noeth-on
+@config/BOARDNAME/args/argsBOARDNAME-local-noeth
+-fssh
+</pre></div>
+</div>
+<p>And last but not least, if you have an imx6 based board and want to load
+SPL/U-Boot with tbot onto it, start tbot with:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>config/BOARDNAME/args/argsBOARDNAME-local-uuu
+@config/BOARDNAME/args/argsBOARDNAME-local
+-fuuuloader
+</pre></div>
+</div>
+<p>tbot call example</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./newtbot_starter.py<span class="w"> </span>@tbotconfig/BOARDNAME/args/argsBOARDNAME-asus-kirkstone-nfs<span class="w"> </span>-f<span class="w"> </span>kas<span class="w"> </span>tbottest.inter.uboot
+tbot<span class="w"> </span>starting<span class="w"> </span>...
+├─TBOT.FLAGS<span class="w"> </span><span class="o">{</span><span class="s1">&#39;boardfile:tbotconfig/BOARDNAME/BOARDNAME.ini&#39;</span>,<span class="w"> </span><span class="s1">&#39;useifconfig&#39;</span>,<span class="w"> </span><span class="s1">&#39;bootcmd:tftp_nfs&#39;</span>,<span class="w"> </span><span class="s1">&#39;noboardethinit&#39;</span>,<span class="w"> </span><span class="s1">&#39;noethinit&#39;</span>,<span class="w"> </span><span class="s1">&#39;kas&#39;</span>,<span class="w"> </span><span class="s1">&#39;do_power&#39;</span>,<span class="w"> </span><span class="s1">&#39;kaslayerbranch:kirkstone&#39;</span>,<span class="w"> </span><span class="s1">&#39;inifile:tbotconfig/BOARDNAME/tbot.ini&#39;</span>,<span class="w"> </span><span class="s1">&#39;bootmode:emmc&#39;</span>,<span class="w"> </span><span class="s1">&#39;picocom&#39;</span><span class="o">}</span>
+├─boardname<span class="w"> </span>now<span class="w"> </span>BOARDNAME
+├─Using<span class="w"> </span>kas<span class="w"> </span>file<span class="w"> </span>kas-denx-withdldir.yml
+├─Calling<span class="w"> </span>uboot<span class="w"> </span>...
+│<span class="w">   </span>├─<span class="o">[</span>local<span class="o">]</span><span class="w"> </span>ssh<span class="w"> </span>-o<span class="w"> </span><span class="nv">BatchMode</span><span class="o">=</span>yes<span class="w"> </span>-i<span class="w"> </span>/home/pi/.ssh/id_rsa<span class="w"> </span>-p<span class="w"> </span><span class="m">22</span><span class="w"> </span>pi@tbotlab
+│<span class="w">   </span>├─set<span class="w"> </span>bootmode<span class="w"> </span>bootmode:emmc
+│<span class="w">   </span>├─<span class="o">[</span>lab8<span class="o">]</span><span class="w"> </span><span class="nb">test</span><span class="w"> </span>-d<span class="w"> </span>/sys/class/gpio/gpio14
+│<span class="w">   </span>├─<span class="o">[</span>lab8<span class="o">]</span><span class="w"> </span>cat<span class="w"> </span>/sys/class/gpio/gpio14/direction
+│<span class="w">   </span>│<span class="w">    </span><span class="c1">## out</span>
+│<span class="w">   </span>├─<span class="o">[</span>lab8<span class="o">]</span><span class="w"> </span><span class="nb">printf</span><span class="w"> </span>%s<span class="w"> </span><span class="m">1</span><span class="w"> </span>&gt;/sys/class/gpio/gpio14/value
+│<span class="w">   </span>├─<span class="o">[</span>local<span class="o">]</span><span class="w"> </span>ssh<span class="w"> </span>-o<span class="w"> </span><span class="nv">BatchMode</span><span class="o">=</span>yes<span class="w"> </span>-i<span class="w"> </span>/home/pi/.ssh/id_rsa<span class="w"> </span>-p<span class="w"> </span><span class="m">22</span><span class="w"> </span>pi@BOARDNAMElab
+│<span class="w">   </span>├─set<span class="w"> </span>bootmode<span class="w"> </span>bootmode:emmc
+│<span class="w">   </span>├─<span class="o">[</span>lab8<span class="o">]</span><span class="w"> </span><span class="nb">test</span><span class="w"> </span>-d<span class="w"> </span>/sys/class/gpio/gpio14
+│<span class="w">   </span>├─<span class="o">[</span>lab8<span class="o">]</span><span class="w"> </span>cat<span class="w"> </span>/sys/class/gpio/gpio14/direction
+│<span class="w">   </span>│<span class="w">    </span><span class="c1">## out</span>
+│<span class="w">   </span>├─<span class="o">[</span>lab8<span class="o">]</span><span class="w"> </span><span class="nb">printf</span><span class="w"> </span>%s<span class="w"> </span><span class="m">1</span><span class="w"> </span>&gt;/sys/class/gpio/gpio14/value
+│<span class="w">   </span>├─<span class="o">[</span>lab8<span class="o">]</span><span class="w"> </span>picocom<span class="w"> </span>-r<span class="w"> </span>-b<span class="w"> </span><span class="m">115200</span><span class="w"> </span>-l<span class="w"> </span>/dev/serial/by-id/usb-FTDI_C232HM-EDHSL-0_FT57MR3U-if00-port0
+│<span class="w">   </span>├─POWERON<span class="w"> </span><span class="o">(</span>board-control-full<span class="o">)</span>
+│<span class="w">   </span>├─<span class="o">[</span>lab8<span class="o">]</span><span class="w"> </span>sispmctl<span class="w"> </span>-D<span class="w"> </span><span class="m">01</span>:01:4f:09:5b<span class="w"> </span>-o<span class="w"> </span><span class="m">1</span>
+│<span class="w">   </span>│<span class="w">    </span><span class="c1">## Accessing Gembird #0 USB device 012</span>
+│<span class="w">   </span>│<span class="w">    </span><span class="c1">## Switched outlet 1 on</span>
+│<span class="w">   </span>├─UBOOT<span class="w"> </span><span class="o">(</span>BOARDNAME-uboot<span class="o">)</span>
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>picocom<span class="w"> </span>v3.1
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>port<span class="w"> </span>is<span class="w">        </span>:<span class="w"> </span>/dev/serial/by-id/usb-FTDI_C232HM-EDHSL-0_FT57MR3U-if00-port0
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>flowcontrol<span class="w">    </span>:<span class="w"> </span>none
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>baudrate<span class="w"> </span>is<span class="w">    </span>:<span class="w"> </span><span class="m">115200</span>
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>parity<span class="w"> </span>is<span class="w">      </span>:<span class="w"> </span>none
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>databits<span class="w"> </span>are<span class="w">   </span>:<span class="w"> </span><span class="m">8</span>
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>stopbits<span class="w"> </span>are<span class="w">   </span>:<span class="w"> </span><span class="m">1</span>
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>escape<span class="w"> </span>is<span class="w">      </span>:<span class="w"> </span>C-a
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>is<span class="w">  </span>:<span class="w"> </span>no
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>noinit<span class="w"> </span>is<span class="w">      </span>:<span class="w"> </span>no
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>noreset<span class="w"> </span>is<span class="w">     </span>:<span class="w"> </span>yes
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>hangup<span class="w"> </span>is<span class="w">      </span>:<span class="w"> </span>no
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>nolock<span class="w"> </span>is<span class="w">      </span>:<span class="w"> </span>yes
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>send_cmd<span class="w"> </span>is<span class="w">    </span>:<span class="w"> </span>sz<span class="w"> </span>-vv
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>receive_cmd<span class="w"> </span>is<span class="w"> </span>:<span class="w"> </span>rz<span class="w"> </span>-vv<span class="w"> </span>-E
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>imap<span class="w"> </span>is<span class="w">        </span>:
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>omap<span class="w"> </span>is<span class="w">        </span>:
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>emap<span class="w"> </span>is<span class="w">        </span>:<span class="w"> </span>crcrlf,delbs,
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>logfile<span class="w"> </span>is<span class="w">     </span>:<span class="w"> </span>none
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>initstring<span class="w">     </span>:<span class="w"> </span>none
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>exit_after<span class="w"> </span>is<span class="w">  </span>:<span class="w"> </span>not<span class="w"> </span><span class="nb">set</span>
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span><span class="nb">exit</span><span class="w"> </span>is<span class="w">        </span>:<span class="w"> </span>no
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>Type<span class="w"> </span><span class="o">[</span>C-a<span class="o">]</span><span class="w"> </span><span class="o">[</span>C-h<span class="o">]</span><span class="w"> </span>to<span class="w"> </span>see<span class="w"> </span>available<span class="w"> </span>commands
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>Terminal<span class="w"> </span>ready
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>U-Boot<span class="w"> </span>SPL<span class="w"> </span><span class="m">2023</span>.04<span class="w"> </span><span class="o">(</span>Apr<span class="w"> </span><span class="m">03</span><span class="w"> </span><span class="m">2023</span><span class="w"> </span>-<span class="w"> </span><span class="m">20</span>:38:50<span class="w"> </span>+0000<span class="o">)</span>
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>Trying<span class="w"> </span>to<span class="w"> </span>boot<span class="w"> </span>from<span class="w"> </span>MMC1
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>U-Boot<span class="w"> </span><span class="m">2023</span>.04<span class="w"> </span><span class="o">(</span>Apr<span class="w"> </span><span class="m">03</span><span class="w"> </span><span class="m">2023</span><span class="w"> </span>-<span class="w"> </span><span class="m">20</span>:38:50<span class="w"> </span>+0000<span class="o">)</span>
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>CPU<span class="w">  </span>:<span class="w"> </span>AM335X-GP<span class="w"> </span>rev<span class="w"> </span><span class="m">2</span>.1
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>Model:<span class="w"> </span>XXX
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>DRAM:<span class="w">  </span><span class="m">512</span><span class="w"> </span>MiB
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>Core:<span class="w">  </span><span class="m">172</span><span class="w"> </span>devices,<span class="w"> </span><span class="m">20</span><span class="w"> </span>uclasses,<span class="w"> </span>devicetree:<span class="w"> </span>separate
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>MMC:<span class="w">   </span>OMAP<span class="w"> </span>SD/MMC:<span class="w"> </span><span class="m">0</span>
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>Loading<span class="w"> </span>Environment<span class="w"> </span>from<span class="w"> </span>MMC...<span class="w"> </span>OK
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>In:<span class="w">    </span>serial@0
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>Out:<span class="w">   </span>serial@0
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>Err:<span class="w">   </span>serial@0
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>Net:<span class="w">   </span>eth2:<span class="w"> </span>ethernet@4a100000
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span>Press<span class="w"> </span>SPACE<span class="w"> </span>to<span class="w"> </span>abort<span class="w"> </span>autoboot<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">2</span><span class="w"> </span>seconds
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span><span class="o">=</span>&gt;<span class="w"> </span>&lt;INTERRUPT&gt;
+│<span class="w">   </span>│<span class="w">    </span>&lt;&gt;<span class="w"> </span><span class="o">=</span>&gt;
+│<span class="w">   </span>├─<span class="o">[</span>BOARDNAME-uboot<span class="o">]</span><span class="w"> </span>setenv<span class="w"> </span>serverip<span class="w"> </span><span class="m">192</span>.168.3.1
+│<span class="w">   </span>├─<span class="o">[</span>BOARDNAME-uboot<span class="o">]</span><span class="w"> </span>printenv<span class="w"> </span>serverip
+│<span class="w">   </span>│<span class="w">    </span><span class="c1">## serverip=192.168.3.1</span>
+<span class="o">[</span>...<span class="o">]</span>
+│<span class="w">   </span>├─<span class="o">[</span>BOARDNAME-uboot<span class="o">]</span><span class="w"> </span>printenv<span class="w"> </span>optargs
+│<span class="w">   </span>│<span class="w">    </span><span class="c1">## optargs=consoleblank=0 vt.global_cursor_default=0 lpj=2988032 quiet  rauc.slot=A</span>
+│<span class="w">   </span>├─Entering<span class="w"> </span>interactive<span class="w"> </span>shell...
+│<span class="w">   </span>├─Press<span class="w"> </span>CTRL+<span class="o">]</span><span class="w"> </span>three<span class="w"> </span><span class="nb">times</span><span class="w"> </span>within<span class="w"> </span><span class="m">1</span><span class="w"> </span>second<span class="w"> </span>to<span class="w"> </span>exit.
+
+<span class="o">=</span>&gt;
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="tbot-flags">
+<h2>tbot flags<a class="headerlink" href="#tbot-flags" title="Permalink to this heading">¶</a></h2>
+<p>The generic lab and board approach defines some tbot flags, so tbot can handle different usage challenges.
+It is recommended to collect arguments in so called argumentsfiles, else you are lost in tbot flags…</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>tbot flag</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>bootcmd</p></td>
+<td><p>format bootcmd:&lt;real bootcmd&gt;, example bootcmd:net_nfs will execute “run net_nfs”</p></td>
+</tr>
+<tr class="row-odd"><td><p>buildname</p></td>
+<td><p>format buildname:&lt;name of builder&gt;, select the used buildhost.</p></td>
+</tr>
+<tr class="row-even"><td><p>labname</p></td>
+<td><p>format labname:&lt;name of lab host&gt;, select the used lab host (configure in tbot.ini with LABHOST_&lt;name&gt;] section)</p></td>
+</tr>
+<tr class="row-odd"><td><p>gpiopower</p></td>
+<td><p>use a gpio pin for boards power control</p></td>
+</tr>
+<tr class="row-even"><td><p>powershellscript</p></td>
+<td><p>use a shellscript for boards power control</p></td>
+</tr>
+<tr class="row-odd"><td><p>tinkerforge</p></td>
+<td><p>use tinkerforge for boards power control</p></td>
+</tr>
+<tr class="row-even"><td><p>picocom</p></td>
+<td><p>use picocom for serial console</p></td>
+</tr>
+<tr class="row-odd"><td><p>scriptcom</p></td>
+<td><p>use a script for serial console</p></td>
+</tr>
+<tr class="row-even"><td><p>dfuutilloader</p></td>
+<td><p>load SPL/U-Boot with dfu-util tool</p></td>
+</tr>
+<tr class="row-odd"><td><p>uuuloader</p></td>
+<td><p>load SPL/U-Boot with uuu tool from NXP</p></td>
+</tr>
+<tr class="row-even"><td><p>xmodemloader</p></td>
+<td><p>load SPL/U-Boot with sb tool (xmodem/ymodem)</p></td>
+</tr>
+<tr class="row-odd"><td><p>ignore_loglevel</p></td>
+<td><p>add ignore_level to miscargs (deprecated, use set_ub_board_specific)</p></td>
+</tr>
+<tr class="row-even"><td><p>enterinitramfs</p></td>
+<td><p>enter initramfs, add enterinitramfs to miscargs(deprecated, use set_ub_board_specific)</p></td>
+</tr>
+<tr class="row-odd"><td><p>linux_no_cmd_after_login</p></td>
+<td><p>set nothing after linux login (beside disable clutter)</p></td>
+</tr>
+<tr class="row-even"><td><p>local</p></td>
+<td><p>enable if labhost and tbot host are the same (use SubprocessConnector)</p></td>
+</tr>
+<tr class="row-odd"><td><p>noboardethinit</p></td>
+<td><p>do no board ethinit in linux after login</p></td>
+</tr>
+<tr class="row-even"><td><p>nobootcon</p></td>
+<td><p>set console to silent (deprecated, use set_ub_board_specific)</p></td>
+</tr>
+<tr class="row-odd"><td><p>yoctobuild</p></td>
+<td><p>use images from yoctobuild</p></td>
+</tr>
+<tr class="row-even"><td><p>ssh</p></td>
+<td><p>login to linux console through ssh (only possible if board already on and in linux)</p></td>
+</tr>
+<tr class="row-odd"><td><p>do_power</p></td>
+<td><p>tbot handles boards power</p></td>
+</tr>
+<tr class="row-even"><td><p>always-on</p></td>
+<td><p>board is already on, log into linux</p></td>
+</tr>
+<tr class="row-odd"><td><p>rescue</p></td>
+<td><p>boot rescue system (deprecated, use flag bootcmd)</p></td>
+</tr>
+<tr class="row-even"><td><p>rescuetftp</p></td>
+<td><p>boot rescue system, rescue image loaded through tftp (deprecated, use flag bootcmd)</p></td>
+</tr>
+<tr class="row-odd"><td><p>emmc</p></td>
+<td><p>u-boot bootcmd “run boot_emmc” (deprecated, use flag bootcmd)</p></td>
+</tr>
+<tr class="row-even"><td><p>sdcard</p></td>
+<td><p>u-boot bootcmd “run boot_mmc” (deprecated, use flag bootcmd)</p></td>
+</tr>
+<tr class="row-odd"><td><p>tftpfit</p></td>
+<td><p>u-boot bootcmd “run tftp_mmc” (deprecated, use flag bootcmd)</p></td>
+</tr>
+<tr class="row-even"><td><p>panic</p></td>
+<td><p>add death string “Kernel panic”</p></td>
+</tr>
+<tr class="row-odd"><td><p>docker</p></td>
+<td><p>if you need to login to a docker container with proxyjump</p></td>
+</tr>
+<tr class="row-even"><td><p>uboot_no_env_set</p></td>
+<td><p>do not set any U-Boot Environment after U-Boot login</p></td>
+</tr>
+<tr class="row-odd"><td><p>set-ethconfig</p></td>
+<td><p>setup ip config in U-Boot</p></td>
+</tr>
+<tr class="row-even"><td><p>useifconfig</p></td>
+<td><p>use ifconfig for ip setup, else ip</p></td>
+</tr>
+<tr class="row-odd"><td><p>poweroffonstart</p></td>
+<td><p>if set, power off board before powering on</p></td>
+</tr>
+<tr class="row-even"><td><p>seggerloader</p></td>
+<td><p>use segger debugger for breathing life into board</p></td>
+</tr>
+<tr class="row-odd"><td><p>outside</p></td>
+<td><p>if lab host is only reachable with proxyjump</p></td>
+</tr>
+<tr class="row-even"><td><p>lablockid</p></td>
+<td><p>pass lab lockid with lockid:&lt;yourlockid&gt;</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="Quick Start" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="boardlocking.html" class="btn btn-neutral float-right" title="tbottest.boardlocking" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

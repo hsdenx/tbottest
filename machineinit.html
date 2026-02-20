@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.machineinit &mdash; tbottest 0.0.1-265-g5b526b7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tbottest.connector" href="connector.html" />
+    <link rel="prev" title="tbottest.initconfighelper" href="iniconfighelper.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1-265-g5b526b7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.machineinit.DFUUTIL"><code class="docutils literal notranslate"><span class="pre">DFUUTIL</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.machineinit.DFUUTIL.dfuutil_loader_steps"><code class="docutils literal notranslate"><span class="pre">DFUUTIL.dfuutil_loader_steps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.machineinit.DFUUTIL._init_machine"><code class="docutils literal notranslate"><span class="pre">DFUUTIL._init_machine()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.machineinit.UsbSdpLoad"><code class="docutils literal notranslate"><span class="pre">UsbSdpLoad</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.machineinit.UsbSdpLoad.get_imx_usb_loader"><code class="docutils literal notranslate"><span class="pre">UsbSdpLoad.get_imx_usb_loader()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.machineinit.UsbSdpLoad.usb_loader_bins"><code class="docutils literal notranslate"><span class="pre">UsbSdpLoad.usb_loader_bins()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.machineinit.UUULoad"><code class="docutils literal notranslate"><span class="pre">UUULoad</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.machineinit.UUULoad.get_uuu_tool"><code class="docutils literal notranslate"><span class="pre">UUULoad.get_uuu_tool()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.machineinit.UUULoad.uuu_loader_steps"><code class="docutils literal notranslate"><span class="pre">UUULoad.uuu_loader_steps()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.machineinit.LauterbachLoad"><code class="docutils literal notranslate"><span class="pre">LauterbachLoad</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.machineinit.LauterbachLoad.get_trace32_config"><code class="docutils literal notranslate"><span class="pre">LauterbachLoad.get_trace32_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.machineinit.LauterbachLoad.get_trace32_script"><code class="docutils literal notranslate"><span class="pre">LauterbachLoad.get_trace32_script()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tbottest.machineinit.XMODEMLoad"><code class="docutils literal notranslate"><span class="pre">XMODEMLoad</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.machineinit.XMODEMLoad.xmodem_loader_steps"><code class="docutils literal notranslate"><span class="pre">XMODEMLoad.xmodem_loader_steps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.machineinit.XMODEMLoad.xmodem_loader_device"><code class="docutils literal notranslate"><span class="pre">XMODEMLoad.xmodem_loader_device()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/machineinit.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <span class="target" id="module-tbottest.machineinit"></span><section id="tbottest-machineinit">
+<h1><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code><a class="headerlink" href="#tbottest-machineinit" title="Permalink to this heading">¶</a></h1>
+<p>A module containing various additional machine initializers.  These
+are:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#tbottest.machineinit.UsbSdpLoad" title="tbottest.machineinit.UsbSdpLoad"><code class="xref py py-class docutils literal notranslate"><span class="pre">UsbSdpLoad</span></code></a> - loading bootloader with <a class="reference external" href="https://github.com/boundarydevices/imx_usb_loader">imx_usb_loader</a>.</p></li>
+<li><p><a class="reference internal" href="#tbottest.machineinit.LauterbachLoad" title="tbottest.machineinit.LauterbachLoad"><code class="xref py py-class docutils literal notranslate"><span class="pre">LauterbachLoad</span></code></a> - loading bootloader with <a href="#id2"><span class="problematic" id="id3">`Lauterbach debugger trace32`_</span></a>.</p></li>
+<li><p><a class="reference internal" href="#tbottest.machineinit.DFUUTIL" title="tbottest.machineinit.DFUUTIL"><code class="xref py py-class docutils literal notranslate"><span class="pre">DFUUTIL</span></code></a> - loading bootloader with <a class="reference external" href="https://dfu-util.sourceforge.net/">dfuutil</a>.</p></li>
+<li><p><a class="reference internal" href="#tbottest.machineinit.UUULoad" title="tbottest.machineinit.UUULoad"><code class="xref py py-class docutils literal notranslate"><span class="pre">UUULoad</span></code></a> - loading bootloader with <a class="reference external" href="https://github.com/NXPmicro/mfgtools">uuu</a>.</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.machineinit.DFUUTIL">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.machineinit.</span></span><span class="sig-name descname"><span class="pre">DFUUTIL</span></span><a class="reference internal" href="_modules/tbottest/machineinit.html#DFUUTIL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.machineinit.DFUUTIL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Initializer</span></code></p>
+<p>Machine-initializer for loading SPL/U-Boot image into
+RAM with dfu-util tool</p>
+<p><a class="reference external" href="https://dfu-util.sourceforge.net/">https://dfu-util.sourceforge.net/</a>
+<a class="reference external" href="https://sourceforge.net/p/dfu-util/dfu-util/ci/master/tree/">https://sourceforge.net/p/dfu-util/dfu-util/ci/master/tree/</a></p>
+<p><strong>Example</strong>: (board config)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">board</span>
+<span class="kn">from</span> <span class="nn">tbottest.powercontrol</span> <span class="kn">import</span> <span class="n">SispmControl</span>
+<span class="kn">from</span> <span class="nn">tbottest.machineinit</span> <span class="kn">import</span> <span class="n">DFUUTIL</span>
+
+<span class="k">class</span> <span class="nc">MyControl</span><span class="p">(</span><span class="n">SispmControl</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">Board</span><span class="p">):</span>
+    <span class="n">sispmctl_device</span> <span class="o">=</span> <span class="s2">&quot;01:01:5c:29:39&quot;</span>
+    <span class="n">sispmctl_port</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span>
+
+<span class="k">class</span> <span class="nc">MyControlLoadUB</span><span class="p">(</span><span class="n">MyControl</span><span class="p">,</span> <span class="n">DFUUTIL</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">dfuutil_loader_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span><span class="s1">&#39;@FSBL /0x01/1*1Me&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span><span class="s1">&#39;/tftpdir/u-boot-spl.stm32&#39;</span><span class="p">,</span> <span class="s1">&#39;dmesgcheck&#39;</span><span class="p">:</span><span class="s1">&#39;004900383232510630323432&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span><span class="s1">&#39;u-boot.itb&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span><span class="s1">&#39;/tftpdir/u-boot.itb&#39;</span><span class="p">}]</span>
+</pre></div>
+</div>
+<p>This class sets also a tbot flag “dfuutilloader”</p>
+<p>if passed to tbot, this class is active, if not passed
+this class does nothing.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.machineinit.DFUUTIL.dfuutil_loader_steps">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dfuutil_loader_steps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/machineinit.html#DFUUTIL.dfuutil_loader_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.machineinit.DFUUTIL.dfuutil_loader_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>return list of steps to do for dfu-util tool</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def dfuutil_loader_steps(self):</dt><dd><p>return [{“a”:”&#64;FSBL /0x01/1*1Me”, “D”:”&lt;tftppath&gt;/u-boot-spl.stm32;dfu-util”}, {“a”:”u-boot.itb”, “D”:”&lt;tftppath&gt;/u-boot.itb”}]</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>This property is <strong>required</strong>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.machineinit.DFUUTIL._init_machine">
+<span class="sig-name descname"><span class="pre">_init_machine</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.14)"><span class="pre">Iterator</span></a></span></span><a class="reference internal" href="_modules/tbottest/machineinit.html#DFUUTIL._init_machine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.machineinit.DFUUTIL._init_machine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run this initializer.</p>
+<p>Implementations of this method can make use of <code class="docutils literal notranslate"><span class="pre">self.ch</span></code> as they will
+run after the connector has succeeded.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>More docs for this …</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.machineinit.UsbSdpLoad">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.machineinit.</span></span><span class="sig-name descname"><span class="pre">UsbSdpLoad</span></span><a class="reference internal" href="_modules/tbottest/machineinit.html#UsbSdpLoad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.machineinit.UsbSdpLoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Initializer</span></code></p>
+<p>Machine-initializer for loading SPL/U-Boot image into
+RAM with imx_usb_loader tool from NXP and using
+Serial Download over USB</p>
+<p>source:
+<a class="reference external" href="https://github.com/boundarydevices/imx_usb_loader">https://github.com/boundarydevices/imx_usb_loader</a></p>
+<p>installation of tool:
+<a class="reference external" href="https://github.com/boundarydevices/imx_usb_loader/blob/master/README.md#installation">https://github.com/boundarydevices/imx_usb_loader/blob/master/README.md#installation</a></p>
+<p><strong>Example</strong>: (board config)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">board</span>
+<span class="kn">from</span> <span class="nn">tbottest.powercontrol</span> <span class="kn">import</span> <span class="n">SispmControl</span>
+<span class="kn">from</span> <span class="nn">tbottest.machineinit</span> <span class="kn">import</span> <span class="n">UsbSdpLoad</span>
+
+<span class="k">class</span> <span class="nc">MyControl</span><span class="p">(</span><span class="n">SispmControl</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">Board</span><span class="p">):</span>
+    <span class="n">sispmctl_device</span> <span class="o">=</span> <span class="s2">&quot;01:01:5c:29:39&quot;</span>
+    <span class="n">sispmctl_port</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span>
+
+<span class="k">class</span> <span class="nc">MyControlLoadUB</span><span class="p">(</span><span class="n">MyControl</span><span class="p">,</span> <span class="n">UsbSdpLoad</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_imx_usb_loader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">toolsdir</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">p</span> <span class="o">/</span> <span class="s2">&quot;imx_usb_loader&quot;</span>
+
+    <span class="k">def</span> <span class="nf">usb_loader_bins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">yocto_result_dir</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">[</span> <span class="n">p</span> <span class="o">/</span> <span class="s2">&quot;SPL.signed&quot;</span><span class="p">,</span> <span class="n">p</span> <span class="o">/</span> <span class="s2">&quot;u-boot-ivt.img.signed&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>This class sets also a tbot flag “usbloader”</p>
+<p>if passed to tbot, this class is active, if not passed
+this class does nothing.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.machineinit.UsbSdpLoad.get_imx_usb_loader">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_imx_usb_loader</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="p"><span class="pre">[</span></span><span class="pre">H</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/machineinit.html#UsbSdpLoad.get_imx_usb_loader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.machineinit.UsbSdpLoad.get_imx_usb_loader" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>def get_imx_usb_loader(self) -&gt; linux.Path:</dt><dd><p>return lh.workdir / “tools” / “imx_usb_loader”</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>linux.Path</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the imx_usb_loader directory on your LabHost</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.machineinit.UsbSdpLoad.usb_loader_bins">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">usb_loader_bins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/machineinit.html#UsbSdpLoad.usb_loader_bins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.machineinit.UsbSdpLoad.usb_loader_bins" title="Permalink to this definition">¶</a></dt>
+<dd><p>return list of linux.Path to usb loader binaries</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def usb_loader_bins(self):</dt><dd><p>p = self.host.yocto_result_dir()
+return [ p / “SPL.signed”, p / “u-boot-ivt.img.signed”]</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>This property is <strong>required</strong>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.machineinit.UUULoad">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.machineinit.</span></span><span class="sig-name descname"><span class="pre">UUULoad</span></span><a class="reference internal" href="_modules/tbottest/machineinit.html#UUULoad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.machineinit.UUULoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Initializer</span></code></p>
+<p>Machine-initializer for loading SPL/U-Boot image into
+RAM with uuu tool from NXP and using
+Serial Download over USB</p>
+<p>source:
+<a class="reference external" href="https://github.com/NXPmicro/mfgtools.git">https://github.com/NXPmicro/mfgtools.git</a></p>
+<p>installation:
+<a class="reference external" href="https://github.com/NXPmicro/mfgtools#how-to-build">https://github.com/NXPmicro/mfgtools#how-to-build</a></p>
+<p>We may can check if tool is installed and if not
+install it automagically…</p>
+<p><strong>Example</strong>: (board config)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">board</span>
+<span class="kn">from</span> <span class="nn">tbottest.powercontrol</span> <span class="kn">import</span> <span class="n">SispmControl</span>
+<span class="kn">from</span> <span class="nn">tbottest.machineinit</span> <span class="kn">import</span> <span class="n">UUULoad</span>
+
+<span class="k">class</span> <span class="nc">MyControl</span><span class="p">(</span><span class="n">SispmControl</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">Board</span><span class="p">):</span>
+    <span class="n">sispmctl_device</span> <span class="o">=</span> <span class="s2">&quot;01:01:5c:29:39&quot;</span>
+    <span class="n">sispmctl_port</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span>
+
+<span class="k">class</span> <span class="nc">MyControlLoadUB</span><span class="p">(</span><span class="n">MyControl</span><span class="p">,</span> <span class="n">UUULoad</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_uuu_tool</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">toolsdir</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">uuu_loader_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">yocto_result_dir</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SDP: boot -f /srv/tftpboot/SPL&quot;</span><span class="p">),</span>
+            <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SDPV: delay 100&quot;</span><span class="p">),</span>
+            <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SDPV: write -f /srv/tftpboot/u-boot-dtb.img -addr 0x877fffc0 -skipfhdr&quot;</span><span class="p">),</span>
+            <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SDPV: jump -addr 0x877fffc0&quot;</span><span class="p">),</span>
+            <span class="p">]</span>
+</pre></div>
+</div>
+<p>This class sets also a tbot flag “uuuloader”</p>
+<p>if passed to tbot, this class is active, if not passed
+this class does nothing.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.machineinit.UUULoad.get_uuu_tool">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_uuu_tool</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="p"><span class="pre">[</span></span><span class="pre">H</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/machineinit.html#UUULoad.get_uuu_tool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.machineinit.UUULoad.get_uuu_tool" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>def get_uuu_tool(self) -&gt; linux.Path:</dt><dd><p>return lh.workdir / “tools”</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>linux.Path</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the uuu directory on your LabHost</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.machineinit.UUULoad.uuu_loader_steps">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uuu_loader_steps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/machineinit.html#UUULoad.uuu_loader_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.machineinit.UUULoad.uuu_loader_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>return list of steps to do for uuu tool</p>
+<blockquote>
+<div><dl>
+<dt>def uuu_loader_steps(self):</dt><dd><p>p = self.host.yocto_result_dir()
+return [linux.Raw(f”SDP: boot -f /srv/tftpboot/SPL”),</p>
+<blockquote>
+<div><p>linux.Raw(f”SDPV: delay 100”),
+linux.Raw(f”SDPV: write -f /srv/tftpboot/u-boot-dtb.img -addr 0x877fffc0 -skipfhdr”),
+linux.Raw(f”SDPV: jump -addr 0x877fffc0”),
+]</p>
+</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+<p>This property is <strong>required</strong>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.machineinit.LauterbachLoad">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.machineinit.</span></span><span class="sig-name descname"><span class="pre">LauterbachLoad</span></span><a class="reference internal" href="_modules/tbottest/machineinit.html#LauterbachLoad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.machineinit.LauterbachLoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Initializer</span></code></p>
+<p>BIG FAT WARNING:</p>
+<p>I do not longer own a Lauterbach debugger, so may this class is broken</p>
+<p>TRACE32’s configuration file “config.t32” has to contain these lines:
+RCL=NETASSIST
+PORT=20000
+The port value may be changed but has to match with the port number
+used with this python script.</p>
+<p>currently we use t32apicmd.py, but we used code from t32remotedo.py
+which does not work … so need more rework!</p>
+<p>Also add in config.t32 the line</p>
+<p>CONNECTIONMODE=AUTOCONNECT</p>
+<p>so if you start trace32 and there is another running (or crashed)
+instance running, it get killed.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.machineinit.LauterbachLoad.get_trace32_config">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_trace32_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/tbottest/machineinit.html#LauterbachLoad.get_trace32_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.machineinit.LauterbachLoad.get_trace32_config" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>def get_trace32_path(self) -&gt; str:</dt><dd><p>return “&lt;pathto&gt;/config.t32”</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the config.t32 file on your Host</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.machineinit.LauterbachLoad.get_trace32_script">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_trace32_script</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/tbottest/machineinit.html#LauterbachLoad.get_trace32_script"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.machineinit.LauterbachLoad.get_trace32_script" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>def get_trace32_path(self) -&gt; str:</dt><dd><p>return “&lt;pathto&gt;/autoboot.cmm”</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the cript file on your Host</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.machineinit.XMODEMLoad">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.machineinit.</span></span><span class="sig-name descname"><span class="pre">XMODEMLoad</span></span><a class="reference internal" href="_modules/tbottest/machineinit.html#XMODEMLoad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.machineinit.XMODEMLoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Initializer</span></code></p>
+<p>Machine-initializer for loading SPL/U-Boot image into
+RAM with UART bootmode (for example on TI AM62x)</p>
+<p>You need to install the lrzsz tools on your labhost, so
+you have the sb tool.</p>
+<p>We may can check if tool is installed and if not
+install it automagically…</p>
+<p><strong>Example</strong>: (board config)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tbot.machine</span> <span class="kn">import</span> <span class="n">board</span>
+<span class="kn">from</span> <span class="nn">tbottest.powercontrol</span> <span class="kn">import</span> <span class="n">SispmControl</span>
+<span class="kn">from</span> <span class="nn">tbottest.machineinit</span> <span class="kn">import</span> <span class="n">XMODEMLoad</span>
+
+<span class="k">class</span> <span class="nc">MyControl</span><span class="p">(</span><span class="n">SispmControl</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">Board</span><span class="p">):</span>
+    <span class="n">sispmctl_device</span> <span class="o">=</span> <span class="s2">&quot;01:01:5c:29:39&quot;</span>
+    <span class="n">sispmctl_port</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span>
+
+<span class="k">class</span> <span class="nc">MyControlLoadUB</span><span class="p">(</span><span class="n">MyControl</span><span class="p">,</span> <span class="n">XMODEMLoad</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">xmodem_loader_device</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;/dev/ttyUSB0&quot;</span>
+
+    <span class="k">def</span> <span class="nf">xmodem_loader_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;sb --xmodem TFTPDIR/tiboot3.bin &gt; SERDEV &lt; SERDEV&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;sb --ymodem TFTPDIR/tispl.bin &gt; SERDEV &lt; SERDEV&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;sb --ymodem TFTPDIR/u-boot.img &gt; SERDEV &lt; SERDEV&quot;</span><span class="p">,</span>
+                <span class="p">]</span>
+</pre></div>
+</div>
+<p>This class sets also a tbot flag “xmodemloader”</p>
+<p>if passed to tbot, this class is active, if not passed
+this class does nothing.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.machineinit.XMODEMLoad.xmodem_loader_steps">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xmodem_loader_steps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/machineinit.html#XMODEMLoad.xmodem_loader_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.machineinit.XMODEMLoad.xmodem_loader_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>return list of steps send with sb tool</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def xmodem_loader_steps(self):</dt><dd><dl class="simple">
+<dt>return [“sb –xmodem TFTPDIR/tiboot3.bin &gt; SERDEV &lt; SERDEV”,</dt><dd><p>“sb –ymodem TFTPDIR/tispl.bin &gt; SERDEV &lt; SERDEV”,
+“sb –ymodem TFTPDIR/u-boot.img &gt; SERDEV &lt; SERDEV”]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p>This property is <strong>required</strong>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.machineinit.XMODEMLoad.xmodem_loader_device">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xmodem_loader_device</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tbottest/machineinit.html#XMODEMLoad.xmodem_loader_device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.machineinit.XMODEMLoad.xmodem_loader_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>return serial device</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def xmodem_loader_steps(self):</dt><dd><p>return “/dev/ttyUSB0”</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>This property is <strong>required</strong>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="iniconfighelper.html" class="btn btn-neutral float-left" title="tbottest.initconfighelper" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="connector.html" class="btn btn-neutral float-right" title="tbottest.connector" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
