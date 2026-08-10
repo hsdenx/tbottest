@@ -168,6 +168,66 @@ def lnx_check_revfile(
         fddiff.close()
     return ret
 
+@tbot.testcase
+def lnx_command_check_dump_file(
+    lnx: linux.LinuxShell,
+    revfile,
+    log,
+) -> int:
+    """
+    opens dump file from a command and compares the output with
+    the current run of the command.
+
+    print the differences
+
+    :param lnx: Linux machine we run on
+    :param revfile: revfile with reference content
+    :param log: collected log (return from lnx.exec0())
+    """
+    try:
+        fd = open(revfile, "r")
+    except IOError:
+        raise RuntimeError("Could not open: " + revfile)
+
+    success = 0
+    ref = fd.read().splitlines()
+    l = log.splitlines()
+    for lineno, (line1, line2) in enumerate(zip(ref, l), start=1):
+        if line1 != line2:
+            print(f"Line {lineno}:")
+            print(f"  file1: {line1}")
+            print(f"  file2: {line2}")
+            success += 1
+
+    fd.close()
+    return success
+
+@tbot.testcase
+def lnx_command_create_dump_file(
+    lnx: linux.LinuxShell,
+    revfile,
+    log,
+) -> bool:
+    """
+    create a file revfile which contains the output of a command.
+
+    see also:
+    :py:func:`tbottest.tc.common.lnx_create_command_check_dump_file`
+
+    :param lnx: Linux machine we run on
+    :param revfile: created revfile
+    :param log: collcected log (return from lnx.exec0()
+    """
+    try:
+        fd = open(revfile, "w")
+    except IOError:
+        raise RuntimeError("Could not open: " + revfile)
+
+    fd.write(log)
+
+    fd.close()
+    return True
+
 
 @tbot.testcase
 def lnx_create_revfile(
