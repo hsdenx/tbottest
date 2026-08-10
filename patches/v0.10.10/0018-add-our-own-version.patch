@@ -1,0 +1,25 @@
+From c36a04f589930d7d128817a5971923e27eac1aee Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@denx.de>
+Date: Mon, 3 Oct 2022 07:37:51 +0200
+Subject: [PATCH 18/23] add our own version
+
+add file tbot/_version.py to have our own version string
+
+Base is: v0.10.4
+
+Signed-off-by: Heiko Schocher <hs@denx.de>
+---
+ tbot/_version.py | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 tbot/_version.py
+
+diff --git a/tbot/_version.py b/tbot/_version.py
+new file mode 100644
+index 0000000..1b48fa5
+--- /dev/null
++++ b/tbot/_version.py
+@@ -0,0 +1 @@
++version = "0.10.10-patched"
+-- 
+2.31.1
+

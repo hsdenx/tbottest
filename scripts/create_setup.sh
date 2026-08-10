@@ -4,7 +4,7 @@ set -e
 
 # tbot setup
 tboturl=https://github.com/Rahix/tbot.git
-tbottag="v0.10.6"
+tbottag="v0.10.10"
 
 # tbottestsetup
 tbottesturl=https://github.com/hsdenx/tbottest.git
