@@ -561,6 +561,19 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
             -f bootmode:uart0
             -f bootmode:spinor
 
+        example config for cmd setup:
+
+        .. code-block:: ini
+
+            [BOOTMODE_testboard]
+            modes = [{"name":"bootmode:dfu", "cmd":"stty -F /dev/ttyACM0 9600;echo 'on' > /dev/ttyACM0"}, {"name":"bootmode:emmc", "cmd":"stty -F /dev/ttyACM0 9600;echo 'off' > /dev/ttyACM0"} ]
+
+        .. code-block:: bash
+
+            -f bootmode:dfu
+            -f bootmode:emmc
+
+
         example config for sd mux:
 
         .. code-block:: ini
@@ -650,6 +663,12 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
             try:
                 self.lab_set_sd_mux_mode(bms["sdwire"])
                 return True
+            except:
+                pass
+
+            try:
+                cmd = bms["cmd"]
+                return self.exec0(linux.Raw(cmd))
             except:
                 pass
 
