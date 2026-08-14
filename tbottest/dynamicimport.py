@@ -58,7 +58,7 @@ def get_boardmodule_import():
 
     except Exception as e:
         raise RuntimeError(
-            f"{e} Could not import module import path {importpath}.boardspecific"
+            f"{e} Could not import module import path {mp}"
         )
 
 def get_boardcallbackpath_import():
