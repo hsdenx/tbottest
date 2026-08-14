@@ -1,10 +1,12 @@
-From 2ceb4b14403f00f03fe8ed53bb8f80317f49d6ef Mon Sep 17 00:00:00 2001
-From: Heiko Schocher <hs@denx.de>
+From dcc128f8fc6106128018cf5574ee3f45f8a03778 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
 Date: Thu, 21 Sep 2023 16:34:37 +0200
 Subject: [PATCH 17/23] Revert "connector: Fix improper channel handling by
  SSHConnector"
 
 This reverts commit b253a7fc4ebfdffdd1bf88d4248029dedf517420.
+
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
 ---
  tbot/machine/connector/ssh.py | 10 +++++++---
  1 file changed, 7 insertions(+), 3 deletions(-)

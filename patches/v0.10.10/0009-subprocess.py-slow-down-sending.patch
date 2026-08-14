@@ -1,5 +1,5 @@
-From 3e1dfb58dadc111b6f5d9480fb48f8484c7faf60 Mon Sep 17 00:00:00 2001
-From: Heiko Schocher <hs@denx.de>
+From 214ec3270b8d42515c52731e7b7e87ad4bce8e75 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
 Date: Wed, 28 Apr 2021 17:43:16 +0200
 Subject: [PATCH 09/23] subprocess.py: slow down sending
 
@@ -8,7 +8,7 @@ problems with USB serial adapters.
 
 How can we do this nicer?
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
 ---
  tbot/machine/channel/subprocess.py | 12 +++++++++++-
  1 file changed, 11 insertions(+), 1 deletion(-)

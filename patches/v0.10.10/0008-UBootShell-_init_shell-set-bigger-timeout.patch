@@ -1,5 +1,5 @@
-From e5e72bc4961f1a57867500fd2c4e197bb403ab70 Mon Sep 17 00:00:00 2001
-From: Heiko Schocher <hs@denx.de>
+From 4cb2b686fec61eb73d59e06cdd915f978cc61ece Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
 Date: Sun, 24 May 2020 07:54:09 +0200
 Subject: [PATCH 08/23] UBootShell, _init_shell: set bigger timeout
 
@@ -8,7 +8,7 @@ when calling read_until_prompt from 0.5 to 2.
 
 Now uboottest.py runs much more stable
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
 ---
  tbot/machine/board/uboot.py | 2 +-
  tbot/machine/linux/copy.py  | 2 +-

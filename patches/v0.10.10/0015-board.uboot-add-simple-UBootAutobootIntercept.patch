@@ -1,5 +1,5 @@
-From 9ec7b444c6d8fe759ebccb2ee7a1d49b04759206 Mon Sep 17 00:00:00 2001
-From: Heiko Schocher <hs@denx.de>
+From cd43bb5fd6082260597ff3098bd5e632e360a520 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
 Date: Sun, 20 Aug 2023 06:16:50 +0200
 Subject: [PATCH 15/23] board.uboot: add simple UBootAutobootIntercept
 
@@ -15,7 +15,7 @@ only if boot_timeout is set.
 Works reliable only with one autobootkey, as may U-Boot
 starts receiving when this class sends already second byte...
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
 ---
  tbot/machine/board/__init__.py |   3 +-
  tbot/machine/board/uboot.py    | 106 +++++++++++++++++++++++++++++----

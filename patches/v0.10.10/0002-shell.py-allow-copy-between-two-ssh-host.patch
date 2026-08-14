@@ -1,5 +1,5 @@
-From 0ad2ffc1f5cc29470332ec2dc7ac506c39f11ad8 Mon Sep 17 00:00:00 2001
-From: Heiko Schocher <hs@denx.de>
+From d4a99885463fc90d4ed92893edff04a26589caaf Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
 Date: Thu, 22 Apr 2021 07:45:49 +0200
 Subject: [PATCH 02/23] shell.py: allow copy between two ssh host
 
@@ -9,7 +9,7 @@ pass remote_copy=True to this testcase.
 This is for example the case, when you want to copy
 from ssh build host and ssh lab host.
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
 ---
  tbot/machine/linux/copy.py | 35 ++++++++++++++++++++++++++++++++---
  tbot/tc/shell.py           |  4 ++--

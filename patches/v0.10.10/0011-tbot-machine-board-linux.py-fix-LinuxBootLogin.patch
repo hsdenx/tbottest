@@ -1,11 +1,11 @@
-From a8cd98653429de356bd3a74bb25cbab8659b8f96 Mon Sep 17 00:00:00 2001
-From: Heiko Schocher <hs@denx.de>
+From 5de0598524be1fef18597f5326889495c12322ca Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
 Date: Tue, 25 Apr 2023 06:27:13 +0200
 Subject: [PATCH 11/23] tbot/machine/board/linux.py fix LinuxBootLogin
 
 fix LinuxBootLogin nth time...
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
 ---
  tbot/machine/board/linux.py | 44 +++++++++++++++++--------------------
  1 file changed, 20 insertions(+), 24 deletions(-)

@@ -1,5 +1,5 @@
-From 4f41f4f31520e82fc6aa91b3830031c995017044 Mon Sep 17 00:00:00 2001
-From: Heiko Schocher <hs@denx.de>
+From 28184259a7d490b3aa981476ad1f61f4838c41de Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
 Date: Tue, 29 Aug 2023 06:10:28 +0200
 Subject: [PATCH 01/23] tbot/machine/board/uboot.py: add death strings
 
@@ -11,7 +11,7 @@ get_death_strings(self) -> List[str]
 
 which gets called from _init_machine()
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
 ---
  tbot/machine/board/uboot.py | 15 +++++++++++++++
  1 file changed, 15 insertions(+)

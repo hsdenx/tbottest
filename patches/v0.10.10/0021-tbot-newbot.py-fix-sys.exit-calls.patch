@@ -1,5 +1,5 @@
-From ce359318971b553981c05b2f3d9ace54c327ebd3 Mon Sep 17 00:00:00 2001
-From: Heiko Schocher <hs@denx.de>
+From ee212aa88df5f5daa80fec59ba2bfd0f8343c6f3 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
 Date: Mon, 24 Feb 2025 10:19:44 +0100
 Subject: [PATCH 21/23] tbot/newbot.py: fix sys.exit calls
 
@@ -7,7 +7,7 @@ it is not good to use sys.exit() calls in code,
 as we may call tbot as an module. use sys.exit()
 in __main__ case.
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
 ---
  tbot/newbot.py | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)

@@ -1,5 +1,5 @@
-From cdc3707369d6d2d73dae2e0a84ec23d22120109d Mon Sep 17 00:00:00 2001
-From: Heiko Schocher <hs@denx.de>
+From b389e1b7b921d2f5858e0dd6fe644437fe4bed22 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
 Date: Fri, 27 Mar 2020 07:35:29 +0100
 Subject: [PATCH 05/23] board.linux: make linux login more robust
 
@@ -19,7 +19,7 @@ to get "login: " and so tbot never login into linux.
 rework this part, so read_until_prompt waits "login_delay"
 seconds, and after that, trigger a new login prompt.
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
 Series-to: tbot@lists.denx.de
 ---
  tbot/machine/board/linux.py | 13 +++++++++++++

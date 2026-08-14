@@ -1,5 +1,5 @@
-From 1b0f04442e7c876d4d10ab47abb812b2c6f6509f Mon Sep 17 00:00:00 2001
-From: Heiko Schocher <hs@denx.de>
+From c25259ca069064a8604844b793d1fb3523f24e3d Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
 Date: Sat, 1 Feb 2025 09:40:10 +0100
 Subject: [PATCH 19/23] shell.py: fix crash when no ParamikoConnector
 MIME-Version: 1.0
@@ -14,7 +14,7 @@ when instance has no ParamikoConnector, copy crashes with
 
 Fix this.
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
 ---
  tbot/machine/linux/copy.py | 31 +++++++++++++++++++++----------
  1 file changed, 21 insertions(+), 10 deletions(-)

@@ -1,5 +1,5 @@
-From 397adaa8f54a35aca58dc86d7d952e02fec04013 Mon Sep 17 00:00:00 2001
-From: Heiko Schocher <hs@denx.de>
+From effc2df3fb45733987a64f57a96a43500de27f4a Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
 Date: Sat, 25 Feb 2023 17:02:56 +0100
 Subject: [PATCH 10/23] tbot/machine/board/uboot.py: HACK autoboot_iter
 
@@ -11,7 +11,7 @@ flash, that autoboot string occurs before debugger stops
 the board, So I need to empty recieve buffer before
 I send go command ... no idea yet how to, so this is a HACK
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
 ---
  tbot/machine/board/uboot.py | 38 +++++++++++++++++++++----------------
  1 file changed, 22 insertions(+), 16 deletions(-)

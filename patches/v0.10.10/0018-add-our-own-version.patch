@@ -1,5 +1,5 @@
-From c36a04f589930d7d128817a5971923e27eac1aee Mon Sep 17 00:00:00 2001
-From: Heiko Schocher <hs@denx.de>
+From 89a8edde6c00a67281cf652f7bf9ba21350b9f20 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
 Date: Mon, 3 Oct 2022 07:37:51 +0200
 Subject: [PATCH 18/23] add our own version
 
@@ -7,7 +7,7 @@ add file tbot/_version.py to have our own version string
 
 Base is: v0.10.4
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
 ---
  tbot/_version.py | 1 +
  1 file changed, 1 insertion(+)

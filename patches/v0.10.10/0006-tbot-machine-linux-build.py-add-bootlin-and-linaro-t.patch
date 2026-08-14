@@ -1,18 +1,18 @@
-From 51d7c10527f5b323bdf0e5763e7472f1dede14de Mon Sep 17 00:00:00 2001
-From: Heiko Schocher <hs@denx.de>
+From b6396ce0744a2d8d2aacb85bf00dc6a0d36f1ab6 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
 Date: Mon, 4 Nov 2019 09:13:49 +0100
 Subject: [PATCH 06/23] tbot/machine/linux/build.py: add bootlin and linaro
  toolchains
 
 add bootlin and linaro toolchains for machine v2.
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
 ---
  tbot/machine/linux/build.py | 190 +++++++++++++++++++++++++++++++++++-
  1 file changed, 189 insertions(+), 1 deletion(-)
 
 diff --git a/tbot/machine/linux/build.py b/tbot/machine/linux/build.py
-index bba4ec6..5a7a842 100644
+index bba4ec6..6886e8a 100644
 --- a/tbot/machine/linux/build.py
 +++ b/tbot/machine/linux/build.py
 @@ -19,6 +19,9 @@ import contextlib
@@ -86,7 +86,7 @@ index bba4ec6..5a7a842 100644
 +
 +    """
 +
-+    def enable(self, host: H) -> None:  # noqa: D102
++    def enable(self, host: "Builder") -> None:  # noqa: D102
 +        td = host.workdir / "toolchain"
 +        if not td.exists():
 +            host.exec0("mkdir", "-p", td)
@@ -177,7 +177,7 @@ index bba4ec6..5a7a842 100644
 +            }
 +    """
 +
-+    def enable(self, host: H) -> None:  # noqa: D102
++    def enable(self, host: "Builder") -> None:  # noqa: D102
 +        td = host.workdir / "toolchain"
 +        if not td.exists():
 +            host.exec0("mkdir", "-p", td)

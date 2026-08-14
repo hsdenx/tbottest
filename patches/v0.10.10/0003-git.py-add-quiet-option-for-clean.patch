@@ -1,11 +1,11 @@
-From dbfa88fce33a3a5d1eb387064fcab814c710ca78 Mon Sep 17 00:00:00 2001
-From: Heiko Schocher <hs@denx.de>
+From f6dbfba3e63c9f6ee51072c76d1637e5fbf2ee93 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
 Date: Tue, 12 May 2020 15:06:00 +0200
 Subject: [PATCH 03/23] git.py: add quiet option for clean
 
 add quiet option for git clean and make quiet as default.
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
 ---
  tbot/tc/git.py | 9 ++++++++-
  1 file changed, 8 insertions(+), 1 deletion(-)

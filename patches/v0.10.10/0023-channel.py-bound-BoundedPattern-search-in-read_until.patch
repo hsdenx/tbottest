@@ -1,0 +1,47 @@
+From 6f1b6f001ee6c4337ccaa6c9f7fba6d27e3977f4 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
+Date: Fri, 14 Aug 2026 10:51:29 +0200
+Subject: [PATCH 23/23] channel.py: bound BoundedPattern search in
+ read_until_prompt
+
+read_until_prompt() re-scanned the whole accumulated buffer from
+position 0 on every newly received chunk when matching a regex
+prompt, which is O(n^2) over the length of the output preceding the
+prompt.
+
+The prompt pattern is anchored to match only at the current end of
+the buffer (with_prompt() appends a "$"), and BoundedPattern already
+tracks the maximum width the pattern can match. So any match can
+only start within the last len(prompt) bytes of the buffer -- bound
+the search there instead of rescanning from the start every time.
+
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
+---
+ tbot/machine/channel/channel.py | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/tbot/machine/channel/channel.py b/tbot/machine/channel/channel.py
+index f44cf2c..7e88189 100644
+--- a/tbot/machine/channel/channel.py
++++ b/tbot/machine/channel/channel.py
+@@ -966,7 +966,16 @@ class Channel(typing.ContextManager):
+                             .replace("\n\r", "\n")
+                         )
+                 elif isinstance(self.prompt, BoundedPattern):
+-                    match = self.prompt.pattern.search(buf)
++                    # The pattern is anchored to match only at the end of
++                    # the buffer (with_prompt() appends a "$"), and its
++                    # maximum match width is bounded (len(self.prompt)).
++                    # So any match can only start within the last
++                    # len(self.prompt) bytes -- searching from further
++                    # back can never succeed and just wastes time
++                    # rescanning the whole (growing) buffer on every
++                    # chunk.
++                    start = max(0, len(buf) - len(self.prompt))
++                    match = self.prompt.pattern.search(buf, start)
+                     if match is not None:
+                         return (
+                             buf[: match.span()[0]]
+-- 
+2.31.1
+
