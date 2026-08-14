@@ -1,0 +1,77 @@
+From 04cd4a9da88b238ee2db17d8367d0ae6d7a13fd6 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
+Date: Fri, 14 Aug 2026 11:19:15 +0200
+Subject: [PATCH 24/24] selftest: add tests for read_until_prompt_save and
+ BoundedPattern search
+
+Add coverage for the two channel.py fixes:
+
+- test_read_until_prompt_bounded_pattern: read_until_prompt() must
+  still find a BoundedPattern prompt correctly when a lot of
+  unrelated output precedes it (regression test for bounding the
+  search window instead of rescanning from position 0).
+
+- test_read_until_prompt_save_success: read_until_prompt_save() must
+  return the captured text on success (it previously always crashed
+  with AttributeError due to storing loop state on attributes not
+  declared in Channel.__slots__, so this never actually ran).
+
+- test_read_until_prompt_save_timeout: read_until_prompt_save() must
+  poll/nudge and eventually raise TimeoutError, not crash, if no
+  prompt ever appears within the overall timeout.
+
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
+---
+ selftest/tests/test_channel.py | 36 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+diff --git a/selftest/tests/test_channel.py b/selftest/tests/test_channel.py
+index a620dc3..6476138 100644
+--- a/selftest/tests/test_channel.py
++++ b/selftest/tests/test_channel.py
+@@ -113,6 +113,42 @@ def test_unbounded_pattern(ch: channel.Channel) -> None:
+         ch.read_until_prompt(prompt=ub_pat, timeout=1)
+ 
+ 
++def test_read_until_prompt_bounded_pattern(ch: channel.Channel) -> None:
++    """
++    Regression test for read_until_prompt() with a BoundedPattern prompt:
++    the match must still be found correctly (at the right position) even
++    when a lot of unrelated output precedes the actual prompt.
++    """
++    prompt = tbot.Re(r"bash-[0-9.]{1,10}\$ ")
++
++    ch.sendline("for i in $(seq 1 200); do echo line $i; done", read_back=True)
++    out = ch.read_until_prompt(prompt=prompt)
++    assert out.rstrip("\n").endswith("line 200")
++
++
++def test_read_until_prompt_save_success(ch: channel.Channel) -> None:
++    """
++    read_until_prompt_save() must return the captured text on success.
++    """
++    prompt = tbot.Re(r"bash-[0-9.]{1,10}\$ ")
++
++    ch.sendline("echo prompt-save-worked", read_back=True)
++    out = ch.read_until_prompt_save(prompt=prompt)
++    assert "prompt-save-worked" in out
++
++
++def test_read_until_prompt_save_timeout(ch: channel.Channel) -> None:
++    """
++    read_until_prompt_save() must poll/nudge and eventually raise a
++    TimeoutError if no prompt ever shows up within the overall timeout.
++    """
++    prompt = tbot.Re(r"bash-[0-9.]{1,10}\$ ")
++
++    ch.sendline("sleep 10", read_back=True)
++    with pytest.raises(TimeoutError):
++        ch.read_until_prompt_save(prompt=prompt, timeout=1, poll_timeout=0.3)
++
++
+ def test_blacklist(ch: channel.Channel) -> None:
+     """
+     Test whether blacklisted characters are properly caught.
+-- 
+2.31.1
+
