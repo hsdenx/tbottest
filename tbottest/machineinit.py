@@ -15,6 +15,25 @@ import ctypes
 H = typing.TypeVar("H", bound=linux.LinuxShell)
 
 
+@contextlib.contextmanager
+def _flag_gated_load(
+    flagname: str, do_load: typing.Callable[[], None]
+) -> typing.Iterator[None]:
+    """
+    Shared _init_machine() body for the *Load initializers below: run
+    do_load() only if flagname was passed as a tbot flag, otherwise do
+    nothing. Always yields exactly once, as required by the
+    Initializer._init_machine() contract -- unlike duplicating the
+    "if flagname not in tbot.flags: yield None; return" check in every
+    subclass, which is easy to get wrong (see UsbSdpLoad below, which
+    used to be missing the "return" and would run its loader logic
+    unconditionally, then crash because its generator yielded twice).
+    """
+    if flagname in tbot.flags:
+        do_load()
+    yield None
+
+
 class LauterbachLoad(machine.Initializer):
     """
     BIG FAT WARNING:
@@ -154,12 +173,7 @@ class LauterbachLoad(machine.Initializer):
         """
         return self.host
 
-    @contextlib.contextmanager
-    def _init_machine(self) -> typing.Iterator:
-        if "lauterbachloader" not in tbot.flags:
-            yield None
-            return
-
+    def _load(self) -> None:
         tbot.log.message(
             tbot.log.c("Using Lauterbach debuggger for loading SPL/U-Boot").yellow
         )
@@ -191,7 +205,9 @@ class LauterbachLoad(machine.Initializer):
         # print(', '.join("%s: %s" % item for item in attrs.items()))
         # ub = tbot.selectable.Board
         # ub.ch.read_until_prompt()
-        yield None
+
+    def _init_machine(self) -> typing.ContextManager:
+        return _flag_gated_load("lauterbachloader", self._load)
 
 
 class SeggerLoad(machine.Initializer):
@@ -248,12 +264,7 @@ class SeggerLoad(machine.Initializer):
         # ToDo
         return True
 
-    @contextlib.contextmanager
-    def _init_machine(self) -> typing.Iterator:
-        if "seggerloader" not in tbot.flags:
-            yield None
-            return
-
+    def _load(self) -> None:
         tbot.log.message(
             tbot.log.c("Using Segger debuggger for loading SPL/U-Boot").yellow
         )
@@ -267,7 +278,8 @@ class SeggerLoad(machine.Initializer):
 
         host.exec0("q")
 
-        yield None
+    def _init_machine(self) -> typing.ContextManager:
+        return _flag_gated_load("seggerloader", self._load)
 
 
 class UsbSdpLoad(machine.Initializer):
@@ -336,11 +348,7 @@ class UsbSdpLoad(machine.Initializer):
     usb_loader_retry: int = 4
     """retry to load binary retry times"""
 
-    @contextlib.contextmanager
-    def _init_machine(self) -> typing.Iterator:
-        if "usbloader" not in tbot.flags:
-            yield None
-
+    def _load(self) -> None:
         imx = self.get_imx_usb_loader()
         bins = self.usb_loader_bins()
         for bina in bins:
@@ -364,7 +372,8 @@ class UsbSdpLoad(machine.Initializer):
                         f"could not load {bina} with imx_usb_loader. retry {self.usb_loader_retry}"
                     )
 
-        yield None
+    def _init_machine(self) -> typing.ContextManager:
+        return _flag_gated_load("usbloader", self._load)
 
 class DFUUTIL(machine.Initializer):
     """
@@ -409,12 +418,7 @@ class DFUUTIL(machine.Initializer):
         raise Exception("abstract method")
 
 
-    @contextlib.contextmanager
-    def _init_machine(self) -> typing.Iterator:
-        if "dfuutilloader" not in tbot.flags:
-            yield None
-            return
-
+    def _load(self) -> None:
         cmds = self.dfuutil_loader_steps()  # type: List[str]
         for cmd in cmds:
             # command fails... FixMe
@@ -434,7 +438,8 @@ class DFUUTIL(machine.Initializer):
 
             self.host.exec("dfu-util", "-w", "-a", cmd["a"], "-D", cmd["D"])  # type: ignore
 
-        yield None
+    def _init_machine(self) -> typing.ContextManager:
+        return _flag_gated_load("dfuutilloader", self._load)
 
 
 class UUULoad(machine.Initializer):
@@ -535,14 +540,8 @@ class UUULoad(machine.Initializer):
 
         return True
 
-    @contextlib.contextmanager
-    def _init_machine(self) -> typing.Iterator:
-        if "uuuloader" not in tbot.flags:
-            yield None
-            return
-
+    def _load(self) -> None:
         if not self._check_uuu_tool():
-            yield None
             return
 
         uuu = self.get_uuu_tool()  # type: ignore
@@ -550,7 +549,8 @@ class UUULoad(machine.Initializer):
         for st in steps:
             self.host.exec0("sudo", uuu / "mfgtools/build/uuu/uuu", st)  # type: ignore
 
-        yield None
+    def _init_machine(self) -> typing.ContextManager:
+        return _flag_gated_load("uuuloader", self._load)
 
 class XMODEMLoad(machine.Initializer):
     """
@@ -635,14 +635,8 @@ class XMODEMLoad(machine.Initializer):
             return False
 
 
-    @contextlib.contextmanager
-    def _init_machine(self) -> typing.Iterator:
-        if "xmodemloader" not in tbot.flags:
-            yield None
-            return
-
+    def _load(self) -> None:
         if not self._check_xmodem_tool():
-            yield None
             return
 
         steps = self.xmodem_loader_steps()  # type: List[str]
@@ -651,7 +645,8 @@ class XMODEMLoad(machine.Initializer):
         for st in steps:
             self.host.exec0(linux.Raw(st))  # type: ignore
 
-        yield None
+    def _init_machine(self) -> typing.ContextManager:
+        return _flag_gated_load("xmodemloader", self._load)
 
 
 
