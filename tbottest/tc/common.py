@@ -46,16 +46,11 @@ def search_multistring_in_multiline(searches, lines) -> bool:
     :param lines: multiline string, in which we search the string
     :return: True if all strings are found else False
     """
-    found = True
-    loop = True
-    while loop:
-        for findstr in searches:
-            found = search_string_in_multiline(findstr, lines)
-            if found is False:
-                loop = False
-                break
-
-        loop = False
+    # split once and reuse for every search string, instead of letting
+    # search_string_in_multiline() re-split the same (potentially large)
+    # log for each of them
+    splitlines = lines.split("\n")
+    found = all(any(s in line for line in splitlines) for s in searches)
 
     if found is False:
         msg = "Not found all strings in log"
