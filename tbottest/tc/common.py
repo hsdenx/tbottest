@@ -1436,10 +1436,8 @@ def tbot_start_thread(
         "stdout": logfile_stdout,
         "stderr": logfile_stderr,
     }
-    try:
-        tmpdict = THREADS[tid]  # noqa: F841
-    except:
-        RuntimeError(f"threadid {tid} already in use")
+    if tid in THREADS:
+        raise RuntimeError(f"threadid {tid} already in use")
 
     THREADS[tid] = newt
 
