@@ -51,7 +51,7 @@ class genericbuilder(connector.SSHConnector, linux.Bash, linux.Builder):
             try:
                 tmp = cfgt.config_parser.get(self.sn, "docker")
                 args.append(f"ProxyJump={tmp}")
-            except:  # noqa: E722
+            except Exception:
                 pass
 
         return args
@@ -66,7 +66,7 @@ class genericbuilder(connector.SSHConnector, linux.Bash, linux.Builder):
         try:
             port = cfgt.config_parser.get(self.sn, "port")
             return int(port)
-        except:
+        except Exception:
             return 22
 
     def init(self) -> None:
@@ -74,7 +74,7 @@ class genericbuilder(connector.SSHConnector, linux.Bash, linux.Builder):
             _INIT_CACHE["BHINIT"] = True
             try:
                 initcmd = eval(cfgt.config_parser.get(self.sn, "initcmd"))
-            except:
+            except Exception:
                 initcmd = []
 
             for cmd in initcmd:
@@ -104,17 +104,17 @@ class genericbuilderlocal(connector.SubprocessConnector, linux.Bash, linux.Build
     sn = "BUILDHOST_local"
     try:
         name = cfgt.config_parser.get(sn, "name")
-    except:
+    except Exception:
         name = "NOTDEFINED please add BUILDHOST_local in tbot.ini"
         pass
     try:
         dl_dir = cfgt.config_parser.get(sn, "dl_dir")
-    except:
+    except Exception:
         dl_dir = "NOTDEFINED please add BUILDHOST_local in tbot.ini"
         pass
     try:
         sstate_dir = cfgt.config_parser.get(sn, "sstate_dir")
-    except:
+    except Exception:
         sstate_dir = "NOTDEFINED please add BUILDHOST_local in tbot.ini"
         pass
 
@@ -135,7 +135,7 @@ class genericbuilderlocal(connector.SubprocessConnector, linux.Bash, linux.Build
             _INIT_CACHE["BHINIT"] = True
             try:
                 initcmd = eval(cfgt.config_parser.get(self.sn, "initcmd"))
-            except:
+            except Exception:
                 initcmd = []
 
             for cmd in initcmd:

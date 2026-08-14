@@ -48,7 +48,7 @@ def ps_parse_ps(log) -> None:  # noqa: D107
                 line, "{PID}\s+{TID}\s+{CPU}\s+{NI}\s+{PRI}\s+{CMD}"  # noqa: W605
             )  # noqa: W605
             result.append(res)
-        except:
+        except Exception:
             continue
 
     return result
@@ -154,7 +154,7 @@ def ps_parse_top(log, busybox) -> None:  # noqa: D107
                 )  # noqa: W605
 
             loopresult.append(res)
-        except:
+        except Exception:
             continue
 
     return result
@@ -189,7 +189,7 @@ def lnx_get_process_cpu_usage(
                 log,
                 "{PID}\s+{USER}\s+{PR}\s+{NI}\s+{VIRT}\s+{RES}\s+{SHR}\s+{S}\s+{CPU}\s+{MEM}\s+{TIME}\s+{CMD}",  # noqa: W605
             )
-        except:
+        except Exception:
             res = {}
 
         return res
@@ -273,7 +273,7 @@ def lnx_measure_process(
             else:
                 # log = lnx.exec0("ps", "a", "-o", "pid,tid,pcpu,nice,priority,comm", "H")
                 log = lnx.exec0("ps", "a", "-o", "pid,tid,pcpu,nice,priority,comm")
-        except:
+        except Exception:
             log = ""
 
         resultnew = ps_parse_ps(log)
@@ -426,7 +426,7 @@ def ps_create_measurement_png(
     outputfilename = gnuplotpath + "/" + "process-usage.png"
     try:
         fd = open(fname, "w")
-    except:
+    except Exception:
         tbot.log.message(
             tbot.log.c(
                 f"could not open {fname}, May you create {gnuplotpath}, if you want to use the results later"
@@ -581,7 +581,7 @@ def top_create_measurement_png(
     outputfilename = gnuplotpath + "/" + "process-usage.png"
     try:
         fd = open(fname, "w")
-    except:
+    except Exception:
         tbot.log.message(
             tbot.log.c(
                 f"could not open {fname}, May you create {gnuplotpath}, if you want to use the results later"

@@ -16,7 +16,7 @@ from tbottest.dynamicimport import get_boardmodulepath_import
 
 try:
     set_ub_board_specific = getattr(get_boardmodule_import(), "set_ub_board_specific")
-except:
+except Exception:
     raise RuntimeError(
         "Please define at least a dummy set_ub_board_specific in {get_boardmodulepath_import()}"
     )
@@ -176,7 +176,7 @@ class GenericUBoot(
         if "set-ethconfig" in tbot.flags:
             try:
                 intf = cfglab.ubcfg[ini.generic_get_boardname()]["ethintf"]
-            except:  # noqa: E722
+            except Exception:
                 intf = "eth0"
 
             ethdev = cfglab.ethdevices[ini.generic_get_boardname()][intf]
@@ -355,7 +355,7 @@ class GenericLinuxBoot(
         for cmd in lx_init:
             try:
                 mode = cmd["mode"]
-            except:
+            except Exception:
                 mode = "exec0"
 
             if mode == "exec0":

@@ -3,7 +3,7 @@ from pathlib import Path
 
 try:
     import tbot
-except:
+except Exception:
     print("tbot lib not found, some functions will fail")
     pass
 

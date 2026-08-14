@@ -165,7 +165,7 @@ def board_lnx_rs485(
                 tbot_copy_file_to_board(lab, lnx, ethdevice, sendfilehexbase)
                 try:
                     tar.exec0("cmp", tar.tmpdir() / sendfilehexbase, rcvtmpfile._local_str())
-                except:
+                except Exception:
                     tar.exec0("cat", tar.tmpdir() / sendfilehexbase)
                     tar.exec0("cat", rcvtmpfile._local_str())
                     raise RuntimeError("RS485 receive error")
@@ -214,7 +214,7 @@ def board_lnx_rs485(
                 tbot_copy_file_to_board(lab, lnx, ethdevice, rcvfile)
                 try:
                     lnx.exec0("cmp", sendfilehex, lnx.tmpdir() / rcvfile)
-                except:
+                except Exception:
                     src.exec0("cat", sendfilehex._local_str())
                     src.exec0("cat", lnx.tmpdir() / rcvfile)
                     raise RuntimeError("RS485 send error")

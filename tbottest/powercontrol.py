@@ -45,7 +45,7 @@ class GpiopmControl(board.PowerControl):
     def poweron(self) -> None:
         try:
             self._gpio
-        except:  # noqa: E722
+        except Exception:
             self._gpio = Gpio(self.host, self.gpiopmctl_pin)
             self._gpio.set_direction("out")
 
@@ -58,7 +58,7 @@ class GpiopmControl(board.PowerControl):
 
         try:
             self._gpio
-        except:  # noqa: E722
+        except Exception:
             self._gpio = Gpio(self.host, self.gpiopmctl_pin)
             self._gpio.set_direction("out")
 

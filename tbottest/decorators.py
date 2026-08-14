@@ -19,7 +19,7 @@ def tbot_save_flags(tc: F_tc) -> F_tc:
         failure = False
         try:
             tc(*args, **kwargs)
-        except:
+        except Exception:
             failure = True
 
         tbot.flags = oldflags.copy()

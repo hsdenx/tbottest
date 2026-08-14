@@ -420,7 +420,7 @@ class DFUUTIL(machine.Initializer):
             # command fails... FixMe
             try:
                 dmesgcheck = cmd["dmesgcheck"]
-            except:
+            except Exception:
                 dmesgcheck = None
 
             if dmesgcheck:
@@ -631,7 +631,7 @@ class XMODEMLoad(machine.Initializer):
             self.host.exec0("sb", "--help")
             self.toolchecked = True
             return True
-        except:
+        except Exception:
             return False
 
 

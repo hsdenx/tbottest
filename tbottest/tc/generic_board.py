@@ -396,7 +396,7 @@ def generic_lnx_all(
             else:
                 success.append(tc)
                 tbot.log.message(tbot.log.c(f"tc {tc} success").green)
-        except:
+        except Exception:
             failed.append(tc)
             tbot.log.message(tbot.log.c(f"tc {tc} failed").red)
 

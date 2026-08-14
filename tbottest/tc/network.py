@@ -184,7 +184,7 @@ def network_linux_iperf(
     fname = "results/iperf/" + filename
     try:
         fd = open(fname, "w")
-    except:
+    except Exception:
         tbot.log.message(
             tbot.log.c(
                 f"could not open {fname}, May you create results/iperf, if you want to use the iperf results later"

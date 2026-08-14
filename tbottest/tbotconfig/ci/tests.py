@@ -23,7 +23,7 @@ def all() -> str:  # noqa: D107
             ret = func()
             if ret is not True:
                 failedtest.append("laball")
-        except:
+        except Exception:
             tbot.log.message(
                 tbot.log.c(
                     f'exception when calling function {test["func"]} from module {test["module"]}'

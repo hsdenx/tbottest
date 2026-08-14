@@ -76,7 +76,7 @@ def BOARDNAME_ub_all(
             try:
                 func = getattr(tc_abb, t)
                 ret = func()
-            except:
+            except Exception:
                 tbot.log.message(tbot.log.c(f"---- test {t} not found ----").red)
                 continue
 

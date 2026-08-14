@@ -128,7 +128,7 @@ def print_log(msg):
     try:
         if tbot.selectable.printed:
             return
-    except:
+    except Exception:
         pass
 
     tbot.log.message(tbot.log.c(msg).yellow)
@@ -198,7 +198,7 @@ def set_board_cfg(temp: str = None, filename: str = None):  # noqa: C901
             if "LABHOST" in s:
                 try:
                     basepath = config_parser.get(s, "nfs_base_path")
-                except:
+                except Exception:
                     raise RuntimeError(
                         f"Could not find 'nfs_base_path' key in section 'default' in {filename}"
                     )

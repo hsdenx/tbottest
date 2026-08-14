@@ -58,7 +58,7 @@ def lnx_mtd_nvram(
                 int(t["seek"]) * int(t["bs"]),
                 int(t["cnt"]) * int(t["bs"]),
             )
-        except:  # noqa: E722
+        except Exception:
             lnx.interactive()
 
         # lnx.exec0("dd", f"if={tmpf}", f"of={dev}", f"bs={t['bs']}", f"count={t['cnt']}", f"seek={t['seek']}")
@@ -126,7 +126,7 @@ def lnx_mtd_nvram_reboot(
                     int(t["seek"]) * int(t["bs"]),
                     int(t["cnt"]) * int(t["bs"]),
                 )
-            except:  # noqa: E722
+            except Exception:
                 lnx.interactive()
 
             out = lnx.exec0(

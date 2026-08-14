@@ -41,7 +41,7 @@ class boardPicocomConnector(PicocomConnector):
                 tmp = cfgt.config_parser.get(s, "noreset")
                 if "True" in tmp:
                     noreset = True
-            except:  # noqa: E722
+            except Exception:
                 pass
 
 
@@ -85,14 +85,14 @@ class boardSSHConnector(connector.SSHConnector):
         tbot.log.message(
             tbot.log.c(f"Use {IP_BOARD_SSH_INTERFACE} interface for ssh").yellow
         )
-    except:
+    except Exception:
         IP_BOARD_SSH_INTERFACE = "eth0"
 
     try:
         ssh_ip_section = f"IPSETUP_{ini.generic_get_boardname()}_{IP_BOARD_SSH_INTERFACE}"
         IP_BOARD = cfgt.config_parser.get(ssh_ip_section, "ipaddr")
         hostname = IP_BOARD
-    except:
+    except Exception:
         RuntimeError(
             f"Please set ipaddr for ssh machine. Expect section {ssh_ip_section} with key ipaddr"
         )
@@ -366,7 +366,7 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
     try:
         enablelocking = cfgt.config_parser.get(LABSECTIONNAME, "uselocking")
         enablelocking = enablelocking.lower()
-    except:
+    except Exception:
         enablelocking = "no"
 
     bootmodecfg = cfgt.bootmodecfg
@@ -389,7 +389,7 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
             try:
                 tmp = cfgt.config_parser.get(LABSECTIONNAME, "proxyjump")
                 args.append(f"ProxyJump={tmp}")
-            except:  # noqa: E722
+            except Exception:
                 pass
 
         return args
@@ -399,13 +399,13 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
         try:
             tmp = cfgt.config_parser.get(LABSECTIONNAME, "sshkeyfile")
             return linux.auth.PrivateKeyAuthenticator(tmp)
-        except:
+        except Exception:
             pass
 
         try:
             password = cfgt.config_parser.get(LABSECTIONNAME, "password")
             return linux.auth.PasswordAuthenticator(password)
-        except:
+        except Exception:
             raise RuntimeError(
                 f"you need to setup Authenticator for {self.name}. Set 'sshkeyfile' or 'password' in section [{LABSECTIONNAME}] in tbot.ini"
             )
@@ -541,7 +541,7 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
                 f"--device-serial={sdwireserial}",
                 md,
             )
-        except:  # noqa: E722
+        except Exception:
             tbot.log.message(tbot.log.c("no sd wire on this labhost").yellow)
             pass
 
@@ -624,7 +624,7 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
         """
         try:
             bootmodes = self.bootmodecfg[ini.generic_get_boardname()]
-        except:
+        except Exception:
             return True
 
         bms = None
@@ -657,19 +657,19 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
                     else:
                         gpio.set_value(True)
                 return True
-            except:
+            except Exception:
                 pass
 
             try:
                 self.lab_set_sd_mux_mode(bms["sdwire"])
                 return True
-            except:
+            except Exception:
                 pass
 
             try:
                 cmd = bms["cmd"]
                 return self.exec0(linux.Raw(cmd))
-            except:
+            except Exception:
                 pass
 
             try:
@@ -677,7 +677,7 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
                 func = getattr(get_boardcallback_import(), funcname)
                 ret = func(self)
                 return ret
-            except:
+            except Exception:
                 pass
 
             tbot.log.message(tbot.log.c(f"set bootmode {bms['name']} failed").red)
@@ -712,7 +712,7 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
                         self.exec0(linux.Raw(i))
 
                     self.exec0("date", linux.Raw(">"), self.labinitfilename)
-            except:  # noqa: E722
+            except Exception:
                 pass
 
             if "noethinit" in tbot.flags:
@@ -759,7 +759,7 @@ class SSHMachine(connector.SSHConnector, linux.Bash):
         port = cfgt.config_parser.get("SSHMACHINE", "port")
         hostname = cfgt.config_parser.get("SSHMACHINE", "hostname")
         wdir = cfgt.config_parser.get("SSHMACHINE", "workdir")
-    except:
+    except Exception:
         pass
 
     def tftp_dir(self) -> "linux.path.Path[SSHMachine]":
@@ -795,7 +795,7 @@ class LocalHostTest(
         """
         try:
             tmp = os.environ["TBOTTESTWORKPATH"]
-        except:
+        except Exception:
             tmp = "/tmp"
 
         tmp = f"{tmp}/tbot"
@@ -817,7 +817,7 @@ class LocalHostTest(
         """
         try:
             tmp = os.environ["TBOTTESTPATH"]
-        except:
+        except Exception:
             tmp = "."
 
         return linux.Workdir.static(self, tmp)

@@ -49,7 +49,7 @@ def board_lnx_tpm2(
 
         try:
             lnx.exec0("eltt2", "-h")
-        except:  # noqa: E722
+        except Exception:
             # no eltt2 tool ... exit
             return
 

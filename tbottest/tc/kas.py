@@ -202,42 +202,42 @@ class KAS:
 
         try:
             self.lab = self.cfg["labhost"]
-        except:  # noqa: E722
+        except Exception:
             raise RuntimeError("please define labhost")
 
         try:
             self.bh = self.cfg["buildhost"]
-        except:  # noqa: E722
+        except Exception:
             raise RuntimeError("please define buildhost")
 
         try:
             self.container = self.cfg["kascontainer"]
-        except:  # noqa: E722
+        except Exception:
             pass
 
         try:
             self.container_engine = self.cfg["kascontainerengine"]
-        except:  # noqa: E722
+        except Exception:
             pass
 
         try:
             self.git_credential_store = self.cfg["git_credential_store"]
-        except:  # noqa: E722
+        except Exception:
             pass
 
         try:
             self.netrc_file = self.cfg["netrc_file"]
-        except:  # noqa: E722
+        except Exception:
             pass
 
         try:
             self.kas_runtime_args = self.cfg["kas_runtime_args"]
-        except:  # noqa: E722
+        except Exception:
             pass
 
         try:
             self.kas_ssh_dir = self.cfg["ssh_dir"]
-        except:  # noqa: E722
+        except Exception:
             pass
 
         try:
@@ -264,74 +264,74 @@ class KAS:
                 self.kascmd = f"{self.kaspath._local_str()}/kas/kas-container"
             else:
                 self.kascmd = f"{self.kaspath._local_str()}/kas/run-kas"
-        except:  # noqa: E722
+        except Exception:
             # simply use the installed kas command
             pass
 
         try:
             self.build_machine = self.cfg["build_machine"]
-        except:  # noqa: E722
+        except Exception:
             raise RuntimeError("please define build_machine")
 
         try:
             self.subdir = self.cfg["subdir"]
-        except:  # noqa: E722
+        except Exception:
             raise RuntimeError("please configure subdir")
 
         try:
             self.deploypath = self.cfg["deploypath"]
-        except:  # noqa: E722
+        except Exception:
             pass
 
         try:
             self.kaslayer = self.cfg["kaslayer"]
-        except:  # noqa: E722
+        except Exception:
             raise RuntimeError("please configure kaslayer")
 
         try:
             self.kaslayername = self.cfg["kaslayername"]
-        except:  # noqa: E722
+        except Exception:
             self.kaslayername = None
 
         try:
             self.kaslayerbranch = self.cfg["kaslayerbranch"]
-        except:  # noqa: E722
+        except Exception:
             raise RuntimeError("please configure kaslayerbranch")
 
         try:
             self.kasconfigfile = self.cfg["kasconfigfile"]
-        except:  # noqa: E722
+        except Exception:
             raise RuntimeError("please configure kasconfigfile")
 
         try:
             self.bitbakeenvinit = self.cfg["bitbakeenvinit"]
-        except:  # noqa: E722
+        except Exception:
             self.bitbakeenvinit = "sources/poky/oe-init-build-env"
 
         # optional setting
         try:
             self.bitbakeoptions = self.cfg["bitbakeoptions"]
-        except:  # noqa: E722
+        except Exception:
             pass
 
         try:
             self.buildtargets = self.cfg["buildtargets"]
-        except:  # noqa: E722
+        except Exception:
             pass
 
         try:
             self.resultimages = self.cfg["resultimages"]
-        except:  # noqa: E722
+        except Exception:
             pass
 
         try:
             self.envinit = self.cfg["envinit"]
-        except:
+        except Exception:
             self.envinit = None
 
         try:
             self.autoconf = self.cfg["auto.conf"]
-        except:
+        except Exception:
             self.autoconf = None
 
         self.kasconfigpath = self.kas_get_basepath() / "kasconfig"
@@ -441,7 +441,7 @@ class KAS:
         try:
             kas_ref_dir = self.bh.kas_ref_dir
             pre = [linux.Raw(f'KAS_REPO_REF_DIR="{kas_ref_dir._local_str()}"')]
-        except:  # noqa: E722
+        except Exception:
             pass
 
         if self.netrc_file:
@@ -462,7 +462,7 @@ class KAS:
         try:
             kas_ref_dir = self.bh.kas_ref_dir
             pre.append(linux.Raw(f'KAS_REPO_REF_DIR="{kas_ref_dir._local_str()}"'))
-        except:  # noqa: E722
+        except Exception:
             pass
 
         kasarg = []
@@ -553,7 +553,7 @@ class KAS:
         if buildtargets is None:
             try:
                 buildtargets = self.buildtargets
-            except:  # noqa: E722
+            except Exception:
                 raise RuntimeError("please specify buildtargets (array of strings)")
 
         self.kas_env_init()
@@ -575,7 +575,7 @@ class KAS:
         try:
             kas_ref_dir = self.bh.kas_ref_dir
             pre.append(f'KAS_REPO_REF_DIR="{kas_ref_dir._local_str()}"')
-        except:  # noqa: E722
+        except Exception:
             pass
 
         if self.netrc_file:
@@ -636,7 +636,7 @@ class KAS:
         if resultimages is None:
             try:
                 resultimages = self.resultimages
-            except:  # noqa: E722
+            except Exception:
                 raise RuntimeError("please specify buildtargets (array of strings)")
 
         for r in resultimages:

@@ -65,7 +65,7 @@ def generic_get_socname(
             print("LOG ", log)
             if "fsl,imx8mp-soc" in log:
                 return "imx8mp"
-        except:
+        except Exception:
             pass
 
     return "not detected"

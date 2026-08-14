@@ -31,7 +31,7 @@ def main(argv):
         try:
             found = re.search("Max:( *)(\d*)", line.strip()).group(2)  # noqa: W605
             val = int(found)
-        except:  # noqa: E722
+        except Exception:
             found = None
 
         if found:

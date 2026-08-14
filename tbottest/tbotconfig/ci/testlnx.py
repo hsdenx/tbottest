@@ -49,7 +49,7 @@ def lnx_test_linux_generic() -> bool:  # noqa: D107
             try:
                 func = getattr(module, test)
                 func(lnx)
-            except:
+            except Exception:
                 error = FAILED
 
         return error

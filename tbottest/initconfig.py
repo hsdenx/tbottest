@@ -80,7 +80,7 @@ def init_get_config(
         if value == "None":
             return None
         return value
-    except:
+    except Exception:
         pass
     # next common config
     value = cfgp.get("TC", name, fallback=default)
@@ -112,7 +112,7 @@ def init_get_config_int(
         if value == "None":
             return None
         return int(value)
-    except:
+    except Exception:
         pass
     # next common config
     value = cfgp.get("TC", name, fallback=default)
@@ -139,7 +139,7 @@ def init_lab_get_config(
     try:
         value = cfgp.get(sectionname, name)
         return value
-    except:
+    except Exception:
         pass
 
     return default
@@ -240,7 +240,7 @@ def find_in_file_and_delete(filename, substring):
 
 try:
     set_board_cfg = getattr(get_boardmodule_import(), "set_board_cfg")
-except:
+except Exception:
     raise RuntimeError(
         f"Please define at least a dummy set_board_config in {get_boardmodulepath_import()}"
     )
@@ -249,7 +249,7 @@ except:
 
 try:
     board_set_boardname = getattr(get_boardmodule_import(), "board_set_boardname")
-except:
+except Exception:
     board_set_boardname = None
 
 
@@ -309,7 +309,7 @@ class IniTBotConfig(metaclass=_Singleton):
                 try:
                     tmpdict = self.ethdevices[nm]
                     tmpdict.update({dev: cfg})
-                except:  # noqa: E722
+                except Exception:
                     self.ethdevices[nm] = devtmp
 
         self.bootmodecfg = {}
@@ -365,12 +365,12 @@ class IniTBotConfig(metaclass=_Singleton):
 
                 try:
                     verbose = self.config_parser.get(s, "verbose")
-                except:
+                except Exception:
                     verbose = 1
 
                 try:
                     ipath = self.config_parser.get(s, "install_path")
-                except:
+                except Exception:
                     ipath = "/opt/t32"
 
                 cmd = self.config_parser.get(s, "cmd")

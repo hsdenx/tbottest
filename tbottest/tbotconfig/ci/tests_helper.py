@@ -20,7 +20,7 @@ def run_all_tests(tests: List, modname: str, name: str) -> bool:  # noqa: D107
             ret = func()
             if ret is not SUCCESS:
                 failedtest.append(test)
-        except:
+        except Exception:
             tbot.log.message(tbot.log.c(f"exception when calling function {test}").red)
             failedtest.append(test)
 

@@ -566,7 +566,7 @@ def lnx_get_ipaddr(
     while i <= poll:
         try:
             return _lnx_get_ipaddr(lnx, name, ip6)
-        except:
+        except Exception:
             if sleep:
                 time.sleep(sleep)
             i += 1

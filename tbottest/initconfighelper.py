@@ -82,7 +82,7 @@ def get_tbotconfig_path():
     try:
         TBOTCONFIGPATH = os.environ['TBOTCONFIGPATH']
         return TBOTCONFIGPATH
-    except:
+    except Exception:
         pass
 
     try:
@@ -90,7 +90,7 @@ def get_tbotconfig_path():
             if "tbotconfig" in p:
                 TBOTCONFIGPATH = p.replace("tbotconfig", "")
                 return TBOTCONFIGPATH
-    except:
+    except Exception:
         pass
 
     TBOTCONFIGPATH = os.getcwd()
@@ -116,7 +116,7 @@ def inifile_get_tbotfilename():
         if "inifile" in f:
             try:
                 pathinifile = f.split(":")[1]
-            except:
+            except Exception:
                 raise RuntimeError("please use : as seperator inifile flag")
         if "tmpfilepath" in f:
             tmppath = f.split(":")[1]
@@ -162,7 +162,7 @@ def inifile_get_tbotboardfilename():
         if "boardfile" in f:
             try:
                 pathinifile = f.split(":")[1]
-            except:
+            except Exception:
                 raise RuntimeError("please use : as seperator boardfile flag")
         if "tmpfilepath" in f:
             tmppath = f.split(":")[1]
