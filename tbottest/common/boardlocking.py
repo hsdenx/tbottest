@@ -132,6 +132,6 @@ def lab_rm_lock(
             boardname = ini.generic_get_boardname()
             errstr = f"passed lockid {lockid} is not the same as lockid in file {lockfile._local_str()}. Boardname {boardname} is locked through ID {activelockid}"
             tbot.log.message(tbot.log.c(errstr).red)
-            raise RuntimeError("errstr")
+            raise RuntimeError(errstr)
 
         lab.exec0("rm", lockfile)
