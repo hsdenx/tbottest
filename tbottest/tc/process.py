@@ -157,6 +157,11 @@ def ps_parse_top(log, busybox) -> None:  # noqa: D107
         except Exception:
             continue
 
+    # flush the last loop's data -- it's otherwise only appended to
+    # result when the *next* "Cpu(s)"/"CPU:" marker line is seen
+    if len(loopresult):
+        result.append({"loop": i, "cpu_system": cpu, "values": loopresult})
+
     return result
 
 
