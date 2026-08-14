@@ -3,7 +3,7 @@ import time
 import re
 import tbot
 from tbot.machine import board, linux, connector, channel
-from typing import List
+from typing import List, TypeVar
 
 import os
 
@@ -213,8 +213,30 @@ def add_death_strings(ch):
         ch.add_death_string(m)
 
 
+_Self = TypeVar("_Self", bound="_WorkdirTmpdirMixin")
+
+
+class _WorkdirTmpdirMixin:
+    """
+    Shared workdir/tmpdir for the Generic* board classes below: they
+    all use the same fixed paths, regardless of which combination of
+    board.Connector/board.LinuxBootLogin/etc. they otherwise inherit
+    from.
+    """
+
+    @property
+    def workdir(self: _Self) -> "linux.Path[_Self]":
+        return linux.Workdir.static(self, "/run/tbot-testdata")
+
+    def tmpdir(self: _Self) -> "linux.path.Path[_Self]":
+        """
+        returns tbot tmpdir for this lab
+        """
+        return linux.Workdir.static(self, "/tmp")
+
+
 class GenericLinuxBoot(
-    board.LinuxUbootConnector, board.LinuxBootLogin, BOARD_LINUX_SHELL
+    _WorkdirTmpdirMixin, board.LinuxUbootConnector, board.LinuxBootLogin, BOARD_LINUX_SHELL
 ):
     name = f"{ini.generic_get_boardname()}-linux"
 
@@ -287,16 +309,6 @@ class GenericLinuxBoot(
 
         return ch
 
-    @property
-    def workdir(self) -> "linux.Path[GenericLinux]":
-        return linux.Workdir.static(self, "/run/tbot-testdata")
-
-    def tmpdir(self) -> "linux.path.Path[GenericLinux]":
-        """
-        returns tbot tmpdir for this lab
-        """
-        return linux.Workdir.static(self, "/tmp")
-
     def init(self) -> None:
         # Disable all clutter on the console
         self.exec("sysctl", "kernel.printk=1 1 1 1")
@@ -364,7 +376,9 @@ class GenericLinuxBoot(
                 self.exec(linux.Raw(cmd["cmd"]))
 
 
-class GenericLinuxBootwithoutUBootwithoutLogin(board.Connector, BOARD_LINUX_SHELL):
+class GenericLinuxBootwithoutUBootwithoutLogin(
+    _WorkdirTmpdirMixin, board.Connector, BOARD_LINUX_SHELL
+):
     """
     removed init function as we have an already running board, so we
     do not want to execute any init tasks.
@@ -376,19 +390,9 @@ class GenericLinuxBootwithoutUBootwithoutLogin(board.Connector, BOARD_LINUX_SHEL
     username = cfgp.get_config("linux_user", "root")
     pwd = None
 
-    @property
-    def workdir(self) -> "linux.Path[GenericLinux]":
-        return linux.Workdir.static(self, "/run/tbot-testdata")
-
-    def tmpdir(self) -> "linux.path.Path[GenericLinux]":
-        """
-        returns tbot tmpdir for this lab
-        """
-        return linux.Workdir.static(self, "/tmp")
-
 
 class GenericLinuxBootwithoutUBoot(
-    board.Connector, board.LinuxBootLogin, BOARD_LINUX_SHELL
+    _WorkdirTmpdirMixin, board.Connector, board.LinuxBootLogin, BOARD_LINUX_SHELL
 ):
     name = f"{ini.generic_get_boardname()}-linux"
 
@@ -398,16 +402,6 @@ class GenericLinuxBootwithoutUBoot(
 
     login_delay = cfgp.get_config_int("linux_login_delay", "None")
     boot_timeout = cfgp.get_config_int("linux_boot_timeout", "None")
-
-    @property
-    def workdir(self) -> "linux.Path[GenericLinux]":
-        return linux.Workdir.static(self, "/run/tbot-testdata")
-
-    def tmpdir(self) -> "linux.path.Path[GenericLinux]":
-        """
-        returns tbot tmpdir for this lab
-        """
-        return linux.Workdir.static(self, "/tmp")
 
     def init(self) -> None:
         add_death_strings(self.ch)
@@ -430,7 +424,7 @@ class GenericLinuxBootwithoutUBoot(
             )
 
 
-class GenericLinuxAlwaysOn(board.Connector, BOARD_LINUX_SHELL):
+class GenericLinuxAlwaysOn(_WorkdirTmpdirMixin, board.Connector, BOARD_LINUX_SHELL):
     name = f"{ini.generic_get_boardname()}-linux-on"
 
     cfgp = cfg
@@ -439,16 +433,6 @@ class GenericLinuxAlwaysOn(board.Connector, BOARD_LINUX_SHELL):
         # Disable all clutter on the console
         # self.exec0("sysctl", "kernel.printk=1 1 1 1")
         pass
-
-    @property
-    def workdir(self) -> "linux.Path[GenericLinuxAlwaysOn]":
-        return linux.Workdir.static(self, "/run/tbot-testdata")
-
-    def tmpdir(self) -> "linux.path.Path[GenericLinux]":
-        """
-        returns tbot tmpdir for this lab
-        """
-        return linux.Workdir.static(self, "/tmp")
 
 
 GenericLinux = GenericLinuxBoot
@@ -467,7 +451,7 @@ if "nouboot" in tbot.flags:
         GenericLinux = GenericLinuxBootwithoutUBoot
 
 
-class GenericSSH(connector.SSHConnector, linux.Ash):
+class GenericSSH(_WorkdirTmpdirMixin, connector.SSHConnector, linux.Ash):
     hostname: str = None  # type: ignore
     username = "root"
     ignore_hostkey = True
@@ -489,16 +473,6 @@ class GenericSSH(connector.SSHConnector, linux.Ash):
         self.hostname = match.group("ipaddr")
 
         super().__init__(lh)
-
-    @property
-    def workdir(self) -> "linux.Path[GenericSSH]":
-        return linux.Workdir.static(self, "/run/tbot-testdata")
-
-    def tmpdir(self) -> "linux.path.Path[GenericSSH]":
-        """
-        returns tbot tmpdir for this lab
-        """
-        return linux.Workdir.static(self, "/tmp")
 
 
 def register_machines(ctx):
