@@ -66,7 +66,6 @@ def lab_get_lock(
             lab = cx.request(tbot.role.LabHost)
 
         lockfile = lab_get_lockname(lab)
-        ret, activelockid = lab_get_lock_info(lab)
         lockid = None
 
         for f in tbot.flags:
@@ -78,17 +77,24 @@ def lab_get_lock(
                 "NO LABLOCKID passed, please pass tbot flag 'lablockid:<yourlockid>'"
             )
 
-        if ret == 1:
-            # no lockid active, set it
-            lab.exec0("echo", lockid, linux.Raw(">"), lockfile)
+        # Atomically create the lockfile only if it does not exist yet
+        # (POSIX noclobber via "set -C"). This avoids a race between
+        # checking for an existing lock and creating it, where two
+        # concurrent callers could both see "no lock" and both believe
+        # they acquired it.
+        ret, _ = lab.exec(
+            "sh", "-c", 'set -C; echo "$1" > "$2"', "lock", lockid, lockfile
+        )
+        if ret == 0:
             return 0, lockid
-        else:
-            # check lockid
-            if lockid != activelockid:
-                boardname = ini.generic_get_boardname()
-                errstr = f"passed lockid {lockid} is not the same as lockid in file {lockfile._local_str()}. Boardname {boardname} is locked through ID {activelockid}"
-                tbot.log.message(tbot.log.c(errstr).red)
-                raise RuntimeError("errstr")
+
+        # Lockfile already existed -- check whether it is ours.
+        _, activelockid = lab_get_lock_info(lab)
+        if lockid != activelockid:
+            boardname = ini.generic_get_boardname()
+            errstr = f"passed lockid {lockid} is not the same as lockid in file {lockfile._local_str()}. Boardname {boardname} is locked through ID {activelockid}"
+            tbot.log.message(tbot.log.c(errstr).red)
+            raise RuntimeError(errstr)
 
 
 @tbot.testcase
