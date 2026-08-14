@@ -226,13 +226,13 @@ class ScriptConnector(connector.ConsoleConnector):
 
     @contextlib.contextmanager
     def scriptconnect(self, mach: linux.LinuxShell, boardname) -> channel.Channel:
+        ch = None
         try:
             ch = mach.open_channel(self.scriptname, boardname)
             yield ch
-        except  Exception as ex:
-            print("Exception ", ex)
         finally:
-            ch.send(self.exitstring)
+            if ch is not None:
+                ch.send(self.exitstring)
 
     def connect(self, mach: linux.LinuxShell) -> channel.Channel:
         return self.scriptconnect(mach, self.boardname)
