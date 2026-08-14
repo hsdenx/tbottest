@@ -792,7 +792,7 @@ def board_wait_for_device(
             lnx = cx.request(tbot.role.BoardLinux)
 
     i = 0
-    while 1 < retries:
+    while i < retries:
         # fix me how to use
         # http://tbot.tools/modules/machine_linux.html?highlight=background#tbot.machine.linux.RedirBoth
         rcode, log = lnx.exec(linux.Raw(f"ls -al {device} &> /dev/null"))
@@ -806,7 +806,7 @@ def board_wait_for_device(
         time.sleep(retry_timeout)
         i += 1
 
-    raise RuntimeError("Device {device} does not come up")
+    raise RuntimeError(f"Device {device} does not come up")
 
 
 @tbot.testcase
