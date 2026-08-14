@@ -144,10 +144,12 @@ class REGISTERMAP:
 
     def __init__(self, mapname: str, socname: str = None) -> None:
         self.mapname = mapname
-        if socname == None:
+        if socname is None:
             # Try to get socname from filename
             self.socname = Path(self.mapname).name
             self.socname = self.socname.split("_")[0]
+        else:
+            self.socname = socname
 
         self.registermap = None
         self.register_load_map()
@@ -212,9 +214,6 @@ class REGISTERMAP:
         with open(self.mapname, "r", encoding="utf-8") as f:
             self.registermap = json.load(f)
             return True
-
-        raise RuntimeError(f"Could not load register definitions from {self.mapname}")
-        return None
 
     def registermap_nxp_search_address(self, address):
         """
