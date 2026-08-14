@@ -640,6 +640,26 @@ def lnx_wait_for_ip(
     raise RuntimeError(f"ip on device {name} not found")
 
 
+def _poll_until(
+    check: typing.Callable[[], bool], loops: int, timeout: float, errmsg: str
+) -> bool:
+    """
+    Shared poll loop for the lnx_wait_for_*/board_wait_for_* helpers
+    below: call check() up to `loops` times, sleeping `timeout`
+    seconds between attempts, and return True as soon as it returns
+    truthy. Raise RuntimeError(errmsg) if it never does.
+    """
+    loop = 0
+    while loop < loops:
+        if check():
+            return True
+
+        time.sleep(timeout)
+        loop += 1
+
+    raise RuntimeError(errmsg)
+
+
 def lnx_wait_for_file(
     lnx: linux.LinuxShell, name: str, loops: int, timeout: int
 ) -> bool:  # noqa: D107
@@ -651,16 +671,9 @@ def lnx_wait_for_file(
     :param loops: maximal wait loops
     :param timeout: timeout if file is not found
     """
-    loop = 0
-    while loop < loops:
-        ret, log = lnx.exec("ls", "-l", name)
-        if ret == 0:
-            return True
-
-        time.sleep(timeout)
-        loop += 1
-
-    raise RuntimeError(f"file {name} not found")
+    return _poll_until(
+        lambda: lnx.exec("ls", "-l", name)[0] == 0, loops, timeout, f"file {name} not found"
+    )
 
 
 def lnx_wait_for_module(
@@ -674,17 +687,12 @@ def lnx_wait_for_module(
     :param loops: maximal wait loops
     :param timeout: timeout if modulename is not found
     """
-    loop = 0
-    while loop < loops:
+
+    def check() -> bool:
         log = lnx.exec0("lsmod")
-        for line in log.split("\n"):
-            if name in line:
-                return True
+        return any(name in line for line in log.split("\n"))
 
-        time.sleep(timeout)
-        loop += 1
-
-    raise RuntimeError(f"module {name} not loaded")
+    return _poll_until(check, loops, timeout, f"module {name} not loaded")
 
 
 def lnx_wait_for_process(
@@ -698,16 +706,9 @@ def lnx_wait_for_process(
     :param loops: maximal wait loops
     :param timeout: timeout if process is not found
     """
-    loop = 0
-    while loop < loops:
-        ret, log = lnx.exec("pidof", name)
-        if ret == 0:
-            return True
-
-        time.sleep(timeout)
-        loop += 1
-
-    raise RuntimeError(f"process {name} not found")
+    return _poll_until(
+        lambda: lnx.exec("pidof", name)[0] == 0, loops, timeout, f"process {name} not found"
+    )
 
 
 @tbot.testcase
@@ -791,22 +792,17 @@ def board_wait_for_device(
         if lnx is None:
             lnx = cx.request(tbot.role.BoardLinux)
 
-    i = 0
-    while i < retries:
+    def check() -> bool:
         # fix me how to use
         # http://tbot.tools/modules/machine_linux.html?highlight=background#tbot.machine.linux.RedirBoth
         rcode, log = lnx.exec(linux.Raw(f"ls -al {device} &> /dev/null"))
-        if rcode == 0:
-            # also wait timeoutafter we detect the device, as at least
-            # on raspberry pi, device is not always writeable after
-            # device appears
-            time.sleep(retry_timeout)
-            return
+        return rcode == 0
 
-        time.sleep(retry_timeout)
-        i += 1
-
-    raise RuntimeError(f"Device {device} does not come up")
+    _poll_until(check, retries, retry_timeout, f"Device {device} does not come up")
+    # also wait timeout after we detect the device, as at least
+    # on raspberry pi, device is not always writeable after
+    # device appears
+    time.sleep(retry_timeout)
 
 
 @tbot.testcase
