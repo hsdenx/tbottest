@@ -200,45 +200,20 @@ class KAS:
         self.autoconf = None
         self.deploypath = None
 
-        try:
-            self.lab = self.cfg["labhost"]
-        except Exception:
-            raise RuntimeError("please define labhost")
+        def _require(key: str, msg: str):
+            if key not in self.cfg:
+                raise RuntimeError(msg)
+            return self.cfg[key]
 
-        try:
-            self.bh = self.cfg["buildhost"]
-        except Exception:
-            raise RuntimeError("please define buildhost")
+        self.lab = _require("labhost", "please define labhost")
+        self.bh = _require("buildhost", "please define buildhost")
 
-        try:
-            self.container = self.cfg["kascontainer"]
-        except Exception:
-            pass
-
-        try:
-            self.container_engine = self.cfg["kascontainerengine"]
-        except Exception:
-            pass
-
-        try:
-            self.git_credential_store = self.cfg["git_credential_store"]
-        except Exception:
-            pass
-
-        try:
-            self.netrc_file = self.cfg["netrc_file"]
-        except Exception:
-            pass
-
-        try:
-            self.kas_runtime_args = self.cfg["kas_runtime_args"]
-        except Exception:
-            pass
-
-        try:
-            self.kas_ssh_dir = self.cfg["ssh_dir"]
-        except Exception:
-            pass
+        self.container = self.cfg.get("kascontainer", self.container)
+        self.container_engine = self.cfg.get("kascontainerengine")
+        self.git_credential_store = self.cfg.get("git_credential_store")
+        self.netrc_file = self.cfg.get("netrc_file")
+        self.kas_runtime_args = self.cfg.get("kas_runtime_args")
+        self.kas_ssh_dir = self.cfg.get("ssh_dir")
 
         try:
             self.kasurl = self.cfg["kasurl"]
@@ -268,52 +243,27 @@ class KAS:
             # simply use the installed kas command
             pass
 
-        try:
-            self.build_machine = self.cfg["build_machine"]
-        except Exception:
-            raise RuntimeError("please define build_machine")
-
-        try:
-            self.subdir = self.cfg["subdir"]
-        except Exception:
-            raise RuntimeError("please configure subdir")
-
-        try:
-            self.deploypath = self.cfg["deploypath"]
-        except Exception:
-            pass
-
-        try:
-            self.kaslayer = self.cfg["kaslayer"]
-        except Exception:
-            raise RuntimeError("please configure kaslayer")
-
-        try:
-            self.kaslayername = self.cfg["kaslayername"]
-        except Exception:
-            self.kaslayername = None
-
-        try:
-            self.kaslayerbranch = self.cfg["kaslayerbranch"]
-        except Exception:
-            raise RuntimeError("please configure kaslayerbranch")
-
-        try:
-            self.kasconfigfile = self.cfg["kasconfigfile"]
-        except Exception:
-            raise RuntimeError("please configure kasconfigfile")
-
-        try:
-            self.bitbakeenvinit = self.cfg["bitbakeenvinit"]
-        except Exception:
-            self.bitbakeenvinit = "sources/poky/oe-init-build-env"
-
+        self.build_machine = _require("build_machine", "please define build_machine")
+        self.subdir = _require("subdir", "please configure subdir")
+        self.deploypath = self.cfg.get("deploypath")
+        self.kaslayer = _require("kaslayer", "please configure kaslayer")
+        self.kaslayername = self.cfg.get("kaslayername")
+        self.kaslayerbranch = _require(
+            "kaslayerbranch", "please configure kaslayerbranch"
+        )
+        self.kasconfigfile = _require(
+            "kasconfigfile", "please configure kasconfigfile"
+        )
+        self.bitbakeenvinit = self.cfg.get(
+            "bitbakeenvinit", "sources/poky/oe-init-build-env"
+        )
         # optional setting
-        try:
-            self.bitbakeoptions = self.cfg["bitbakeoptions"]
-        except Exception:
-            pass
+        self.bitbakeoptions = self.cfg.get("bitbakeoptions", self.bitbakeoptions)
 
+        # left as try/except on purpose: unlike the settings above, these
+        # two are meant to stay *unset* (not None) when not configured, so
+        # that kas_build()/kas_copy() can tell "not configured" apart from
+        # "configured as empty" via AttributeError.
         try:
             self.buildtargets = self.cfg["buildtargets"]
         except Exception:
@@ -324,15 +274,8 @@ class KAS:
         except Exception:
             pass
 
-        try:
-            self.envinit = self.cfg["envinit"]
-        except Exception:
-            self.envinit = None
-
-        try:
-            self.autoconf = self.cfg["auto.conf"]
-        except Exception:
-            self.autoconf = None
+        self.envinit = self.cfg.get("envinit")
+        self.autoconf = self.cfg.get("auto.conf")
 
         self.kasconfigpath = self.kas_get_basepath() / "kasconfig"
 
