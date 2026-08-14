@@ -1176,10 +1176,10 @@ def lnx_create_file(
     if filename is None:
         raise RuntimeError("only call with valid filename")
 
-    act = ">"
+    act = linux.Raw(">")
     for line in filedata:
-        lnx.exec0(linux.Raw(f"echo '{line}' {act} {filename}"))
-        act = ">>"
+        lnx.exec0("echo", line, act, filename)
+        act = linux.Raw(">>")
 
 
 def common_install_debian(

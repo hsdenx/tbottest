@@ -181,7 +181,7 @@ def lnx_get_process_cpu_usage(
             lnx = cx.request(tbot.role.BoardLinux)
 
         try:
-            log = lnx.exec0(linux.Raw(f"top -b -d 1 -n 1 | grep {pname}"))
+            log = lnx.exec0(linux.Raw(f"top -b -d 1 -n 1 | grep {lnx.escape(pname)}"))
             # output of top command is
             # PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
             # 172 root      20   0   14588   2344   1912 S  62.5   0.5   0:37.31 rngd
@@ -293,7 +293,7 @@ def is_busybox(
     """
     detect if we have a busybox version of command ```cmd```
     """
-    ret, log = lnx.exec(linux.Raw(f"ls -al {cmd} | grep busybox"))
+    ret, log = lnx.exec(linux.Raw(f"ls -al {lnx.escape(cmd)} | grep busybox"))
     if ret == 0:
         return True
 
