@@ -1221,6 +1221,25 @@ def lnx_install_package(
         raise RuntimeError(f"OS {os} not supported yet for automated installation")
 
 
+def _scp(machine: linux.LinuxShell, src: str, dst: str) -> None:
+    """
+    Shared scp invocation for the tbot_* helpers below: copy between
+    src and dst (either a local path or a "user@host:path" remote
+    spec) via machine, with host-key checking disabled -- boards and
+    lab hosts get reprovisioned/reused across test runs, so their
+    host key changes constantly.
+    """
+    machine.exec0(
+        "scp",
+        "-o",
+        "StrictHostKeyChecking=no",
+        "-o",
+        "UserKnownHostsFile=/dev/null",
+        src,
+        dst,
+    )
+
+
 def tbot_copy_file_to_board(
     lab: linux.LinuxShell,
     lnx: linux.LinuxShell,
@@ -1249,15 +1268,7 @@ def tbot_copy_file_to_board(
     bplocal = bp._local_str()
 
     # copy log from lab to board
-    lab.exec0(
-        "scp",
-        "-o",
-        "StrictHostKeyChecking=no",
-        "-o",
-        "UserKnownHostsFile=/dev/null",
-        srclocal,
-        f"{user}@{ip}:{bplocal}",
-    )
+    _scp(lab, srclocal, f"{user}@{ip}:{bplocal}")
 
 
 def tbot_start_script_on_board(
@@ -1287,15 +1298,7 @@ def tbot_start_script_on_board(
     bplocal = bp._local_str()
 
     # copy log from lab to board
-    lab.exec0(
-        "scp",
-        "-o",
-        "StrictHostKeyChecking=no",
-        "-o",
-        "UserKnownHostsFile=/dev/null",
-        srclocal,
-        f"{user}@{ip}:{bplocal}",
-    )
+    _scp(lab, srclocal, f"{user}@{ip}:{bplocal}")
     ret, out = lnx.exec(bplocal)
 
     return ret, out
@@ -1336,15 +1339,7 @@ def tbot_start_script_on_lab(
     bfp = boardtmppath._local_str()
 
     # copy log to lab
-    lab.exec0(
-        "scp",
-        "-o",
-        "StrictHostKeyChecking=no",
-        "-o",
-        "UserKnownHostsFile=/dev/null",
-        f"{user}@{ip}:{bfp}",
-        lfp,
-    )
+    _scp(lab, f"{user}@{ip}:{bfp}", lfp)
     # check if script is on lab
     with tbot.ctx() as cx:
         host = cx.request(tbot.role.LocalHost)
@@ -1384,12 +1379,8 @@ def tbot_start_script_on_lab(
                 copy = True
 
         if copy:
-            host.exec0(
-                "scp",
-                "-o",
-                "StrictHostKeyChecking=no",
-                "-o",
-                "UserKnownHostsFile=/dev/null",
+            _scp(
+                host,
                 f"{labtbottestcasepath}/{scriptname}",
                 f"{lab.username}@{lab.hostname}:{scrp}",
             )
