@@ -631,8 +631,8 @@ def lnx_wait_for_ip(
         try:
             ret = lnx_get_ipaddr(lnx, name, ip6)
             return ret
-        except:
-            break
+        except Exception:
+            pass
 
         time.sleep(timeout)
         loop += 1
