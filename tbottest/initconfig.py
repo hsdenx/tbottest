@@ -1,13 +1,40 @@
+import atexit
 import configparser
 from configparser import ExtendedInterpolation
 import tbot
 import os
-import weakref
 from tbottest.dynamicimport import get_boardmodule_import
 from tbottest.dynamicimport import get_boardmodulepath_import
 import tbottest.initconfighelper as inithelper
 
 BOARDNAME = None
+
+
+class _Singleton(type):
+    """
+    Metaclass making a class a per-process singleton: the first call to
+    ClassName() constructs and caches the instance, every later call
+    returns that same instance (and __init__ does not run again).
+
+    Without this, every ClassName() call (e.g. one created inline
+    inside a property that runs on every SSH connection attempt)
+    re-parsed the same shared, UUID-suffixed ini file from scratch and
+    registered its own weakref.finalize(self, self.cleanup) cleanup.
+    Since that callback is a bound method of the instance itself, it
+    keeps a strong reference back to it -- a documented
+    weakref.finalize pitfall -- so none of these instances were ever
+    actually garbage collected during the run; they just accumulated
+    for as long as the process lived, each holding its own parsed
+    configparser. A cached singleton with atexit-based cleanup avoids
+    both the unbounded per-call leak and the repeated re-parsing.
+    """
+
+    _instances: dict = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super().__call__(*args, **kwargs)
+        return cls._instances[cls]
 
 
 def init_get_default_config(
@@ -226,7 +253,7 @@ except:
     board_set_boardname = None
 
 
-class IniTBotConfig:
+class IniTBotConfig(metaclass=_Singleton):
     """
     reads common tbot config
 
@@ -390,14 +417,14 @@ class IniTBotConfig:
             if f"TM021_{bn}" in s:
                 self.tm021 = True
 
-        weakref.finalize(self, self.cleanup)
+        atexit.register(self.cleanup)
 
     def cleanup(self):
         if os.path.exists(self.tbotinifile):
             os.remove(self.tbotinifile)
 
 
-class IniConfig:
+class IniConfig(metaclass=_Singleton):
     """
     reads board config
 
@@ -418,7 +445,7 @@ class IniConfig:
         )
         self.filename = inithelper.inifile_get_tbotboardfilename()
         self.config_parser.read(self.filename)
-        weakref.finalize(self, self.cleanup)
+        atexit.register(self.cleanup)
 
     def cleanup(self):
         if os.path.exists(self.filename):
