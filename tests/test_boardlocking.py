@@ -29,14 +29,6 @@ boardlocking = load_module(
 tbot = sys.modules["tbot"]
 
 
-@pytest.fixture(autouse=True)
-def _reset_tbot_flags():
-    old = tbot.flags
-    tbot.flags = set()
-    yield
-    tbot.flags = old
-
-
 class FakeFS:
     def __init__(self):
         self.files = {}

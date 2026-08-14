@@ -26,6 +26,8 @@ import importlib.util
 import sys
 import types
 
+import pytest
+
 
 class _AnyAttrModule(types.ModuleType):
     """
@@ -152,6 +154,24 @@ def install_tbot_stubs() -> None:
         sys.modules[name] = mod
 
 
+def install_real_submodule(dotted_name: str, path: str) -> None:
+    """
+    Load a real tbottest submodule (one with no heavy import-time
+    side effects of its own, e.g. tbottest/common/utils.py) and
+    register it in sys.modules under its real dotted name, so other
+    modules under test that do e.g.
+    "from tbottest.common.utils import string_to_dict" resolve it via
+    the normal import system instead of failing with
+    "No module named 'tbottest.common'; 'tbottest' is not a package".
+    """
+    parts = dotted_name.split(".")
+    pkg = ""
+    for part in parts[:-1]:
+        pkg = f"{pkg}.{part}" if pkg else part
+        sys.modules.setdefault(pkg, types.ModuleType(pkg))
+    sys.modules[dotted_name] = load_module(dotted_name, path)
+
+
 def install_fake_initconfig(boardname: str = "testboard") -> None:
     """
     Install a minimal fake tbottest.initconfig module, for testing
@@ -207,3 +227,17 @@ def load_definition(name: str, path: str, defname: str, extra_src: str = ""):
 
 
 install_tbot_stubs()
+
+
+@pytest.fixture(autouse=True)
+def _reset_tbot_flags():
+    """
+    tbot.flags (from the stub installed above) is shared, mutable,
+    process-global state -- reset it around every test so one test's
+    flags can never leak into another.
+    """
+    tbot = sys.modules["tbot"]
+    old = tbot.flags
+    tbot.flags = set()
+    yield
+    tbot.flags = old
