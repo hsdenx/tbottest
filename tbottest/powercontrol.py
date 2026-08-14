@@ -471,8 +471,8 @@ class TM021Control(board.PowerControl):
             tbot.log.message("Updating hook scripts ...")
 
             for scriptname, script in TM021_SCRIPTS.items():
-                print("scriptname ", scriptname)
-                print("script     ", script, type(script))
+                tbot.log.message(f"scriptname {scriptname}")
+                tbot.log.message(f"script     {script} {type(script)}")
                 (self.hookdir / scriptname).write_text(script)
                 self.host.exec0("chmod", "+x", self.hookdir / scriptname)
 

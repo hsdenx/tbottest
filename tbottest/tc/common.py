@@ -189,9 +189,9 @@ def lnx_command_check_dump_file(
     l = log.splitlines()
     for lineno, (line1, line2) in enumerate(zip(ref, l), start=1):
         if line1 != line2:
-            print(f"Line {lineno}:")
-            print(f"  file1: {line1}")
-            print(f"  file2: {line2}")
+            tbot.log.message(
+                tbot.log.c(f"Line {lineno}:\n  file1: {line1}\n  file2: {line2}").yellow
+            )
             success += 1
 
     fd.close()
@@ -385,7 +385,7 @@ def generic_machine_dump_write(
     fd = open(filename, "r")
     for line in fd.readlines():
         cols = line.split()
-        print(f"a: {cols[0]} v: {cols[1]}")
+        tbot.log.message(tbot.log.c(f"a: {cols[0]} v: {cols[1]}").green)
         if cols[0] == "#":
             tbot.log.message(tbot.log.c(f"ignoring {cols[1]}").yellow)
             continue
@@ -1052,16 +1052,13 @@ def board_bootcounter_with_linux(
 
                 val = board_lx_getbootcounter(lnx)
                 tbot.log.message(tbot.log.c(f"bootcount linux {val}").green)
-                print(f"----- UB VAL {ubval} LX {val}")
 
                 lnx.ch.sendline("reboot")
 
             with contextlib.ExitStack() as cx:
                 ub = cx.enter_context(tbot.acquire_uboot(b))
 
-                print(f"----- UB VAL {ubval} LX {val}")
                 ubval = ub.env("bootcount")
-                print(f"----- END UB VAL {ubval} LX {val}")
 
 
 # get bootcounter in u-boot

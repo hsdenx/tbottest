@@ -62,7 +62,6 @@ def generic_get_socname(
         # Try through device-tree
         try:
             log = lnx.exec0("cat", "/proc/device-tree/soc@0/compatible")
-            print("LOG ", log)
             if "fsl,imx8mp-soc" in log:
                 return "imx8mp"
         except Exception:
