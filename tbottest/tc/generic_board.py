@@ -387,7 +387,7 @@ def generic_lnx_all(
         count += 1
         tbot.log.message(tbot.log.c(f"start tc {tc}").green)
         try:
-            func = eval(tc)
+            func = globals()[tc]
             ret = func()
             tbot.log.message(tbot.log.c(f"tc {tc} return {ret}").yellow)
             if ret == TC_SKIP:

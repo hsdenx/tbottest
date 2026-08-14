@@ -1,3 +1,4 @@
+import ast
 import os
 import typing
 import tbot
@@ -139,7 +140,7 @@ class boardPowerShellControl(powercontrol.PowerShellScriptControl):
     cfg = f"POWERSHELLSCRIPT_{bn}"
     for s in cfgt.config_parser.sections():
         if cfg == s:
-            shell_script = eval(cfgt.config_parser.get(s, "script"))
+            shell_script = ast.literal_eval(cfgt.config_parser.get(s, "script"))
 
 
 class boardSisControl(powercontrol.SispmControl):
@@ -704,7 +705,7 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
             self.labinitfilename = "/tmp/tbotlabinitdone"
             labinit = []
             try:
-                labinit = eval(cfgt.config_parser.get(LABSECTIONNAME, "labinit"))
+                labinit = ast.literal_eval(cfgt.config_parser.get(LABSECTIONNAME, "labinit"))
 
                 ret, log = self.exec("test", "-f", self.labinitfilename)
                 if ret != 0:

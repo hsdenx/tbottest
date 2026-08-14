@@ -1,3 +1,4 @@
+import ast
 import atexit
 import configparser
 from configparser import ExtendedInterpolation
@@ -316,7 +317,7 @@ class IniTBotConfig(metaclass=_Singleton):
         for s in self.config_parser.sections():
             if "BOOTMODE" in s:
                 nm = s.split("_")[1]
-                modes = eval(self.config_parser.get(s, "modes"))
+                modes = ast.literal_eval(self.config_parser.get(s, "modes"))
                 self.bootmodecfg[nm] = modes
 
         self.ubcfg = {}
@@ -334,7 +335,7 @@ class IniTBotConfig(metaclass=_Singleton):
             if "DFUUTIL_CONFIG" in s:
                 nm = s.split("_")[2]
                 cmds = self.config_parser.get(s, "cmds")
-                self.dfuutilcfg[nm] = eval(cmds)
+                self.dfuutilcfg[nm] = ast.literal_eval(cmds)
 
         self.uuucfg = {}
         for s in self.config_parser.sections():
@@ -354,7 +355,7 @@ class IniTBotConfig(metaclass=_Singleton):
             if "XMODEM_CONFIG" in s:
                 nm = s.split("_")[2]
                 cmd = self.config_parser.get(s, "cmd")
-                xmodemcmd = eval(cmd)
+                xmodemcmd = ast.literal_eval(cmd)
                 self.xmodemcfg[nm] = xmodemcmd
                 self.xmodemdevice[nm] = self.config_parser.get(s, "device")
 
@@ -391,7 +392,7 @@ class IniTBotConfig(metaclass=_Singleton):
             if "SEGGER_CONFIG" in s:
                 nm = s.split("_")[2]
 
-                cmds = eval(self.config_parser.get(s, "cmds"))
+                cmds = ast.literal_eval(self.config_parser.get(s, "cmds"))
                 cfg = {
                     "cmds": cmds,
                 }

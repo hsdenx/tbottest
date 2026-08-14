@@ -1,3 +1,4 @@
+import ast
 import os
 import tbottest.initconfig as ini
 import typing
@@ -73,7 +74,7 @@ class genericbuilder(connector.SSHConnector, linux.Bash, linux.Builder):
         if "BHINIT" not in _INIT_CACHE:
             _INIT_CACHE["BHINIT"] = True
             try:
-                initcmd = eval(cfgt.config_parser.get(self.sn, "initcmd"))
+                initcmd = ast.literal_eval(cfgt.config_parser.get(self.sn, "initcmd"))
             except Exception:
                 initcmd = []
 
@@ -134,7 +135,7 @@ class genericbuilderlocal(connector.SubprocessConnector, linux.Bash, linux.Build
         if "BHINIT" not in _INIT_CACHE:
             _INIT_CACHE["BHINIT"] = True
             try:
-                initcmd = eval(cfgt.config_parser.get(self.sn, "initcmd"))
+                initcmd = ast.literal_eval(cfgt.config_parser.get(self.sn, "initcmd"))
             except Exception:
                 initcmd = []
 

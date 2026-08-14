@@ -1,3 +1,4 @@
+import ast
 import tbot
 from tbottest.boardgeneric import cfggeneric
 from tbotconfig.ci.tests_helper import run_all_tests, FAILED, SUCCESS
@@ -17,7 +18,7 @@ def check_environment_settings() -> bool:  # noqa: D107
         ub = cx.request(tbot.role.BoardUBoot)
 
         error = SUCCESS
-        ubenvcfg = eval(cfggeneric.cfgp.get_config("ub_env", "[]"))
+        ubenvcfg = ast.literal_eval(cfggeneric.cfgp.get_config("ub_env", "[]"))
         for entry in ubenvcfg:
             val = ub.env(entry["name"])
             if val not in entry["val"]:

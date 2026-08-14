@@ -1,3 +1,4 @@
+import ast
 import inspect
 import time
 import re
@@ -42,8 +43,8 @@ class GenericBoardConfig:
     qspiheader = cfg.get_config("qspiheader", "None")
     splimage = cfg.get_config("splimage", "None")
 
-    mtd_parts = eval(cfg.get_config("mtd_parts", "[]"))
-    ub_mtd_delete = eval(cfg.get_config("ub_mtd_delete", "[]"))
+    mtd_parts = ast.literal_eval(cfg.get_config("mtd_parts", "[]"))
+    ub_mtd_delete = ast.literal_eval(cfg.get_config("ub_mtd_delete", "[]"))
 
     ##############################################
     # U-Boot testcases
@@ -55,15 +56,15 @@ class GenericBoardConfig:
     ##############################################
     # Linux testcases
     ##############################################
-    beep = eval(cfg.get_config("beep", "[]"))
-    cyclictestmaxvalue = eval(cfg.get_config("cyclictestmaxvalue", "100"))
-    dmesg = eval(cfg.get_config("dmesg", "[]"))
-    dmesg_false = eval(cfg.get_config("dmesg_false", "[]"))
-    leds = eval(cfg.get_config("leds", "[]"))
-    lnx_commands = eval(cfg.get_config("lnx_commands", "[]"))
-    network_iperf_intervall = eval(cfg.get_config("network_iperf_intervall", "1"))
-    network_iperf_minval = eval(cfg.get_config("network_iperf_minval", "90000000"))
-    network_iperf_cycles = eval(cfg.get_config("network_iperf_cycles", "30"))
+    beep = ast.literal_eval(cfg.get_config("beep", "[]"))
+    cyclictestmaxvalue = ast.literal_eval(cfg.get_config("cyclictestmaxvalue", "100"))
+    dmesg = ast.literal_eval(cfg.get_config("dmesg", "[]"))
+    dmesg_false = ast.literal_eval(cfg.get_config("dmesg_false", "[]"))
+    leds = ast.literal_eval(cfg.get_config("leds", "[]"))
+    lnx_commands = ast.literal_eval(cfg.get_config("lnx_commands", "[]"))
+    network_iperf_intervall = ast.literal_eval(cfg.get_config("network_iperf_intervall", "1"))
+    network_iperf_minval = ast.literal_eval(cfg.get_config("network_iperf_minval", "90000000"))
+    network_iperf_cycles = ast.literal_eval(cfg.get_config("network_iperf_cycles", "30"))
 
     nvramdev = cfg.get_config("nvramdev", "None")
     nvramcomp = cfg.get_config("nvramcomp", "None")
@@ -71,16 +72,16 @@ class GenericBoardConfig:
 
     rs485labdev = cfg.get_config("rs485labdev", "None")
     rs485baud = cfg.get_config("rs485baud", "None")
-    rs485boarddev = eval(cfg.get_config("rs485boarddev", '["/dev/ttymxc2"]'))
-    rs485lengths = eval(cfg.get_config("rs485lengths", '["20", "100", "1024"]'))
+    rs485boarddev = ast.literal_eval(cfg.get_config("rs485boarddev", '["/dev/ttymxc2"]'))
+    rs485lengths = ast.literal_eval(cfg.get_config("rs485lengths", '["20", "100", "1024"]'))
 
-    iperf = eval(cfg.get_config("iperf", "[]"))
-    ping = eval(cfg.get_config("ping", "[]"))
-    regdump = eval(cfg.get_config("regdump", "[]"))
+    iperf = ast.literal_eval(cfg.get_config("iperf", "[]"))
+    ping = ast.literal_eval(cfg.get_config("ping", "[]"))
+    regdump = ast.literal_eval(cfg.get_config("regdump", "[]"))
 
-    sensors = eval(cfg.get_config("sensors", "[]"))
+    sensors = ast.literal_eval(cfg.get_config("sensors", "[]"))
 
-    lnx_dump_files = eval(cfg.get_config("lnx_dump_files", "[]"))
+    lnx_dump_files = ast.literal_eval(cfg.get_config("lnx_dump_files", "[]"))
     for entry in lnx_dump_files:
         entry[
             "revfile"
@@ -99,9 +100,9 @@ class GenericBoardConfig:
     ##############################################
     # kas testcases
     ##############################################
-    kas = eval(cfg.get_config("kas", "[]"))
-    kas_check_files = eval(cfg.get_config("kas_check_files", "[]"))
-    kas_results = eval(cfg.get_config("kas_results", "[]"))
+    kas = ast.literal_eval(cfg.get_config("kas", "[]"))
+    kas_check_files = ast.literal_eval(cfg.get_config("kas_check_files", "[]"))
+    kas_results = ast.literal_eval(cfg.get_config("kas_results", "[]"))
 
     def get_config(self, name: str, default: str):
         return cfg.get_config(name, default)
@@ -167,7 +168,7 @@ class GenericUBoot(
         autoboot_iter = int(ap)
 
     def get_death_strings(self) -> List[str]:
-        return eval(self.cfgp.get_config("uboot_death_strings", "[]"))
+        return ast.literal_eval(self.cfgp.get_config("uboot_death_strings", "[]"))
 
     def init(self) -> None:
         if "uboot_no_env_set" in tbot.flags:
@@ -199,7 +200,7 @@ class GenericUBoot(
             self.env("console", "silent")
 
         env = self.cfgp.get_config("ub_env", "[]")
-        envvalues = eval(env)
+        envvalues = ast.literal_eval(env)
         for ev in envvalues:
             self.env(ev["name"], ev["val"])
 
@@ -208,7 +209,7 @@ class GenericUBoot(
 
 
 def add_death_strings(ch):
-    dstr = eval(cfg.get_config("death_strings", "[]"))
+    dstr = ast.literal_eval(cfg.get_config("death_strings", "[]"))
     for m in dstr:
         ch.add_death_string(m)
 
@@ -359,11 +360,11 @@ class GenericLinuxBoot(
                         "up",
                     )
 
-            lx_init_timeout = eval(self.cfgp.get_config("linux_init_timeout", "None"))
+            lx_init_timeout = ast.literal_eval(self.cfgp.get_config("linux_init_timeout", "None"))
             if lx_init_timeout is not None:
                 time.sleep(float(lx_init_timeout))
 
-        lx_init = eval(self.cfgp.get_config("linux_init", "[]"))
+        lx_init = ast.literal_eval(self.cfgp.get_config("linux_init", "[]"))
         for cmd in lx_init:
             try:
                 mode = cmd["mode"]
