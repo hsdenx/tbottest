@@ -30,6 +30,18 @@ import types
 import pytest
 
 
+class _PlaceholderMeta(type):
+    """Lets attribute access chain arbitrarily deep on a _Placeholder
+    (e.g. "linux.auth.Authenticator"), not just one level -- returns
+    the same placeholder class again for any further attribute."""
+
+    def __getattr__(cls, name):
+        return cls
+
+    def __class_getitem__(cls, item):
+        return cls
+
+
 class _AnyAttrModule(types.ModuleType):
     """
     A module stand-in that returns a harmless placeholder for any
@@ -39,9 +51,10 @@ class _AnyAttrModule(types.ModuleType):
     """
 
     def __getattr__(self, name):
-        class _Placeholder:
-            def __class_getitem__(cls, item):
-                return cls
+        # a fresh class per access, so e.g. "class Foo(linux.Bash,
+        # linux.Builder)" doesn't collide on a shared placeholder
+        class _Placeholder(metaclass=_PlaceholderMeta):
+            pass
 
         return _Placeholder
 
@@ -233,6 +246,28 @@ def install_gpio_stub() -> None:
     gpio_mod.Gpio = FakeGpio
     sys.modules.setdefault("tbot_contrib", types.ModuleType("tbot_contrib"))
     sys.modules["tbot_contrib.gpio"] = gpio_mod
+
+
+def install_fake_initbotconfig(sections: dict):
+    """
+    Install a fake tbottest.initconfig.IniTBotConfig backed by a real
+    configparser.ConfigParser preloaded with `sections`
+    ({section_name: {key: value}}), for modules (e.g. builders.py)
+    that do `cfgt = ini.IniTBotConfig()` at import time and read
+    cfgt.config_parser.get(...). Returns the ConfigParser so tests can
+    extend it further if needed.
+    """
+    import configparser
+
+    cp = configparser.ConfigParser()
+    for section, values in sections.items():
+        cp[section] = values
+
+    ini_mod = types.ModuleType("tbottest.initconfig")
+    ini_mod.IniTBotConfig = lambda: types.SimpleNamespace(config_parser=cp)
+    sys.modules.setdefault("tbottest", types.ModuleType("tbottest"))
+    sys.modules["tbottest.initconfig"] = ini_mod
+    return cp
 
 
 def load_module(name: str, path: str):

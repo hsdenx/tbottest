@@ -11,7 +11,53 @@ cfgt = ini.IniTBotConfig()
 _INIT_CACHE: typing.Dict[str, bool] = {}
 
 
-class genericbuilder(connector.SSHConnector, linux.Bash, linux.Builder):
+def _get_or_placeholder(sn: str, key: str) -> str:
+    try:
+        return cfgt.config_parser.get(sn, key)
+    except Exception:
+        return "NOTDEFINED please add BUILDHOST_local in tbot.ini"
+
+
+class _BuilderPathsMixin:
+    """
+    kas_ref_dir/workdir/init() are identical between genericbuilder
+    and genericbuilderlocal, save for reading self.sn -- shared here
+    instead of duplicated on both classes.
+    """
+
+    @property
+    def kas_ref_dir(self) -> "linux.Path[genericbuilder]":
+        kas_ref_dir = cfgt.config_parser.get(self.sn, "kas_ref_dir")
+        return linux.Workdir.static(self, kas_ref_dir)
+
+    @property
+    def workdir(self) -> "linux.Path[genericbuilder]":
+        workdir = cfgt.config_parser.get(self.sn, "workdir")
+        if workdir[0] != "/":
+            workdir = os.getcwd() + "/" + workdir
+        return linux.Workdir.static(self, workdir)
+
+    def init(self) -> None:
+        # cache key is per-class (not a shared literal): genericbuilder
+        # and genericbuilderlocal each need their own initcmd run once,
+        # independently of each other
+        cachekey = type(self).__name__
+        if cachekey not in _INIT_CACHE:
+            _INIT_CACHE[cachekey] = True
+            try:
+                initcmd = ast.literal_eval(cfgt.config_parser.get(self.sn, "initcmd"))
+            except Exception:
+                initcmd = []
+
+            for cmd in initcmd:
+                c = []
+                for t in cmd.split(" "):
+                    c.append(t)
+
+                self.exec0(*c)
+
+
+class genericbuilder(_BuilderPathsMixin, connector.SSHConnector, linux.Bash, linux.Builder):
     def builder_get_sectionname() -> str:
         for f in tbot.flags:
             if "buildername" in f:
@@ -26,18 +72,6 @@ class genericbuilder(connector.SSHConnector, linux.Bash, linux.Builder):
     hostname = cfgt.config_parser.get(sn, "hostname")
     dl_dir = cfgt.config_parser.get(sn, "dl_dir")
     sstate_dir = cfgt.config_parser.get(sn, "sstate_dir")
-
-    @property
-    def kas_ref_dir(self) -> "linux.Path[genericbuilder]":
-        kas_ref_dir = cfgt.config_parser.get(self.sn, "kas_ref_dir")
-        return linux.Workdir.static(self, kas_ref_dir)
-
-    @property
-    def workdir(self) -> "linux.Path[genericbuilder]":
-        workdir = cfgt.config_parser.get(self.sn, "workdir")
-        if workdir[0] != "/":
-            workdir = os.getcwd() + "/" + workdir
-        return linux.Workdir.static(self, workdir)
 
     @property
     def ssh_config(self) -> typing.List[str]:
@@ -70,21 +104,6 @@ class genericbuilder(connector.SSHConnector, linux.Bash, linux.Builder):
         except Exception:
             return 22
 
-    def init(self) -> None:
-        if "BHINIT" not in _INIT_CACHE:
-            _INIT_CACHE["BHINIT"] = True
-            try:
-                initcmd = ast.literal_eval(cfgt.config_parser.get(self.sn, "initcmd"))
-            except Exception:
-                initcmd = []
-
-            for cmd in initcmd:
-                c = []
-                for t in cmd.split(" "):
-                    c.append(t)
-
-                self.exec0(*c)
-
     @property
     def authenticator(self) -> linux.auth.Authenticator:
         auth = cfgt.config_parser.get(self.sn, "authenticator", fallback=None)
@@ -101,55 +120,22 @@ class genericbuilder(connector.SSHConnector, linux.Bash, linux.Builder):
         raise RuntimeError("toolchains not implemented yet, please add support!")
 
 
-class genericbuilderlocal(connector.SubprocessConnector, linux.Bash, linux.Builder):
+class genericbuilderlocal(
+    _BuilderPathsMixin, connector.SubprocessConnector, linux.Bash, linux.Builder
+):
     sn = "BUILDHOST_local"
-    try:
-        name = cfgt.config_parser.get(sn, "name")
-    except Exception:
-        name = "NOTDEFINED please add BUILDHOST_local in tbot.ini"
-        pass
-    try:
-        dl_dir = cfgt.config_parser.get(sn, "dl_dir")
-    except Exception:
-        dl_dir = "NOTDEFINED please add BUILDHOST_local in tbot.ini"
-        pass
-    try:
-        sstate_dir = cfgt.config_parser.get(sn, "sstate_dir")
-    except Exception:
-        sstate_dir = "NOTDEFINED please add BUILDHOST_local in tbot.ini"
-        pass
-
-    @property
-    def kas_ref_dir(self) -> "linux.Path[genericbuilder]":
-        kas_ref_dir = cfgt.config_parser.get(self.sn, "kas_ref_dir")
-        return linux.Workdir.static(self, kas_ref_dir)
-
-    @property
-    def workdir(self) -> "linux.Path[genericbuilder]":
-        workdir = cfgt.config_parser.get(self.sn, "workdir")
-        if workdir[0] != "/":
-            workdir = os.getcwd() + "/" + workdir
-        return linux.Workdir.static(self, workdir)
-
-    def init(self) -> None:
-        if "BHINIT" not in _INIT_CACHE:
-            _INIT_CACHE["BHINIT"] = True
-            try:
-                initcmd = ast.literal_eval(cfgt.config_parser.get(self.sn, "initcmd"))
-            except Exception:
-                initcmd = []
-
-            for cmd in initcmd:
-                c = []
-                for t in cmd.split(" "):
-                    c.append(t)
-
-                self.exec0(*c)
+    name = _get_or_placeholder(sn, "name")
+    dl_dir = _get_or_placeholder(sn, "dl_dir")
+    sstate_dir = _get_or_placeholder(sn, "sstate_dir")
 
     def toolchains(self) -> typing.Dict[str, linux.build.Toolchain]:
         raise RuntimeError("toolchains not implemented yet, please add support!")
 
 
 FLAGS = {
-    "buildername": "buildername:<name of builder> searches for BUILDHOST_<name of builder> section if passed to tbot. If not searches for BUILDHOST section. use name local to build on the machine, on which tbot is started",
+    "buildername": (
+        "buildername:<name of builder> searches for BUILDHOST_<name of builder> "
+        "section if passed to tbot. If not searches for BUILDHOST section. use "
+        "name local to build on the machine, on which tbot is started"
+    ),
 }
