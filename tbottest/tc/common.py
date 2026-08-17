@@ -530,13 +530,15 @@ def _lnx_get_ipaddr(lnx: linux.LinuxShell, name: str, ip6: bool = False) -> str:
     for line in out.split("\n"):
         if ip6:
             if "inet6" in line:
+                # old-style net-tools: "inet6 addr: fe80::1/64  Scope:Link"
                 match = re.match(
-                    r"\s+inet6\s+addr:(?P<ipaddr>\d+.\d+.\d+.\d+)\s+",  # noqa: E501
+                    r"\s+inet6\s+addr:\s*(?P<ipaddr>[0-9a-fA-F:]+)",
                     line,
                 )
                 if match is None:
+                    # newer net-tools: "inet6 fe80::1  prefixlen 64  scopeid ..."
                     match = re.match(
-                        r"\s+inet6\s(?P<ipaddr>\d+.\d+.\d+.\d+)\s+",  # noqa: E501
+                        r"\s+inet6\s+(?P<ipaddr>[0-9a-fA-F:]+)",
                         line,
                     )
 

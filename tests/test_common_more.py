@@ -215,20 +215,34 @@ class TestLnxGetIpaddr:
         lnx.responses[("ifconfig",)] = "eth0\n          inet addr:10.0.0.5  Bcast:10.0.0.255"
         assert common._lnx_get_ipaddr(lnx, "eth0") == "10.0.0.5"
 
-    def test_parses_ipv6(self):
+    def test_parses_ipv6_old_style_net_tools(self):
         """
-        Note: the ip6 regex ("\\d+.\\d+.\\d+.\\d+") only matches
-        decimal-digit groups, so it can never actually match a real
-        IPv6 address (hex letters, "::" compression) -- this is a
-        pre-existing issue, not something introduced or fixed in this
-        pass (unclear what a correct general replacement should be
-        without real target `ifconfig` output to validate against),
-        so this test documents current behavior against a
-        (unrealistic) all-digit address rather than a real one.
+        Regression test: the ip6 regex used to be "\\d+.\\d+.\\d+.\\d+"
+        (decimal digits only), so it could never match a real IPv6
+        address (hex letters, "::" compression, "/prefixlen" suffix
+        with no space before it).
         """
         lnx = FakeLinuxShell()
-        lnx.responses[("ifconfig",)] = "eth0\n          inet6 addr:1.2.3.4  Scope:Link"
-        assert common._lnx_get_ipaddr(lnx, "eth0", ip6=True) == "1.2.3.4"
+        lnx.responses[("ifconfig",)] = (
+            "eth0\n          inet6 addr: fe80::1234:5678:9abc:def0/64 Scope:Link"
+        )
+        assert (
+            common._lnx_get_ipaddr(lnx, "eth0", ip6=True) == "fe80::1234:5678:9abc:def0"
+        )
+
+    def test_parses_ipv6_newer_style_net_tools(self):
+        lnx = FakeLinuxShell()
+        lnx.responses[("ifconfig",)] = (
+            "eth0\n        inet6 fe80::1234:5678:9abc:def0  prefixlen 64  scopeid 0x20<link>"
+        )
+        assert (
+            common._lnx_get_ipaddr(lnx, "eth0", ip6=True) == "fe80::1234:5678:9abc:def0"
+        )
+
+    def test_parses_ipv6_compressed_address(self):
+        lnx = FakeLinuxShell()
+        lnx.responses[("ifconfig",)] = "eth0\n          inet6 addr: ::1/128 Scope:Host"
+        assert common._lnx_get_ipaddr(lnx, "eth0", ip6=True) == "::1"
 
     def test_polls_until_ip_appears(self, monkeypatch):
         monkeypatch.setattr(common.time, "sleep", lambda s: None)
