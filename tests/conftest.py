@@ -46,15 +46,18 @@ class _AnyAttrModule(types.ModuleType):
     """
     A module stand-in that returns a harmless placeholder for any
     attribute access. Used for tbot submodules that are only ever
-    referenced in type hints (e.g. "board.UBootShell") by the code
-    under test, never actually called.
+    referenced in type hints (e.g. "board.UBootShell") by code under
+    test, or constructed as an inert sentinel value (e.g.
+    "linux.RedirStdout(path)", "linux.Then") without inspecting it
+    afterwards.
     """
 
     def __getattr__(self, name):
         # a fresh class per access, so e.g. "class Foo(linux.Bash,
         # linux.Builder)" doesn't collide on a shared placeholder
         class _Placeholder(metaclass=_PlaceholderMeta):
-            pass
+            def __init__(self, *args, **kwargs):
+                pass
 
         return _Placeholder
 
