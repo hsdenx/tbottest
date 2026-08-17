@@ -1,14 +1,40 @@
 import tbot
 from tbot.machine import linux
-from tbot.context import Optional
 
 from tbottest.tc.common import lnx_create_random
 from tbottest.tc.common import lnx_compare_files
 
 
+def _write_random_and_verify(lnx: linux.LinuxShell, tmpf: str, dev: str, t: dict) -> None:
+    lnx_create_random(lnx, tmpf, int(t["cnt"]) * int(t["bs"]))
+    lnx.exec0(
+        "dd",
+        f"if={tmpf}",
+        f"of={dev}",
+        f"bs={t['bs']}",
+        f"count={t['cnt']}",
+        f"seek={t['seek']}",
+    )
+    try:
+        lnx_compare_files(
+            lnx,
+            tmpf,
+            0,
+            dev,
+            int(t["seek"]) * int(t["bs"]),
+            int(t["cnt"]) * int(t["bs"]),
+        )
+    except Exception:
+        lnx.interactive()
+
+
+def _hexdump(lnx: linux.LinuxShell, path: str, skipflag: str, length: int) -> str:
+    return lnx.exec0("hexdump", "-e", '"%03.2x"', skipflag, "0", "-n", str(length), path)
+
+
 def lnx_mtd_nvram(
     lnx: linux.LinuxShell,
-    dev: Optional[str] = "/dev/mtd0",
+    dev: str = "/dev/mtd0",
     tests=None,
 ) -> None:
     """
@@ -40,33 +66,7 @@ def lnx_mtd_nvram(
     lnx.exec0("date", linux.Raw(">"), tmpf)
     lnx.exec0("cat", tmpf)
     for t in tests:
-        lnx_create_random(lnx, tmpf, int(t["cnt"]) * int(t["bs"]))
-        lnx.exec0(
-            "dd",
-            f"if={tmpf}",
-            f"of={dev}",
-            f"bs={t['bs']}",
-            f"count={t['cnt']}",
-            f"seek={t['seek']}",
-        )
-        try:
-            lnx_compare_files(
-                lnx,
-                tmpf,
-                0,
-                dev,
-                int(t["seek"]) * int(t["bs"]),
-                int(t["cnt"]) * int(t["bs"]),
-            )
-        except Exception:
-            lnx.interactive()
-
-        # lnx.exec0("dd", f"if={tmpf}", f"of={dev}", f"bs={t['bs']}", f"count={t['cnt']}", f"seek={t['seek']}")
-        # lnx.exec0("dd", f"if={dev}", f"of={tmpf2}", f"bs={t['bs']}", f"count={t['cnt']}", f"skip={t['seek']}")
-        # try:
-        #    lnx_compare_files(lnx, tmpf, "0", tmpf2, "0", int(t['cnt']) * int(t["bs"]))
-        # except:
-        #    lnx.interactive()
+        _write_random_and_verify(lnx, tmpf, dev, t)
 
 
 @tbot.testcase
@@ -101,44 +101,14 @@ def lnx_mtd_nvram_reboot(
 
     tmpf = "/tmp/gnlmpf"
 
-    option = "--skip"
-    # busybox
+    # -s is the skip-offset flag for both busybox and non-busybox hexdump
     option = "-s"
     for t in tests:
-        out = ""
-        with tbot.ctx.request(tbot.role.BoardLinux) as lnx:
-            # write random data
-            lnx_create_random(lnx, tmpf, int(t["cnt"]) * int(t["bs"]))
-            lnx.exec0(
-                "dd",
-                f"if={tmpf}",
-                f"of={dev}",
-                f"bs={t['bs']}",
-                f"count={t['cnt']}",
-                f"seek={t['seek']}",
-            )
-            try:
-                lnx_compare_files(
-                    lnx,
-                    tmpf,
-                    0,
-                    dev,
-                    int(t["seek"]) * int(t["bs"]),
-                    int(t["cnt"]) * int(t["bs"]),
-                )
-            except Exception:
-                lnx.interactive()
+        length = int(t["cnt"]) * int(t["bs"])
 
-            out = lnx.exec0(
-                "hexdump",
-                "-e",
-                '"%03.2x"',
-                option,
-                "0",
-                "-n",
-                str(int(t["cnt"]) * int(t["bs"])),
-                tmpf,
-            )
+        with tbot.ctx.request(tbot.role.BoardLinux) as lnx:
+            _write_random_and_verify(lnx, tmpf, dev, t)
+            out = _hexdump(lnx, tmpf, option, length)
 
         with tbot.ctx.request(tbot.role.BoardLinux, reset=True) as lnx:
             lnx.exec0(
@@ -149,16 +119,7 @@ def lnx_mtd_nvram_reboot(
                 f"count={t['cnt']}",
                 f"skip={t['seek']}",
             )
-            outn = lnx.exec0(
-                "hexdump",
-                "-e",
-                '"%03.2x"',
-                option,
-                "0",
-                "-n",
-                str(int(t["cnt"]) * int(t["bs"])),
-                tmpf,
-            )
+            outn = _hexdump(lnx, tmpf, option, length)
 
         if out != outn:
             tbot.log.message(
