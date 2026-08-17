@@ -6,7 +6,7 @@ import typing
 from typing import List
 import tbot
 import time
-import datetime
+from datetime import datetime
 from tbot.machine import linux
 from tbot.context import Optional
 from tbottest.tc.common import tbot_start_thread
@@ -26,9 +26,19 @@ def get_lines(lnx: linux.LinuxShell, fi: str) -> int:
     return int(cl[0])
 
 
+def _default_can_devices(
+    candev: typing.Optional[List[str]], candevsend: typing.Optional[List[str]]
+) -> typing.Tuple[List[str], List[str]]:
+    if candev is None:
+        candev = ["can0", "can1"]
+    if candevsend is None:
+        candevsend = ["can0"]
+    return candev, candevsend
+
+
 def board_setup_can(
     lnx: linux.LinuxShell,
-    candev: List[str] = ["can0", "can1"],
+    candev: typing.Optional[List[str]] = None,
     br: str = "500000",
     tql: str = "500",
     usesudo: bool = False,
@@ -42,6 +52,8 @@ def board_setup_can(
     :param tql: use tx queuelen
     :param usesudo: if we need a sudo for calling ip command
     """
+    if candev is None:
+        candev = ["can0", "can1"]
 
     for n in candev:
         sudo_exec0(lnx, usesudo, "ifconfig", n, "down")
@@ -84,7 +96,11 @@ def lnx_can_write_dump_compare(
 
     .. code-block:: python
 
-        {"dev":"linux device name", "data":"data format strig for cansend", "res":"resulting line in dump file created from candump"}
+        {
+            "dev": "linux device name",
+            "data": "data format strig for cansend",
+            "res": "resulting line in dump file created from candump",
+        }
 
     """
     # init can busses
@@ -135,9 +151,11 @@ def lnx_can_write_dump_compare(
             continue
 
         if line != data[i - ign]["res"]:
+            expected = data[i - ign]["res"]
+            sent = data[i - ign]["data"]
             tbot.log.message(
                 tbot.log.c(
-                    f"found difference in candump '{line}' != '{data[i - ign]['res']}' send: '{data[i - ign]['data']}'"
+                    f"found difference in candump '{line}' != '{expected}' send: '{sent}'"
                 ).red
             )
             error = True
@@ -153,10 +171,10 @@ def board_lnx_cangen(
     lab: typing.Optional[linux.LinuxShell] = None,
     lnx: Optional[linux.LinuxShell] = None,
     lnxsend: Optional[linux.LinuxShell] = None,
-    labtbottestcasepath: str = None,
+    labtbottestcasepath: typing.Optional[str] = None,
     tmpdir: str = "/tmp",
-    candev: List[str] = ["can0", "can1"],
-    candevsend: List[str] = ["can0"],
+    candev: typing.Optional[List[str]] = None,
+    candevsend: typing.Optional[List[str]] = None,
     candevdump: str = "can0",
     frames: str = "1000",
     dllength: str = "8",
@@ -167,6 +185,8 @@ def board_lnx_cangen(
     """
     use cangen for generating testdata
     """
+    candev, candevsend = _default_can_devices(candev, candevsend)
+
     with tbot.ctx() as cx:
         if lab is None:
             lab = cx.request(tbot.role.LabHost)
@@ -269,7 +289,9 @@ def board_lnx_cangen(
 
             tbot.log.message(
                 tbot.log.c(
-                    f"send {frames} msgs with {dllength} databytes in {delta} from {cs} to {candevdump} with gap {cangen_gap} txqueuelen {txqueuelen} bitrate {bitrate} {realbitrate}"
+                    f"send {frames} msgs with {dllength} databytes in {delta} from {cs} to "
+                    f"{candevdump} with gap {cangen_gap} txqueuelen {txqueuelen} "
+                    f"bitrate {bitrate} {realbitrate}"
                 ).green
             )
 
