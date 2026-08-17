@@ -22,6 +22,7 @@ covered by tbot's own selftest suite and by running tbot testcases
 against real hardware, not by this unit test suite.
 """
 
+import argparse
 import importlib.util
 import sys
 import types
@@ -93,6 +94,19 @@ def install_tbot_stubs() -> None:
     tbot_mod.log_event = types.SimpleNamespace(
         command=lambda *a, **kw: _NoopCtxManager()
     )
+    tbot_mod.selectable = types.SimpleNamespace(printed=False)
+
+    def _build_parser():
+        # minimal stand-in for tbot.newbot.build_parser(): only the
+        # pieces initconfighelper.py actually reads (-f flags, testcase)
+        p = argparse.ArgumentParser(prog="tbot", fromfile_prefix_chars="@")
+        p.add_argument("-f", dest="flags", action="append", default=[])
+        p.add_argument("testcase", nargs="*")
+        return p
+
+    newbot_mod = types.ModuleType("tbot.newbot")
+    newbot_mod.build_parser = _build_parser
+    tbot_mod.newbot = newbot_mod
 
     machine_mod = types.ModuleType("tbot.machine")
     linux_mod = _AnyAttrModule("tbot.machine.linux")
@@ -143,6 +157,7 @@ def install_tbot_stubs() -> None:
     for name, mod in [
         ("tbot", tbot_mod),
         ("tbot.log", log_mod),
+        ("tbot.newbot", newbot_mod),
         ("tbot.machine", machine_mod),
         ("tbot.machine.linux", linux_mod),
         ("tbot.machine.board", board_mod),
@@ -182,6 +197,14 @@ def install_fake_initconfig(boardname: str = "testboard") -> None:
     """
     ini_mod = types.ModuleType("tbottest.initconfig")
     ini_mod.generic_get_boardname = lambda: boardname
+
+    def copy_file(filename, newfile):
+        with open(filename, "rt") as fin:
+            data = fin.read()
+        with open(newfile, "wt") as fout:
+            fout.write(data)
+
+    ini_mod.copy_file = copy_file
     sys.modules.setdefault("tbottest", types.ModuleType("tbottest"))
     sys.modules["tbottest.initconfig"] = ini_mod
 

@@ -43,7 +43,7 @@ def get_tbot_arguments():
     try:
         args = parser.parse_args(arguments)
     except Exception as error:
-        print("get_tbot_arguments error parsing arguments: ", error)
+        raise RuntimeError(f"get_tbot_arguments error parsing arguments: {error}") from error
 
     # in case we do autocompletion, supress output
     if args.complete_testcase is not None:
@@ -72,7 +72,9 @@ def get_unique_filename_extension():
     UUID_FILENAME = str(uuid.uuid4())
     return UUID_FILENAME
 
+
 TBOTCONFIGPATH = None
+
 
 def get_tbotconfig_path():
     global TBOTCONFIGPATH
@@ -96,86 +98,37 @@ def get_tbotconfig_path():
     TBOTCONFIGPATH = os.getcwd()
     return TBOTCONFIGPATH
 
-TBOTINIFILE = None
+
+_INIFILE_CACHE: dict = {}
 
 
-def inifile_get_tbotfilename():
-    """
-    helper function for setting up tbot.ini filename
-    """
-    global TBOTINIFILE
-    if TBOTINIFILE is not None:
-        return TBOTINIFILE
+def _get_cached_inifile(cachekey: str, flagkey: str, default_filename: str, errmsg: str) -> str:
+    if cachekey in _INIFILE_CACHE:
+        return _INIFILE_CACHE[cachekey]
 
     # may we pass an ini file path through tbot flags
-    # with for example: -f inifile_/tmp/tbot.ini
+    # with for example: -f inifile:/tmp/tbot.ini
     flags = get_tbot_flags()
     pathinifile = None
     tmppath = None
     for f in flags:
-        if "inifile" in f:
+        if flagkey in f:
             try:
                 pathinifile = f.split(":")[1]
             except Exception:
-                raise RuntimeError("please use : as seperator inifile flag")
+                raise RuntimeError(errmsg)
         if "tmpfilepath" in f:
             tmppath = f.split(":")[1]
 
     cfgpath = get_tbotconfig_path()
 
     if pathinifile:
-        if pathinifile[0] != r"\/":  # noqa: W605
-            tbotinifile = cfgpath + "/" + pathinifile
-        else:
-            tbotinifile = pathinifile
-    else:
-        tbotinifile = cfgpath + "/../tbottest/tbotconfig/BOARDNAME/tbot.ini"
-
-    uidfile = get_unique_filename_extension()
-    newfilename = f"{tbotinifile}-{uidfile}"
-    if tmppath:
-        name = os.path.basename(tbotinifile)
-        newfilename = f"{tmppath}/{name}-{uidfile}"
-
-    initconfig.copy_file(tbotinifile, newfilename)
-    TBOTINIFILE = newfilename
-    return TBOTINIFILE
-
-
-TBOTBOARDNAME = None
-
-
-def inifile_get_tbotboardfilename():
-    """
-    helper function for setting up boardname.ini filename
-    """
-    global TBOTBOARDNAME
-    if TBOTBOARDNAME is not None:
-        return TBOTBOARDNAME
-
-    # may we pass an ini file path through tbot flags
-    # with for example: -f inifile_/tmp/boardname.ini
-    flags = get_tbot_flags()
-    pathinifile = None
-    tmppath = None
-    for f in flags:
-        if "boardfile" in f:
-            try:
-                pathinifile = f.split(":")[1]
-            except Exception:
-                raise RuntimeError("please use : as seperator boardfile flag")
-        if "tmpfilepath" in f:
-            tmppath = f.split(":")[1]
-
-    cfgpath = get_tbotconfig_path()
-
-    if pathinifile:
-        if pathinifile[0] != r"\/":  # noqa: W605
+        if pathinifile[0] != "/":
             filename = cfgpath + "/" + pathinifile
         else:
             filename = pathinifile
     else:
-        filename = cfgpath + "/../tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini"
+        filename = cfgpath + "/../tbottest/tbotconfig/BOARDNAME/" + default_filename
 
     uidfile = get_unique_filename_extension()
     newfilename = f"{filename}-{uidfile}"
@@ -184,5 +137,26 @@ def inifile_get_tbotboardfilename():
         newfilename = f"{tmppath}/{name}-{uidfile}"
 
     initconfig.copy_file(filename, newfilename)
-    TBOTBOARDNAME = newfilename
-    return TBOTBOARDNAME
+    _INIFILE_CACHE[cachekey] = newfilename
+    return newfilename
+
+
+def inifile_get_tbotfilename():
+    """
+    helper function for setting up tbot.ini filename
+    """
+    return _get_cached_inifile(
+        "tbotinifile", "inifile", "tbot.ini", "please use : as seperator inifile flag"
+    )
+
+
+def inifile_get_tbotboardfilename():
+    """
+    helper function for setting up boardname.ini filename
+    """
+    return _get_cached_inifile(
+        "tbotboardname",
+        "boardfile",
+        "BOARDNAME.ini",
+        "please use : as seperator boardfile flag",
+    )
