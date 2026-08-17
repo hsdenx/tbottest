@@ -101,6 +101,32 @@ def lx_devmem2_get(
     raise RuntimeError("devmem2 unexpected output")
 
 
+def _check_revfile_line(
+    lnx: linux.LinuxShell,
+    revfile,
+    lnr: int,
+    cols: List[str],
+    fddiff,
+) -> bool:
+    """
+    Check a single already-split revfile line against the live
+    register value; returns False on a mismatch (writing it to
+    fddiff, if given), True for a comment/blank line or a match.
+    """
+    if not cols or cols[0] == "#":
+        return True
+
+    val = lx_devmem2_get(lnx, cols[0], cols[2])
+    msg = f"diff args: {revfile} line: {lnr} {val}@{cols[0]} & {cols[1]} != {cols[3]}"
+    if (int(val, 16) & int(cols[1], 16)) != (int(cols[3], 16) & int(cols[1], 16)):
+        tbot.log.message(tbot.log.c(msg).red)
+        if fddiff is not None:
+            fddiff.write(msg + "\n")
+        return False
+
+    return True
+
+
 @tbot.testcase
 def lnx_check_revfile(
     lnx: linux.LinuxShell,
@@ -133,6 +159,7 @@ def lnx_check_revfile(
     except IOError:
         raise RuntimeError("Could not open: " + revfile)
 
+    fddiff = None
     if difffile is not None:
         try:
             fddiff = open(difffile, "a")
@@ -143,16 +170,7 @@ def lnx_check_revfile(
     for line in fd.readlines():
         lnr += 1
         cols = line.split()
-        if cols[0] == "#":
-            continue
-
-        val = lx_devmem2_get(lnx, cols[0], cols[2])
-        msg = f"diff args: {revfile} line: {lnr} {val}@{cols[0]} & {cols[1]} != {cols[3]}"
-        if (int(val, 16) & int(cols[1], 16)) != (int(cols[3], 16) & int(cols[1], 16)):
-            tbot.log.message(tbot.log.c(msg).red)
-            if difffile is not None:
-                fddiff.write(msg + "\n")
-
+        if not _check_revfile_line(lnx, revfile, lnr, cols, fddiff):
             ret = False
 
         if timeout is not None:
@@ -162,6 +180,7 @@ def lnx_check_revfile(
     if difffile is not None:
         fddiff.close()
     return ret
+
 
 @tbot.testcase
 def lnx_command_check_dump_file(
@@ -186,8 +205,8 @@ def lnx_command_check_dump_file(
 
     success = 0
     ref = fd.read().splitlines()
-    l = log.splitlines()
-    for lineno, (line1, line2) in enumerate(zip(ref, l), start=1):
+    loglines = log.splitlines()
+    for lineno, (line1, line2) in enumerate(zip(ref, loglines), start=1):
         if line1 != line2:
             tbot.log.message(
                 tbot.log.c(f"Line {lineno}:\n  file1: {line1}\n  file2: {line2}").yellow
@@ -196,6 +215,7 @@ def lnx_command_check_dump_file(
 
     fd.close()
     return success
+
 
 @tbot.testcase
 def lnx_command_create_dump_file(
@@ -274,10 +294,12 @@ def lnx_create_revfile(
 
     if readtype == "w":
         step = 4
-    if readtype == "h":
+    elif readtype == "h":
         step = 2
-    if readtype == "b":
+    elif readtype == "b":
         step = 1
+    else:
+        raise RuntimeError(f"readtype {readtype} not supported, use one of w/h/b")
 
     for i in iter(range(start, stop, step)):
         val = lx_devmem2_get(lnx, hex(i), readtype)
@@ -458,8 +480,7 @@ def lnx_compare_files(
     :param o2: offset in first file
     :param length: length (in bytes)
     """
-    option = "--skip"
-    # busybox
+    # -s is the skip-offset flag for both busybox and non-busybox hexdump
     option = "-s"
     out1 = lnx.exec0("hexdump", "-e", '"%03.2x"', option, str(o1), "-n", str(length), f1)
     out2 = lnx.exec0("hexdump", "-e", '"%03.2x"', option, str(o2), "-n", str(length), f2)
@@ -483,7 +504,8 @@ def lnx_get_hwaddr(lnx: linux.LinuxShell, name: str) -> str:
     for line in out.split("\n"):
         if "HWaddr" in line:
             match = re.match(
-                r".*HWaddr (?P<hwaddr>[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+)",  # noqa: E501
+                r".*HWaddr (?P<hwaddr>[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+:"
+                r"[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+)",
                 line,
             )
             if match is None:
@@ -709,7 +731,7 @@ def lnx_wait_for_process(
 @tbot.testcase
 def board_ub_delete_env(
     ub: Optional[board.UBootShell] = None,
-    mtdparts=["env", "env-red"],
+    mtdparts=None,
 ) -> None:
     """
     erase the MTD partitions defined in mtdparts
@@ -728,6 +750,9 @@ def board_ub_delete_env(
         ]
 
     """
+    if mtdparts is None:
+        raise RuntimeError("please configure mtdparts")
+
     with tbot.ctx() as cx:
         if ub is None:
             ub = cx.request(tbot.role.BoardUBoot)
@@ -787,17 +812,17 @@ def board_wait_for_device(
         if lnx is None:
             lnx = cx.request(tbot.role.BoardLinux)
 
-    def check() -> bool:
-        # fix me how to use
-        # http://tbot.tools/modules/machine_linux.html?highlight=background#tbot.machine.linux.RedirBoth
-        rcode, log = lnx.exec(linux.Raw(f"ls -al {device} &> /dev/null"))
-        return rcode == 0
+        def check() -> bool:
+            # fix me how to use
+            # http://tbot.tools/modules/machine_linux.html?highlight=background#tbot.machine.linux.RedirBoth
+            rcode, log = lnx.exec(linux.Raw(f"ls -al {device} &> /dev/null"))
+            return rcode == 0
 
-    _poll_until(check, retries, retry_timeout, f"Device {device} does not come up")
-    # also wait timeout after we detect the device, as at least
-    # on raspberry pi, device is not always writeable after
-    # device appears
-    time.sleep(retry_timeout)
+        _poll_until(check, retries, retry_timeout, f"Device {device} does not come up")
+        # also wait timeout after we detect the device, as at least
+        # on raspberry pi, device is not always writeable after
+        # device appears
+        time.sleep(retry_timeout)
 
 
 @tbot.testcase
@@ -805,7 +830,7 @@ def board_set_default(
     lab: Optional[linux.LinuxShell] = None,
     ub: Optional[board.UBootShell] = None,
     lnx: Optional[linux.LinuxShell] = None,
-    mtdparts=["env", "env-red"],
+    mtdparts=None,
     device: str = None,
     erasesz: str = None,
 ) -> None:
@@ -1085,7 +1110,7 @@ def lnx_check_beeper(
     .. code-block:: python
 
         beep = [
-            {"freq":"440", "length":"1000", "device", "/dev/input/by-path/platform-buzzer-event"},
+            {"freq":"440", "length":"1000", "device":"/dev/input/by-path/platform-buzzer-event"},
         ]
     """
     if beeper is None:
@@ -1135,7 +1160,7 @@ def lnx_check_dmesg(
 def lnx_create_file(
     lnx: linux.LinuxShell = None,
     filename: AnyStr = None,
-    filedata: List = [],
+    filedata: Optional[List] = None,
 ) -> str:  # noqa: D107
     """
     create a file with filename on linux machine lnx with lines
@@ -1146,13 +1171,15 @@ def lnx_create_file(
     .. code-block:: python
 
             scriptname = "/tmp/cansend.sh"
-            filedata = ["#!/bin/sh",
+            filedata = [
+                "#!/bin/sh",
                 "",
                 "while true;do",
                 "    sleep 5",
                 "",
                 "    cansend can0 15a#1122334455667788",
-                "done"
+                "done",
+            ]
 
             lnx_create_file(lab, scriptname, filedata)
 
@@ -1163,6 +1190,9 @@ def lnx_create_file(
     """
     if filename is None:
         raise RuntimeError("only call with valid filename")
+
+    if filedata is None:
+        filedata = []
 
     act = linux.Raw(">")
     for line in filedata:
@@ -1204,7 +1234,7 @@ def lnx_install_package(
     if "debian" in os:
         return common_install_debian(lnx, package)
     elif "Fedora" in os:
-        return common_install_debian(lnx, package)
+        return common_install_fedora(lnx, package)
     else:
         raise RuntimeError(f"OS {os} not supported yet for automated installation")
 
@@ -1318,7 +1348,7 @@ def tbot_start_script_on_lab(
     tmp = lab.tmpdir()
     labtmppath = tmp / logfilename
     lfp = labtmppath._local_str()
-    scrpath = labtmppath = tmp / scriptname
+    scrpath = tmp / scriptname
     scrp = scrpath._local_str()
 
     # logfile path on board
@@ -1426,7 +1456,7 @@ def tbot_start_thread(
 def tbot_stop_thread(
     tid: uuid.UUID = None,
     signal: str = None,
-) -> int:  # noqa: D107
+) -> dict:  # noqa: D107
     """
     stop linux command with tid
 
@@ -1448,7 +1478,7 @@ def tbot_stop_thread(
 @tbot.testcase
 def sudo_subshell(
     lnx: linux.LinuxShell = None,
-    cmds: str = [],
+    cmds: Optional[List[str]] = None,
     password: str = None,
 ) -> list:
     """
@@ -1473,6 +1503,8 @@ def sudo_subshell(
     :param str: sudo password, pass None (default) if not needed
     :param list cmds: list of commands (strings), which are run under sudo
     """
+    if cmds is None:
+        cmds = []
 
     ret = []
     if len(cmds) == 0:
@@ -1484,12 +1516,11 @@ def sudo_subshell(
                 log = root.exec0(linux.Raw(cmd))
                 ret.append(log)
     else:
-        # create askpass file"
+        # create askpass file
         tmpfile = "/tmp/sendpass.sh"
 
-        lnx.exec0(linux.Raw(f'echo "#!/bin/sh\n\necho {password}" > {tmpfile}'))
+        lnx_create_file(lnx, tmpfile, ["#!/bin/sh", "", f"echo {password}"])
         lnx.exec0("chmod", "777", tmpfile)
-        lnx.exec0("cat", tmpfile)
 
         with lnx.subshell(
             "export",
