@@ -42,30 +42,26 @@ class GpiopmControl(board.PowerControl):
     def gpiopmctl_state(self) -> str:
         raise Exception("abstract method")
 
-    def poweron(self) -> None:
-        try:
-            self._gpio
-        except Exception:
+    def _ensure_gpio(self) -> Gpio:
+        if not hasattr(self, "_gpio"):
             self._gpio = Gpio(self.host, self.gpiopmctl_pin)
             self._gpio.set_direction("out")
+        return self._gpio
 
-        self._gpio.set_value(int(self.gpiopmctl_state))
+    def poweron(self) -> None:
+        gpio = self._ensure_gpio()
+        gpio.set_value(int(self.gpiopmctl_state))
 
     def poweroff(self) -> None:
         if "nopoweroff" in tbot.flags:
             tbot.log.message("Do not power off ...")
             return
 
-        try:
-            self._gpio
-        except Exception:
-            self._gpio = Gpio(self.host, self.gpiopmctl_pin)
-            self._gpio.set_direction("out")
-
+        gpio = self._ensure_gpio()
         if int(self.gpiopmctl_state) == 1:
-            self._gpio.set_value(False)
+            gpio.set_value(False)
         else:
-            self._gpio.set_value(True)
+            gpio.set_value(True)
 
         tbot.log.message("Waiting a bit to let power settle down ...")
         time.sleep(2)
@@ -184,9 +180,9 @@ class TinkerforgeControl(board.PowerControl):
     .. code-block:: python
 
         from tbot.machine import board
-        from tbottest.powercontrol import Tinkerforge
+        from tbottest.powercontrol import TinkerforgeControl
 
-        class MyControl(Tinkerforge, board.Board):
+        class MyControl(TinkerforgeControl, board.Board):
             channel = ""
             uid = ""
     """
@@ -239,6 +235,7 @@ class TinkerforgeControl(board.PowerControl):
                 self.channel,
                 "true",
             )
+
 
 TM021_SCRIPTS = {
     # scripts which tm021 uses:
@@ -381,15 +378,15 @@ class TM021Control(board.PowerControl):
     .. code-block:: python
 
         from tbot.machine import board
-        from tbottest.powercontrol import TM021
+        from tbottest.powercontrol import TM021Control
 
-        class MyControl(TM021, board.Board):
-            device = "/dev/relais"
-            baudrate = "500000"
-            timeout = "5"
-            address = "0"
-            port = "1"
-            debug = False
+        class MyControl(TM021Control, board.Board):
+            tm021_device = "/dev/relais"
+            tm021_baudrate = "500000"
+            tm021_timeout = "5"
+            tm021_address = "0"
+            tm021_port = "1"
+            tm021_debug = False
     """
     scriptexists = False
 
@@ -448,7 +445,7 @@ class TM021Control(board.PowerControl):
         return "False"
 
     def copy_script(self) -> bool:
-        if self.scriptexists == True:
+        if self.scriptexists:
             return True
 
         self.hookdir = linux.Path(self.host, "/tmp/tbot/tm021")
@@ -479,7 +476,6 @@ class TM021Control(board.PowerControl):
             # Write checksum so we don't re-deploy next time
             hashfile.write_text(script_hash)
 
-
         self.scriptexists = True
         return True
 
@@ -488,7 +484,10 @@ class TM021Control(board.PowerControl):
         # may is not started on lab host!
         self.copy_script()
 
-        self.host.exec0(self.hookdir / "tm021.py", self.tm021_device, self.tm021_baudrate,
+        self.host.exec0(
+            self.hookdir / "tm021.py",
+            self.tm021_device,
+            self.tm021_baudrate,
             self.tm021_timeout,
             self.tm021_address,
             self.tm021_port,
@@ -500,14 +499,21 @@ class TM021Control(board.PowerControl):
         if "nopoweroff" in tbot.flags:
             tbot.log.message("Do not power off ...")
         else:
-            self.host.exec0(self.hookdir / "tm021.py", self.tm021_device, self.tm021_baudrate,
+            # power_check() may call poweroff() directly (-f
+            # poweroffonstart) without a prior poweron() on this
+            # instance, so self.hookdir isn't guaranteed to be set yet
+            self.copy_script()
+
+            self.host.exec0(
+                self.hookdir / "tm021.py",
+                self.tm021_device,
+                self.tm021_baudrate,
                 self.tm021_timeout,
                 self.tm021_address,
                 self.tm021_port,
                 "off",
                 self.tm021_debug,
             )
-
 
 
 FLAGS = {

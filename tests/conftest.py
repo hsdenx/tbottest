@@ -209,6 +209,32 @@ def install_fake_initconfig(boardname: str = "testboard") -> None:
     sys.modules["tbottest.initconfig"] = ini_mod
 
 
+def install_gpio_stub() -> None:
+    """
+    Install a lightweight stand-in for tbot_contrib.gpio.Gpio (used by
+    powercontrol.GpiopmControl), since the real one talks to a live
+    /sys/class/gpio via linux.LinuxShell exec/read/write calls.
+    """
+    gpio_mod = types.ModuleType("tbot_contrib.gpio")
+
+    class FakeGpio:
+        def __init__(self, host, gpio_number, *, sys_path=None):
+            self.host = host
+            self.gpio_number = gpio_number
+            self.direction = None
+            self.value = None
+
+        def set_direction(self, direction):
+            self.direction = direction
+
+        def set_value(self, value):
+            self.value = value
+
+    gpio_mod.Gpio = FakeGpio
+    sys.modules.setdefault("tbot_contrib", types.ModuleType("tbot_contrib"))
+    sys.modules["tbot_contrib.gpio"] = gpio_mod
+
+
 def load_module(name: str, path: str):
     """
     Import a single module directly from its file path, bypassing
