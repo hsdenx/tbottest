@@ -1,18 +1,21 @@
 """
-Unit tests for tbottest/powercontrol.py's GpiopmControl and
-TM021Control.
+Unit tests for tbottest/powercontrol.py's GpiopmControl,
+PowerShellScriptControl, SispmControl and TM021Control.
 
 GpiopmControl is tested against a stub tbot_contrib.gpio.Gpio (the
 real one talks to a live /sys/class/gpio, see conftest's
-install_gpio_stub). TM021Control's copy_script()/poweron()/poweroff()
-are tested against a real temp directory (via a small linux.Path
-stand-in scoped to tmp_path) and a FakeHost that only understands
-enough of exec0() to make "mkdir -p" actually create the directory,
-since copy_script()'s hashfile.read_text()/write_text() do real I/O.
+install_gpio_stub). PowerShellScriptControl/SispmControl are tested
+via a FakeExecHost that just records exec0() calls, since they are
+pure one-liners with no cached/lazily-initialized state.
+TM021Control's copy_script()/poweron()/poweroff() are tested against
+a real temp directory (via a small linux.Path stand-in scoped to
+tmp_path) and a FakeHost that only understands enough of exec0() to
+make "mkdir -p" actually create the directory, since
+copy_script()'s hashfile.read_text()/write_text() do real I/O.
 
-PowerShellScriptControl/SispmControl/TinkerforgeControl are pure
-exec0() one-liners with no cached/lazily-initialized state, so they
-are not covered here.
+TinkerforgeControl is not covered here: it is also a pure exec0()
+one-liner (same shape as SispmControl), left out only because no
+Tinkerforge-specific behavior needed a regression test.
 """
 
 import os
@@ -75,6 +78,76 @@ class TestGpiopmControl:
         ctl._gpio.value = "untouched"
         ctl.poweroff()
         assert ctl._gpio.value == "untouched"
+
+
+class FakeExecHost:
+    hostname = "fakehost"
+
+    def __init__(self):
+        self.commands = []
+
+    def exec0(self, *args):
+        self.commands.append(tuple(str(a) for a in args))
+        return ""
+
+
+def make_shell_control(script="/opt/power.sh"):
+    class Ctl(powercontrol.PowerShellScriptControl):
+        shell_script = script
+        host = FakeExecHost()
+
+    return Ctl()
+
+
+class TestPowerShellScriptControl:
+    def test_poweron_runs_script_with_on(self):
+        ctl = make_shell_control()
+        ctl.poweron()
+        assert ctl.host.commands == [("/opt/power.sh", "on")]
+
+    def test_poweroff_runs_script_with_off(self):
+        ctl = make_shell_control()
+        ctl.poweroff()
+        assert ctl.host.commands == [("/opt/power.sh", "off")]
+
+    def test_poweroff_respects_nopoweroff_flag(self):
+        ctl = make_shell_control()
+        sys.modules["tbot"].flags = {"nopoweroff"}
+        ctl.poweroff()
+        assert ctl.host.commands == []
+
+
+def make_sispm_control(device="01:01:5c:29:39", port="2"):
+    class Ctl(powercontrol.SispmControl):
+        sispmctl_device = device
+        sispmctl_port = port
+        host = FakeExecHost()
+
+    return Ctl()
+
+
+class TestSispmControl:
+    def test_poweron_calls_sispmctl_with_o_flag(self):
+        ctl = make_sispm_control()
+        ctl.poweron()
+        assert ctl.host.commands == [
+            ("sispmctl", "-D", "01:01:5c:29:39", "-o", "2")
+        ]
+
+    def test_poweroff_calls_sispmctl_with_f_flag(self, monkeypatch):
+        monkeypatch.setattr(powercontrol.time, "sleep", lambda s: None)
+        ctl = make_sispm_control()
+        ctl.poweroff()
+        assert ctl.host.commands == [
+            ("sispmctl", "-D", "01:01:5c:29:39", "-f", "2")
+        ]
+
+    def test_poweroff_respects_nopoweroff_flag(self, monkeypatch):
+        monkeypatch.setattr(powercontrol.time, "sleep", lambda s: None)
+        ctl = make_sispm_control()
+        sys.modules["tbot"].flags = {"nopoweroff"}
+        ctl.poweroff()
+        assert ctl.host.commands == []
 
 
 class _FakeTm021Path:
