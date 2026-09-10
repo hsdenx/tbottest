@@ -16,6 +16,12 @@ This testcases work without tbot imports
 .. automodule:: tbottest.tc.common_generic
    :members:
 
+Boot counter
+------------
+
+.. automodule:: tbottest.tc.bootcount
+   :members:
+
 CAN Tests
 ---------
 
