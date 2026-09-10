@@ -672,8 +672,9 @@ settings needed for linux testcases.
         :escape: '
         :header: "key", "description", "default", "example"
 
-        "linux_user", "username for linux login", "root", "root"
+        "linux_user", "username for linux login. Set to empty (linux_user = ) to just send Enter instead of a username, e.g. for boards that already auto-login", "root", "root"
         "linux_password", "password for linux login, None for no password required", "None", "None"
+        "linux_login_prompt", "prompt that indicates tbot should send the username. Set this to match your board's shell prompt if it logs in automatically and never shows a real login prompt. Matched as regex with optional trailing whitespace, no need to (and can't, ini strips it) include a trailing space", "login: ", "root@foobar:~#"
         "linux_login_delay", "login delay in seconds", "5", "1"
         "linux_boot_timeout", "Maximum time for Linux to reach the login prompt.", "None", "30"
         "linux_init_timeout", "If not None, timeout in seconds after ethernetconfig", "None", "2.0"

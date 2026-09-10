@@ -246,6 +246,16 @@ class GenericLinuxBoot(
     cfgp = cfg
     username = cfgp.get_config("linux_user", "root")
     password = cfgp.get_config("linux_password", "None")
+    _login_prompt_cfg = cfgp.get_config("linux_login_prompt", "login: ")
+    if _login_prompt_cfg == "login: ":
+        # default: keep as plain literal string (unchanged behavior)
+        login_prompt = _login_prompt_cfg
+    else:
+        # board-specific prompt: match as regex with optional trailing
+        # whitespace, since configparser strips trailing whitespace from
+        # ini values so a literal string can never end with the trailing
+        # space/tab most shell prompts have.
+        login_prompt = tbot.Re(re.escape(_login_prompt_cfg) + r"\s{0,4}$")
 
     login_delay = cfgp.get_config_int("linux_login_delay", "None")
     boot_timeout = cfgp.get_config_int("linux_boot_timeout", "None")
