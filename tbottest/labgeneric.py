@@ -64,6 +64,12 @@ class boardKermitConnector(KermitConnector):
             kermit_cfg_file = cfgt.config_parser.get(s, "cfgfile")
             kermit_delay = int(cfgt.config_parser.get(s, "delay"))
             name = ini.generic_get_boardname()
+            try:
+                kermit_options = ast.literal_eval(
+                    cfgt.config_parser.get(s, "kermit_options")
+                )
+            except Exception:
+                pass
 
 
 class boardSSHConnector(connector.SSHConnector):

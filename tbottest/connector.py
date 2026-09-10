@@ -1,6 +1,7 @@
 import abc
 import contextlib
 import time
+import typing
 from tbot.machine import channel, connector, linux
 
 __all__ = (
@@ -14,6 +15,8 @@ class KermitConnector(connector.ConsoleConnector):
     Connect to a serial console using kermit
 
     You can configure the device name using the ``kermit_cfg_file`` property.
+    Additional command line options for kermit can be set using the
+    ``kermit_options`` property.
 
     **Example**: (board config)
 
@@ -45,10 +48,20 @@ class KermitConnector(connector.ConsoleConnector):
         """
         raise Exception("abstract method")
 
+    @property
+    def kermit_options(self) -> typing.List[str]:
+        """
+        additional command line options passed to kermit before the
+        config file, e.g. ``["-c", "-y"]``
+
+        default: no additional options
+        """
+        return []
+
     @contextlib.contextmanager
     def kermitconnect(self, mach: linux.LinuxShell) -> channel.Channel:
         KERMIT_PROMPT = b"C-Kermit>"
-        ch = mach.open_channel("kermit", self.kermit_cfg_file)
+        ch = mach.open_channel("kermit", *self.kermit_options, self.kermit_cfg_file)
         try:
             try:
                 ret = ch.read(150, timeout=2)

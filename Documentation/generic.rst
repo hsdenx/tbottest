@@ -376,6 +376,7 @@ Here as example wandboard.
 
         "cfgfile", "path to kermit config file, which is passed to kermit when starting", "/home/pi/kermrc_wandboard"
         "delay", "delay for poweroff", "3"
+        "kermit_options", "optional, additional command line options passed to kermit before the config file", "['-c', '-y']"
 
 [SCRIPTCOM_BOARDNAME]
 ^^^^^^^^^^^^^^^^^^^^^
