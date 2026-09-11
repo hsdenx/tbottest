@@ -6,6 +6,7 @@ import time
 import uuid
 from tbot.machine import linux
 from tbot.machine import board
+from tbot.machine import channel
 from tbot.context import Optional
 from typing import AnyStr, List
 import tbottest.initconfig as ini
@@ -57,6 +58,79 @@ def search_multistring_in_multiline(searches, lines) -> bool:
         tbot.log.message(tbot.log.c(msg).red)
 
     return found
+
+
+class ExecDeathStringError(Exception):
+    """
+    Raised by exec_check()/exec0_check() when one of the given
+    death_strings appears in a command's output before the command
+    finished on its own.
+    """
+
+    def __init__(self, match: bytes, args: typing.Tuple[typing.Any, ...]) -> None:
+        self.match = match
+        self.cmd_args = args
+        super().__init__(f"command {args!r} aborted: found {match!r} in output")
+
+
+@contextlib.contextmanager
+def _with_death_strings(
+    mach: typing.Any, death_strings: typing.List[typing.Any]
+) -> typing.Iterator[None]:
+    with contextlib.ExitStack() as cx:
+        for s in death_strings:
+            cx.enter_context(mach.ch.with_death_string(s))
+        yield
+
+
+def exec_check(
+    mach: typing.Any,
+    *args: typing.Any,
+    death_strings: typing.List[typing.Any],
+) -> typing.Tuple[int, str]:
+    """
+    Like ``mach.exec(*args)``, but aborts immediately by raising
+    ExecDeathStringError as soon as any string in death_strings appears
+    in the command's output, instead of waiting for the command to
+    finish on its own.
+
+    Works for any machine exposing ``.ch`` and ``.exec()``, e.g. Linux
+    shells (linux.LinuxShell) and U-Boot shells (board.UBootShell).
+
+    :param mach: machine to run the command on
+    :param death_strings: list of strings/patterns which, if found in
+        the command's output, abort the command immediately
+    """
+    with _with_death_strings(mach, death_strings):
+        try:
+            return mach.exec(*args)
+        except channel.DeathStringException as e:
+            raise ExecDeathStringError(e.match, args) from e
+
+
+def exec0_check(
+    mach: typing.Any,
+    *args: typing.Any,
+    death_strings: typing.List[typing.Any],
+) -> str:
+    """
+    Like ``mach.exec0(*args)``, but aborts immediately by raising
+    ExecDeathStringError as soon as any string in death_strings appears
+    in the command's output, instead of waiting for the command to
+    finish on its own.
+
+    Works for any machine exposing ``.ch`` and ``.exec0()``, e.g. Linux
+    shells (linux.LinuxShell) and U-Boot shells (board.UBootShell).
+
+    :param mach: machine to run the command on
+    :param death_strings: list of strings/patterns which, if found in
+        the command's output, abort the command immediately
+    """
+    with _with_death_strings(mach, death_strings):
+        try:
+            return mach.exec0(*args)
+        except channel.DeathStringException as e:
+            raise ExecDeathStringError(e.match, args) from e
 
 
 @tbot.testcase
