@@ -159,6 +159,14 @@ def install_tbot_stubs() -> None:
     connector_mod = _AnyAttrModule("tbot.machine.connector")
     machine_mod.connector = connector_mod
 
+    channel_mod = _AnyAttrModule("tbot.machine.channel")
+
+    class DeathStringException(Exception):
+        pass
+
+    channel_mod.DeathStringException = DeathStringException
+    machine_mod.channel = channel_mod
+
     class Optional:
         def __class_getitem__(cls, item):
             return cls
@@ -178,6 +186,7 @@ def install_tbot_stubs() -> None:
         ("tbot.machine.linux", linux_mod),
         ("tbot.machine.board", board_mod),
         ("tbot.machine.connector", connector_mod),
+        ("tbot.machine.channel", channel_mod),
         ("tbot.context", ctx_mod),
         ("tbot.tc", tc_mod),
         ("tbot.tc.shell", tc_shell_mod),
