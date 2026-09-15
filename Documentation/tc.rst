@@ -106,6 +106,9 @@ Testcases for testing devices which use `swupdate`_.
 .. automodule:: tbottest.tc.swu
    :members:
 
+.. automodule:: tbottest.tc.swupdate
+   :members:
+
 SystemD
 -------
 
