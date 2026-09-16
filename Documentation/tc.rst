@@ -121,6 +121,12 @@ TPM
 .. automodule:: tbottest.tc.tpm
    :members:
 
+Watchdog
+--------
+
+.. automodule:: tbottest.tc.watchdog
+   :members:
+
 U-Boot
 ------
 
