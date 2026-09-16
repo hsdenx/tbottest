@@ -1,0 +1,1135 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.labgeneric &mdash; tbottest 0.0.1-317-gfa7b0b6 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=0fc419ee" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/documentation_options.js?v=8a1275c6"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.labgeneric</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.labgeneric</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tbot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbot.machine</span><span class="w"> </span><span class="kn">import</span> <span class="n">connector</span><span class="p">,</span> <span class="n">linux</span><span class="p">,</span> <span class="n">board</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tbottest.initconfig</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ini</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbot_contrib.gpio</span><span class="w"> </span><span class="kn">import</span> <span class="n">Gpio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.connector</span><span class="w"> </span><span class="kn">import</span> <span class="n">KermitConnector</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.connector</span><span class="w"> </span><span class="kn">import</span> <span class="n">PicocomConnector</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.connector</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScriptConnector</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest</span><span class="w"> </span><span class="kn">import</span> <span class="n">builders</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest</span><span class="w"> </span><span class="kn">import</span> <span class="n">powercontrol</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest</span><span class="w"> </span><span class="kn">import</span> <span class="n">machineinit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.common.boardlocking</span><span class="w"> </span><span class="kn">import</span> <span class="n">lab_get_lock</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.dynamicimport</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_boardcallback_import</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.dynamicimport</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_boardmodule_import</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">tbottest.initconfighelper</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">inithelper</span>
+
+<span class="n">cfgt</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">IniTBotConfig</span><span class="p">()</span>
+
+<span class="n">_INIT_CACHE</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="n">LABSECTIONNAME</span> <span class="o">=</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">get_lab_sectionname</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">shelltype</span> <span class="o">==</span> <span class="s2">"bash"</span><span class="p">:</span>
+    <span class="n">LAB_LINUX_SHELL</span> <span class="o">=</span> <span class="n">linux</span><span class="o">.</span><span class="n">Bash</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">LAB_LINUX_SHELL</span> <span class="o">=</span> <span class="n">linux</span><span class="o">.</span><span class="n">Ash</span>
+
+
+<div class="viewcode-block" id="boardPicocomConnector">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardPicocomConnector">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardPicocomConnector</span><span class="p">(</span><span class="n">PicocomConnector</span><span class="p">):</span>
+    <span class="n">bn</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"PICOCOM_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">cfg</span> <span class="o">==</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">baudrate</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"baudrate"</span><span class="p">)</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"device"</span><span class="p">)</span>
+            <span class="n">delay</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"delay"</span><span class="p">))</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"noreset"</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">"True"</span> <span class="ow">in</span> <span class="n">tmp</span><span class="p">:</span>
+                    <span class="n">noreset</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="boardScriptConnector">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardScriptConnector">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardScriptConnector</span><span class="p">(</span><span class="n">ScriptConnector</span><span class="p">):</span>
+    <span class="n">bn</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"SCRIPTCOM_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">cfg</span> <span class="o">==</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">scriptname</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"scriptname"</span><span class="p">)</span>
+            <span class="n">exitstring</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"exitstring"</span><span class="p">)</span>
+            <span class="n">boardname</span> <span class="o">=</span> <span class="n">bn</span></div>
+
+
+
+<div class="viewcode-block" id="boardKermitConnector">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardKermitConnector">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardKermitConnector</span><span class="p">(</span><span class="n">KermitConnector</span><span class="p">):</span>
+    <span class="n">bn</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"KERMIT_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">cfg</span> <span class="o">==</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">kermit_cfg_file</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"cfgfile"</span><span class="p">)</span>
+            <span class="n">kermit_delay</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"delay"</span><span class="p">))</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">kermit_options</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span>
+                    <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"kermit_options"</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="boardSSHConnector">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardSSHConnector">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardSSHConnector</span><span class="p">(</span><span class="n">connector</span><span class="o">.</span><span class="n">SSHConnector</span><span class="p">):</span>
+
+    <span class="n">cfgl</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">IniConfig</span><span class="p">()</span>
+    <span class="n">cfgp</span> <span class="o">=</span> <span class="n">cfgl</span><span class="o">.</span><span class="n">config_parser</span>
+    <span class="n">tmpdir</span> <span class="o">=</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"TC"</span><span class="p">,</span> <span class="s2">"tmpdir"</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="s2">"/tmp"</span><span class="p">)</span>
+
+    <span class="n">ign_hostkey</span> <span class="o">=</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">"TC"</span><span class="p">,</span> <span class="s2">"ignore_hostkey"</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ign_hostkey</span><span class="p">:</span>
+        <span class="n">ignore_hostkey</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">username</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">init_get_config</span><span class="p">(</span><span class="n">cfgp</span><span class="p">,</span> <span class="s2">"linux_user"</span><span class="p">,</span> <span class="s2">"root"</span><span class="p">)</span>
+    <span class="c1"># hostname for ssh machine to board</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">board_detect_lx_ethernet_interface</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">get_boardmodule_import</span><span class="p">(),</span> <span class="s2">"board_detect_lx_ethernet_interface"</span>
+        <span class="p">)</span>
+        <span class="n">IP_BOARD_SSH_INTERFACE</span> <span class="o">=</span> <span class="n">board_detect_lx_ethernet_interface</span><span class="p">()</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Use </span><span class="si">{</span><span class="n">IP_BOARD_SSH_INTERFACE</span><span class="si">}</span><span class="s2"> interface for ssh"</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">IP_BOARD_SSH_INTERFACE</span> <span class="o">=</span> <span class="s2">"eth0"</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ssh_ip_section</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"IPSETUP_</span><span class="si">{</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">IP_BOARD_SSH_INTERFACE</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">IP_BOARD</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ssh_ip_section</span><span class="p">,</span> <span class="s2">"ipaddr"</span><span class="p">)</span>
+        <span class="n">hostname</span> <span class="o">=</span> <span class="n">IP_BOARD</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Please set ipaddr for ssh machine. Expect section </span><span class="si">{</span><span class="n">ssh_ip_section</span><span class="si">}</span><span class="s2"> with key ipaddr"</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">authenticator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">linux</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">Authenticator</span><span class="p">:</span>
+        <span class="n">cfgb</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">IniConfig</span><span class="p">()</span>
+        <span class="n">cfgp</span> <span class="o">=</span> <span class="n">cfgb</span><span class="o">.</span><span class="n">config_parser</span>
+        <span class="n">ssh_keyfile</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">init_get_config</span><span class="p">(</span><span class="n">cfgp</span><span class="p">,</span> <span class="s2">"ssh_keyfile"</span><span class="p">,</span> <span class="s2">"None"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ssh_keyfile</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">PrivateKeyAuthenticator</span><span class="p">(</span><span class="n">ssh_keyfile</span><span class="p">)</span>
+
+        <span class="n">ssh_password</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">init_get_config</span><span class="p">(</span><span class="n">cfgp</span><span class="p">,</span> <span class="s2">"ssh_password"</span><span class="p">,</span> <span class="s2">"None"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ssh_password</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">PasswordAuthenticator</span><span class="p">(</span><span class="n">ssh_password</span><span class="p">)</span>
+
+        <span class="c1"># default, hopefully ssh config has all needed settings</span>
+        <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">NoneAuthenticator</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="boardGpioControl">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardGpioControl">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardGpioControl</span><span class="p">(</span><span class="n">powercontrol</span><span class="o">.</span><span class="n">GpiopmControl</span><span class="p">):</span>
+<div class="viewcode-block" id="boardGpioControl.power_check">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardGpioControl.power_check">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">power_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"poweroffonstart"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">poweroff</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+    <span class="n">bn</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"GPIOPMCTRL_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">cfg</span> <span class="o">==</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">gpiopmctl_pin</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"gpiopmctl_pin"</span><span class="p">)</span>
+            <span class="n">gpiopmctl_state</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"gpiopmctl_state"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="boardPowerShellControl">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardPowerShellControl">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardPowerShellControl</span><span class="p">(</span><span class="n">powercontrol</span><span class="o">.</span><span class="n">PowerShellScriptControl</span><span class="p">):</span>
+<div class="viewcode-block" id="boardPowerShellControl.power_check">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardPowerShellControl.power_check">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">power_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"poweroffonstart"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">poweroff</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+    <span class="n">bn</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"POWERSHELLSCRIPT_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">cfg</span> <span class="o">==</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">shell_script</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"script"</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="boardSisControl">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardSisControl">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardSisControl</span><span class="p">(</span><span class="n">powercontrol</span><span class="o">.</span><span class="n">SispmControl</span><span class="p">):</span>
+<div class="viewcode-block" id="boardSisControl.power_check">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardSisControl.power_check">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">power_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"poweroffonstart"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">poweroff</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+    <span class="n">bn</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"SISPMCTRL_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">cfg</span> <span class="o">==</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">sispmctl_device</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"device"</span><span class="p">)</span>
+            <span class="n">sispmctl_port</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"port"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="boardTMControl">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardTMControl">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardTMControl</span><span class="p">(</span><span class="n">powercontrol</span><span class="o">.</span><span class="n">TM021Control</span><span class="p">):</span>
+<div class="viewcode-block" id="boardTMControl.power_check">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardTMControl.power_check">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">power_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"poweroffonstart"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">poweroff</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+    <span class="n">bn</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"TM021_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">cfg</span> <span class="o">==</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">tm021_device</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"device"</span><span class="p">)</span>
+            <span class="n">tm021_baudrate</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"baudrate"</span><span class="p">)</span>
+            <span class="n">tm021_timeout</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"timeout"</span><span class="p">)</span>
+            <span class="n">tm021_address</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"address"</span><span class="p">)</span>
+            <span class="n">tm021_port</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"port"</span><span class="p">)</span>
+            <span class="n">tm021_debug</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"debug"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="boardTFControl">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardTFControl">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardTFControl</span><span class="p">(</span><span class="n">powercontrol</span><span class="o">.</span><span class="n">TinkerforgeControl</span><span class="p">):</span>
+    <span class="n">bn</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"TF_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">cfg</span> <span class="o">==</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">uid</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"uid"</span><span class="p">)</span>
+            <span class="n">channel</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"channel"</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="s2">"tinkerforge"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+    <span class="n">BOARDCTL</span> <span class="o">=</span> <span class="n">boardTFControl</span>
+<span class="k">elif</span> <span class="s2">"gpiopower"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+    <span class="n">BOARDCTL</span> <span class="o">=</span> <span class="n">boardGpioControl</span>
+<span class="k">elif</span> <span class="s2">"powershellscript"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+    <span class="n">BOARDCTL</span> <span class="o">=</span> <span class="n">boardPowerShellControl</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># try to autodetect from tbot.ini file</span>
+    <span class="k">if</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">sispmctrl</span><span class="p">:</span>
+        <span class="n">BOARDCTL</span> <span class="o">=</span> <span class="n">boardSisControl</span>
+    <span class="k">elif</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">powershellscript</span><span class="p">:</span>
+        <span class="n">BOARDCTL</span> <span class="o">=</span> <span class="n">boardPowerShellControl</span>
+    <span class="k">elif</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">gpiopowerctrl</span><span class="p">:</span>
+        <span class="n">BOARDCTL</span> <span class="o">=</span> <span class="n">boardGpioControl</span>
+    <span class="k">elif</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">tinkerforce</span><span class="p">:</span>
+        <span class="n">BOARDCTL</span> <span class="o">=</span> <span class="n">boardTFControl</span>
+    <span class="k">elif</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">tm021</span><span class="p">:</span>
+        <span class="n">BOARDCTL</span> <span class="o">=</span> <span class="n">boardTMControl</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bn</span> <span class="o">=</span> <span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"please configure powerctrl for board </span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="c1"># if we want to download bootloader with uuu tool</span>
+<span class="c1"># after powering on the board, we must load the bootloader</span>
+<span class="c1"># with the uuu tool onto the board</span>
+<div class="viewcode-block" id="boardControlUUU">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlUUU">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardControlUUU</span><span class="p">(</span><span class="n">BOARDCTL</span><span class="p">,</span> <span class="n">machineinit</span><span class="o">.</span><span class="n">UUULoad</span><span class="p">):</span>
+<div class="viewcode-block" id="boardControlUUU.get_uuu_tool">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlUUU.get_uuu_tool">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_uuu_tool</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">toolsdir</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="boardControlUUU.uuu_loader_steps">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlUUU.uuu_loader_steps">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">uuu_loader_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">lbd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">tftp_dir</span><span class="p">()</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+        <span class="n">ucfg</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">uuucfg</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()]</span>
+        <span class="n">cmds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ucfg</span><span class="p">:</span>
+            <span class="n">new</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"LBD"</span><span class="p">,</span> <span class="n">lbd</span><span class="p">)</span>
+            <span class="n">cmds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="n">new</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">cmds</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="boardControlXmodem">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlXmodem">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardControlXmodem</span><span class="p">(</span><span class="n">BOARDCTL</span><span class="p">,</span> <span class="n">machineinit</span><span class="o">.</span><span class="n">XMODEMLoad</span><span class="p">):</span>
+<div class="viewcode-block" id="boardControlXmodem.xmodem_loader_device">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlXmodem.xmodem_loader_device">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">xmodem_loader_device</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">xmodemdevice</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()]</span></div>
+
+
+<div class="viewcode-block" id="boardControlXmodem.xmodem_loader_steps">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlXmodem.xmodem_loader_steps">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">xmodem_loader_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">lbd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">tftp_dir</span><span class="p">()</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+        <span class="n">xcfg</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">xmodemcfg</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()]</span>
+        <span class="n">xdev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmodem_loader_device</span><span class="p">()</span>
+        <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"TFTPDIR"</span><span class="p">,</span> <span class="n">lbd</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">xcfg</span><span class="p">]</span>
+        <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"SERDEV"</span><span class="p">,</span> <span class="n">xdev</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">cmds</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">cmds</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="boardControlDFUUTIL">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlDFUUTIL">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardControlDFUUTIL</span><span class="p">(</span><span class="n">BOARDCTL</span><span class="p">,</span> <span class="n">machineinit</span><span class="o">.</span><span class="n">DFUUTIL</span><span class="p">):</span>
+<div class="viewcode-block" id="boardControlDFUUTIL.dfuutil_loader_steps">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlDFUUTIL.dfuutil_loader_steps">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dfuutil_loader_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tftpd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">tftp_dir</span><span class="p">()</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">dfuutilcfg</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()]</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">:</span>
+            <span class="n">c</span><span class="p">[</span><span class="s2">"a"</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="s2">"a"</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"LBD"</span><span class="p">,</span> <span class="n">tftpd</span><span class="p">)</span>
+            <span class="n">c</span><span class="p">[</span><span class="s2">"D"</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="s2">"D"</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"LBD"</span><span class="p">,</span> <span class="n">tftpd</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cfg</span></div>
+</div>
+
+
+
+<span class="c1"># if we want to download bootloader with Lauterbach TRACE32</span>
+<span class="c1"># after powering on the board, we must load the bootloader</span>
+<span class="c1"># with the trace32 tool onto the board</span>
+<div class="viewcode-block" id="boardControlLauterbach">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlLauterbach">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardControlLauterbach</span><span class="p">(</span><span class="n">BOARDCTL</span><span class="p">,</span> <span class="n">machineinit</span><span class="o">.</span><span class="n">LauterbachLoad</span><span class="p">):</span>
+<div class="viewcode-block" id="boardControlLauterbach.get_host">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlLauterbach.get_host">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_host</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">"lauterbachusesshmachine"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+                <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">lab</span><span class="o">.</span><span class="n">has_sshmachine</span><span class="p">():</span>
+                    <span class="k">with</span> <span class="n">lab</span><span class="o">.</span><span class="n">sshmachine</span><span class="p">()</span> <span class="k">as</span> <span class="n">lnxssh</span><span class="p">:</span>
+                        <span class="c1"># lnxssh.exec0("uname", "-a")</span>
+                        <span class="c1"># ret, log = lnxssh.exec("ps", "afx", linux.Raw("|"), "grep", "dummy-1920x1080.conf", linux.Raw("|"), "grep", "-v", "grep")</span>
+                        <span class="c1"># if ret != 0:</span>
+                        <span class="c1">#    lnxssh.exec0("sudo", "X", "-config", "/home/hs/data/Entwicklung/XXX/dummy-1920x1080.conf", ":99", linux.Raw("&amp;"))</span>
+                        <span class="c1"># lnxssh.exec0("export", "DISPLAY=:99")</span>
+
+                        <span class="k">return</span> <span class="n">lnxssh</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_trace32_verbose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">lauterbachcfg</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">"verbose"</span><span class="p">]</span>
+
+<div class="viewcode-block" id="boardControlLauterbach.get_trace32_install_path">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlLauterbach.get_trace32_install_path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_trace32_install_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">lauterbachcfg</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">"install_path"</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="boardControlLauterbach.get_trace32_cmd">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlLauterbach.get_trace32_cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_trace32_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">lauterbachcfg</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">"cmd"</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="boardControlLauterbach.get_trace32_config">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlLauterbach.get_trace32_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_trace32_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">lauterbachcfg</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">"config"</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="boardControlLauterbach.get_trace32_script">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlLauterbach.get_trace32_script">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_trace32_script</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">lauterbachcfg</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">"script"</span><span class="p">]</span></div>
+</div>
+
+
+
+<span class="c1"># if we want to download bootloader with Segger JLink</span>
+<span class="c1"># after powering on the board, we must load the bootloader</span>
+<span class="c1"># with the JLinkExe tool onto the board</span>
+<div class="viewcode-block" id="boardControlSegger">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlSegger">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardControlSegger</span><span class="p">(</span><span class="n">BOARDCTL</span><span class="p">,</span> <span class="n">machineinit</span><span class="o">.</span><span class="n">SeggerLoad</span><span class="p">):</span>
+<div class="viewcode-block" id="boardControlSegger.get_host">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlSegger.get_host">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_host</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span></div>
+
+
+<div class="viewcode-block" id="boardControlSegger.get_segger_cmds">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlSegger.get_segger_cmds">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_segger_cmds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">seggercfg</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">"cmds"</span><span class="p">]</span></div>
+</div>
+
+
+
+<span class="k">if</span> <span class="s2">"uuuloader"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+    <span class="n">BOARDCTRL</span> <span class="o">=</span> <span class="n">boardControlUUU</span>
+<span class="k">elif</span> <span class="s2">"dfuutilloader"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+    <span class="n">BOARDCTRL</span> <span class="o">=</span> <span class="n">boardControlDFUUTIL</span>
+<span class="k">elif</span> <span class="s2">"lauterbachloader"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+    <span class="n">BOARDCTRL</span> <span class="o">=</span> <span class="n">boardControlLauterbach</span>
+<span class="k">elif</span> <span class="s2">"seggerloader"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+    <span class="n">BOARDCTRL</span> <span class="o">=</span> <span class="n">boardControlSegger</span>
+<span class="k">elif</span> <span class="s2">"xmodemloader"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+    <span class="n">BOARDCTRL</span> <span class="o">=</span> <span class="n">boardControlXmodem</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">BOARDCTRL</span> <span class="o">=</span> <span class="n">BOARDCTL</span>
+
+<span class="k">if</span> <span class="s2">"ssh"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+    <span class="n">BOARDCON</span> <span class="o">=</span> <span class="n">boardSSHConnector</span>
+<span class="k">elif</span> <span class="s2">"picocom"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+    <span class="n">BOARDCON</span> <span class="o">=</span> <span class="n">boardPicocomConnector</span>
+<span class="k">elif</span> <span class="s2">"scriptcom"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+    <span class="n">BOARDCON</span> <span class="o">=</span> <span class="n">boardScriptConnector</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># try to autodetect setup (config from tbot.ini file)</span>
+    <span class="k">if</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">kermit</span><span class="p">:</span>
+        <span class="n">BOARDCON</span> <span class="o">=</span> <span class="n">boardKermitConnector</span>
+    <span class="k">elif</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">picocom</span><span class="p">:</span>
+        <span class="n">BOARDCON</span> <span class="o">=</span> <span class="n">boardPicocomConnector</span>
+    <span class="k">elif</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">scriptcom</span><span class="p">:</span>
+        <span class="n">BOARDCON</span> <span class="o">=</span> <span class="n">boardScriptConnector</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Please setup console connector"</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="boardControlFull">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardControlFull">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardControlFull</span><span class="p">(</span><span class="n">BOARDCON</span><span class="p">,</span> <span class="n">BOARDCTRL</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">Board</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="boardExtPower">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.boardExtPower">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">boardExtPower</span><span class="p">(</span><span class="n">BOARDCON</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">Board</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<span class="k">if</span> <span class="s2">"local"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+    <span class="n">CON</span> <span class="o">=</span> <span class="n">connector</span><span class="o">.</span><span class="n">SubprocessConnector</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">CON</span> <span class="o">=</span> <span class="n">connector</span><span class="o">.</span><span class="n">SSHConnector</span>
+
+<span class="n">BH</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">TypeVar</span><span class="p">(</span><span class="s2">"BH"</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">linux</span><span class="o">.</span><span class="n">Builder</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="GenericLab">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.GenericLab">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GenericLab</span><span class="p">(</span><span class="n">CON</span><span class="p">,</span> <span class="n">LAB_LINUX_SHELL</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Lab</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Builder</span><span class="p">):</span>
+    <span class="n">sectionname</span> <span class="o">=</span> <span class="n">LABSECTIONNAME</span>
+    <span class="n">tmpdir_exists</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">nfsbasedir</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">nfsboardbasedir</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABSECTIONNAME</span><span class="p">,</span> <span class="s2">"labname"</span><span class="p">)</span>
+    <span class="n">hostname</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABSECTIONNAME</span><span class="p">,</span> <span class="s2">"hostname"</span><span class="p">)</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABSECTIONNAME</span><span class="p">,</span> <span class="s2">"username"</span><span class="p">)</span>
+    <span class="n">tftproot</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABSECTIONNAME</span><span class="p">,</span> <span class="s2">"tftproot"</span><span class="p">)</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABSECTIONNAME</span><span class="p">,</span> <span class="s2">"port"</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="mi">22</span><span class="p">)</span>
+    <span class="n">nfs_base_path</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABSECTIONNAME</span><span class="p">,</span> <span class="s2">"nfs_base_path"</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">enablelocking</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABSECTIONNAME</span><span class="p">,</span> <span class="s2">"uselocking"</span><span class="p">)</span>
+        <span class="n">enablelocking</span> <span class="o">=</span> <span class="n">enablelocking</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">enablelocking</span> <span class="o">=</span> <span class="s2">"no"</span>
+
+    <span class="n">bootmodecfg</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">bootmodecfg</span>
+    <span class="n">ubcfg</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">ubcfg</span>
+    <span class="n">ethdevices</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">ethdevices</span>
+    <span class="n">uuucfg</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">uuucfg</span>
+    <span class="n">lauterbachcfg</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">lauterbachcfg</span>
+    <span class="n">seggercfg</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">seggercfg</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ssh_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        if ProxyJump does not work, execute this command from hand</span>
+<span class="sd">        on the lab PC with BatchMode=no" -&gt; answer allwith "yes"</span>
+<span class="sd">        If again password question pops up, copy id_rsa.pub from</span>
+<span class="sd">        lab PC to authorized_keys on build PC</span>
+<span class="sd">        """</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="s2">"outside"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABSECTIONNAME</span><span class="p">,</span> <span class="s2">"proxyjump"</span><span class="p">)</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ProxyJump=</span><span class="si">{</span><span class="n">tmp</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">args</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">authenticator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">linux</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">Authenticator</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABSECTIONNAME</span><span class="p">,</span> <span class="s2">"sshkeyfile"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">PrivateKeyAuthenticator</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">password</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABSECTIONNAME</span><span class="p">,</span> <span class="s2">"password"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">PasswordAuthenticator</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"you need to setup Authenticator for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">. Set 'sshkeyfile' or 'password' in section [</span><span class="si">{</span><span class="n">LABSECTIONNAME</span><span class="si">}</span><span class="s2">] in tbot.ini"</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">tftp_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"linux.path.Path[GenericLab]"</span><span class="p">:</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">linux</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tftp_root_path</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tftp_dir_board</span><span class="p">())</span>
+        <span class="c1"># check if path exists, if not create it</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"mkdir"</span><span class="p">,</span> <span class="s2">"-p"</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tmp</span>
+
+<div class="viewcode-block" id="GenericLab.tftp_root_path">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.GenericLab.tftp_root_path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tftp_root_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"linux.Path[GenericLab]"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns root tftp path</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tftproot</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenericLab.tftp_dir_board">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.GenericLab.tftp_dir_board">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tftp_dir_board</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"linux.Path[GenericLab]"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns tftp path for u-boot tftp command</span>
+<span class="sd">        """</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABSECTIONNAME</span><span class="p">,</span> <span class="s2">"tftpsubdir"</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenericLab.workdir">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.GenericLab.workdir">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">workdir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"linux.path.Path[GenericLab]"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns tbot workdir for this lab</span>
+<span class="sd">        """</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABSECTIONNAME</span><span class="p">,</span> <span class="s2">"workdir"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">Workdir</span><span class="o">.</span><span class="n">static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenericLab.tmpdir">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.GenericLab.tmpdir">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tmpdir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"linux.path.Path[GenericLab]"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns tbot tmpdir for this lab</span>
+<span class="sd">        """</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABSECTIONNAME</span><span class="p">,</span> <span class="s2">"tmpdir"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmpdir_exists</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">ret</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"ls"</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"mkdir"</span><span class="p">,</span> <span class="s2">"-p"</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tmpdir_exists</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">Workdir</span><span class="o">.</span><span class="n">static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenericLab.tmpmntdir">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.GenericLab.tmpmntdir">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tmpmntdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"linux.path.Path[GenericLab]"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns tbot tmpdir for mounting stuff on this lab</span>
+<span class="sd">        """</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmpdir</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">Workdir</span><span class="o">.</span><span class="n">static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"mnt</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenericLab.nfsbasedir">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.GenericLab.nfsbasedir">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">nfsbasedir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"linux.path.Path[GenericLab]"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns nfs base directory, configured in section [LABHOST]</span>
+<span class="sd">        in ```tbot.ini```, key value ```nfs_base_path```</span>
+<span class="sd">        """</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">linux</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfs_base_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfsbasedir</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">ret</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"ls"</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"mkdir"</span><span class="p">,</span> <span class="s2">"-p"</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nfsbasedir_exists</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">Workdir</span><span class="o">.</span><span class="n">static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenericLab.nfsboardbasedir">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.GenericLab.nfsboardbasedir">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">nfsboardbasedir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"linux.path.Path[GenericLab]"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns nfs base directory for the specific board,</span>
+<span class="sd">        configured in section [default] in ```BOARDNAME.ini```,</span>
+<span class="sd">        key value ```nfs_path```</span>
+<span class="sd">        """</span>
+        <span class="c1"># we need board config here, but we cannot import</span>
+        <span class="c1"># this global</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.boardgeneric</span><span class="w"> </span><span class="kn">import</span> <span class="n">cfggeneric</span>
+
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">cfggeneric</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">cfgp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"default"</span><span class="p">,</span> <span class="s2">"nfs_path"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nfsboardbasedir</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">ret</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"ls"</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"mkdir"</span><span class="p">,</span> <span class="s2">"-p"</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nfsboardbasedir</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">Workdir</span><span class="o">.</span><span class="n">static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenericLab.toolsdir">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.GenericLab.toolsdir">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">toolsdir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"linux.path.Path[GenericLab]"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns directory where tbot finds tools</span>
+<span class="sd">        """</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABSECTIONNAME</span><span class="p">,</span> <span class="s2">"toolsdir"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenericLab.yocto_result_dir">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.GenericLab.yocto_result_dir">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">yocto_result_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"linux.Path[GenericLab]"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns path to directory where tbot finds yocto build results</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tftp_dir</span><span class="p">()</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">toolchains</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">build</span><span class="o">.</span><span class="n">Toolchain</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"bootlin-armv5-eabi"</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">build</span><span class="o">.</span><span class="n">EnvSetBootlinToolchain</span><span class="p">(</span>
+                <span class="n">arch</span><span class="o">=</span><span class="s2">"armv5-eabi"</span><span class="p">,</span>
+                <span class="n">libc</span><span class="o">=</span><span class="s2">"glibc"</span><span class="p">,</span>
+                <span class="n">typ</span><span class="o">=</span><span class="s2">"stable"</span><span class="p">,</span>
+                <span class="n">date</span><span class="o">=</span><span class="s2">"2018.11-1"</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s2">"linaro-gnueabi"</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">build</span><span class="o">.</span><span class="n">EnvSetLinaroToolchain</span><span class="p">(</span>
+                <span class="n">host_arch</span><span class="o">=</span><span class="s2">"x86_64"</span><span class="p">,</span>
+                <span class="n">arch</span><span class="o">=</span><span class="s2">"arm-linux-gnueabi"</span><span class="p">,</span>
+                <span class="n">date</span><span class="o">=</span><span class="s2">"2019.12"</span><span class="p">,</span>
+                <span class="n">gcc_vers</span><span class="o">=</span><span class="s2">"7.5"</span><span class="p">,</span>
+                <span class="n">gcc_subvers</span><span class="o">=</span><span class="s2">"0"</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="GenericLab.lab_set_sd_mux_mode">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.GenericLab.lab_set_sd_mux_mode">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lab_set_sd_mux_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        set sd mux mode to lab or dut</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"lab"</span><span class="p">:</span>
+            <span class="n">md</span> <span class="o">=</span> <span class="s2">"--ts"</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"dut"</span><span class="p">:</span>
+            <span class="n">md</span> <span class="o">=</span> <span class="s2">"--dut"</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"only mode 'dut' or 'lab' allowed for mode not </span><span class="si">{mode}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sdwireserial</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SDWIRE"</span><span class="p">,</span> <span class="s2">"serial"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+                <span class="s2">"sudo"</span><span class="p">,</span>
+                <span class="s2">"/usr/local/bin/sd-mux-ctrl"</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"--device-serial=</span><span class="si">{</span><span class="n">sdwireserial</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="n">md</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="s2">"no sd wire on this labhost"</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span><span class="p">)</span>
+            <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="GenericLab.set_bootmode">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.GenericLab.set_bootmode">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_bootmode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wantbootmode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        set the bootmode defined in config file section [BOOTMODE_&lt;boardname&gt;]</span>
+
+<span class="sd">        example config for gpio setup:</span>
+
+<span class="sd">        .. code-block:: ini</span>
+
+<span class="sd">            [BOOTMODE_testboard]</span>
+<span class="sd">            modes = [{"name":"bootmode:uart0", "gpios":"26:1 19:0"}, {"name":"bootmode:spinor", "gpios":"26:0 19:0"} ]</span>
+
+<span class="sd">        .. code-block:: bash</span>
+
+<span class="sd">            -f bootmode:uart0</span>
+<span class="sd">            -f bootmode:spinor</span>
+
+<span class="sd">        example config for cmd setup:</span>
+
+<span class="sd">        .. code-block:: ini</span>
+
+<span class="sd">            [BOOTMODE_testboard]</span>
+<span class="sd">            modes = [{"name":"bootmode:dfu", "cmd":"stty -F /dev/ttyACM0 9600;echo 'on' &gt; /dev/ttyACM0"}, {"name":"bootmode:emmc", "cmd":"stty -F /dev/ttyACM0 9600;echo 'off' &gt; /dev/ttyACM0"} ]</span>
+
+<span class="sd">        .. code-block:: bash</span>
+
+<span class="sd">            -f bootmode:dfu</span>
+<span class="sd">            -f bootmode:emmc</span>
+
+
+<span class="sd">        example config for sd mux:</span>
+
+<span class="sd">        .. code-block:: ini</span>
+
+<span class="sd">            [BOOTMODE_testboard]</span>
+<span class="sd">            modes = [{"name":"bootmode:sd", "sdwire":"dut"}, {"name":"bootmode:emmc", "sdwire":"lab"} ]</span>
+
+<span class="sd">        .. code-block:: bash</span>
+
+<span class="sd">            -f bootmode:sd</span>
+<span class="sd">            -f bootmode:emmc</span>
+
+<span class="sd">        example config for calling function in tbotconfig/labcallbacks.py:</span>
+
+<span class="sd">        .. code-block:: ini</span>
+
+<span class="sd">            [BOOTMODE_testboard]</span>
+<span class="sd">            modes = [{"name":"bootmode:usb", "func":"board_setbootmode_usb"}, {"name":"bootmode:emmc", "func":"board_setbootmode_emmc"} ]</span>
+
+<span class="sd">        .. code-block:: bash</span>
+
+<span class="sd">            -f bootmode:usb</span>
+<span class="sd">            -f bootmode:emmc</span>
+
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            This is a hack !</span>
+
+<span class="sd">            You need to add the new file tbotconfig/labcallbacks.py and</span>
+<span class="sd">            implement there the files you define in "modes"</span>
+
+<span class="sd">            Only use it, for fast testing, then implement it in a class!</span>
+
+<span class="sd">        Currently there is only one argument passed:</span>
+
+<span class="sd">        Example code</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            def board_setbootmode_usb(</span>
+<span class="sd">                lab: linux.LinuxShell = None,</span>
+<span class="sd">            ) -&gt; None:  # noqa: D107</span>
+<span class="sd">                # call commands on lab with</span>
+<span class="sd">                # lab.exec0("....")</span>
+<span class="sd">                return True</span>
+
+<span class="sd">        :param wantbootmode: str, bootmode string, use this, when you call the function from within python function</span>
+<span class="sd">        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">bootmodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bootmodecfg</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">bms</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">bmtype</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">wantbootmode</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">bm</span> <span class="ow">in</span> <span class="n">bootmodes</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">bm</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="ow">in</span> <span class="n">wantbootmode</span><span class="p">:</span>
+                    <span class="n">bms</span> <span class="o">=</span> <span class="n">bm</span>
+                    <span class="n">bmtype</span> <span class="o">=</span> <span class="s2">"function"</span>
+
+        <span class="k">if</span> <span class="n">bms</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">bm</span> <span class="ow">in</span> <span class="n">bootmodes</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">bm</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+                    <span class="n">bms</span> <span class="o">=</span> <span class="n">bm</span>
+                    <span class="n">bmtype</span> <span class="o">=</span> <span class="s2">"tbot.flag"</span>
+
+        <span class="k">if</span> <span class="n">bms</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">"set bootmode </span><span class="si">{</span><span class="n">bms</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">bmtype</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span>
+            <span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">gpios</span> <span class="o">=</span> <span class="n">bms</span><span class="p">[</span><span class="s2">"gpios"</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">gpios</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">):</span>
+                    <span class="n">gpionr</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">state</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">gpio</span> <span class="o">=</span> <span class="n">Gpio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gpionr</span><span class="p">)</span>
+                    <span class="n">gpio</span><span class="o">.</span><span class="n">set_direction</span><span class="p">(</span><span class="s2">"out"</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">gpio</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">gpio</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lab_set_sd_mux_mode</span><span class="p">(</span><span class="n">bms</span><span class="p">[</span><span class="s2">"sdwire"</span><span class="p">])</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">cmd</span> <span class="o">=</span> <span class="n">bms</span><span class="p">[</span><span class="s2">"cmd"</span><span class="p">]</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">funcname</span> <span class="o">=</span> <span class="n">bms</span><span class="p">[</span><span class="s2">"func"</span><span class="p">]</span>
+                <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">get_boardcallback_import</span><span class="p">(),</span> <span class="n">funcname</span><span class="p">)</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">ret</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">"set bootmode </span><span class="si">{</span><span class="n">bms</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span><span class="si">}</span><span class="s2"> failed"</span><span class="p">)</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Exit until callbacks work"</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_locking</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enablelocking</span> <span class="o">==</span> <span class="s2">"yes"</span><span class="p">:</span>
+            <span class="n">lab_get_lock</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GenericLab.init">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.GenericLab.init">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_locking</span><span class="p">()</span>
+
+        <span class="c1"># check if nfs server is running, if not start it</span>
+        <span class="c1"># utils.ensure_sd_unit(self, ["nfs-server.service", "tftp.socket"])</span>
+        <span class="c1"># check if we have eth0 connection, link and carrier</span>
+        <span class="c1"># do not know, why pi always has no-carrier !!</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_bootmode</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s2">"LABINIT"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_INIT_CACHE</span><span class="p">:</span>
+            <span class="n">_INIT_CACHE</span><span class="p">[</span><span class="s2">"LABINIT"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">labinitfilename</span> <span class="o">=</span> <span class="s2">"/tmp/tbotlabinitdone"</span>
+            <span class="n">labinit</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">labinit</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LABSECTIONNAME</span><span class="p">,</span> <span class="s2">"labinit"</span><span class="p">))</span>
+
+                <span class="n">ret</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"test"</span><span class="p">,</span> <span class="s2">"-f"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labinitfilename</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">labinit</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"date"</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">labinitfilename</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">if</span> <span class="s2">"noethinit"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+                <span class="k">return</span>
+
+            <span class="n">ethdevices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ethdevices</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()]</span>
+            <span class="k">for</span> <span class="n">dev</span> <span class="ow">in</span> <span class="n">ethdevices</span><span class="p">:</span>
+                <span class="n">ethdev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ethdevices</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()][</span><span class="n">dev</span><span class="p">]</span>
+                <span class="n">labdev</span> <span class="o">=</span> <span class="n">ethdev</span><span class="p">[</span><span class="s2">"labdevice"</span><span class="p">]</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"ifconfig"</span><span class="p">,</span> <span class="s2">"-a"</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">labdev</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+                    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">"ethernet device </span><span class="si">{</span><span class="n">labdev</span><span class="si">}</span><span class="s2"> not found on lab host"</span>
+                        <span class="p">)</span><span class="o">.</span><span class="n">yellow</span>
+                    <span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"sudo"</span><span class="p">,</span> <span class="s2">"ifconfig"</span><span class="p">,</span> <span class="n">labdev</span><span class="p">,</span> <span class="s2">"down"</span><span class="p">,</span> <span class="n">ethdev</span><span class="p">[</span><span class="s2">"serverip"</span><span class="p">],</span> <span class="s2">"up"</span><span class="p">)</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"ip"</span><span class="p">,</span> <span class="s2">"link"</span><span class="p">,</span> <span class="s2">"show"</span><span class="p">,</span> <span class="s2">"dev"</span><span class="p">,</span> <span class="n">labdev</span><span class="p">)</span>
+                <span class="k">while</span> <span class="s2">"NO-CARRIER"</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"sudo"</span><span class="p">,</span> <span class="s2">"ethtool"</span><span class="p">,</span> <span class="s2">"-s"</span><span class="p">,</span> <span class="n">labdev</span><span class="p">,</span> <span class="s2">"autoneg"</span><span class="p">,</span> <span class="s2">"on"</span><span class="p">)</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"ip"</span><span class="p">,</span> <span class="s2">"link"</span><span class="p">,</span> <span class="s2">"show"</span><span class="p">,</span> <span class="s2">"dev"</span><span class="p">,</span> <span class="n">labdev</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_sshmachine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"SSHMACHINE"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">sshmachine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">linux</span><span class="o">.</span><span class="n">Bash</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_sshmachine</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SSHMachine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="SSHMachine">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.SSHMachine">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SSHMachine</span><span class="p">(</span><span class="n">connector</span><span class="o">.</span><span class="n">SSHConnector</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Bash</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SSHMACHINE"</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">)</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SSHMACHINE"</span><span class="p">,</span> <span class="s2">"username"</span><span class="p">)</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SSHMACHINE"</span><span class="p">,</span> <span class="s2">"port"</span><span class="p">)</span>
+        <span class="n">hostname</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SSHMACHINE"</span><span class="p">,</span> <span class="s2">"hostname"</span><span class="p">)</span>
+        <span class="n">wdir</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SSHMACHINE"</span><span class="p">,</span> <span class="s2">"workdir"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">tftp_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"linux.path.Path[SSHMachine]"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">workdir</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">toolsdir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"linux.path.Path[SSHMachine]"</span><span class="p">:</span>
+        <span class="n">toolsdir</span> <span class="o">=</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SSHMACHINE"</span><span class="p">,</span> <span class="s2">"toolsdir"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toolsdir</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">workdir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"linux.Path[SSHMachine]"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">Workdir</span><span class="o">.</span><span class="n">static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wdir</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SSHMachine.init">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.SSHMachine.init">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># do stuff after login</span>
+        <span class="c1"># self.exec0("uname", "-a")</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="LocalHostTest">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.LocalHostTest">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LocalHostTest</span><span class="p">(</span>
+    <span class="n">connector</span><span class="o">.</span><span class="n">SubprocessConnector</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Bash</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Lab</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">ContextManager</span>
+<span class="p">):</span>
+    <span class="n">workdir_exists</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="LocalHostTest.workdir">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.LocalHostTest.workdir">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">workdir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"linux.path.Path[LocalHostTest]"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns tbot workdir on Local Host</span>
+
+<span class="sd">        default is ```/tmp```</span>
+
+<span class="sd">        If you want to set it to other path set Environment</span>
+<span class="sd">        variable ```TBOTTESTWORKPATH```</span>
+<span class="sd">        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"TBOTTESTWORKPATH"</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="s2">"/tmp"</span>
+
+        <span class="n">tmp</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">tmp</span><span class="si">}</span><span class="s2">/tbot"</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">workdir_exists</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"mkdir"</span><span class="p">,</span> <span class="s2">"-p"</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">workdir_exists</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">Workdir</span><span class="o">.</span><span class="n">static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalHostTest.sourcedir">
+<a class="viewcode-back" href="../../labgeneric.html#tbottest.labgeneric.LocalHostTest.sourcedir">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sourcedir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"linux.path.Path[LocalHostTest]"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns tbottest sourcedir on Local host</span>
+<span class="sd">        (installation path of tbottest)</span>
+
+<span class="sd">        default is ```.```</span>
+
+<span class="sd">        If you need, you can set the path to tbottest</span>
+<span class="sd">        through Environment variable ```TBOTTESTPATH```</span>
+<span class="sd">        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"TBOTTESTPATH"</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="s2">"."</span>
+
+        <span class="k">return</span> <span class="n">linux</span><span class="o">.</span><span class="n">Workdir</span><span class="o">.</span><span class="n">static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">register_machines</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">GenericLab</span><span class="p">,</span> <span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">LocalHostTest</span><span class="p">,</span> <span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LocalHost</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">cfgt</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="n">localfound</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="s2">"BUILDHOST"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">"buildername:local"</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="c1"># build on machine, on which tbot is startet!</span>
+                    <span class="n">ctx</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">builders</span><span class="o">.</span><span class="n">genericbuilderlocal</span><span class="p">,</span> <span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BuildHost</span><span class="p">)</span>
+                    <span class="n">localfound</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">localfound</span><span class="p">:</span>
+                <span class="n">ctx</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">builders</span><span class="o">.</span><span class="n">genericbuilder</span><span class="p">,</span> <span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BuildHost</span><span class="p">)</span>
+
+            <span class="k">return</span>
+
+
+<span class="n">FLAGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"local"</span><span class="p">:</span> <span class="s2">"enable if labhost and tbot host are the same (use SubprocessConnector)"</span><span class="p">,</span>
+    <span class="s2">"yoctobuild"</span><span class="p">:</span> <span class="s2">"use u-boot images from yocto build"</span><span class="p">,</span>
+    <span class="s2">"ssh"</span><span class="p">:</span> <span class="s2">"use as boards console login with ssh"</span><span class="p">,</span>
+    <span class="s2">"withscript"</span><span class="p">:</span> <span class="s2">"also load a script with uuu tool into ram"</span><span class="p">,</span>
+    <span class="s2">"uuuloader"</span><span class="p">:</span> <span class="s2">"load SPL/U-Boot with uuu tool into RAM"</span><span class="p">,</span>
+    <span class="s2">"picocom"</span><span class="p">:</span> <span class="s2">"use piccom for accessing serial console"</span><span class="p">,</span>
+    <span class="s2">"scriptcom"</span><span class="p">:</span> <span class="s2">"use a script for accessing serial console"</span><span class="p">,</span>
+    <span class="s2">"tinkerforge"</span><span class="p">:</span> <span class="s2">"use tinkerforge for switching power"</span><span class="p">,</span>
+    <span class="s2">"gpiopower"</span><span class="p">:</span> <span class="s2">"use gpio pin for switching power"</span><span class="p">,</span>
+    <span class="s2">"powershellscript"</span><span class="p">:</span> <span class="s2">"use a shell script for switching power"</span><span class="p">,</span>
+    <span class="s2">"poweroffonstart"</span><span class="p">:</span> <span class="s2">"always power off board on tbot start"</span><span class="p">,</span>
+    <span class="s2">"labname"</span><span class="p">:</span> <span class="s2">"select which labhost we use"</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
