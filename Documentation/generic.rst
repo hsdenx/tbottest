@@ -932,6 +932,7 @@ enterinitramfs           enter initramfs, add enterinitramfs to miscargs(depreca
 linux_no_cmd_after_login set nothing after linux login (beside disable clutter)
 local                    enable if labhost and tbot host are the same (use SubprocessConnector)
 noboardethinit           do no board ethinit in linux after login
+cmdtimestamp             prefix each command log line with a H:M:S timestamp, e.g. [boardname 07:22:26]
 nobootcon                set console to silent (deprecated, use set_ub_board_specific)
 yoctobuild               use images from yoctobuild
 ssh                      login to linux console through ssh (only possible if board already on and in linux)
