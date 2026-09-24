@@ -647,6 +647,7 @@ settings needed for U-Boot testcases.
         "uboot_autoboot_keys", "string with which U-Boot boot is interrupted. It is possible to set also a bytearray", "SPACE", "None"
         "autoboot_prompt", "set autoboot_prompt, None if None", b'"autoboot:\\s{0,5}\\d{0,3}\\s{0,3}.{0,80}'", "None"
         "autoboot_timeout", "UBootAutobootInterceptSimple timeout for waiting for U-Boot prompt", '0.05', "0.1"
+        "uboot_has_retcode", "tbot reads the return code of every U-Boot command with echo $?, which only the hush parser supports. Set to False for a U-Boot without hush: exec() then skips that query and reports 0, so exec0() cannot detect a failing command", "True", "False"
         "rescueimage", "name of rescueimage", "None", "rescueimage-fit.itb"
         "qspiheader", "name of qspi header", "None", "qspiheader.bin"
         "splimage", "name of spl image", "None", "SPL"

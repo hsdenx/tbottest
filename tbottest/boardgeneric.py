@@ -4,7 +4,7 @@ import time
 import re
 import tbot
 from tbot.machine import board, linux, connector, channel
-from typing import List, TypeVar
+from typing import List, Tuple, TypeVar
 
 import os
 
@@ -166,6 +166,25 @@ class GenericUBoot(
         pass
     else:
         autoboot_iter = int(ap)
+
+    # U-Boot built without the hush parser has no $?: "echo $?" prints "$?"
+    # and tbot fails converting that to an int. uboot_has_retcode = False
+    # in the board ini makes exec() skip that query and report 0 for every
+    # command, so exec0() cannot detect a failing command on such a board.
+    has_retcode = cfgp.get_config("uboot_has_retcode", "True") != "False"
+
+    def exec(self, *args) -> Tuple[int, str]:
+        if self.has_retcode:
+            return super().exec(*args)
+
+        cmd = self.escape(*args)
+        with tbot.log_event.command(self.name, cmd) as ev:
+            self.ch.sendline(cmd, read_back=True)
+            with self.ch.with_stream(ev, show_prompt=False):
+                out = self.ch.read_until_prompt()
+            ev.data["stdout"] = out
+
+        return (0, out)
 
     def get_death_strings(self) -> List[str]:
         return ast.literal_eval(self.cfgp.get_config("uboot_death_strings", "[]"))
