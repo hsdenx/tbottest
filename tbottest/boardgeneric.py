@@ -345,7 +345,7 @@ class GenericLinuxBoot(
 
     def init(self) -> None:
         # Disable all clutter on the console
-        self.exec("sysctl", "kernel.printk=1 1 1 1")
+        self.exec("echo", '"0 0 0 0"', linux.Raw(">"), "/proc/sys/kernel/printk")
         if "linux_no_cmd_after_login" in tbot.flags:
             return
         if "noboardethinit" not in tbot.flags:
@@ -440,7 +440,7 @@ class GenericLinuxBootwithoutUBoot(
     def init(self) -> None:
         add_death_strings(self.ch)
         # Disable all clutter on the console
-        self.exec("sysctl", "kernel.printk=1 1 1 1")
+        self.exec("echo", '"0 0 0 0"', linux.Raw(">"), "/proc/sys/kernel/printk")
         if "noboardethinit" in tbot.flags:
             return
 
