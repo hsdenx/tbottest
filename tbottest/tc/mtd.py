@@ -154,6 +154,10 @@ def lnx_mtd_dump(
     """
     prerequisite: Board boots into linux, reachable with ssh as root
 
+    Works with the board's linux on the console or, with -fssh, over ssh.
+    Over ssh the md5sums on the board are not disturbed by whatever
+    userspace writes to the console.
+
     Dump every MTD partition of the board into the lab host's tftp
     directory, below subdir, and verify each dump against the board.
 
@@ -161,11 +165,12 @@ def lnx_mtd_dump(
     kernel opens read only. The data goes from the board to the lab host
     with ssh ("ssh root@<ipaddr> cat /dev/mtdrN"), straight into a file on
     the lab host. The lab host needs sshpass: the root password from
-    linux_password is handed over with "sshpass -e" in the SSHPASS
-    variable of a subshell, so it shows up neither in the command log nor
+    linux_password is handed over with "sshpass -e" in the SSHPASS variable
+    of a subshell, set with tbot's PasswordAuthenticator.export_sshpass(),
+    so it shows up neither in the command log, nor in a channel trace, nor
     in the process list. The board computes md5sum of every partition over
-    its console, the lab host does the same on the files, and sizes and
-    sums have to match.
+    its console, the lab host does the same on the files, and sizes and sums
+    have to match.
 
     Files written: mtd<N>-<name>.bin per partition, proc-mtd.txt with the
     board's /proc/mtd, and md5sums.txt.
@@ -175,7 +180,13 @@ def lnx_mtd_dump(
         lnx = cx.request(tbot.role.BoardLinux)
 
         ip = lab.ethdevices[ini.generic_get_boardname()][ethdevice]["ipaddr"]
-        password = lnx.password
+        # The linux classes that log in on the console carry the password,
+        # the ssh one (-fssh) does not; then take it from the board ini.
+        password = getattr(lnx, "password", None) or ini.init_get_config(
+            ini.IniConfig().config_parser, "linux_password", "None"
+        )
+        if not password:
+            raise RuntimeError("no linux_password in the board ini")
         dumpdir = lab.tftp_dir() / subdir
         lab.exec0("mkdir", "-p", dumpdir)
 
@@ -184,9 +195,7 @@ def lnx_mtd_dump(
 
         sums = []
         with lab.subshell():
-            # Set directly on the channel, so it does not end up in the log.
-            lab.ch.sendline("export SSHPASS=" + lab.escape(password))
-            lab.ch.read_until_prompt()
+            linux.auth.PasswordAuthenticator(password).export_sshpass(lab)
             for idx, size, name in _proc_mtd(lnx):
                 sums.append(_dump_one(lab, lnx, ip, dumpdir, idx, size, name))
 
