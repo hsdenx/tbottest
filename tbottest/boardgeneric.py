@@ -244,6 +244,10 @@ class _WorkdirTmpdirMixin:
     from.
     """
 
+    # tbot's interactive_plain_prompt, for shells that print the colored
+    # interactive prompt literally, like the ash of an old busybox.
+    interactive_plain_prompt = cfg.get_config("linux_plain_prompt", "False") == "True"
+
     @property
     def workdir(self: _Self) -> "linux.Path[_Self]":
         return linux.Workdir.static(self, "/run/tbot-testdata")
