@@ -1,5 +1,9 @@
+import re
+
 import tbot
 from tbot.machine import linux
+
+import tbottest.initconfig as ini
 
 from tbottest.tc.common import lnx_create_random
 from tbottest.tc.common import lnx_compare_files
@@ -126,3 +130,100 @@ def lnx_mtd_nvram_reboot(
                 tbot.log.c(f"content differ:\noriginal:\n{out}\nnew\n{outn}").red
             )
             raise RuntimeError("files have not same content")
+
+
+def _proc_mtd(lnx: linux.LinuxShell) -> list:
+    """
+    Parse /proc/mtd into a list of (index, size in bytes, name).
+    """
+    parts = []
+    for line in lnx.exec0("cat", "/proc/mtd").splitlines():
+        m = re.match(r'^mtd(\d+):\s+([0-9a-fA-F]+)\s+[0-9a-fA-F]+\s+"([^"]*)"', line)
+        if m:
+            parts.append((int(m.group(1)), int(m.group(2), 16), m.group(3)))
+    if not parts:
+        raise RuntimeError("no MTD partitions found in /proc/mtd")
+    return parts
+
+
+@tbot.testcase
+def lnx_mtd_dump(
+    ethdevice: str = "eth0",
+    subdir: str = "dump",
+) -> None:
+    """
+    prerequisite: Board boots into linux, reachable with ssh as root
+
+    Dump every MTD partition of the board into the lab host's tftp
+    directory, below subdir, and verify each dump against the board.
+
+    The board side only reads, through the /dev/mtdrN nodes, which the
+    kernel opens read only. The data goes from the board to the lab host
+    with ssh ("ssh root@<ipaddr> cat /dev/mtdrN"), straight into a file on
+    the lab host. The lab host needs sshpass: the root password from
+    linux_password is handed over with "sshpass -e" in the SSHPASS
+    variable of a subshell, so it shows up neither in the command log nor
+    in the process list. The board computes md5sum of every partition over
+    its console, the lab host does the same on the files, and sizes and
+    sums have to match.
+
+    Files written: mtd<N>-<name>.bin per partition, proc-mtd.txt with the
+    board's /proc/mtd, and md5sums.txt.
+    """
+    with tbot.ctx() as cx:
+        lab = cx.request(tbot.role.LabHost)
+        lnx = cx.request(tbot.role.BoardLinux)
+
+        ip = lab.ethdevices[ini.generic_get_boardname()][ethdevice]["ipaddr"]
+        password = lnx.password
+        dumpdir = lab.tftp_dir() / subdir
+        lab.exec0("mkdir", "-p", dumpdir)
+
+        procmtd = lnx.exec0("cat", "/proc/mtd")
+        (dumpdir / "proc-mtd.txt").write_text(procmtd)
+
+        sums = []
+        with lab.subshell():
+            # Set directly on the channel, so it does not end up in the log.
+            lab.ch.sendline("export SSHPASS=" + lab.escape(password))
+            lab.ch.read_until_prompt()
+            for idx, size, name in _proc_mtd(lnx):
+                sums.append(_dump_one(lab, lnx, ip, dumpdir, idx, size, name))
+
+        (dumpdir / "md5sums.txt").write_text("\n".join(sums) + "\n")
+
+
+def _dump_one(lab, lnx, ip, dumpdir, idx: int, size: int, name: str) -> str:
+    """
+    Dump one MTD partition to the lab host and verify it. Needs SSHPASS
+    set in the lab host's shell. Returns the md5sums.txt line.
+    """
+    dev = f"/dev/mtdr{idx}"
+    fname = f"mtd{idx}-{name}.bin"
+    dst = dumpdir / fname
+
+    boardsum = lnx.exec0("md5sum", dev).split()[0]
+
+    lab.exec0(
+        "sshpass",
+        "-e",
+        "ssh",
+        "-o",
+        "StrictHostKeyChecking=no",
+        "-o",
+        "UserKnownHostsFile=/dev/null",
+        f"root@{ip}",
+        f"cat {dev}",
+        linux.RedirStdout(dst),
+    )
+
+    labsize = int(lab.exec0("stat", "-c", "%s", dst).strip())
+    if labsize != size:
+        raise RuntimeError(f"{fname}: {labsize} bytes, partition has {size}")
+
+    labsum = lab.exec0("md5sum", dst).split()[0]
+    if labsum != boardsum:
+        raise RuntimeError(f"{fname}: md5sum {labsum}, board has {boardsum}")
+
+    tbot.log.message(f"{fname}: {size} bytes, md5sum {labsum}, verified")
+    return f"{labsum}  {fname}"
