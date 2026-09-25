@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.tc.watchdog &mdash; tbottest 0.0.1-325-g5a9200c documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=0fc419ee" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/documentation_options.js?v=d9bc7a43"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.tc.watchdog</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.tc.watchdog</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">Watchdog testcases.</span>
+
+<span class="sd">A watchdog that is never tested is a watchdog that may not work, and the way</span>
+<span class="sd">to test one is to stop feeding it and see the board come back. That is what</span>
+<span class="sd">board_lnx_watchdog_bites() does.</span>
+
+<span class="sd">Generic: what feeds the watchdog is a systemd service whose name is handed</span>
+<span class="sd">in, and what a reset looks like from the bootloader is handed in as a</span>
+<span class="sd">callable, because only the board knows which register says so and what it</span>
+<span class="sd">says.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tbot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbot.machine</span><span class="w"> </span><span class="kn">import</span> <span class="n">linux</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbot.context</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+
+<div class="viewcode-block" id="lnx_service_main_pid">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.watchdog.lnx_service_main_pid">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_service_main_pid</span><span class="p">(</span><span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">service</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    the main PID of a systemd service, empty string when it is not running</span>
+
+<span class="sd">    :param lnx: board linux machine</span>
+<span class="sd">    :param service: name of the service</span>
+<span class="sd">    """</span>
+    <span class="n">ret</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"systemctl"</span><span class="p">,</span> <span class="s2">"show"</span><span class="p">,</span> <span class="s2">"-p"</span><span class="p">,</span> <span class="s2">"MainPID"</span><span class="p">,</span> <span class="s2">"--value"</span><span class="p">,</span> <span class="n">service</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">""</span>
+
+    <span class="n">pid</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="s2">""</span> <span class="k">if</span> <span class="n">pid</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">)</span> <span class="k">else</span> <span class="n">pid</span></div>
+
+
+
+<div class="viewcode-block" id="lnx_pid_holds">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.watchdog.lnx_pid_holds">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_pid_holds</span><span class="p">(</span><span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">pid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    does this process hold that file open</span>
+
+<span class="sd">    Reads /proc/&lt;pid&gt;/fd rather than using fuser or lsof, so it works on an</span>
+<span class="sd">    image that ships neither.</span>
+
+<span class="sd">    :param lnx: board linux machine</span>
+<span class="sd">    :param pid: process id as a string</span>
+<span class="sd">    :param path: the file to look for</span>
+<span class="sd">    """</span>
+    <span class="n">ret</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span>
+        <span class="s2">"sh"</span><span class="p">,</span>
+        <span class="s2">"-c"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"for f in /proc/</span><span class="si">{</span><span class="n">pid</span><span class="si">}</span><span class="s2">/fd/*; do readlink $f; done"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">log</span><span class="o">.</span><span class="n">split</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="board_lnx_watchdog_bites">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.watchdog.board_lnx_watchdog_bites">[docs]</a>
+<span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">board_lnx_watchdog_bites</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">service</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/dev/watchdog"</span><span class="p">,</span>
+    <span class="n">check</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">boot_timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    stop feeding the watchdog and prove that it resets the board</span>
+
+<span class="sd">    The one test a watchdog cannot pass on paper. Everything up to here can</span>
+<span class="sd">    look right, the service can be running and the device can be open, and</span>
+<span class="sd">    the watchdog can still be doing nothing because the bootloader never</span>
+<span class="sd">    started it or because the kernel is quietly feeding it instead.</span>
+
+<span class="sd">    The run: check that the service holds the device, stop it, and wait for</span>
+<span class="sd">    the board to come up in the bootloader on its own. Nobody asked it to</span>
+<span class="sd">    reboot, so arriving there at all is the result. What kind of reset it</span>
+<span class="sd">    was is left to the caller through check(), and the board is booted back</span>
+<span class="sd">    into linux at the end so it is not left sitting at a prompt.</span>
+
+<span class="sd">    The board and the lab host are requested once and held, the U-Boot and</span>
+<span class="sd">    Linux machines are built from the board object rather than requested as</span>
+<span class="sd">    roles. Requesting them takes the board with exclusive=True, and an</span>
+<span class="sd">    exclusively requested instance is torn down on release, which would</span>
+<span class="sd">    power the board off in the middle of the run and answer the question</span>
+<span class="sd">    with a power cycle instead of a watchdog.</span>
+
+<span class="sd">    :param lab: lab host, requested when not given</span>
+<span class="sd">    :param service: the systemd service that feeds the watchdog</span>
+<span class="sd">    :param device: the watchdog device that service is expected to hold</span>
+<span class="sd">    :param check: called with the U-Boot machine that came up after the</span>
+<span class="sd">        reset, for whatever the board can say about what kind of reset it</span>
+<span class="sd">        was. Returns whether that was the expected kind.</span>
+<span class="sd">    :param boot_timeout: seconds to wait for the board to come back. The</span>
+<span class="sd">        budget is the watchdog timeout, which starts at the last feed just</span>
+<span class="sd">        before the service was stopped, plus the boot to the prompt. Set so</span>
+<span class="sd">        that a watchdog which does not bite fails the testcase instead of</span>
+<span class="sd">        hanging it.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">service</span> <span class="o">==</span> <span class="s2">""</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"please configure service"</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+        <span class="n">b</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">Board</span><span class="p">)</span>
+        <span class="n">ub_class</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">get_machine_class</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardUBoot</span><span class="p">)</span>
+        <span class="n">lnx_class</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">get_machine_class</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="c1"># Same machine, but it gives up waiting. Without a boot_timeout the</span>
+        <span class="c1"># connector waits for the prompt forever, and a watchdog that does</span>
+        <span class="c1"># not bite would hang the run rather than fail it.</span>
+        <span class="n">ub_wait_class</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
+            <span class="s2">"UBootWaitForWatchdog"</span><span class="p">,</span> <span class="p">(</span><span class="n">ub_class</span><span class="p">,),</span> <span class="p">{</span><span class="s2">"boot_timeout"</span><span class="p">:</span> <span class="n">boot_timeout</span><span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="n">retval</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">had_nopoweroff</span> <span class="o">=</span> <span class="s2">"nopoweroff"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span>
+
+        <span class="c1"># The whole point is that the board resets by itself. A teardown</span>
+        <span class="c1"># that cuts the power would look exactly the same from the outside.</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"nopoweroff"</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">ub_class</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">as</span> <span class="n">ub</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">lnx_class</span><span class="p">(</span><span class="n">ub</span><span class="p">)</span> <span class="k">as</span> <span class="n">lnx</span><span class="p">:</span>
+                    <span class="n">pid</span> <span class="o">=</span> <span class="n">lnx_service_main_pid</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">service</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">pid</span> <span class="o">==</span> <span class="s2">""</span><span class="p">:</span>
+                        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">service</span><span class="si">}</span><span class="s2"> is not running, nothing feeds </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">"</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">red</span>
+                        <span class="p">)</span>
+                        <span class="k">return</span> <span class="kc">False</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">lnx_pid_holds</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
+                        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">service</span><span class="si">}</span><span class="s2"> runs as pid </span><span class="si">{</span><span class="n">pid</span><span class="si">}</span><span class="s2"> but does "</span>
+                                <span class="sa">f</span><span class="s2">"not hold </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">"</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">red</span>
+                        <span class="p">)</span>
+                        <span class="k">return</span> <span class="kc">False</span>
+
+                    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">service</span><span class="si">}</span><span class="s2"> holds </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2"> as pid </span><span class="si">{</span><span class="n">pid</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">green</span>
+                    <span class="p">)</span>
+
+                    <span class="c1"># Every machine below has to have a boot to catch, so</span>
+                    <span class="c1"># the stop goes out here and the block ends with it.</span>
+                    <span class="c1"># There is no prompt to wait for either: the shell dies</span>
+                    <span class="c1"># with the board somewhere in the next seconds.</span>
+                    <span class="n">lnx</span><span class="o">.</span><span class="n">ch</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="sa">f</span><span class="s2">"systemctl stop </span><span class="si">{</span><span class="n">service</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">service</span><span class="si">}</span><span class="s2"> stopped, waiting up to </span><span class="si">{</span><span class="n">boot_timeout</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">s "</span>
+                <span class="s2">"for the board to reset"</span>
+            <span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">ub_wait_class</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">as</span> <span class="n">ub</span><span class="p">:</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="s2">"the board reset itself with nobody asking it to"</span><span class="p">)</span><span class="o">.</span><span class="n">green</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">check</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">check</span><span class="p">(</span><span class="n">ub</span><span class="p">):</span>
+                    <span class="n">retval</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="c1"># Back into linux, so the board is left running rather than</span>
+                <span class="c1"># sitting at a prompt with an unfed watchdog.</span>
+                <span class="k">with</span> <span class="n">lnx_class</span><span class="p">(</span><span class="n">ub</span><span class="p">)</span> <span class="k">as</span> <span class="n">lnx</span><span class="p">:</span>
+                    <span class="n">pid</span> <span class="o">=</span> <span class="n">lnx_service_main_pid</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">service</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">pid</span> <span class="o">==</span> <span class="s2">""</span><span class="p">:</span>
+                        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">service</span><span class="si">}</span><span class="s2"> did not come back after the reset"</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">red</span>
+                        <span class="p">)</span>
+                        <span class="n">retval</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">service</span><span class="si">}</span><span class="s2"> is feeding </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2"> again"</span><span class="p">)</span><span class="o">.</span><span class="n">green</span>
+                        <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">had_nopoweroff</span><span class="p">:</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="s2">"nopoweroff"</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">retval</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

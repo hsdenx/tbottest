@@ -1,0 +1,428 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.tc.can &mdash; tbottest 0.0.1-325-g5a9200c documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=0fc419ee" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/documentation_options.js?v=d9bc7a43"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.tc.can</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.tc.can</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># collection of testcases, for CAN</span>
+<span class="c1"># may go into mainline</span>
+<span class="c1">#</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tbot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbot.machine</span><span class="w"> </span><span class="kn">import</span> <span class="n">linux</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbot.context</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.tc.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">tbot_start_thread</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.tc.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">tbot_stop_thread</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sudo_exec0</span><span class="p">(</span><span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">usesudo</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">usesudo</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"sudo"</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_lines</span><span class="p">(</span><span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">fi</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"wc"</span><span class="p">,</span> <span class="s2">"-l"</span><span class="p">,</span> <span class="n">fi</span><span class="p">)</span>
+    <span class="n">cl</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">cl</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_default_can_devices</span><span class="p">(</span>
+    <span class="n">candev</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">candevsend</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+    <span class="k">if</span> <span class="n">candev</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">candev</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"can0"</span><span class="p">,</span> <span class="s2">"can1"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">candevsend</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">candevsend</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"can0"</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">candev</span><span class="p">,</span> <span class="n">candevsend</span>
+
+
+<div class="viewcode-block" id="board_setup_can">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.can.board_setup_can">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">board_setup_can</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">candev</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">br</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"500000"</span><span class="p">,</span>
+    <span class="n">tql</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"500"</span><span class="p">,</span>
+    <span class="n">usesudo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    setup the can interface on linux machine</span>
+
+<span class="sd">    :param lnx: linux machine where we work on</span>
+<span class="sd">    :param candev: List of candevices which get intialized</span>
+<span class="sd">    :param br: used bitrate</span>
+<span class="sd">    :param tql: use tx queuelen</span>
+<span class="sd">    :param usesudo: if we need a sudo for calling ip command</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">candev</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">candev</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"can0"</span><span class="p">,</span> <span class="s2">"can1"</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">candev</span><span class="p">:</span>
+        <span class="n">sudo_exec0</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">usesudo</span><span class="p">,</span> <span class="s2">"ifconfig"</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s2">"down"</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">candev</span><span class="p">:</span>
+        <span class="n">sudo_exec0</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">usesudo</span><span class="p">,</span> <span class="s2">"ip"</span><span class="p">,</span> <span class="s2">"link"</span><span class="p">,</span> <span class="s2">"set"</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s2">"type"</span><span class="p">,</span> <span class="s2">"can"</span><span class="p">,</span> <span class="s2">"bitrate"</span><span class="p">,</span> <span class="n">br</span><span class="p">)</span>
+        <span class="n">sudo_exec0</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">usesudo</span><span class="p">,</span> <span class="s2">"ip"</span><span class="p">,</span> <span class="s2">"link"</span><span class="p">,</span> <span class="s2">"set"</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s2">"txqueuelen"</span><span class="p">,</span> <span class="n">tql</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">candev</span><span class="p">:</span>
+        <span class="n">sudo_exec0</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">usesudo</span><span class="p">,</span> <span class="s2">"ifconfig"</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="s2">"up"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="lnx_can_write_dump_compare">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.can.lnx_can_write_dump_compare">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_can_write_dump_compare</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">lnxsend</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">senddev</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">lnxread</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">readdev</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">bitrate</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">txqueuelen</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    send in lnxsend shell with cansend over senddev the</span>
+<span class="sd">    data and dump it with candump in lnxread shell on</span>
+<span class="sd">    readdev. Use bitrate and txqueuelen</span>
+
+<span class="sd">    :param lab: linux  machine where we work on</span>
+<span class="sd">    :param lnx: linux machine where we work on</span>
+<span class="sd">    :param lnxsend: linux machine from where we send CAN data</span>
+<span class="sd">    :param senddev: List of device from which we send</span>
+<span class="sd">    :param lnxread: linux machine where we receive CAN data</span>
+<span class="sd">    :param readdev: devices from which we read</span>
+<span class="sd">    :param bitrate: used bitrate</span>
+<span class="sd">    :param txqueuelen: used txqueuelen</span>
+<span class="sd">    :param data: List of dictionary, see below</span>
+
+<span class="sd">    data is an dictionary with format:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        {</span>
+<span class="sd">            "dev": "linux device name",</span>
+<span class="sd">            "data": "data format strig for cansend",</span>
+<span class="sd">            "res": "resulting line in dump file created from candump",</span>
+<span class="sd">        }</span>
+
+<span class="sd">    """</span>
+    <span class="c1"># init can busses</span>
+    <span class="n">lnxsendsudo</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">lnxreadsudo</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">lab</span> <span class="o">==</span> <span class="n">lnxsend</span><span class="p">:</span>
+        <span class="n">lnxsendsudo</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">lab</span> <span class="o">==</span> <span class="n">lnxread</span><span class="p">:</span>
+        <span class="n">lnxreadsudo</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">board_setup_can</span><span class="p">(</span><span class="n">lnxsend</span><span class="p">,</span> <span class="n">senddev</span><span class="p">,</span> <span class="n">br</span><span class="o">=</span><span class="n">bitrate</span><span class="p">,</span> <span class="n">tql</span><span class="o">=</span><span class="n">txqueuelen</span><span class="p">,</span> <span class="n">usesudo</span><span class="o">=</span><span class="n">lnxsendsudo</span><span class="p">)</span>
+    <span class="n">board_setup_can</span><span class="p">(</span><span class="n">lnxread</span><span class="p">,</span> <span class="n">readdev</span><span class="p">,</span> <span class="n">br</span><span class="o">=</span><span class="n">bitrate</span><span class="p">,</span> <span class="n">tql</span><span class="o">=</span><span class="n">txqueuelen</span><span class="p">,</span> <span class="n">usesudo</span><span class="o">=</span><span class="n">lnxreadsudo</span><span class="p">)</span>
+
+    <span class="c1"># logfiles in stdin: /tmp/thread_1_{tid} and stderr: /tmp/thread_2_{tid}</span>
+    <span class="n">tid</span> <span class="o">=</span> <span class="n">tbot_start_thread</span><span class="p">(</span><span class="n">lnxread</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"candump </span><span class="si">{</span><span class="n">readdev</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">lnxsend</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"cansend"</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">"dev"</span><span class="p">],</span> <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"data"</span><span class="p">]))</span>
+
+    <span class="n">tbot_stop_thread</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="s2">"-9"</span><span class="p">)</span>
+
+    <span class="c1"># check stderr</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">lnxread</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+        <span class="s2">"wc"</span><span class="p">,</span>
+        <span class="s2">"-c"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"/tmp/thread_2_</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="n">linux</span><span class="o">.</span><span class="n">Pipe</span><span class="p">,</span>
+        <span class="s2">"cut"</span><span class="p">,</span>
+        <span class="s2">"-d"</span><span class="p">,</span>
+        <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="s1">'" "'</span><span class="p">),</span>
+        <span class="s2">"-f"</span><span class="p">,</span>
+        <span class="s2">"1"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="s2">"found output in stderr"</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span><span class="p">)</span>
+        <span class="n">lnxread</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"cat"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"/tmp/thread_2_</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="n">log</span> <span class="o">=</span> <span class="n">lnxread</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"cat"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"/tmp/thread_1_</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ign</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">log</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">):</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">"interface"</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">ign</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">line</span> <span class="o">!=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">ign</span><span class="p">][</span><span class="s2">"res"</span><span class="p">]:</span>
+            <span class="n">expected</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">ign</span><span class="p">][</span><span class="s2">"res"</span><span class="p">]</span>
+            <span class="n">sent</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">ign</span><span class="p">][</span><span class="s2">"data"</span><span class="p">]</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"found difference in candump '</span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">' != '</span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">' send: '</span><span class="si">{</span><span class="n">sent</span><span class="si">}</span><span class="s2">'"</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">red</span>
+            <span class="p">)</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"candump errors"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="board_lnx_cangen">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.can.board_lnx_cangen">[docs]</a>
+<span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">board_lnx_cangen</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">lnxsend</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">labtbottestcasepath</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tmpdir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/tmp"</span><span class="p">,</span>
+    <span class="n">candev</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">candevsend</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">candevdump</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"can0"</span><span class="p">,</span>
+    <span class="n">frames</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"1000"</span><span class="p">,</span>
+    <span class="n">dllength</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"8"</span><span class="p">,</span>
+    <span class="n">bitrate</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"500000"</span><span class="p">,</span>
+    <span class="n">txqueuelen</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"500"</span><span class="p">,</span>
+    <span class="n">cangen_gap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"10"</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    use cangen for generating testdata</span>
+<span class="sd">    """</span>
+    <span class="n">candev</span><span class="p">,</span> <span class="n">candevsend</span> <span class="o">=</span> <span class="n">_default_can_devices</span><span class="p">(</span><span class="n">candev</span><span class="p">,</span> <span class="n">candevsend</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">lnx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="n">board_setup_can</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">candev</span><span class="p">,</span> <span class="n">br</span><span class="o">=</span><span class="n">bitrate</span><span class="p">,</span> <span class="n">tql</span><span class="o">=</span><span class="n">txqueuelen</span><span class="p">)</span>
+        <span class="c1"># lnx.interactive()</span>
+        <span class="k">if</span> <span class="n">lnxsend</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lnxsend</span> <span class="o">=</span> <span class="n">lnx</span>
+
+        <span class="n">board_setup_can</span><span class="p">(</span><span class="n">lnxsend</span><span class="p">,</span> <span class="n">candevsend</span><span class="p">,</span> <span class="n">br</span><span class="o">=</span><span class="n">bitrate</span><span class="p">,</span> <span class="n">tql</span><span class="o">=</span><span class="n">txqueuelen</span><span class="p">,</span> <span class="n">usesudo</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># lnx.interactive()</span>
+        <span class="k">for</span> <span class="n">cs</span> <span class="ow">in</span> <span class="n">candevsend</span><span class="p">:</span>
+            <span class="n">cand</span> <span class="o">=</span> <span class="s2">"/tmp/candump.log"</span>
+            <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"rm"</span><span class="p">,</span> <span class="n">cand</span><span class="p">)</span>
+            <span class="c1"># use logformat "-L" for candump output</span>
+            <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">"candump </span><span class="si">{</span><span class="n">candevdump</span><span class="si">}</span><span class="s2"> -L &gt; </span><span class="si">{</span><span class="n">cand</span><span class="si">}</span><span class="s2"> 2&gt;&amp;1 &amp;"</span><span class="p">))</span>
+            <span class="n">pid</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">"!"</span><span class="p">)</span>
+
+            <span class="c1"># create data</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="n">lnxsend</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+                <span class="s2">"cangen"</span><span class="p">,</span>
+                <span class="s2">"-g"</span><span class="p">,</span>
+                <span class="n">cangen_gap</span><span class="p">,</span>
+                <span class="s2">"-I"</span><span class="p">,</span>
+                <span class="s2">"i"</span><span class="p">,</span>
+                <span class="s2">"-L"</span><span class="p">,</span>
+                <span class="n">dllength</span><span class="p">,</span>
+                <span class="s2">"-D"</span><span class="p">,</span>
+                <span class="s2">"i"</span><span class="p">,</span>
+                <span class="n">cs</span><span class="p">,</span>
+                <span class="s2">"-n"</span><span class="p">,</span>
+                <span class="n">frames</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># wait until all lines are in dump</span>
+            <span class="n">cl</span> <span class="o">=</span> <span class="n">get_lines</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">cand</span><span class="p">)</span>
+            <span class="n">stop</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+            <span class="n">retry</span> <span class="o">=</span> <span class="mi">4</span>
+            <span class="n">re</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">cl</span> <span class="o">&lt;</span> <span class="n">stop</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">clold</span> <span class="o">=</span> <span class="n">cl</span>
+                <span class="n">cl</span> <span class="o">=</span> <span class="n">get_lines</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">cand</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">re</span> <span class="o">&lt;</span> <span class="n">retry</span><span class="p">:</span>
+                    <span class="n">re</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="n">cl</span> <span class="o">==</span> <span class="n">clold</span><span class="p">:</span>
+                    <span class="n">lnx</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+                    <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"kill"</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Then</span><span class="p">,</span> <span class="s2">"wait"</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Lost messages"</span><span class="p">)</span>
+
+            <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"kill"</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Then</span><span class="p">,</span> <span class="s2">"wait"</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span>
+
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
+            <span class="c1"># length of one message</span>
+            <span class="n">bits</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">11</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">dllength</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="mi">15</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">+</span> <span class="mi">3</span>
+            <span class="n">alldata</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span> <span class="o">*</span> <span class="n">bits</span>
+
+            <span class="n">realbitrate</span> <span class="o">=</span> <span class="n">alldata</span> <span class="o">/</span> <span class="n">delta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+            <span class="c1"># lnx.interactive()</span>
+
+            <span class="c1"># copy file to lab host and check it</span>
+            <span class="c1"># ToDo use</span>
+            <span class="c1"># lab.boardip["imx8mp"]</span>
+            <span class="c1"># lab.workdir</span>
+            <span class="n">tmppath</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">tmpdir</span><span class="p">()</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">tmpdir</span><span class="si">}</span><span class="s2">/candump.log"</span>
+            <span class="n">lab</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+                <span class="s2">"scp"</span><span class="p">,</span>
+                <span class="s2">"-o"</span><span class="p">,</span>
+                <span class="s2">"StrictHostKeyChecking=no"</span><span class="p">,</span>
+                <span class="s2">"-o"</span><span class="p">,</span>
+                <span class="s2">"UserKnownHostsFile=/dev/null"</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"root@192.168.3.21:</span><span class="si">{</span><span class="n">df</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="n">tmppath</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">ret</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"ls"</span><span class="p">,</span> <span class="s2">"-1"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">tmppath</span><span class="si">}</span><span class="s2">/check_cangen_output.py"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">labtbottestcasepath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"could not install check_cangen_output.py"</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">lab</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+                        <span class="s2">"scp"</span><span class="p">,</span>
+                        <span class="s2">"-o"</span><span class="p">,</span>
+                        <span class="s2">"StrictHostKeyChecking=no"</span><span class="p">,</span>
+                        <span class="s2">"-o"</span><span class="p">,</span>
+                        <span class="s2">"UserKnownHostsFile=/dev/null"</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">labtbottestcasepath</span><span class="si">}</span><span class="s2">/check_cangen_output.py"</span><span class="p">,</span>
+                        <span class="n">tmppath</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+            <span class="n">ret</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"python3"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">tmppath</span><span class="si">}</span><span class="s2">/check_cangen_output.py"</span><span class="p">,</span> <span class="s2">"-i"</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">lnx</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"send </span><span class="si">{</span><span class="n">frames</span><span class="si">}</span><span class="s2"> msgs with </span><span class="si">{</span><span class="n">dllength</span><span class="si">}</span><span class="s2"> databytes in </span><span class="si">{</span><span class="n">delta</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">cs</span><span class="si">}</span><span class="s2"> to "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">candevdump</span><span class="si">}</span><span class="s2"> with gap </span><span class="si">{</span><span class="n">cangen_gap</span><span class="si">}</span><span class="s2"> txqueuelen </span><span class="si">{</span><span class="n">txqueuelen</span><span class="si">}</span><span class="s2"> "</span>
+                    <span class="sa">f</span><span class="s2">"bitrate </span><span class="si">{</span><span class="n">bitrate</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">realbitrate</span><span class="si">}</span><span class="s2">"</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">green</span>
+            <span class="p">)</span></div>
+
+
+            <span class="c1"># lnx.interactive()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

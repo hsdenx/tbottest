@@ -1,0 +1,375 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.common.ubootbuild &mdash; tbottest 0.0.1-325-g5a9200c documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=0fc419ee" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/documentation_options.js?v=d9bc7a43"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.common.ubootbuild</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.common.ubootbuild</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tbot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbot.context</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbot.machine</span><span class="w"> </span><span class="kn">import</span> <span class="n">linux</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbot.machine</span><span class="w"> </span><span class="kn">import</span> <span class="n">board</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbot.machine</span><span class="w"> </span><span class="kn">import</span> <span class="n">connector</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbot.tc</span><span class="w"> </span><span class="kn">import</span> <span class="n">shell</span>
+
+<div class="viewcode-block" id="UBBUILDMAN">
+<a class="viewcode-back" href="../../../tc.html#tbottest.common.ubootbuild.UBBUILDMAN">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UBBUILDMAN</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    simple class for some useful buildman tool abstractions</span>
+<span class="sd">    for building U-Boot. You can define a subdirname</span>
+<span class="sd">    "binsubpath" which is a subdir on lab hosts tftp directory</span>
+<span class="sd">    in which needed binaries for complete and working U-Boot</span>
+<span class="sd">    build are found. tbot copies all files found in this subdirectory</span>
+<span class="sd">    to U-Boots build directory on build host.</span>
+
+<span class="sd">    Same for downsream patches. You can define a name for</span>
+<span class="sd">    a subdirectory found on labhosts tftp directory for the</span>
+<span class="sd">    board with name "ubootpatchsubpath". All patches found in</span>
+<span class="sd">    this directory, are copied to U-Boot source directory</span>
+<span class="sd">    on build host and applied to the current U-Boot source</span>
+<span class="sd">    code.</span>
+
+<span class="sd">    The list of resulting binaries in resultbins you can</span>
+<span class="sd">    copy to lab hosts tftp path with</span>
+
+<span class="sd">    :py:func:`~UBBUILDMAN.bm_copy_results2lab`</span>
+
+<span class="sd">    You may need to call also some make targets you can add</span>
+<span class="sd">    through list of strings in makelist</span>
+
+<span class="sd">    :param lab: lab host machine. must be valid</span>
+<span class="sd">    :param bh: build host machine, must be valid</span>
+<span class="sd">    :param ubootpatchsubpath: str subdir on labhosts tftp directory with downstream U-Boot patches</span>
+<span class="sd">    :param defconfig: defconfig name of the board</span>
+<span class="sd">    :param binariessubpath: str subdir on labhosts tftp directory where needed binaries are found</span>
+<span class="sd">    :param resultbins: list of strings of resulting binarienames</span>
+<span class="sd">    :param makelist: list of strings of make targets</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        B = [</span>
+<span class="sd">        {</span>
+<span class="sd">            'defconfig': 'foo',</span>
+<span class="sd">            'ubootpatchsubpath': 'uboot-patches',</span>
+<span class="sd">            'binsubpath': 'binaries',</span>
+<span class="sd">            'resultbinaries': ['flash.bin'],</span>
+<span class="sd">            'makelist': ['flash.bin'],</span>
+<span class="sd">        },</span>
+<span class="sd">        ]</span>
+
+<span class="sd">        for b in B:</span>
+<span class="sd">            bmcfg = UBBUILDMAN(lab, bh, b["ubootpatchsubpath"], b["binsubath"], b["defconfig"], b["resultbinaries"])</span>
+<span class="sd">            bmcfg.bm_build_board()</span>
+<span class="sd">            bmcfg.bm_copy_results2lab()</span>
+
+<span class="sd">    """</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">lab</span><span class="p">:</span><span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+            <span class="n">bh</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+            <span class="n">ubootpatchsubpath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">ubootbinariessubpath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">defconfig</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">resultbins</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="n">makelist</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]):</span>
+        <span class="k">if</span> <span class="n">lab</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"class UBBUILDMAN only with valid lab host possible"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bh</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"class UBBUILDMAN only with valid build host possible"</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lab</span> <span class="o">=</span> <span class="n">lab</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span> <span class="o">=</span> <span class="n">bh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ubootpatchsubpath</span> <span class="o">=</span> <span class="n">ubootpatchsubpath</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ubootbinariessubpath</span> <span class="o">=</span> <span class="n">ubootbinariessubpath</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basedir</span> <span class="o">=</span> <span class="n">linux</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"pwd"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        <span class="c1"># we call it from u-boot subdir tbottest, so U-Boot source base is one level back</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basedir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">basedir</span> <span class="o">/</span> <span class="s2">".."</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tbotbranchname</span> <span class="o">=</span> <span class="s2">"tbot-build"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defconfig</span> <span class="o">=</span> <span class="n">defconfig</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ubootpatchpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">basedir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">ubootpatchsubpath</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">builddir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">basedir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"build-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">defconfig</span><span class="si">}</span><span class="s2">"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">builddirbuildman</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">builddir</span>  <span class="o">/</span> <span class="s2">".bm-work/00/build/"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resultbins</span> <span class="o">=</span> <span class="n">resultbins</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">makelist</span> <span class="o">=</span> <span class="n">makelist</span>
+
+<div class="viewcode-block" id="UBBUILDMAN.bm_get_uboot_patches">
+<a class="viewcode-back" href="../../../tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_get_uboot_patches">[docs]</a>
+    <span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bm_get_uboot_patches</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        copy boardspecfic downstream patches found on lab</span>
+<span class="sd">        host in current tftp path for the board in subdir</span>
+<span class="sd">        "uboot-patches" to the build host</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"rm"</span><span class="p">,</span> <span class="s2">"-rf"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ubootpatchpath</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"mkdir"</span><span class="p">,</span> <span class="s2">"-p"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ubootpatchpath</span><span class="p">)</span>
+        <span class="n">pf</span> <span class="o">=</span> <span class="s2">"0*"</span>
+        <span class="n">shell</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lab</span><span class="o">.</span><span class="n">tftp_dir</span><span class="p">()</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"uboot-patches/</span><span class="si">{</span><span class="n">pf</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ubootpatchpath</span><span class="p">,</span> <span class="n">remote_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UBBUILDMAN.bm_apply_uboot_patches">
+<a class="viewcode-back" href="../../../tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_apply_uboot_patches">[docs]</a>
+    <span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bm_apply_uboot_patches</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        apply the patches which are in self.ubootpatchpath</span>
+<span class="sd">        """</span>
+        <span class="c1"># check if we are on self.tbotbranchname</span>
+        <span class="c1"># if so, do nothing</span>
+        <span class="c1"># check if branchname exists</span>
+        <span class="n">ret</span><span class="p">,</span> <span class="n">commitidtbotbranch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"git"</span><span class="p">,</span> <span class="s2">"rev-parse"</span><span class="p">,</span> <span class="s2">"--verify"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tbotbranchname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># branch exists, check if we are currently on it</span>
+            <span class="c1"># if so, do nothing</span>
+            <span class="n">ret</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"git"</span><span class="p">,</span> <span class="s2">"rev-parse"</span><span class="p">,</span> <span class="s2">"--verify"</span><span class="p">,</span> <span class="s2">"HEAD"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">commitidtbotbranch</span> <span class="o">==</span> <span class="n">log</span><span class="p">:</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tbotbranchname</span><span class="si">}</span><span class="s2"> currently checked out"</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span><span class="p">)</span>
+                <span class="k">return</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"git"</span><span class="p">,</span> <span class="s2">"branch"</span><span class="p">,</span> <span class="s2">"-D"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tbotbranchname</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"git"</span><span class="p">,</span> <span class="s2">"checkout"</span><span class="p">,</span> <span class="s2">"-b"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tbotbranchname</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"pwd"</span><span class="p">)</span>
+        <span class="n">pp</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ubootpatchpath</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span><span class="si">}</span><span class="s2">/*.patch"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"git"</span><span class="p">,</span> <span class="s2">"am"</span><span class="p">,</span> <span class="s2">"-3"</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="n">pp</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="UBBUILDMAN.bm_build_prepare">
+<a class="viewcode-back" href="../../../tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_build_prepare">[docs]</a>
+    <span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bm_build_prepare</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="nb">str</span><span class="p">]:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        setup all stuff we need for building U-Boot</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"cd"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">basedir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"pip"</span><span class="p">,</span> <span class="s2">"install"</span><span class="p">,</span> <span class="s2">"-r"</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">basedir</span> <span class="o">/</span> <span class="s2">"tools/buildman/requirements.txt"</span><span class="p">)</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basedir</span> <span class="o">/</span> <span class="s2">"tools/buildman/buildman"</span><span class="p">,</span>
+                            <span class="s2">"--list-tool-chains"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"--fetch-arch all"</span> <span class="ow">in</span> <span class="n">log</span><span class="p">:</span>
+            <span class="c1"># no buildman setup at all, fetch all</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basedir</span> <span class="o">/</span> <span class="s2">"tools/buildman/buildman"</span><span class="p">,</span>
+                            <span class="s2">"--fetch-arch"</span><span class="p">,</span> <span class="s2">"all"</span><span class="p">)</span>
+            <span class="n">log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basedir</span> <span class="o">/</span> <span class="s2">"tools/buildman/buildman"</span><span class="p">,</span>
+                            <span class="s2">"--list-tool-chains"</span><span class="p">)</span>
+
+        <span class="c1"># detect toolchain path and gcc name</span>
+        <span class="n">arch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basedir</span> <span class="o">/</span> <span class="s2">"tools/buildman/buildman"</span><span class="p">,</span>
+                            <span class="s2">"--print-arch"</span><span class="p">,</span> <span class="s2">"--boards"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">defconfig</span><span class="p">)</span>
+        <span class="n">arch</span> <span class="o">=</span> <span class="n">arch</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">log</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">arch</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">found</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">ret</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basedir</span> <span class="o">/</span> <span class="s2">"tools/buildman/buildman"</span><span class="p">,</span>
+                                    <span class="s2">"--fetch-arch"</span><span class="p">,</span> <span class="n">arch</span><span class="p">)</span>
+            <span class="n">log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basedir</span> <span class="o">/</span> <span class="s2">"tools/buildman/buildman"</span><span class="p">,</span>
+                                <span class="s2">"--list-tool-chains"</span><span class="p">)</span>
+
+        <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">log</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">arch</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">toolchain</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">toolchain</span> <span class="o">=</span> <span class="n">toolchain</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                <span class="n">gcc</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">toolchain</span><span class="p">)</span>
+                <span class="n">toolchainpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">toolchain</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">found</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Could not fetch toolchain for arch </span><span class="si">{</span><span class="n">arch</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"mkdir"</span><span class="p">,</span> <span class="s2">"-p"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">builddirbuildman</span><span class="p">)</span>
+        <span class="n">ret</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lab</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"ls"</span><span class="p">,</span> <span class="s2">"-1"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lab</span><span class="o">.</span><span class="n">tftp_dir</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">ubootbinariessubpath</span><span class="p">)</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">log</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">):</span>
+            <span class="n">shell</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lab</span><span class="o">.</span><span class="n">tftp_dir</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">ubootbinariessubpath</span> <span class="o">/</span> <span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">builddirbuildman</span><span class="p">,</span> <span class="n">remote_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bm_get_uboot_patches</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bm_apply_uboot_patches</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">arch</span><span class="p">,</span> <span class="n">gcc</span><span class="p">,</span> <span class="n">toolchainpath</span></div>
+
+
+<div class="viewcode-block" id="UBBUILDMAN.bm_build_board">
+<a class="viewcode-back" href="../../../tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_build_board">[docs]</a>
+    <span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bm_build_board</span><span class="p">(</span>
+        <span class="bp">self</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        setup all stuff we need for building U-Boot</span>
+<span class="sd">        """</span>
+        <span class="n">arch</span><span class="p">,</span> <span class="n">gcc</span><span class="p">,</span> <span class="n">toolchainpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bm_build_prepare</span><span class="p">()</span>
+
+        <span class="n">ret</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basedir</span> <span class="o">/</span> <span class="s2">"tools/buildman/buildman"</span><span class="p">,</span>
+                                <span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">,</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">builddir</span><span class="p">,</span> <span class="s2">"--boards"</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">defconfig</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ret2</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basedir</span> <span class="o">/</span> <span class="s2">"tools/buildman/buildman"</span><span class="p">,</span>
+                                    <span class="s2">"-o"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">builddir</span><span class="p">,</span> <span class="s2">"-seP"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Build </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">defconfig</span><span class="si">}</span><span class="s2"> failed with ret </span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="c1"># get shell variable values</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">makelist</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">arch</span> <span class="o">==</span> <span class="s2">"aarch64"</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"export"</span><span class="p">,</span> <span class="s2">"ARCH=arm64"</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"export"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"ARCH=</span><span class="si">{</span><span class="n">arch</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">gcc</span> <span class="o">=</span> <span class="n">gcc</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"gcc"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"export"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"CROSS_COMPILE=</span><span class="si">{</span><span class="n">gcc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"export"</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">"PATH=$PATH:</span><span class="si">{</span><span class="n">toolchainpath</span><span class="si">}</span><span class="s2">"</span><span class="p">))</span>
+
+        <span class="c1"># call make targets</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">makelist</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"make"</span><span class="p">,</span> <span class="s2">"V=1"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"O=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">builddirbuildman</span><span class="o">.</span><span class="n">_local_str</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ret</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Build </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">defconfig</span><span class="si">}</span><span class="s2"> failed with ret </span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s2"> for Makefile target </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultbins</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"pwd"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"ls"</span><span class="p">,</span> <span class="s2">"-al"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">builddirbuildman</span> <span class="o">/</span> <span class="n">f</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UBBUILDMAN.bm_copy_results2lab">
+<a class="viewcode-back" href="../../../tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_copy_results2lab">[docs]</a>
+    <span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bm_copy_results2lab</span><span class="p">(</span>
+        <span class="bp">self</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        copy results to lab</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultbins</span><span class="p">:</span>
+            <span class="n">shell</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builddirbuildman</span> <span class="o">/</span> <span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lab</span><span class="o">.</span><span class="n">tftp_dir</span><span class="p">()</span><span class="o">/</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">-githubci"</span><span class="p">,</span> <span class="n">remote_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+</div>
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,650 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.initconfig &mdash; tbottest 0.0.1-325-g5a9200c documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=0fc419ee" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/documentation_options.js?v=d9bc7a43"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tbottest.initconfig</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tbottest.initconfig</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">atexit</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">configparser</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExtendedInterpolation</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tbot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.dynamicimport</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_boardmodule_import</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.dynamicimport</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_boardmodulepath_import</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tbottest.initconfighelper</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">inithelper</span>
+
+<span class="n">BOARDNAME</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_Singleton</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Metaclass making a class a per-process singleton: the first call to</span>
+<span class="sd">    ClassName() constructs and caches the instance, every later call</span>
+<span class="sd">    returns that same instance (and __init__ does not run again).</span>
+
+<span class="sd">    Without this, every ClassName() call (e.g. one created inline</span>
+<span class="sd">    inside a property that runs on every SSH connection attempt)</span>
+<span class="sd">    re-parsed the same shared, UUID-suffixed ini file from scratch and</span>
+<span class="sd">    registered its own weakref.finalize(self, self.cleanup) cleanup.</span>
+<span class="sd">    Since that callback is a bound method of the instance itself, it</span>
+<span class="sd">    keeps a strong reference back to it -- a documented</span>
+<span class="sd">    weakref.finalize pitfall -- so none of these instances were ever</span>
+<span class="sd">    actually garbage collected during the run; they just accumulated</span>
+<span class="sd">    for as long as the process lived, each holding its own parsed</span>
+<span class="sd">    configparser. A cached singleton with atexit-based cleanup avoids</span>
+<span class="sd">    both the unbounded per-call leak and the repeated re-parsing.</span>
+<span class="sd">    """</span>
+
+    <span class="n">_instances</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">cls</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="bp">cls</span><span class="p">]</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="bp">cls</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">init_get_default_config</span><span class="p">(</span>
+    <span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns value of key name from configparser.</span>
+
+<span class="sd">    Searches key name in "default" sectio</span>
+
+<span class="sd">    :param cfgp: current config parser</span>
+<span class="sd">    :param name: name of key</span>
+<span class="sd">    :param default: default value if key is not found</span>
+<span class="sd">    """</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"default"</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="n">default</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">"None"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">value</span>
+
+
+<div class="viewcode-block" id="init_get_config">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_get_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_get_config</span><span class="p">(</span>
+    <span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns value of key name from configparser.</span>
+
+<span class="sd">    Searches first for a "TC_BOARDNAME" section and if it there</span>
+<span class="sd">    is not the key, search in section "TC". If not found, return</span>
+<span class="sd">    default value. If default value is "None" return None</span>
+
+<span class="sd">    :param cfgp: current config parser</span>
+<span class="sd">    :param name: name of key</span>
+<span class="sd">    :param default: default value if key is not found</span>
+<span class="sd">    """</span>
+    <span class="n">boardname</span> <span class="o">=</span> <span class="n">generic_get_boardname</span><span class="p">()</span>
+    <span class="c1"># first try boardname specific config</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"TC_</span><span class="si">{</span><span class="n">boardname</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">"None"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">value</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="c1"># next common config</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"TC"</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="n">default</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">"None"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">value</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">init_get_config_int</span><span class="p">(</span>
+    <span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns value of key name from configparser.</span>
+
+<span class="sd">    Searches first for a "TC_BOARDNAME" section and if it there</span>
+<span class="sd">    is not the key, search in section "TC". If not found, return</span>
+<span class="sd">    default value. If default value is "None" return None</span>
+
+<span class="sd">    :param cfgp: current config parser</span>
+<span class="sd">    :param name: name of key</span>
+<span class="sd">    :param default: default value if key is not found</span>
+<span class="sd">    """</span>
+    <span class="n">boardname</span> <span class="o">=</span> <span class="n">generic_get_boardname</span><span class="p">()</span>
+    <span class="c1"># first try boardname specific config</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"TC_</span><span class="si">{</span><span class="n">boardname</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">"None"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="c1"># next common config</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"TC"</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="n">default</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">"None"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">init_lab_get_config</span><span class="p">(</span>
+    <span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns value of key name from configparser</span>
+<span class="sd">    from section LABHOST or LABHOST_labname</span>
+
+<span class="sd">    :param cfgp: current config parser</span>
+<span class="sd">    :param name: name of key</span>
+<span class="sd">    :param default: default value if key is not found</span>
+<span class="sd">    """</span>
+    <span class="n">sectionname</span> <span class="o">=</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">get_lab_sectionname</span><span class="p">()</span>
+    <span class="c1"># first try boardname specific config</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionname</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">default</span>
+
+
+<div class="viewcode-block" id="generic_get_boardname">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.generic_get_boardname">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">generic_get_boardname</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    return the boards name in your lab setup</span>
+
+<span class="sd">    setup the boardname through tbot.flag selectableboardname</span>
+
+<span class="sd">    You can overwrite this by defining your own board_set_boardname()</span>
+<span class="sd">    in boardspecific.py if you need another approach.</span>
+<span class="sd">    """</span>
+    <span class="k">global</span> <span class="n">BOARDNAME</span>
+
+    <span class="k">if</span> <span class="n">BOARDNAME</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">BOARDNAME</span>
+
+    <span class="k">if</span> <span class="n">board_set_boardname</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">"selectableboardname"</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">BOARDNAME</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">BOARDNAME</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">BOARDNAME</span> <span class="o">=</span> <span class="n">board_set_boardname</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">BOARDNAME</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+        <span class="s2">"please set your boardname with tbot.flag -f selectableboardname:&lt;NAME&gt;"</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="copy_file">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.copy_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">copy_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">newfile</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    copy file filename to newfile</span>
+
+<span class="sd">    :param filename: full path and name of source file</span>
+<span class="sd">    :param newfile: full path and name of target file</span>
+<span class="sd">    """</span>
+    <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"rt"</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">newfile</span><span class="p">,</span> <span class="s2">"wt"</span><span class="p">)</span>
+    <span class="n">fin</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="replace_in_file">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.replace_in_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">newv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    replace string in filename with string newv</span>
+
+<span class="sd">    :param filename: full path and name of source file</span>
+<span class="sd">    :param string: searchstring</span>
+<span class="sd">    :param newv: new value</span>
+<span class="sd">    """</span>
+    <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"rt"</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">newv</span><span class="p">)</span>
+    <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"wt"</span><span class="p">)</span>
+    <span class="n">fin</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="find_in_file_and_append">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.find_in_file_and_append">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_in_file_and_append</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">substring</span><span class="p">,</span> <span class="n">append</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    append in file filename to the string substring the string append</span>
+
+<span class="sd">    :param filename: full path and name of source file</span>
+<span class="sd">    :param substring: string to which string append gets appended</span>
+<span class="sd">    :param append: appended string</span>
+<span class="sd">    """</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">IN</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"output.txt"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">OUT</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">IN</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">substring</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="n">append</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+                <span class="n">OUT</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span> <span class="o">+</span> <span class="n">append</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">OUT</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="n">copy_file</span><span class="p">(</span><span class="s2">"output.txt"</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="find_in_file_and_delete">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.find_in_file_and_delete">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_in_file_and_delete</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">substring</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    delete line in file filename when substring is found</span>
+
+<span class="sd">    :param filename: full path and name of source file</span>
+<span class="sd">    :param substring: substring which get searched</span>
+<span class="sd">    """</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">IN</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"output.txt"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">OUT</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">IN</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">substring</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">):</span>
+                <span class="n">OUT</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+    <span class="n">copy_file</span><span class="p">(</span><span class="s2">"output.txt"</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
+
+
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">set_board_cfg</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">get_boardmodule_import</span><span class="p">(),</span> <span class="s2">"set_board_cfg"</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"Please define at least a dummy set_board_config in </span><span class="si">{</span><span class="n">get_boardmodulepath_import</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
+    <span class="n">set_board_cfg</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">board_set_boardname</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">get_boardmodule_import</span><span class="p">(),</span> <span class="s2">"board_set_boardname"</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="n">board_set_boardname</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="IniTBotConfig">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniTBotConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">IniTBotConfig</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">_Singleton</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    reads common tbot config</span>
+
+<span class="sd">    see: :ref:`boardspecificruntimeadaption`</span>
+<span class="sd">    """</span>
+
+    <span class="c1"># must be done before init</span>
+    <span class="n">tbotinifile</span> <span class="o">=</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">inifile_get_tbotfilename</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">set_board_cfg</span><span class="p">:</span>
+        <span class="n">set_board_cfg</span><span class="p">(</span><span class="s2">"IniTBotConfig"</span><span class="p">,</span> <span class="n">tbotinifile</span><span class="p">)</span>
+    <span class="n">replace_in_file</span><span class="p">(</span><span class="n">tbotinifile</span><span class="p">,</span> <span class="s2">"@@TBOTBOARD@@"</span><span class="p">,</span> <span class="n">generic_get_boardname</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tbotinifile</span> <span class="o">=</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">inifile_get_tbotfilename</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labsectionname</span> <span class="o">=</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">get_lab_sectionname</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">(</span>
+            <span class="n">interpolation</span><span class="o">=</span><span class="n">ExtendedInterpolation</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tbotinifile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labsectionname</span><span class="p">,</span> <span class="s2">"date"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shelltype</span> <span class="o">=</span> <span class="n">init_lab_get_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="s2">"shelltype"</span><span class="p">,</span> <span class="s2">"ash"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shelltype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shelltype</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ethdevices</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">picocom</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kermit</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scriptcom</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sispmctrl</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">powershellscript</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gpiopowerctrl</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tinkerforce</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tm021</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"IPSETUP"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">dev</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+
+                <span class="n">ethaddr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"ethaddr"</span><span class="p">)</span>
+                <span class="n">labdevice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"labdevice"</span><span class="p">)</span>
+                <span class="n">ipaddr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"ipaddr"</span><span class="p">)</span>
+                <span class="n">serverip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"serverip"</span><span class="p">)</span>
+                <span class="n">netmask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"netmask"</span><span class="p">)</span>
+
+                <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">"labdevice"</span><span class="p">:</span> <span class="n">labdevice</span><span class="p">,</span>
+                    <span class="s2">"ethaddr"</span><span class="p">:</span> <span class="n">ethaddr</span><span class="p">,</span>
+                    <span class="s2">"serverip"</span><span class="p">:</span> <span class="n">serverip</span><span class="p">,</span>
+                    <span class="s2">"ipaddr"</span><span class="p">:</span> <span class="n">ipaddr</span><span class="p">,</span>
+                    <span class="s2">"netmask"</span><span class="p">:</span> <span class="n">netmask</span><span class="p">,</span>
+                <span class="p">}</span>
+
+                <span class="n">devtmp</span> <span class="o">=</span> <span class="p">{</span><span class="n">dev</span><span class="p">:</span> <span class="n">cfg</span><span class="p">}</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">tmpdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ethdevices</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span>
+                    <span class="n">tmpdict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">dev</span><span class="p">:</span> <span class="n">cfg</span><span class="p">})</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ethdevices</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">devtmp</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bootmodecfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"BOOTMODE"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">modes</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"modes"</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bootmodecfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">modes</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ubcfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"UBCFG"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">"ethintf"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"ethintf"</span><span class="p">),</span>
+                <span class="p">}</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">ubcfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dfuutilcfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"DFUUTIL_CONFIG"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">cmds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"cmds"</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dfuutilcfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">uuucfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"UUU_CONFIG"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"cmd"</span><span class="p">)</span>
+
+                <span class="n">uuucmd</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">):</span>
+                    <span class="n">uuucmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">uuucfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">uuucmd</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">xmodemcfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xmodemdevice</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"XMODEM_CONFIG"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"cmd"</span><span class="p">)</span>
+                <span class="n">xmodemcmd</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">xmodemcfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">xmodemcmd</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">xmodemdevice</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"device"</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lauterbachcfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"LAUTERBACH_CONFIG"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">verbose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"verbose"</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="n">verbose</span> <span class="o">=</span> <span class="mi">1</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">ipath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"install_path"</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="n">ipath</span> <span class="o">=</span> <span class="s2">"/opt/t32"</span>
+
+                <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"cmd"</span><span class="p">)</span>
+                <span class="n">conf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"config"</span><span class="p">)</span>
+                <span class="n">script</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"script"</span><span class="p">)</span>
+                <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">"verbose"</span><span class="p">:</span> <span class="n">verbose</span><span class="p">,</span>
+                    <span class="s2">"install_path"</span><span class="p">:</span> <span class="n">ipath</span><span class="p">,</span>
+                    <span class="s2">"cmd"</span><span class="p">:</span> <span class="n">cmd</span><span class="p">,</span>
+                    <span class="s2">"config"</span><span class="p">:</span> <span class="n">conf</span><span class="p">,</span>
+                    <span class="s2">"script"</span><span class="p">:</span> <span class="n">script</span><span class="p">,</span>
+                <span class="p">}</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">lauterbachcfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">seggercfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"SEGGER_CONFIG"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+
+                <span class="n">cmds</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"cmds"</span><span class="p">))</span>
+                <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">"cmds"</span><span class="p">:</span> <span class="n">cmds</span><span class="p">,</span>
+                <span class="p">}</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">seggercfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bdi2000cfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"BDI2000_"</span><span class="p">):</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">"ip"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"ip"</span><span class="p">),</span>
+                <span class="p">}</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">bdi2000cfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg</span>
+
+        <span class="n">bn</span> <span class="o">=</span> <span class="n">generic_get_boardname</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">"PICOCOM_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">picocom</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">"KERMIT_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kermit</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">"SCRIPTCOM_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scriptcom</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">"SISPMCTRL_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sispmctrl</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">"POWERSHELLSCRIPT_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">powershellscript</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">"GPIOPMCTRL_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gpiopowerctrl</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">"TF_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tinkerforce</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">"TM021_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tm021</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">atexit</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cleanup</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tbotinifile</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tbotinifile</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="IniConfig">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">IniConfig</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">_Singleton</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    reads board config</span>
+
+<span class="sd">    see: :ref:`boardspecificruntimeadaption`</span>
+<span class="sd">    """</span>
+
+    <span class="c1"># read common tbot config and generate later [default] section</span>
+    <span class="c1"># cfg = IniTBotConfig()</span>
+    <span class="c1"># cfgp = cfg.config_parser</span>
+
+    <span class="k">if</span> <span class="n">set_board_cfg</span><span class="p">:</span>
+        <span class="n">set_board_cfg</span><span class="p">(</span><span class="s2">"IniConfig"</span><span class="p">,</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">inifile_get_tbotboardfilename</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">(</span>
+            <span class="n">interpolation</span><span class="o">=</span><span class="n">ExtendedInterpolation</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">inifile_get_tbotboardfilename</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">atexit</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cleanup</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IniConfig.get_config">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniConfig.get_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns value of key name from configparser.</span>
+
+<span class="sd">        use internal function init_get_config</span>
+
+<span class="sd">        :param name: name of key</span>
+<span class="sd">        :param default: default value if key is not found</span>
+<span class="sd">        """</span>
+
+        <span class="k">return</span> <span class="n">init_get_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IniConfig.get_config_int">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniConfig.get_config_int">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_config_int</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns int value of key name from configparser.</span>
+
+<span class="sd">        use internal function init_get_config_int</span>
+
+<span class="sd">        :param name: name of key</span>
+<span class="sd">        :param default: default value if key is not found</span>
+<span class="sd">        """</span>
+
+        <span class="k">return</span> <span class="n">init_get_config_int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IniConfig.get_default_config">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniConfig.get_default_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_default_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        return value of key from "default" section with name "name"</span>
+
+<span class="sd">        :param name: name of key</span>
+<span class="sd">        :param default: default value if key is not found</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">init_get_default_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
