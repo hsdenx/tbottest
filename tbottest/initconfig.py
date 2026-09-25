@@ -399,6 +399,16 @@ class IniTBotConfig(metaclass=_Singleton):
 
                 self.seggercfg[nm] = cfg
 
+        self.bdi2000cfg = {}
+        for s in self.config_parser.sections():
+            if s.startswith("BDI2000_"):
+                nm = s.split("_", 1)[1]
+                cfg = {
+                    "ip": self.config_parser.get(s, "ip"),
+                }
+
+                self.bdi2000cfg[nm] = cfg
+
         bn = generic_get_boardname()
         for s in self.config_parser.sections():
             if f"PICOCOM_{bn}" in s:

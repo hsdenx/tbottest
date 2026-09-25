@@ -602,6 +602,24 @@ define the section
         "install_path", "path to your installation of the Segger tools", "/opt/segger"
         "cmds", "list of commands executed in JLinkExe shell to bring up U-Boot", "[{'cmd':'go', 'prompt':'J-Link>'}]"
 
+setup for BDI2000 debugger
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+if your board has an Abatron BDI2000 attached, define its address and open
+an interactive telnet session to it from the lab host with the testcase
+
+:py:func:`tbottest.tc.bdi2000.bdi2000`
+
+Leave it like any other interactive session, with CTRL+] three times within
+one second. telnet's own escape character is moved to CTRL+^ for this, so
+it does not catch the first CTRL+]. The session also ends when telnet exits
+by itself.
+
+.. csv-table:: [BDI2000_<boardname>]
+        :header: "key", "value", "example"
+
+        "ip", "IP address of the BDI2000, reached with telnet from the lab host", "192.168.3.101"
+
 
 boardconfiguration file
 .......................

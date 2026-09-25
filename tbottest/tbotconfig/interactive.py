@@ -1,6 +1,7 @@
 import tbot
 from tbottest.boardgeneric import cfggeneric
 from tbottest.tc.kas import KAS
+from tbottest.tc.bdi2000 import bdi2000 as tc_bdi2000
 
 
 # only to have interactive commands handy and do not use the ones
@@ -55,3 +56,9 @@ def kas() -> None:
         kas = KAS(cfggeneric.kas)
 
         kas.kas_shell()
+
+
+@tbot.testcase
+def bdi2000() -> None:
+    """Open an interactive telnet session to the board's BDI2000."""
+    tc_bdi2000()

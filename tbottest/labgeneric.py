@@ -745,6 +745,12 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
                     time.sleep(1)
                     out = self.exec0("ip", "link", "show", "dev", labdev)
 
+    def get_bdi2000_ip(self) -> str:
+        bn = ini.generic_get_boardname()
+        if bn not in cfgt.bdi2000cfg:
+            raise RuntimeError(f"no [BDI2000_{bn}] section in tbot.ini")
+        return cfgt.bdi2000cfg[bn]["ip"]
+
     def has_sshmachine(self) -> bool:
         for s in cfgt.config_parser.sections():
             if "SSHMACHINE" in s:
