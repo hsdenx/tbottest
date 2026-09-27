@@ -164,6 +164,25 @@ class boardSisControl(powercontrol.SispmControl):
             sispmctl_port = cfgt.config_parser.get(s, "port")
 
 
+class boardTboxControl(powercontrol.TboxCtrlControl):
+    def power_check(self) -> bool:
+        if "poweroffonstart" in tbot.flags:
+            self.poweroff()
+
+        return True
+
+    bn = ini.generic_get_boardname()
+    cfg = f"TBOX_{bn}"
+    for s in cfgt.config_parser.sections():
+        if cfg == s:
+            tbox_powerpin = cfgt.config_parser.get(s, "powerpin")
+
+            _vid = cfgt.config_parser.get(s, "vid", fallback=None)
+            _pid = cfgt.config_parser.get(s, "pid", fallback=None)
+            tbox_vid = int(_vid, 0) if _vid else None
+            tbox_pid = int(_pid, 0) if _pid else None
+
+
 class boardTMControl(powercontrol.TM021Control):
     def power_check(self) -> bool:
         if "poweroffonstart" in tbot.flags:
@@ -211,6 +230,8 @@ else:
         BOARDCTL = boardTFControl
     elif cfgt.tm021:
         BOARDCTL = boardTMControl
+    elif cfgt.tbox:
+        BOARDCTL = boardTboxControl
     else:
         bn = ini.generic_get_boardname()
         raise RuntimeError(f"please configure powerctrl for board {bn}")

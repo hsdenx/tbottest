@@ -287,6 +287,7 @@ class IniTBotConfig(metaclass=_Singleton):
         self.gpiopowerctrl = False
         self.tinkerforce = False
         self.tm021 = False
+        self.tbox = False
         for s in self.config_parser.sections():
             if "IPSETUP" in s:
                 nm = s.split("_")[1]
@@ -427,6 +428,8 @@ class IniTBotConfig(metaclass=_Singleton):
                 self.tinkerforce = True
             if f"TM021_{bn}" in s:
                 self.tm021 = True
+            if f"TBOX_{bn}" in s:
+                self.tbox = True
 
         atexit.register(self.cleanup)
 

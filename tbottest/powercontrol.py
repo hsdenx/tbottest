@@ -2,6 +2,7 @@ import abc
 import hashlib
 import tbot
 import time
+import typing
 from tbot.machine import board
 from tbot.machine import linux
 
@@ -11,6 +12,7 @@ __all__ = (
     "GpiopmControl",
     "PowerShellScriptControl",
     "SispmControl",
+    "TboxCtrlControl",
     "TinkerforgeControl",
     "TM021Control",
 )
@@ -167,6 +169,71 @@ class SispmControl(board.PowerControl):
 
             tbot.log.message("Waiting a bit to let power settle down ...")
             time.sleep(2)
+
+
+class TboxCtrlControl(board.PowerControl):
+    """
+    control Power On/off through tbox-ctrl (a tbox SYSTEM Controller
+    Modul, talking to the board over USB HID)
+
+    https://gitlab.nabladev.com/nabla/tbox/tbox-ctrl
+
+    **Example**: (board config)
+
+    .. code-block:: python
+
+        from tbot.machine import board
+        from tbottest.powercontrol import TboxCtrlControl
+
+        class MyControl(TboxCtrlControl, board.Board):
+            tbox_powerpin = "P1_5V_EN"
+    """
+
+    @property
+    @abc.abstractmethod
+    def tbox_powerpin(self) -> str:
+        """
+        the tbox-firmware pin to switch, e.g. "P1_5V_EN", "P2_12V_EN",
+        "P3_24V_EN", ... (see tbox-firmware/src/pins.h for the full list)
+
+        This property is **required**.
+        """
+        raise Exception("abstract method")
+
+    @property
+    def tbox_vid(self) -> typing.Optional[int]:
+        """
+        optional USB VID override for tbox-ctrl's --vid - leave unset to
+        use tbox-ctrl's own default (0x1209, pid.codes shared VID).
+        """
+        return None
+
+    @property
+    def tbox_pid(self) -> typing.Optional[int]:
+        """
+        optional USB PID override for tbox-ctrl's --pid - leave unset to
+        use tbox-ctrl's own default (0x0001).
+        """
+        return None
+
+    def _tbox_ctrl(self, *args: str) -> str:
+        cmd = ["tbox-ctrl"]
+        if self.tbox_vid is not None:
+            cmd += ["--vid", hex(self.tbox_vid)]
+        if self.tbox_pid is not None:
+            cmd += ["--pid", hex(self.tbox_pid)]
+        cmd += list(args)
+        return self.host.exec0(*cmd)
+
+    def poweron(self) -> None:
+        self._tbox_ctrl("set", self.tbox_powerpin, "on")
+
+    def poweroff(self) -> None:
+        if "nopoweroff" in tbot.flags:
+            tbot.log.message("Do not power off ...")
+            return
+
+        self._tbox_ctrl("set", self.tbox_powerpin, "off")
 
 
 class TinkerforgeControl(board.PowerControl):

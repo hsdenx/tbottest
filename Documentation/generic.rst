@@ -443,6 +443,24 @@ Here as example wandboard.
         "device", "id of sispmctl device", "01:01:4f:d4:b1"
         "port", "sispmctl port used for the boards power", "3"
 
+[TBOX_BOARDNAME]
+^^^^^^^^^^^^^^^^
+
+If you want to control boards power with a tbox SYSTEM Controller
+Modul (talking to it over USB HID via tbox-ctrl)
+
+:py:meth:`tbottest.powercontrol.TboxCtrlControl`
+
+replace BOARDNAME with the name of your board!
+Here as example wandboard.
+
+.. csv-table:: [TBOX_wandboard]
+        :header: "key", "value", "example"
+
+        "powerpin", "tbox-firmware pin to switch for this board", "P1_5V_EN"
+        "vid", "optional USB VID override for tbox-ctrl", "0x1209"
+        "pid", "optional USB PID override for tbox-ctrl", "0x0001"
+
 [TM021_BOARDNAME]
 ^^^^^^^^^^^^^^^^^
 
