@@ -3,7 +3,6 @@ import os
 import typing
 import tbot
 from tbot.machine import connector, linux, board
-import time
 import tbottest.initconfig as ini
 from tbot_contrib.gpio import Gpio
 from tbottest.connector import KermitConnector
@@ -13,6 +12,8 @@ from tbottest import builders
 from tbottest import powercontrol
 from tbottest import machineinit
 from tbottest.common.boardlocking import lab_get_lock
+from tbottest.common.labinit import lab_init_once
+from tbottest.common.labinit import labinit_from_config
 from tbottest.dynamicimport import get_boardcallback_import
 from tbottest.dynamicimport import get_boardmodule_import
 
@@ -729,42 +730,15 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
         if "LABINIT" not in _INIT_CACHE:
             _INIT_CACHE["LABINIT"] = True
 
-            self.labinitfilename = "/tmp/tbotlabinitdone"
-            labinit = []
-            try:
-                labinit = ast.literal_eval(cfgt.config_parser.get(LABSECTIONNAME, "labinit"))
-
-                ret, log = self.exec("test", "-f", self.labinitfilename)
-                if ret != 0:
-                    for i in labinit:
-                        self.exec0(linux.Raw(i))
-
-                    self.exec0("date", linux.Raw(">"), self.labinitfilename)
-            except Exception:
-                pass
-
-            if "noethinit" in tbot.flags:
-                return
-
-            ethdevices = self.ethdevices[ini.generic_get_boardname()]
-            for dev in ethdevices:
-                ethdev = self.ethdevices[ini.generic_get_boardname()][dev]
-                labdev = ethdev["labdevice"]
-                out = self.exec0("ifconfig", "-a")
-                if labdev not in out:
-                    tbot.log.message(
-                        tbot.log.c(
-                            f"ethernet device {labdev} not found on lab host"
-                        ).yellow
-                    )
-                    continue
-
-                self.exec0("sudo", "ifconfig", labdev, "down", ethdev["serverip"], "up")
-                out = self.exec0("ip", "link", "show", "dev", labdev)
-                while "NO-CARRIER" in out:
-                    self.exec0("sudo", "ethtool", "-s", labdev, "autoneg", "on")
-                    time.sleep(1)
-                    out = self.exec0("ip", "link", "show", "dev", labdev)
+            bn = ini.generic_get_boardname()
+            ethinit = "noethinit" not in tbot.flags
+            lab_init_once(
+                self,
+                labinit_from_config(cfgt.config_parser, LABSECTIONNAME),
+                bn,
+                self.ethdevices[bn] if ethinit else {},
+                ethinit=ethinit,
+            )
 
     def get_bdi2000_ip(self) -> str:
         bn = ini.generic_get_boardname()

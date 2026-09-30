@@ -261,7 +261,7 @@ For login with ssh key set key 'sshkeyfile', for password login set key 'passwor
         "workdir", "tbots workdirectory on lab host", "/work/USERNAME/tbot-workdir/BOARD"
         "tmpdir", "path to where tbot stores temporary data", "/tmp/tbot/USERNAME/BOARD"
         "proxyjump", "if set, proxyjump settings for ssh login on lab host", "pi@xeidos.ddns.net"
-        "labinit", "array of strings which contains commands, executed when you init the lab", "['sudo systemctl --all --no-pager restart tftpd-hpa']"
+        "labinit", "array of strings which contains commands, executed when you init the lab. They run once per boot of the lab host, marked by /tmp/tbotlabinitdone; the setup of the board's ethernet devices on the lab host runs once per board, marked by /tmp/tbotlabinitdone-<boardname>. Remove a marker to run its part again", "['sudo systemctl --all --no-pager restart tftpd-hpa']"
         "nfs_base_path", "base path to nfs share on lab host. !! May you have board specific subdir, so use placeholder @@TBOTLABBASENFSPATH@@ in board ini file and replace it in set_board_cfg", "/srv/nfs"
         "uselocking", "use board locking mechanism. You must pass correct locking id for the board with tbot flag lablocking:<lockingid> else tbot will fail.", "yes|no"
 
