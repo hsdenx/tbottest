@@ -1,0 +1,59 @@
+From 25315c9c08a177939da52ffe2228fe68196fdd12 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
+Date: Thu, 1 Oct 2026 16:40:47 +0200
+Subject: [PATCH] channel: make the slow sending of subprocess channels
+ configurable
+
+"subprocess.py: slow down sending" splits every write into chunks of
+8 bytes with 10 ms in between, hard coded in SubprocessChannelIO. That
+is too coarse for a console which takes one character at a time: an
+old U-Boot on an MPC855 SCC drops letters out of each 8 byte chunk, so
+"setenv serverip" arrives as "setenv erverip", the echo comes back
+short and the prompt is never found.
+
+Channel already has slow_send_delay and slow_send_chunksize for this.
+Drop the loop from SubprocessChannelIO.write() and set both attributes
+in SubprocessChannel instead, with the same 10 ms and 8 bytes, so
+nothing changes for existing setups. A connector can now change them on
+the channel it opens; take() deep copies the channel and keeps them.
+
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
+---
+ tbot/machine/channel/subprocess.py | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
+
+diff --git a/tbot/machine/channel/subprocess.py b/tbot/machine/channel/subprocess.py
+index ca5d6f7..7d7af26 100644
+--- a/tbot/machine/channel/subprocess.py
++++ b/tbot/machine/channel/subprocess.py
+@@ -60,17 +60,7 @@ class SubprocessChannelIO(channel.ChannelIO):
+         if self.pty_master not in w:
+             raise TimeoutError("write timeout exceeded")
+ 
+-        chunk_delay = 0.01
+-        chunk_size = 8
+-
+-        # Patch the `write()` method to send bytes slowly, with delays.
+-        bw = 0
+-        bytes_written = 0
+-        for chunk in (buf[i : i + chunk_size] for i in range(0, len(buf), chunk_size)):
+-            bw = os.write(self.pty_master, chunk)
+-            bytes_written += bw
+-            time.sleep(chunk_delay)
+-
++        bytes_written = os.write(self.pty_master, buf)
+         if bytes_written == 0:
+             raise tbot.error.ChannelClosedError
+         return bytes_written
+@@ -184,3 +174,8 @@ Waiting for {wait_time:.1f} more seconds..."""
+ class SubprocessChannel(channel.Channel):
+     def __init__(self) -> None:
+         super().__init__(SubprocessChannelIO())
++        # Some USB serial adapters drop characters when they get a whole
++        # line at once, so send in small chunks by default.  A connector
++        # can change both values on the channel it opens.
++        self.slow_send_delay = 0.01
++        self.slow_send_chunksize = 8
+-- 
+2.31.1
+
