@@ -643,20 +643,34 @@ define the section
 setup for BDI2000 debugger
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-if your board has an Abatron BDI2000 attached, define its address and open
-an interactive telnet session to it from the lab host with the testcase
+if your board has an Abatron BDI2000 attached, define its address. tbot
+then provides the BDI2000 as a machine for the role
+:py:class:`tbottest.bdi2000.BDI2000`, a telnet session to the BDI's command
+line from the lab host, on which ``exec()`` runs one BDI command and
+returns its output.
+
+Open an interactive session on it with the testcase
 
 :py:func:`tbottest.tc.bdi2000.bdi2000`
 
 Leave it like any other interactive session, with CTRL+] three times within
-one second. telnet's own escape character is moved to CTRL+^ for this, so
-it does not catch the first CTRL+]. The session also ends when telnet exits
-by itself.
+one second.
+
+With ``poweron_cmds`` set, the board control runs these commands on the
+BDI2000 every time it has powered the board on, for example ``reset run``
+when the BDI would otherwise hold the CPU in reset
+(:py:class:`tbottest.machineinit.BDI2000Cmds`). Right after power on the
+BDI still waits for the target Vcc and a command sent then is lost; with
+``poweron_wait_state`` set, the commands are only sent once the BDI command
+``info`` reports that target state.
 
 .. csv-table:: [BDI2000_<boardname>]
         :header: "key", "value", "example"
 
         "ip", "IP address of the BDI2000, reached with telnet from the lab host", "192.168.3.101"
+        "poweron_cmds", "optional list of BDI commands run after each power on of the board", "['reset run']"
+        "poweron_wait_state", "optional target state, as info reports it, to wait for before poweron_cmds", "debug mode"
+        "poweron_timeout", "seconds to wait for poweron_wait_state, default 30", "30"
 
 
 boardconfiguration file

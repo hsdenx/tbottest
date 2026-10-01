@@ -9,6 +9,7 @@ from tbottest.connector import KermitConnector
 from tbottest.connector import PicocomConnector
 from tbottest.connector import ScriptConnector
 from tbottest.connector import TelnetConnector
+from tbottest.bdi2000 import BDI2000
 from tbottest import builders
 from tbottest import powercontrol
 from tbottest import machineinit
@@ -351,6 +352,30 @@ class boardControlSegger(BOARDCTL, machineinit.SeggerLoad):
         return cfg["cmds"]
 
 
+# if the board's BDI2000 has commands to run after power on (e.g. "reset
+# run" while the BDI holds the CPU in reset), run them on the BDI2000
+class boardControlBDI2000(BOARDCTL, machineinit.BDI2000Cmds):
+    def get_bdi2000_cmds(self):
+        return cfgt.bdi2000cfg[ini.generic_get_boardname()]["poweron_cmds"]
+
+    def get_bdi2000_wait_state(self):
+        return cfgt.bdi2000cfg[ini.generic_get_boardname()]["poweron_wait_state"]
+
+    def get_bdi2000_timeout(self):
+        return cfgt.bdi2000cfg[ini.generic_get_boardname()]["poweron_timeout"]
+
+
+class GenericBDI2000(TelnetConnector, BDI2000):
+    name = "bdi2000"
+    telnet_port = 23
+
+    @property
+    def telnet_host(self) -> str:
+        return cfgt.bdi2000cfg[ini.generic_get_boardname()]["ip"]
+
+
+_BDI2000CFG = cfgt.bdi2000cfg.get(ini.generic_get_boardname(), {})
+
 if "uuuloader" in tbot.flags:
     BOARDCTRL = boardControlUUU
 elif "dfuutilloader" in tbot.flags:
@@ -361,6 +386,8 @@ elif "seggerloader" in tbot.flags:
     BOARDCTRL = boardControlSegger
 elif "xmodemloader" in tbot.flags:
     BOARDCTRL = boardControlXmodem
+elif _BDI2000CFG.get("poweron_cmds"):
+    BOARDCTRL = boardControlBDI2000
 else:
     BOARDCTRL = BOARDCTL
 
@@ -761,12 +788,6 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
                 ethinit=ethinit,
             )
 
-    def get_bdi2000_ip(self) -> str:
-        bn = ini.generic_get_boardname()
-        if bn not in cfgt.bdi2000cfg:
-            raise RuntimeError(f"no [BDI2000_{bn}] section in tbot.ini")
-        return cfgt.bdi2000cfg[bn]["ip"]
-
     def has_sshmachine(self) -> bool:
         for s in cfgt.config_parser.sections():
             if "SSHMACHINE" in s:
@@ -854,6 +875,8 @@ class LocalHostTest(
 
 def register_machines(ctx):
     ctx.register(GenericLab, tbot.role.LabHost)
+    if _BDI2000CFG:
+        ctx.register(GenericBDI2000, BDI2000)
     ctx.register(LocalHostTest, tbot.role.LocalHost)
     for s in cfgt.config_parser.sections():
         localfound = False

@@ -282,6 +282,56 @@ class SeggerLoad(machine.Initializer):
         return _flag_gated_load("seggerloader", self._load)
 
 
+class BDI2000Cmds(machine.Initializer):
+    """
+    Run commands on the board's BDI2000 after the board is powered on,
+    for example "reset run" when the BDI holds the CPU in reset otherwise.
+
+    The commands come from get_bdi2000_cmds(); the BDI2000 machine is
+    requested through the role tbottest.bdi2000.BDI2000. If
+    get_bdi2000_wait_state() returns a target state, the commands are only
+    sent once the BDI reports it.
+    """
+
+    def get_bdi2000_wait_state(self) -> typing.Optional[str]:
+        """
+        :returns: target state to wait for before the commands, e.g.
+            "debug mode", or None to send them right away
+        """
+        return None
+
+    def get_bdi2000_timeout(self) -> float:
+        """
+        :returns: seconds to wait for get_bdi2000_wait_state()
+        """
+        return 30.0
+
+    @abc.abstractmethod
+    def get_bdi2000_cmds(self) -> List[str]:
+        """
+            def get_bdi2000_cmds(self) -> List[str]:
+                return ["reset run"]
+
+        :rtype: list
+        """
+        pass
+
+    def _run_bdi2000_cmds(self) -> None:
+        from tbottest.bdi2000 import BDI2000
+
+        with tbot.ctx.request(BDI2000) as bdi:
+            state = self.get_bdi2000_wait_state()
+            if state:
+                bdi.wait_target_state(state, timeout=self.get_bdi2000_timeout())
+            for cmd in self.get_bdi2000_cmds():
+                bdi.exec(cmd)
+
+    @contextlib.contextmanager
+    def _init_machine(self) -> typing.Iterator:
+        self._run_bdi2000_cmds()
+        yield None
+
+
 class UsbSdpLoad(machine.Initializer):
     """
     Machine-initializer for loading SPL/U-Boot image into

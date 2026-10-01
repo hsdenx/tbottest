@@ -405,8 +405,20 @@ class IniTBotConfig(metaclass=_Singleton):
         for s in self.config_parser.sections():
             if s.startswith("BDI2000_"):
                 nm = s.split("_", 1)[1]
+                try:
+                    cmds = ast.literal_eval(self.config_parser.get(s, "poweron_cmds"))
+                except Exception:
+                    cmds = []
+
                 cfg = {
                     "ip": self.config_parser.get(s, "ip"),
+                    "poweron_cmds": list(cmds),
+                    "poweron_wait_state": self.config_parser.get(
+                        s, "poweron_wait_state", fallback=None
+                    ),
+                    "poweron_timeout": float(
+                        self.config_parser.get(s, "poweron_timeout", fallback="30")
+                    ),
                 }
 
                 self.bdi2000cfg[nm] = cfg
