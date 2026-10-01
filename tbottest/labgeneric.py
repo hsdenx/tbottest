@@ -8,6 +8,7 @@ from tbot_contrib.gpio import Gpio
 from tbottest.connector import KermitConnector
 from tbottest.connector import PicocomConnector
 from tbottest.connector import ScriptConnector
+from tbottest.connector import TelnetConnector
 from tbottest import builders
 from tbottest import powercontrol
 from tbottest import machineinit
@@ -69,6 +70,22 @@ class boardKermitConnector(KermitConnector):
                 kermit_options = ast.literal_eval(
                     cfgt.config_parser.get(s, "kermit_options")
                 )
+            except Exception:
+                pass
+
+
+class boardTelnetConnector(TelnetConnector):
+    bn = ini.generic_get_boardname()
+    cfg = f"TELNET_{bn}"
+    for s in cfgt.config_parser.sections():
+        if cfg == s:
+            telnet_port = int(cfgt.config_parser.get(s, "port"))
+            try:
+                telnet_host = cfgt.config_parser.get(s, "host")
+            except Exception:
+                pass
+            try:
+                telnet_delay = int(cfgt.config_parser.get(s, "delay"))
             except Exception:
                 pass
 
@@ -353,6 +370,8 @@ elif "picocom" in tbot.flags:
     BOARDCON = boardPicocomConnector
 elif "scriptcom" in tbot.flags:
     BOARDCON = boardScriptConnector
+elif "telnet" in tbot.flags:
+    BOARDCON = boardTelnetConnector
 else:
     # try to autodetect setup (config from tbot.ini file)
     if cfgt.kermit:
@@ -361,6 +380,8 @@ else:
         BOARDCON = boardPicocomConnector
     elif cfgt.scriptcom:
         BOARDCON = boardScriptConnector
+    elif cfgt.telnet:
+        BOARDCON = boardTelnetConnector
     else:
         raise RuntimeError("Please setup console connector")
 

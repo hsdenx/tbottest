@@ -395,6 +395,26 @@ Here as example wandboard.
         "exitstring", "string send to exit", "~~."
 
 
+[TELNET_BOARDNAME]
+^^^^^^^^^^^^^^^^^^
+
+if you want to use telnet for connecting to your boards console
+(e.g. a terminal/console server exposing the serial line as a telnet
+port).
+
+:py:meth:`tbottest.connector.TelnetConnector`
+
+replace BOARDNAME with the name of your board!
+Here as example wandboard.
+
+.. csv-table:: [TELNET_wandboard]
+        :header: "key", "value", "example"
+
+        "host", "optional, telnet host", "localhost"
+        "port", "telnet port", "2013"
+        "delay", "optional, delay after exit", "3"
+
+
 [GPIOPMCTRL_BOARDNAME]
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -962,6 +982,7 @@ powershellscript         use a shellscript for boards power control
 tinkerforge              use tinkerforge for boards power control
 picocom                  use picocom for serial console
 scriptcom                use a script for serial console
+telnet                   use telnet for serial console
 dfuutilloader            load SPL/U-Boot with dfu-util tool
 uuuloader                load SPL/U-Boot with uuu tool from NXP
 xmodemloader             load SPL/U-Boot with sb tool (xmodem/ymodem)

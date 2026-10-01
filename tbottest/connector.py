@@ -7,6 +7,7 @@ from tbot.machine import channel, connector, linux
 __all__ = (
     "KermitConnector",
     "PicocomConnector",
+    "TelnetConnector",
 )
 
 
@@ -187,6 +188,96 @@ class PicocomConnector(connector.ConsoleConnector):
 
     def connect(self, mach: linux.LinuxShell) -> channel.Channel:
         return self.picocomconnect(mach)
+
+
+class TelnetConnector(connector.ConsoleConnector):
+    """
+    Connect to a serial console via telnet (e.g. a terminal/console
+    server exposing a serial line as a telnet port)
+
+    You can configure host and port using the ``telnet_host`` and
+    ``telnet_port`` properties.
+
+    **Example**: (board config)
+
+    .. code-block:: python
+
+        from tbot.machine import board
+        from tbottest.connector import TelnetConnector
+
+        class MyBoard(TelnetConnector, board.Board):
+            telnet_port = 2013
+
+        BOARD = MyBoard
+    """
+
+    @property
+    def telnet_host(self) -> str:
+        """
+        telnet host, default "localhost"
+        """
+        return "localhost"
+
+    @property
+    @abc.abstractmethod
+    def telnet_port(self) -> int:
+        """
+        telnet port
+
+        This property is **required**.
+        """
+        raise Exception("abstract method")
+
+    @property
+    def telnet_delay(self) -> float:
+        """
+        delay after exit, default 0.0
+        """
+        return 0.0
+
+    @contextlib.contextmanager
+    def telnetconnect(self, mach: linux.LinuxShell) -> channel.Channel:
+        TELNET_PROMPT = b"telnet> "
+        # telnet's own default escape character is also Ctrl-], the
+        # same sequence tbot's interactive() uses to detach. Give it a
+        # different one here so a user pressing Ctrl-] three times to
+        # leave interactive() reaches tbot untouched instead of being
+        # caught by telnet's own escape handling first.
+        TELNET_ESCAPE = "T"
+        ch = mach.open_channel(
+            "telnet",
+            "-e",
+            "^" + TELNET_ESCAPE,
+            self.telnet_host,
+            str(self.telnet_port),
+        )
+        try:
+            try:
+                ret = ch.read(150, timeout=2)
+                buf = ret.decode(errors="replace")
+                # telnet tries every resolved address in turn (e.g. ::1
+                # before 127.0.0.1) and reports "Connection refused" for
+                # each one that does not answer, so that string alone
+                # does not mean the connection failed overall; only
+                # treat it as a failure if none of the attempts
+                # succeeded.
+                if "Connection refused" in buf and "Connected to" not in buf:
+                    raise RuntimeError(f"telnet connection refused {buf}")
+            except TimeoutError:
+                pass
+
+            yield ch
+        finally:
+            ch.sendcontrol(TELNET_ESCAPE)
+            ch.read_until_prompt(TELNET_PROMPT)
+            ch.sendline("quit")
+
+            if self.telnet_delay != 0.0:
+                time.sleep(self.telnet_delay)
+
+    def connect(self, mach: linux.LinuxShell) -> channel.Channel:
+        return self.telnetconnect(mach)
+
 
 class ScriptConnector(connector.ConsoleConnector):
     """

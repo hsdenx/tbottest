@@ -282,6 +282,7 @@ class IniTBotConfig(metaclass=_Singleton):
         self.picocom = False
         self.kermit = False
         self.scriptcom = False
+        self.telnet = False
         self.sispmctrl = False
         self.powershellscript = False
         self.gpiopowerctrl = False
@@ -418,6 +419,8 @@ class IniTBotConfig(metaclass=_Singleton):
                 self.kermit = True
             if f"SCRIPTCOM_{bn}" in s:
                 self.scriptcom = True
+            if f"TELNET_{bn}" in s:
+                self.telnet = True
             if f"SISPMCTRL_{bn}" in s:
                 self.sispmctrl = True
             if f"POWERSHELLSCRIPT_{bn}" in s:
