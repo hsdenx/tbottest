@@ -608,4 +608,8 @@ def generic_kas_all(
 
 FLAGS = {
     "kasskipcheckout": "skip kas checkout step",
+    "kaskeepconfig": (
+        "kas: keep repo checkouts and build/conf unchanged (kas "
+        "--keep-config-unchanged), needs an earlier run without it"
+    ),
 }

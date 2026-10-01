@@ -792,6 +792,11 @@ the kas container, each as host:container or host:container:options, for
 example a directory with build helper scripts. See
 :py:class:`tbottest.tc.kas.KAS`.
 
+With tbot flag kaskeepconfig, kas keeps the repo checkouts and build/conf as
+they are (kas --keep-config-unchanged): tbot does no kas checkout and passes
+the option to kas shell and kas build. It needs one earlier run without the
+flag, which set the build tree up.
+
 argumentfiles
 .............
 

@@ -139,6 +139,14 @@ class KAS:
 
     You need the ```"``` so escape them!
 
+    tbot flag kaskeepconfig
+
+    keeps the repo checkouts and build/conf as they are, like the
+    --keep-config-unchanged option of kas: kas_checkout() does nothing
+    (no pull of the kas config repo, no kas checkout, no auto.conf), and
+    kas shell and kas build get --keep-config-unchanged. It needs one
+    earlier run without the flag, which set the build tree up.
+
     kas_mounts
 
     list of directories the kas container gets mounted, each as
@@ -246,6 +254,7 @@ class KAS:
         self.kas_runtime_args = None
         self.kas_mounts = []
         self.kas_ssh_dir = None
+        self.keep_config = "kaskeepconfig" in tbot.flags
         self.container_engine = None
         self.container = False
         self.kasconfigpath = None
@@ -394,6 +403,15 @@ class KAS:
                 for env in self.envinit:
                     self.bh.exec0(linux.Raw(env))
 
+    def kas_keep_config_args(self) -> list:
+        """
+        returns the kas option that keeps repo checkouts and build/conf
+        unchanged, if tbot flag kaskeepconfig is set
+        """
+        if self.keep_config:
+            return ["--keep-config-unchanged"]
+        return []
+
     def kas_create_autoconf(self) -> None:
         if self.autoconf:
             bp = self.kas_get_buildpath()
@@ -413,7 +431,15 @@ class KAS:
         """
         call "kas checkout" so kas checksout all the needed sources
         for your ow build, and setup conf directory.
+
+        Does nothing with tbot flag kaskeepconfig.
         """
+        if self.keep_config:
+            tbot.log.message(
+                tbot.log.c("kaskeepconfig: keep repo checkouts and build/conf").green
+            )
+            return
+
         post = []
         if self.kaslayername is not None:
             post = [linux.Raw(f" {self.kaslayername}")]
@@ -517,6 +543,7 @@ class KAS:
             self.kascmd,
             *kasarg,
             "build",
+            *self.kas_keep_config_args(),
             self.kasconfigpath / self.kasconfigfile,
             *post,
         )
@@ -613,7 +640,10 @@ class KAS:
         if kasarg:
             cmd += " ".join(kasarg)
 
-        cmd += f" shell {self.kasconfigpath._local_str()}/{self.kasconfigfile}"
+        cmd += " shell"
+        for a in self.kas_keep_config_args():
+            cmd += f" {a}"
+        cmd += f" {self.kasconfigpath._local_str()}/{self.kasconfigfile}"
         with tbot.log_event.command("kas-shell", cmd) as ev:
             with self.bh.ch.with_prompt("build$ "):
                 self.bh.ch.sendline(cmd, read_back=True)

@@ -5,6 +5,7 @@ buildtargets/resultimages "stay unset if absent" special case).
 """
 
 import os
+import sys
 
 import pytest
 
@@ -180,3 +181,34 @@ class TestRuntimeArgsWithMounts:
     def test_mounts_alone(self):
         got = kas.kas_runtime_args_with_mounts(None, ["/h/scripts:/scripts"])
         assert got == '"-v /h/scripts:/scripts"'
+
+
+class TestKeepConfig:
+    """tbot flag kaskeepconfig, like kas --keep-config-unchanged"""
+
+    @pytest.fixture
+    def flags(self, monkeypatch):
+        tbot = sys.modules["tbot"]
+        monkeypatch.setattr(tbot, "flags", set())
+        return tbot.flags
+
+    def test_without_flag_no_extra_option(self, flags):
+        obj = kas.KAS(base_cfg())
+        assert obj.keep_config is False
+        assert obj.kas_keep_config_args() == []
+
+    def test_with_flag_passes_keep_config_unchanged(self, flags):
+        flags.add("kaskeepconfig")
+        obj = kas.KAS(base_cfg())
+        assert obj.keep_config is True
+        assert obj.kas_keep_config_args() == ["--keep-config-unchanged"]
+
+    def test_with_flag_checkout_touches_nothing(self, flags):
+        # FakeHost.exec0 raises, so any pull, kas checkout or auto.conf
+        # write would fail this test
+        flags.add("kaskeepconfig")
+        kas.KAS(base_cfg()).kas_checkout()
+
+    def test_without_flag_checkout_does_work(self, flags):
+        with pytest.raises(RuntimeError, match="no real host"):
+            kas.KAS(base_cfg()).kas_checkout()
