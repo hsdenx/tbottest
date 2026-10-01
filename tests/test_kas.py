@@ -145,3 +145,38 @@ class TestBuildtargetsResultimagesStayUnset:
         obj = kas.KAS(base_cfg())
         with pytest.raises(RuntimeError, match="please specify buildtargets"):
             obj.kas_copy()
+
+
+class TestKasMounts:
+    def test_default_is_no_mount(self):
+        assert kas.KAS(base_cfg()).kas_mounts == []
+
+    def test_mounts_are_taken_over(self):
+        obj = kas.KAS(base_cfg(kas_mounts=["/h/scripts:/scripts:ro"]))
+        assert obj.kas_mounts == ["/h/scripts:/scripts:ro"]
+
+    def test_mount_without_colon_raises(self):
+        with pytest.raises(RuntimeError, match="not host:container"):
+            kas.KAS(base_cfg(kas_mounts=["/h/scripts"]))
+
+
+class TestRuntimeArgsWithMounts:
+    def test_nothing_configured_gives_none(self):
+        assert kas.kas_runtime_args_with_mounts(None, []) is None
+        assert kas.kas_runtime_args_with_mounts('""', None) is None
+
+    def test_runtime_args_alone_keep_their_value(self):
+        assert kas.kas_runtime_args_with_mounts('"--privileged"', []) == '"--privileged"'
+
+    def test_runtime_args_without_quotes_get_quoted(self):
+        assert kas.kas_runtime_args_with_mounts("--privileged", []) == '"--privileged"'
+
+    def test_mounts_are_appended_inside_the_quotes(self):
+        got = kas.kas_runtime_args_with_mounts(
+            '"--privileged -v /dl:/downloads"', ["/h/scripts:/scripts:ro", "/a:/b"]
+        )
+        assert got == '"--privileged -v /dl:/downloads -v /h/scripts:/scripts:ro -v /a:/b"'
+
+    def test_mounts_alone(self):
+        got = kas.kas_runtime_args_with_mounts(None, ["/h/scripts:/scripts"])
+        assert got == '"-v /h/scripts:/scripts"'

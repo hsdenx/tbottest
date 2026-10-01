@@ -3,6 +3,46 @@ from tbot.machine import linux
 from tbot.tc.shell import copy as shell_copy
 
 
+def kas_check_mounts(mounts) -> list:
+    """
+    returns mounts as a list, after checking that every entry has the
+    form host:container[:options]
+    """
+    mounts = list(mounts or [])
+    for m in mounts:
+        if ":" not in m:
+            raise RuntimeError(f"kas_mounts entry {m!r} is not host:container[:options]")
+    return mounts
+
+
+def kas_runtime_args_with_mounts(runtime_args, mounts) -> str:
+    """
+    returns the value for kas-container --runtime-args: runtime_args as
+    configured in kas_runtime_args, followed by a "-v <mount>" for each
+    entry of mounts, all in one pair of double quotes. Returns None when
+    there is nothing to pass.
+
+    runtime_args may carry its own surrounding quotes, as the
+    kas_runtime_args examples do; they are dropped before the mounts are
+    appended.
+    """
+    args = []
+    if runtime_args:
+        a = str(runtime_args).strip()
+        if len(a) >= 2 and a[0] == a[-1] and a[0] in "\"'":
+            a = a[1:-1]
+        if a:
+            args.append(a)
+
+    for m in mounts or []:
+        args.append(f"-v {m}")
+
+    if not args:
+        return None
+
+    return '"' + " ".join(args) + '"'
+
+
 class KAS:
     """
     helper class for building yocto projects with kas
@@ -99,6 +139,17 @@ class KAS:
 
     You need the ```"``` so escape them!
 
+    kas_mounts
+
+    list of directories the kas container gets mounted, each as
+    ``host:container`` or ``host:container:options``. Every entry becomes
+    a ``-v <entry>`` behind kas_runtime_args in "--runtime-args", for
+    example to give the kas shell a directory with build helper scripts:
+
+    .. code-block:: python
+
+        "kas_mounts" : ["/work/hs/yocto/scripts/build:/scripts:ro"],
+
     kaslayer
 
     sources which contain your kas config file(s). This class downloads them
@@ -193,6 +244,7 @@ class KAS:
         self.netrc_file = None
         self.git_credential_store = None
         self.kas_runtime_args = None
+        self.kas_mounts = []
         self.kas_ssh_dir = None
         self.container_engine = None
         self.container = False
@@ -213,6 +265,7 @@ class KAS:
         self.git_credential_store = self.cfg.get("git_credential_store")
         self.netrc_file = self.cfg.get("netrc_file")
         self.kas_runtime_args = self.cfg.get("kas_runtime_args")
+        self.kas_mounts = kas_check_mounts(self.cfg.get("kas_mounts", []))
         self.kas_ssh_dir = self.cfg.get("ssh_dir")
 
         try:
@@ -413,9 +466,12 @@ class KAS:
             kasarg.append("--git-credential-store")
             kasarg.append(self.git_credential_store)
 
-        if self.kas_runtime_args:
+        runtime_args = kas_runtime_args_with_mounts(
+            self.kas_runtime_args, self.kas_mounts
+        )
+        if runtime_args:
             kasarg.append("--runtime-args")
-            kasarg.append(linux.Raw(self.kas_runtime_args))
+            kasarg.append(linux.Raw(runtime_args))
 
         if self.kas_ssh_dir:
             kasarg.append("--ssh-dir")
@@ -529,9 +585,12 @@ class KAS:
             kasarg.append("--git-credential-store")
             kasarg.append(self.git_credential_store)
 
-        if self.kas_runtime_args:
+        runtime_args = kas_runtime_args_with_mounts(
+            self.kas_runtime_args, self.kas_mounts
+        )
+        if runtime_args:
             kasarg.append("--runtime-args")
-            kasarg.append(str(self.kas_runtime_args))
+            kasarg.append(runtime_args)
 
         if self.kas_ssh_dir:
             kasarg.append("--ssh-dir")

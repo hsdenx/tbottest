@@ -787,6 +787,11 @@ settings needed for yocto build with kas tool.
         "kas_check_files", "list of files, which must exist after building", "[]", "['tmp/deploy/images/wandboard/SPL']"
         "kas_results", "list of files, which get copied from build host to lab host for later use. Basepath is machine directory in tmp/deploy/images", "[]", "['SPL']"
 
+Inside the kas dictionary, kas_mounts adds directories of the build host to
+the kas container, each as host:container or host:container:options, for
+example a directory with build helper scripts. See
+:py:class:`tbottest.tc.kas.KAS`.
+
 argumentfiles
 .............
 
