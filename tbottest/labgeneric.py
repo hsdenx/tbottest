@@ -47,6 +47,12 @@ class boardPicocomConnector(PicocomConnector):
                     noreset = True
             except Exception:
                 pass
+            if cfgt.config_parser.has_option(s, "slow_send_delay"):
+                slow_send_delay = cfgt.config_parser.getfloat(s, "slow_send_delay")
+            if cfgt.config_parser.has_option(s, "slow_send_chunksize"):
+                slow_send_chunksize = cfgt.config_parser.getint(
+                    s, "slow_send_chunksize"
+                )
 
 
 class boardScriptConnector(ScriptConnector):

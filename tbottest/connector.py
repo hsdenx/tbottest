@@ -164,6 +164,28 @@ class PicocomConnector(connector.ConsoleConnector):
         """
         return False
 
+    @property
+    def slow_send_delay(self) -> typing.Optional[float]:
+        """
+        seconds to wait after each chunk sent to the console, see
+        :py:attr:`tbot.machine.channel.Channel.slow_send_delay`
+
+        Some consoles drop characters when a whole line arrives at once.
+
+        default: None, keep the value of the channel
+        """
+        return None
+
+    @property
+    def slow_send_chunksize(self) -> typing.Optional[int]:
+        """
+        maximum number of bytes sent at once, see
+        :py:attr:`tbot.machine.channel.Channel.slow_send_chunksize`
+
+        default: None, keep the value of the channel
+        """
+        return None
+
     @contextlib.contextmanager
     def picocomconnect(self, mach: linux.LinuxShell) -> channel.Channel:
         args = []
@@ -176,6 +198,10 @@ class PicocomConnector(connector.ConsoleConnector):
         args.append(self.device)
 
         ch = mach.open_channel("picocom", *args)
+        if self.slow_send_delay is not None:
+            ch.slow_send_delay = self.slow_send_delay
+        if self.slow_send_chunksize is not None:
+            ch.slow_send_chunksize = self.slow_send_chunksize
         try:
             yield ch
         finally:

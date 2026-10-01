@@ -359,6 +359,12 @@ Here as example wandboard.
         "device", "linux device name for the serial device on lab host", "/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller-if00-port0"
         "delay", "delay for power off", "3"
         "noreset", "set picocom noreset parameter", "True"
+        "slow_send_delay", "optional, seconds to wait after each chunk sent to the console", "0.01"
+        "slow_send_chunksize", "optional, maximum number of bytes sent at once", "1"
+
+Without ``slow_send_delay`` and ``slow_send_chunksize`` the channel sends
+8 bytes and then waits 10 ms. Consoles that still drop characters (the
+echo of a command misses letters) need smaller chunks, down to 1.
 
 
 [KERMIT_BOARDNAME]

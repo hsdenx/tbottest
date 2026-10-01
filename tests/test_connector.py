@@ -138,3 +138,47 @@ class TestTelnetConnect:
         with pytest.raises(RuntimeError, match="telnet connection refused"):
             with Board().telnetconnect(mach):
                 pass
+
+
+class PicocomChannel(FakeChannel):
+    def __init__(self):
+        super().__init__()
+        self.slow_send_delay = 0.01
+        self.slow_send_chunksize = 8
+
+
+class PicocomMach(FakeMach):
+    def open_channel(self, *args):
+        self.args = args
+        self.ch = PicocomChannel()
+        return self.ch
+
+
+class PicocomBoard(connector.PicocomConnector):
+    baudrate = "115200"
+    device = "/dev/ttyUSB0"
+
+
+class PicocomBoardSlow(PicocomBoard):
+    slow_send_delay = 0.02
+    slow_send_chunksize = 1
+
+
+class TestPicocomSlowSend:
+    def test_defaults_keep_channel_values(self):
+        mach = PicocomMach()
+        with PicocomBoard().picocomconnect(mach) as ch:
+            assert ch.slow_send_delay == 0.01
+            assert ch.slow_send_chunksize == 8
+
+    def test_configured_values_reach_channel(self):
+        mach = PicocomMach()
+        with PicocomBoardSlow().picocomconnect(mach) as ch:
+            assert ch.slow_send_delay == 0.02
+            assert ch.slow_send_chunksize == 1
+
+    def test_args_unchanged(self):
+        mach = PicocomMach()
+        with PicocomBoardSlow().picocomconnect(mach):
+            pass
+        assert mach.args == ("picocom", "-b", "115200", "-l", "/dev/ttyUSB0")
