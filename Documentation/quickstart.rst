@@ -82,16 +82,29 @@ directory:
 
 For the example run above it defines:
 
-.. csv-table::
-        :header: "name", "what it is"
+``tb``
+    ``tbottest/newtbot_starter.py``
 
-        "tb", "``tbottest/newtbot_starter.py``"
-        "tbfoobar", "``tb`` with ``tbotconfig/foobar/args/argsfoobar``"
-        "tbfoobarnoeth", "``tb`` with ``argsfoobar-noeth``, which adds ``-fnoethinit -fnoboardethinit``"
-        "tbfoobarssh", "``tb`` with ``argsfoobar-noeth-ssh``, which adds ``-fnopoweroff -falways-on -fssh -fnouboot`` to that"
-        "tbfoovendorfoobar, tbfoovendorfoobar-noeth, tbfoovendorfoobar-ssh", "the three above with ``-f boardname:foobar`` added"
-        "$con, $conint, $tbtc", "the module paths ``tbotconfig``, ``tbotconfig.interactive``, ``tbottest.tc``"
-        "$foobar", "the testcase module of the board, ``tbotconfig.tc_foobar``"
+``tbfoobar``
+    ``tb`` with ``tbotconfig/foobar/args/argsfoobar``
+
+``tbfoobarnoeth``
+    ``tb`` with ``argsfoobar-noeth``, which adds
+    ``-fnoethinit -fnoboardethinit``
+
+``tbfoobarssh``
+    ``tb`` with ``argsfoobar-noeth-ssh``, which adds
+    ``-fnopoweroff -falways-on -fssh -fnouboot`` to that
+
+``tbfoovendorfoobar``, ``tbfoovendorfoobar-noeth``, ``tbfoovendorfoobar-ssh``
+    the three above with ``-f boardname:foobar`` added
+
+``$con``, ``$conint``, ``$tbtc``
+    the module paths ``tbotconfig``, ``tbotconfig.interactive`` and
+    ``tbottest.tc``
+
+``$foobar``
+    the testcase module of the board, ``tbotconfig.tc_foobar``
 
 The commands the script prints at the end use these aliases.
 
