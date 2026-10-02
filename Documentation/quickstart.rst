@@ -17,7 +17,8 @@ each. A unique prefix of a choice is enough (``tm`` for ``tm021``).
 Without ``--inter`` it creates the setup the github CI uses: board
 ``foo``, picocom and sispmctrl.
 
-Here an example run:
+Example run
+^^^^^^^^^^^
 
 .. code-block:: bash
 
