@@ -139,12 +139,50 @@ Here some setup tricks to get PI working as lab host
 My setup is always
 
 
-.. image:: images/hardware-setup.png
-   :alt: example hardware setup
-   :width: 600px
-   :align: center
+.. mermaid::
+
+    %%{init: {"flowchart": {"curve": "linear"}}}%%
+    flowchart LR
+        subgraph world["somewhere in the world"]
+            A["<b>tbot host</b><br/>Linux PC"]
+        end
+        subgraph local["local hardware setup"]
+            B["<div style='text-align:left'><b>Lab Host</b><br/>OS Linux<br/>- tftp server<br/>- nfs server<br/>- dhcp server<br/>- ...</div>"]
+            C["<b>DUT</b>"]
+        end
+        A -->|ssh| B
+        B -->|power on/off| C
+        B -->|serial| C
+        B -->|ethernet| C
+        B -->|more...| C
 
 with a raspberry PI as lab host.
+
+If tbot also builds the images, a build machine is added, connected to
+the lab host over ssh:
+
+.. mermaid::
+
+    %%{init: {"flowchart": {"curve": "linear"}}}%%
+    flowchart LR
+        subgraph world["somewhere in the world"]
+            A["<b>tbot host</b><br/>Linux PC"]
+        end
+        subgraph local["local hardware setup"]
+            B["<div style='text-align:left'><b>Lab Host</b><br/>OS Linux<br/>- tftp server<br/>- nfs server<br/>- dhcp server<br/>- ...</div>"]
+            C["<b>DUT</b>"]
+        end
+        subgraph build["build setup"]
+            D["<div style='text-align:left'><b>Build Machine</b><br/>OS Linux</div>"]
+        end
+        style build fill:#ffd8a8,stroke:#e8590c
+        A -->|ssh| B
+        A ~~~ D
+        D <-->|ssh| B
+        B -->|power on/off| C
+        B -->|serial| C
+        B -->|ethernet| C
+        B -->|more...| C
 
 setup ssh
 .........

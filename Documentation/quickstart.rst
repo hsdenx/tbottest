@@ -17,6 +17,12 @@ each. A unique prefix of a choice is enough (``tm`` for ``tm021``).
 Without ``--inter`` it creates the setup the github CI uses: board
 ``foo``, picocom and sispmctrl.
 
+Lab setup
+^^^^^^^^^
+
+How the tbot host, the lab host, the board (DUT) and a build machine are
+connected is shown in :ref:`labsetup`.
+
 Example run
 ^^^^^^^^^^^
 

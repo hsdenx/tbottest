@@ -44,6 +44,7 @@ version = release
 extensions = [
     "recommonmark",
     "sphinxcontrib.aafig",
+    "sphinxcontrib.mermaid",
     "sphinx.ext.autodoc",
     "sphinx.ext.coverage",
     "sphinx.ext.intersphinx",
