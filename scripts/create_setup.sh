@@ -13,6 +13,7 @@ tbottestbranch="master"
 # tbotconfig setup
 # default values, valid only for CI
 BOARDNAME=foo
+VENDOR=vendor
 LABNAME=lab8
 LABHOSTNAME=192.168.1.113
 LABUSER=pi
@@ -317,6 +318,7 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 		ask LABUSER "Username for login into lab"
 
 		ask BOARDNAME "Name of the board in your lab"
+		ask VENDOR "Vendor of the board (used in the aliases of setup.sh)"
 	fi
 
 	mkdir $BOARDNAME
@@ -380,26 +382,38 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	sed -i "s|@@IPSETUPSERVERIP@@|$IPSETUPSERVERIP|g" ./tbotconfig/$BOARDNAME/tbot.ini
 
 	#sed -i "s|@@@@|$|g" ./tbotconfig/$BOARDNAME/tbot.ini
+
+	# aliases for starting tbot, see the quick start documentation
+	if [ -e setup.sh ];then
+		echo "Found existing setup.sh, do nothing with it!"
+	else
+		cp tbottest/tbottest/tbotconfig/setup.sh setup.sh
+		sed -i "s|VENDOR|$VENDOR|g" setup.sh
+		sed -i "s|BOARDNAME|$BOARDNAME|g" setup.sh
+	fi
 fi
 
 # end print some starter help
-echo "add commandline completions with:
+echo "add commandline completions with:"
 echo "source tbottest/completions.sh"
 echo
-echo "start tbot with:"
-echo "tbottest/newtbot_starter.py @tbotconfig/$BOARDNAME/args/argsbase"
+echo "add the aliases for starting tbot with:"
+echo "source setup.sh"
+echo
+echo "start tbot with the aliases from setup.sh:"
+echo "tb${BOARDNAME} <testcase>"
 echo
 echo "Now edit lab config in tbotconfig/$BOARDNAME/tbot.ini"
 echo
-echo "check that \'ssh ${LABUSER}@${LABHOSTNAME}\' works without typing password
+echo "check that 'ssh ${LABUSER}@${LABHOSTNAME}' works without typing password"
 echo "than interactive lab should work:"
-echo "tbottest/newtbot_starter.py @tbotconfig/${BOARDNAME}/args/args${BOARDNAME}-noeth tbotconfig.interactive.lab"
+echo "tb${BOARDNAME}noeth \$conint.lab"
 echo
 echo "edit and adapt U-Boot settings in tbotconfig/$BOARDNAME/${BOARDNAME}.ini and interactive U-Boot should work"
-echo "tbottest/newtbot_starter.py @tbotconfig/${BOARDNAME}/args/args${BOARDNAME}-noeth tbotconfig.interactive.uboot"
+echo "tb${BOARDNAME}noeth \$conint.uboot"
 echo
-echo "edit linux settings in tbotconfig/$BOARDNAME/${BOARDNAME}.ini and interactive U-Boot should work"
-echo "tbottest/newtbot_starter.py @tbotconfig/${BOARDNAME}/args/args${BOARDNAME}-noeth tbotconfig.interactive.linux"
+echo "edit linux settings in tbotconfig/$BOARDNAME/${BOARDNAME}.ini and interactive Linux should work"
+echo "tb${BOARDNAME}noeth \$conint.linux"
 echo
 echo "start CI tests with"
-echo "tbottest/newtbot_starter.py @tbotconfig/${BOARDNAME}/args/args${BOARDNAME}-noeth tbotconfig.ci.tests.all"
+echo "tb${BOARDNAME}noeth \$con.ci.tests.all"

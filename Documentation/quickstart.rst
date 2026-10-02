@@ -33,6 +33,7 @@ Here an example run:
     Hostname of the lab: 192.168.1.113
     Username for login into lab: pi
     Name of the board in your lab: foobar
+    Vendor of the board (used in the aliases of setup.sh): foovendor
     Select console access for the board (picocom|kermit|scriptcom|telnet): picocom
     picocom baudrate: 115200
     picocom device: /dev/ttyUSB0
@@ -43,29 +44,66 @@ Here an example run:
     Sispmctl Port: 1
     Created picocom console and sispmctrl powerctrl setup
     add commandline completions with:
-    echo source tbottest/completions.sh
-    echo
-    echo start tbot with:
-    echo tbottest/newtbot_starter.py @tbotconfig/foobar/args/argsbase
-    echo
-    echo Now edit lab config in tbotconfig/foobar/tbot.ini
-    echo
-    echo check that 'ssh pi@192.168.1.113' works without typing password
+    source tbottest/completions.sh
+
+    add the aliases for starting tbot with:
+    source setup.sh
+
+    start tbot with the aliases from setup.sh:
+    tbfoobar <testcase>
+
+    Now edit lab config in tbotconfig/foobar/tbot.ini
+
+    check that 'ssh pi@192.168.1.113' works without typing password
     than interactive lab should work:
-    tbottest/newtbot_starter.py @tbotconfig/foobar/args/argsfoobar-noeth tbotconfig.interactive.lab
+    tbfoobarnoeth $conint.lab
 
     edit and adapt U-Boot settings in tbotconfig/foobar/foobar.ini and interactive U-Boot should work
-    tbottest/newtbot_starter.py @tbotconfig/foobar/args/argsfoobar-noeth tbotconfig.interactive.uboot
+    tbfoobarnoeth $conint.uboot
 
-    edit linux settings in tbotconfig/foobar/foobar.ini and interactive U-Boot should work
-    tbottest/newtbot_starter.py @tbotconfig/foobar/args/argsfoobar-noeth tbotconfig.interactive.linux
+    edit linux settings in tbotconfig/foobar/foobar.ini and interactive Linux should work
+    tbfoobarnoeth $conint.linux
 
+    start CI tests with
+    tbfoobarnoeth $con.ci.tests.all
+
+Aliases for starting tbot
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``create_setup.sh`` also writes ``setup.sh`` next to ``tbot``,
+``tbottest`` and ``tbotconfig``, from the example
+``tbottest/tbotconfig/setup.sh``, with the board name and the vendor
+filled in. An existing ``setup.sh`` is left alone. Source it in that
+directory:
+
+.. code-block:: bash
+
+    $ source setup.sh
+
+For the example run above it defines:
+
+.. csv-table::
+        :header: "name", "what it is"
+
+        "tb", "``tbottest/newtbot_starter.py``"
+        "tbfoobar", "``tb`` with ``tbotconfig/foobar/args/argsfoobar``"
+        "tbfoobarnoeth", "``tb`` with ``argsfoobar-noeth``, which adds ``-fnoethinit -fnoboardethinit``"
+        "tbfoobarssh", "``tb`` with ``argsfoobar-noeth-ssh``, which adds ``-fnopoweroff -falways-on -fssh -fnouboot`` to that"
+        "tbfoovendorfoobar, tbfoovendorfoobar-noeth, tbfoovendorfoobar-ssh", "the three above with ``-f boardname:foobar`` added"
+        "$con, $conint, $tbtc", "the module paths ``tbotconfig``, ``tbotconfig.interactive``, ``tbottest.tc``"
+        "$foobar", "the testcase module of the board, ``tbotconfig.tc_foobar``"
+
+The commands the script prints at the end use these aliases.
+
+The board name becomes a shell variable, so it must be a valid shell
+variable name (no ``-``).
 
 Test your new config and setup with:
 
 .. code-block:: bash
 
-    $ tbottest/newtbot_starter.py @tbotconfig/foobar/args/argsfoobar-noeth tbotconfig.interactive.lab
+    $ source setup.sh
+    $ tbfoobarnoeth $conint.lab
     tbot starting ...
     ├─TBOT.FLAGS {'boardfile:tbotconfig/foobar/foobar.ini', 'noethinit', 'picocom', 'inifile:tbotconfig/foobar/tbot.ini', 'do_power', 'useifconfig'}
     ├─boardname now foobar

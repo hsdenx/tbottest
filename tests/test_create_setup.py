@@ -22,7 +22,8 @@ REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 SCRIPT = os.path.join(REPO, "scripts", "create_setup.sh")
 BOARD = "testboard"
 
-LAB_ANSWERS = ["testlab", "192.168.1.200", "labuser", BOARD]
+VENDOR = "acme"
+LAB_ANSWERS = ["testlab", "192.168.1.200", "labuser", BOARD, VENDOR]
 
 # name: (section prefix, answers in the order asked, expected section
 # content, flag written to the args file or None)
@@ -98,8 +99,9 @@ POWERS = {
 
 
 def run_setup(tmp_path, answers, inter=True):
-    os.mkdir(tmp_path / "tbot")
-    os.symlink(REPO, tmp_path / "tbottest")
+    if not (tmp_path / "tbot").exists():
+        os.mkdir(tmp_path / "tbot")
+        os.symlink(REPO, tmp_path / "tbottest")
     args = ["bash", SCRIPT]
     if inter:
         args.append("--inter")
@@ -239,3 +241,67 @@ def test_end_of_input_stops(tmp_path):
     res = run_setup(tmp_path, LAB_ANSWERS + ["picocom"] + CONSOLES["picocom"][1])
     assert res.returncode != 0
     assert "No more input" in res.stderr
+
+
+def aliases(tmp_path):
+    """source setup.sh in bash and return its aliases and $board"""
+    res = subprocess.run(
+        ["bash", "-c", f"shopt -s expand_aliases; source setup.sh; alias; echo board=${BOARD}"],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert res.returncode == 0, res.stderr
+    out = {}
+    for line in res.stdout.splitlines():
+        if line.startswith("alias "):
+            name, value = line[len("alias "):].split("=", 1)
+            out[name] = value.strip("'")
+        elif line.startswith("board="):
+            out["$board"] = line[len("board="):]
+    return out
+
+
+def test_setup_sh(tmp_path):
+    res = run_setup(
+        tmp_path,
+        LAB_ANSWERS + ["picocom"] + CONSOLES["picocom"][1] + ["gpio"] + POWERS["gpio"][1],
+    )
+    assert res.returncode == 0, res.stdout + res.stderr
+
+    text = (tmp_path / "setup.sh").read_text()
+    assert "VENDOR" not in text
+    assert "BOARDNAME" not in text
+
+    a = aliases(tmp_path)
+    args = tmp_path / "tbotconfig" / BOARD / "args"
+    assert a["tb"] == str(tmp_path / "tbottest" / "newtbot_starter.py")
+    assert a[f"tb{BOARD}"] == f"tb @{args}/args{BOARD}"
+    assert a[f"tb{BOARD}noeth"] == f"tb @{args}/args{BOARD}-noeth"
+    assert a[f"tb{BOARD}ssh"] == f"tb @{args}/args{BOARD}-noeth-ssh"
+    assert a[f"tb{VENDOR}{BOARD}"] == f"tb{BOARD} -f boardname:{BOARD}"
+    assert a[f"tb{VENDOR}{BOARD}-noeth"] == f"tb{BOARD}noeth -f boardname:{BOARD}"
+    assert a[f"tb{VENDOR}{BOARD}-ssh"] == f"tb{BOARD}ssh -f boardname:{BOARD}"
+    assert a["$board"] == f"tbotconfig.tc_{BOARD}"
+
+    # everything the aliases point to exists
+    assert os.path.isfile(a["tb"])
+    for name in (f"tb{BOARD}", f"tb{BOARD}noeth", f"tb{BOARD}ssh"):
+        assert os.path.isfile(a[name].split("@", 1)[1])
+    assert (tmp_path / "tbotconfig" / f"tc_{BOARD}.py").is_file()
+
+
+def test_setup_sh_ci(tmp_path):
+    res = run_setup(tmp_path, [], inter=False)
+    assert res.returncode == 0, res.stdout + res.stderr
+    text = (tmp_path / "setup.sh").read_text()
+    assert 'alias tbvendorfoo="tbfoo -f boardname:foo"' in text
+
+
+def test_setup_sh_kept(tmp_path):
+    (tmp_path / "setup.sh").write_text("# my own\n")
+    res = run_setup(tmp_path, [], inter=False)
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert (tmp_path / "setup.sh").read_text() == "# my own\n"
+    assert "Found existing setup.sh" in res.stdout
