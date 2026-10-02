@@ -17,7 +17,7 @@ LABNAME=lab8
 LABHOSTNAME=192.168.1.113
 LABUSER=pi
 TERMPROG=picocom
-SELECTPOWERCTRL="none"
+SELECTPOWERCTRL=sispmctrl
 
 SCRIPTCOMSCRIPTNAME=./connect.sh
 SCRIPTCOMEXITSTRING=~~.
@@ -26,6 +26,34 @@ PICOCOMBAUDRATE=115200
 PICOCOMDEV=/dev/serial/by-id/usb-FTDI_C232HM-EDHSL-0_FT57MR3U-if00-port0
 PICOCOMDELAY=3
 PICOCOMNORESET=True
+
+KERMITCFGFILE=/home/pi/kermrc_BOARDNAME
+KERMITDELAY=3
+
+TELNETHOST=localhost
+TELNETPORT=2013
+TELNETDELAY=3
+
+# for github CI we need sispmctl for board we use for testing
+SISPMCTRLMAC=01:01:4f:09:5b
+SISPMCTRLPORT=1
+
+POWERGPIOPIN=17
+POWERGPIOSTATE=1
+
+POWERSHELLSCRIPTNAME=/tmp/power.sh
+
+POWERTFUID=Nt2
+POWERTFCHANNEL=1
+
+TBOXPOWERPIN=P1_5V_EN
+
+TM021DEVICE=/dev/relais
+TM021BAUDRATE=500000
+TM021TIMEOUT=5
+TM021ADDRESS=0
+TM021PORT=1
+TM021DEBUG=False
 
 IPSETUPMASK=255.255.255.0
 IPSETUPETH=00:30:D6:2C:A6:3D
@@ -66,104 +94,171 @@ case $key in
 esac
 done
 
-# $1 input_file
-# $2 search_string
-# $3 lines_to_delete
-delete_line()
+# console and power control choices, and the tbot.ini section of each
+consoles=("picocom" "kermit" "scriptcom" "telnet")
+declare -A consolesection=(
+	[picocom]=PICOCOM
+	[kermit]=KERMIT
+	[scriptcom]=SCRIPTCOM
+	[telnet]=TELNET
+)
+powerctrls=("gpio" "sispmctrl" "shell" "tinkerforge" "tbox" "tm021")
+declare -A powersection=(
+	[gpio]=GPIOPMCTRL
+	[sispmctrl]=SISPMCTRL
+	[shell]=POWERSHELLSCRIPT
+	[tinkerforge]=TF
+	[tbox]=TBOX
+	[tm021]=TM021
+)
+
+# $1 name of the variable to set
+# $2 prompt
+ask()
 {
-	input_file=$1
-	search_string=$2
-	lines_to_delete=$3
-	temp_file=/tmp/initworktbot
-	line_number=$(grep -n "$search_string" "$input_file" | cut -d: -f1)
+	echo -n "$2: "
+	if ! read -r "$1"; then
+		echo
+		echo "No more input, giving up" >&2
+		exit 1
+	fi
+}
 
-	echo "delete line " $1 $2 $3
-	echo "delete line " $line_number
-	if [ -n "$line_number" ]; then
-		# Use sed to delete the matched line and the next n lines
-		sed -e "${line_number},$((line_number + lines_to_delete))d" "$input_file" > "$temp_file"
+# $1 prompt
+# $2... the choices
+# Sets SELECTED to the choice that equals the input, or to the only
+# choice that starts with it.
+select_one()
+{
+	local prompt=$1
+	shift
+	local choices=("$@")
+	local choicestring
+	choicestring=$(IFS="|"; echo "${choices[*]}")
 
-		# Replace the original file with the temporary file
-		mv "$temp_file" "$input_file"
+	while true; do
+		ask SELECTINPUT "${prompt} (${choicestring})"
+		SELECTED=""
+		local matches=0
+		if [ -n "${SELECTINPUT}" ]; then
+			for c in "${choices[@]}"; do
+				if [ "${c}" == "${SELECTINPUT}" ]; then
+					SELECTED="${c}"
+					matches=1
+					break
+				fi
+				if [[ "${c}" == "${SELECTINPUT}"* ]]; then
+					SELECTED="${c}"
+					matches=$((matches + 1))
+				fi
+			done
+		fi
+		if [ ${matches} -eq 1 ]; then
+			return
+		fi
+		echo "Input ${SELECTINPUT} not supported, please enter one of ${choicestring}"
+	done
+}
 
-		#echo "Lines containing '$search_string' and the next $lines_to_delete lines deleted."
-	else
-		echo "Search string not found in the file."
+# $1 ini file
+# $2 section name
+# Delete the section from its header up to and including the next empty
+# line.
+delete_section()
+{
+	awk -v hdr="[$2]" '
+		$0 == hdr { skip = 1; next }
+		skip && /^$/ { skip = 0; next }
+		!skip { print }
+	' "$1" > "$1.tmp"
+	mv "$1.tmp" "$1"
+}
+
+# ask for the console and the power control of the board, and their
+# settings
+ask_tbot_ini()
+{
+	select_one "Select console access for the board" "${consoles[@]}"
+	TERMPROG="${SELECTED}"
+
+	if [ "${TERMPROG}" == "picocom" ]; then
+		ask PICOCOMBAUDRATE "picocom baudrate"
+		ask PICOCOMDEV "picocom device"
+		ask PICOCOMDELAY "picocom delay after exit"
+		ask PICOCOMNORESET "picocom noreset (True|False)"
+	elif [ "${TERMPROG}" == "kermit" ]; then
+		ask KERMITCFGFILE "kermit config file"
+		ask KERMITDELAY "kermit delay after exit"
+	elif [ "${TERMPROG}" == "scriptcom" ]; then
+		ask SCRIPTCOMSCRIPTNAME "name of the console script"
+		ask SCRIPTCOMEXITSTRING "string that exits the console script"
+	elif [ "${TERMPROG}" == "telnet" ]; then
+		ask TELNETHOST "telnet host"
+		ask TELNETPORT "telnet port"
+		ask TELNETDELAY "telnet delay after exit"
+	fi
+
+	select_one "Select power switch method for the board" "${powerctrls[@]}"
+	SELECTPOWERCTRL="${SELECTED}"
+
+	if [ "${SELECTPOWERCTRL}" == "gpio" ]; then
+		ask POWERGPIOPIN "gpio pin nr"
+		ask POWERGPIOSTATE "gpio pin state"
+	elif [ "${SELECTPOWERCTRL}" == "shell" ]; then
+		ask POWERSHELLSCRIPTNAME "shell name of shell script"
+	elif [ "${SELECTPOWERCTRL}" == "sispmctrl" ]; then
+		ask SISPMCTRLMAC "Sispmctl MAC"
+		ask SISPMCTRLPORT "Sispmctl Port"
+	elif [ "${SELECTPOWERCTRL}" == "tinkerforge" ]; then
+		ask POWERTFUID "uid"
+		ask POWERTFCHANNEL "channel"
+	elif [ "${SELECTPOWERCTRL}" == "tbox" ]; then
+		ask TBOXPOWERPIN "tbox power pin"
+	elif [ "${SELECTPOWERCTRL}" == "tm021" ]; then
+		ask TM021DEVICE "tm021 device"
+		ask TM021BAUDRATE "tm021 baudrate"
+		ask TM021TIMEOUT "tm021 timeout"
+		ask TM021ADDRESS "tm021 relais address"
+		ask TM021PORT "tm021 relais port"
+		ask TM021DEBUG "tm021 debug (True|False)"
 	fi
 }
 
 # $1 path to tbot ini file
-create_tbot_ini()
+# Fill in the console and power control settings, then drop the
+# sections of the consoles and power controls not selected, so tbot
+# finds exactly one of each.
+fill_tbot_ini()
 {
 	filename=$1
-	powerctrlstrings=("gpio" "sispmctrl" "shell" "tinkerforge")
-	powerctrlstringall=""
-	for substring in "${powerctrlstrings[@]}"; do
-		powerctrlstringall+="$substring|"
+
+	for v in SCRIPTCOMSCRIPTNAME SCRIPTCOMEXITSTRING \
+		PICOCOMBAUDRATE PICOCOMDEV PICOCOMDELAY PICOCOMNORESET \
+		KERMITCFGFILE KERMITDELAY \
+		TELNETHOST TELNETPORT TELNETDELAY \
+		POWERGPIOPIN POWERGPIOSTATE POWERSHELLSCRIPTNAME \
+		SISPMCTRLMAC SISPMCTRLPORT POWERTFUID POWERTFCHANNEL \
+		TBOXPOWERPIN \
+		TM021DEVICE TM021BAUDRATE TM021TIMEOUT TM021ADDRESS TM021PORT TM021DEBUG; do
+		sed -i "s|@@${v}@@|${!v}|g" "${filename}"
 	done
-	FOUND="False"
 
-	while [ "${FOUND}" == "False" ];do
-		echo -n "Select power switch method for the board (${powerctrlstringall}) : "
-		read -r SELECTPOWERCTRL
-		for substring in "${powerctrlstrings[@]}"; do
-			if [[ "${substring}" =~ "${SELECTPOWERCTRL}" ]]; then
-				FOUND="True"
-				SELECTPOWERCTRL="${substring}"
-			fi
-		done
-
-		if [ "${FOUND}" == "False" ];then
-			echo "Input ${SELECTPOWERCTRL} not supported, please enter one of ${powerctrlstringall}"
+	for c in "${consoles[@]}"; do
+		if [ "${c}" != "${TERMPROG}" ]; then
+			delete_section "${filename}" "${consolesection[$c]}_BOARDNAME"
 		fi
 	done
-
-	if [ ${SELECTPOWERCTRL} == "gpio" ]; then
-		echo -n "gpio pin nr: "
-		read -r VALUE
-		sed -i "s|@@POWERGPIOPIN@@|$VALUE|g" $filename
-		echo -n "gpio pin state: "
-		read -r VALUE
-		sed -i "s|@@POWERGPIOSTATE@@|$VALUE|g" $filename
-	elif [ ${SELECTPOWERCTRL} == "shell" ]; then
-		echo -n "shell name of shell script: "
-		read -r VALUE
-		sed -i "s|@@POWERSHELLSCRIPTNAME@@|$VALUE|g" $filename
-	elif [ ${SELECTPOWERCTRL} == "sispmctrl" ]; then
-		echo -n "Sispmctl MAC: "
-		read -r VALUE
-		sed -i "s|@@SISPMCTRLMAC@@|$VALUE|g" $filename
-		echo -n "Sispmctl Port: "
-		read -r VALUE
-		sed -i "s|@@SISPMCTRLPORT@@|$VALUE|g" $filename
-	elif [ ${SELECTPOWERCTRL} == "tinkerforge" ]; then
-		echo -n "uid: "
-		read -r VALUE
-		sed -i "s|@@POWERTFUID@@|$VALUE|g" $filename
-		echo -n "channel: "
-		read -r VALUE
-		sed -i "s|@@POWERTFCHANNEL@@|$VALUE|g" $filename
+	for p in "${powerctrls[@]}"; do
+		if [ "${p}" != "${SELECTPOWERCTRL}" ]; then
+			delete_section "${filename}" "${powersection[$p]}_BOARDNAME"
+		fi
+	done
+	# the xmodem example uses the device of the PICOCOM section
+	if [ "${TERMPROG}" != "picocom" ]; then
+		delete_section "${filename}" "XMODEM_CONFIG_BOARDNAME"
 	fi
 
-	for substring in "${powerctrlstrings[@]}"; do
-		if [ ${SELECTPOWERCTRL} != $substring ]; then
-			echo "Delete ${substring} example"
-			if [[ ${substring} == "gpio" ]]; then
-				delete_line $filename "GPIOPMCTRL_BOARDNAME" 2
-			fi
-			if [[ ${substring} == "shell" ]]; then
-				delete_line $filename "POWERSHELLSCRIPT_BOARDNAME" 1
-			fi
-			if [[ ${substring} == "sispmctrl" ]]; then
-				delete_line $filename "SISPMCTRL_BOARDNAME" 2
-			fi
-			if [[ ${substring} == "tinkerforge" ]]; then
-				delete_line $filename "TF_BOARDNAME" 2
-			fi
-		fi
-	done
-
-	echo "Created ${SELECTPOWERCTRL} powerctrl setup"
+	echo "Created ${TERMPROG} console and ${SELECTPOWERCTRL} powerctrl setup"
 }
 
 ## clone and create repos
@@ -217,15 +312,11 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	if [ "${INTER}" == "yes" ];then
 		echo "Check that ssh login without password works!"
 
-		echo -n "Name of the lab: "
-		read -r LABNAME
-		echo -n "Hostname of the lab: "
-		read -r LABHOSTNAME
-		echo -n "Username for login into lab: "
-		read -r LABUSER
+		ask LABNAME "Name of the lab"
+		ask LABHOSTNAME "Hostname of the lab"
+		ask LABUSER "Username for login into lab"
 
-		echo -n "Name of the board in your lab: "
-		read -r BOARDNAME
+		ask BOARDNAME "Name of the board in your lab"
 	fi
 
 	mkdir $BOARDNAME
@@ -243,14 +334,18 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	cd ../..
 
 	if [ "${INTER}" == "yes" ];then
-		create_tbot_ini tbotconfig/$BOARDNAME/tbot.ini
+		ask_tbot_ini
 	fi
+	fill_tbot_ini tbotconfig/$BOARDNAME/tbot.ini
 
 	# prepare some argumentfiles
 	sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/args/argsbase
 
 	echo "@tbotconfig/${BOARDNAME}/args/argsbase" > ./tbotconfig/$BOARDNAME/args/args$BOARDNAME
-	echo "-f${TERMPROG}" >> ./tbotconfig/$BOARDNAME/args/args$BOARDNAME
+	# kermit has no flag, tbot picks it from the KERMIT section
+	if [ "${TERMPROG}" != "kermit" ]; then
+		echo "-f${TERMPROG}" >> ./tbotconfig/$BOARDNAME/args/args$BOARDNAME
+	fi
 
 	echo "@tbotconfig/${BOARDNAME}/args/args$BOARDNAME" > ./tbotconfig/$BOARDNAME/args/args$BOARDNAME-noeth
 	echo "-fnoethinit" >> ./tbotconfig/$BOARDNAME/args/args$BOARDNAME-noeth
@@ -279,25 +374,10 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	sed -i "s|@@LABHOSTNAME@@|$LABHOSTNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
 	sed -i "s|@@LABUSER@@|$LABUSER|g" ./tbotconfig/$BOARDNAME/tbot.ini
 
-	sed -i "s|@@SCRIPTCOMSCRIPTNAME@@|$SCRIPTCOMSCRIPTNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
-	sed -i "s|@@SCRIPTCOMEXITSTRING@@|$SCRIPTCOMEXITSTRING|g" ./tbotconfig/$BOARDNAME/tbot.ini
-
-	sed -i "s|@@PICOCOMBAUDRATE@@|$PICOCOMBAUDRATE|g" ./tbotconfig/$BOARDNAME/tbot.ini
-	sed -i "s|@@PICOCOMDEV@@|$PICOCOMDEV|g" ./tbotconfig/$BOARDNAME/tbot.ini
-	sed -i "s|@@PICOCOMDELAY@@|$PICOCOMDELAY|g" ./tbotconfig/$BOARDNAME/tbot.ini
-	sed -i "s|@@PICOCOMNORESET@@|$PICOCOMNORESET|g" ./tbotconfig/$BOARDNAME/tbot.ini
-
 	sed -i "s|@@IPSETUPMASK@@|$IPSETUPMASK|g" ./tbotconfig/$BOARDNAME/tbot.ini
 	sed -i "s|@@IPSETUPETH@@|$IPSETUPETH|g" ./tbotconfig/$BOARDNAME/tbot.ini
 	sed -i "s|@@IPSETUPIP@@|$IPSETUPIP|g" ./tbotconfig/$BOARDNAME/tbot.ini
 	sed -i "s|@@IPSETUPSERVERIP@@|$IPSETUPSERVERIP|g" ./tbotconfig/$BOARDNAME/tbot.ini
-
-	# for github CI we need sispmctl for board we use for testing
-	sed -i "s|@@SISPMCTRLMAC@@|01:01:4f:09:5b|g" ./tbotconfig/$BOARDNAME/tbot.ini
-	sed -i "s|@@SISPMCTRLPORT@@|1|g" ./tbotconfig/$BOARDNAME/tbot.ini
-	delete_line ./tbotconfig/$BOARDNAME/tbot.ini "GPIOPMCTRL_$BOARDNAME" 2
-	delete_line ./tbotconfig/$BOARDNAME/tbot.ini "POWERSHELLSCRIPT_$BOARDNAME" 1
-	delete_line ./tbotconfig/$BOARDNAME/tbot.ini "TF_$BOARDNAME" 2
 
 	#sed -i "s|@@@@|$|g" ./tbotconfig/$BOARDNAME/tbot.ini
 fi

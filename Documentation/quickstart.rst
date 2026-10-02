@@ -10,6 +10,13 @@ https://github.com/hsdenx/tbottest/tree/master/scripts/create_setup.sh
 
 which will create you a complete base setup, as described in `configuration`_.
 
+With ``--inter`` it asks for the console access and the power control of
+the board and their settings. The generated ``tbot.ini`` holds only the
+selected console and power control section, so tbot finds exactly one of
+each. A unique prefix of a choice is enough (``tm`` for ``tm021``).
+Without ``--inter`` it creates the setup the github CI uses: board
+``foo``, picocom and sispmctrl.
+
 Here an example run:
 
 .. code-block:: bash
@@ -17,16 +24,24 @@ Here an example run:
     $ wget -q https://github.com/hsdenx/tbottest/raw/master/scripts/create_setup.sh
     $ chmod 777 create_setup.sh
     $ ./create_setup.sh --inter
+    Cloning into 'tbot'...
+    [...]
+    Cloning into 'tbottest'...
+    [...]
+    Check that ssh login without password works!
     Name of the lab: foolabname
     Hostname of the lab: 192.168.1.113
     Username for login into lab: pi
     Name of the board in your lab: foobar
+    Select console access for the board (picocom|kermit|scriptcom|telnet): picocom
+    picocom baudrate: 115200
+    picocom device: /dev/ttyUSB0
+    picocom delay after exit: 3
+    picocom noreset (True|False): True
+    Select power switch method for the board (gpio|sispmctrl|shell|tinkerforge|tbox|tm021): sispmctrl
     Sispmctl MAC: 01:01:4f:09:5b
     Sispmctl Port: 1
-    Klone nach 'tbot' ...
-    [...]
-    Klone nach 'tbottest' ...
-    [...]
+    Created picocom console and sispmctrl powerctrl setup
     add commandline completions with:
     echo source tbottest/completions.sh
     echo
