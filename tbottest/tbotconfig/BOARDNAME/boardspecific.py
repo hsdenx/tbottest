@@ -76,7 +76,7 @@ def board_set_boardname() -> str:
 
     So you can have in one lab setup more than one boards
     """
-    # do not use selectableboardname flag
+    # do not use boardname flag
     print("SET BOARDNAME to BOARDNAME (This is only useful for documentation build!")
     BOARDNAME = "BOARDNAME"
     for f in tbot.flags:
@@ -203,8 +203,3 @@ def set_board_cfg(temp: str = None, filename: str = None):  # noqa: C901
                         f"Could not find 'nfs_base_path' key in section 'default' in {filename}"
                     )
         replace_in_file(filename, "@@TBOTLABBASENFSPATH@@", basepath)
-
-
-FLAGS = {
-    "selectableboardname": "set value of tbot.selectable.boardname format selectableboardname:<name>",
-}

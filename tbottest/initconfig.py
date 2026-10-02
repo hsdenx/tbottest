@@ -150,7 +150,7 @@ def generic_get_boardname():
     """
     return the boards name in your lab setup
 
-    setup the boardname through tbot.flag selectableboardname
+    setup the boardname through tbot.flag boardname, -f boardname:<NAME>
 
     You can overwrite this by defining your own board_set_boardname()
     in boardspecific.py if you need another approach.
@@ -162,15 +162,15 @@ def generic_get_boardname():
 
     if board_set_boardname is None:
         for f in tbot.flags:
-            if "selectableboardname" in f:
-                BOARDNAME = f.split(":")[1]
+            if f.startswith("boardname:"):
+                BOARDNAME = f.split(":", 1)[1]
                 return BOARDNAME
     else:
         BOARDNAME = board_set_boardname()
         return BOARDNAME
 
     raise RuntimeError(
-        "please set your boardname with tbot.flag -f selectableboardname:<NAME>"
+        "please set your boardname with tbot.flag -f boardname:<NAME>"
     )
 
 

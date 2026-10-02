@@ -174,8 +174,8 @@ is parsed. So you can adapt the ini files for your needs
 
         tbot.selectable.boardname = None
         for f in tbot.flags:
-            if "selectableboardname" in f:
-                tbot.selectable.boardname = f.split(":")[1]
+            if f.startswith("boardname:"):
+                tbot.selectable.boardname = f.split(":", 1)[1]
 
         if tbot.selectable.boardname == None:
             tbot.selectable.boardname = "wandboard"
@@ -192,7 +192,7 @@ called from initconfig.py generic_get_boardname()
 
 
     def board_set_boardname() -> str:
-        # do not use selectableboardname flag
+        # do not use boardname flag
         BOARDNAME = "foo"
         for f in tbot.flags:
             if "8G" in f:

@@ -12,6 +12,8 @@ IniConfig use it.
 import gc
 import os
 
+import pytest
+
 from conftest import load_definition
 
 INITCONFIG_PATH = os.path.join(
@@ -77,3 +79,49 @@ class TestSingleton:
         gc.collect()
         after = sum(1 for o in gc.get_objects() if isinstance(o, Cfg))
         assert after - before == 1
+
+
+def load_get_boardname(board_set_boardname=None):
+    mod = load_definition(
+        "tbottest_initconfig_generic_get_boardname_only",
+        INITCONFIG_PATH,
+        "generic_get_boardname",
+        extra_src="import tbot\nBOARDNAME = None\nboard_set_boardname = None",
+    )
+    mod.board_set_boardname = board_set_boardname
+    return mod
+
+
+class TestGenericGetBoardname:
+    def test_boardname_flag(self):
+        import tbot
+
+        tbot.flags = {"do_power", "boardname:foo"}
+        assert load_get_boardname().generic_get_boardname() == "foo"
+
+    def test_old_selectableboardname_flag_is_not_taken(self):
+        import tbot
+
+        tbot.flags = {"selectableboardname:foo"}
+        with pytest.raises(RuntimeError, match="-f boardname:<NAME>"):
+            load_get_boardname().generic_get_boardname()
+
+    def test_no_flag(self):
+        with pytest.raises(RuntimeError, match="-f boardname:<NAME>"):
+            load_get_boardname().generic_get_boardname()
+
+    def test_board_set_boardname_wins(self):
+        import tbot
+
+        tbot.flags = {"boardname:foo"}
+        mod = load_get_boardname(lambda: "bar")
+        assert mod.generic_get_boardname() == "bar"
+
+    def test_value_is_cached(self):
+        import tbot
+
+        tbot.flags = {"boardname:foo"}
+        mod = load_get_boardname()
+        assert mod.generic_get_boardname() == "foo"
+        tbot.flags = {"boardname:other"}
+        assert mod.generic_get_boardname() == "foo"
