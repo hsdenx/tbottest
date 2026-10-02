@@ -512,3 +512,11 @@ class IniConfig(metaclass=_Singleton):
         :param default: default value if key is not found
         """
         return init_get_default_config(self.config_parser, name, default)
+
+
+FLAGS = {
+    "boardname": (
+        "boardname:<name> sets the name of the board, used when boardspecific.py "
+        "does not define board_set_boardname()"
+    ),
+}
