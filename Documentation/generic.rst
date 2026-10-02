@@ -433,8 +433,8 @@ Here as example wandboard.
 .. csv-table:: [GPIOPMCTRL_wandboard]
         :header: "key", "value", "example"
 
-        "pin", "pin number of gpio pin", "17"
-        "state", "on state", "1"
+        "gpiopmctl_pin", "pin number of gpio pin", "17"
+        "gpiopmctl_state", "on state", "1"
 
 [POWERSHELLSCRIPT_BOARDNAME]
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
