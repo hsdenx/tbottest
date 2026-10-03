@@ -125,3 +125,66 @@ class TestLnxSetEthdevice:
         lnx = FakeShell({"ip"})
         mod.lnx_set_ethdevice(lnx, "eth0", ETHCFG)
         assert lnx.calls == IFCONFIG_CALLS
+
+
+def load_set_ethdevices(ini=None):
+    mod = load_set_ethdevice(ini)
+    for name in ("lnx_root_on_nfs", "lnx_set_ethdevices"):
+        part = load_definition(
+            f"tbottest_boardgeneric_{name}_only",
+            BOARDGENERIC_PATH,
+            name,
+            extra_src="import tbot",
+        )
+        setattr(mod, name, getattr(part, name))
+    # lnx_set_ethdevices() calls the other two by their global names
+    mod.lnx_set_ethdevices.__globals__.update(
+        lnx_root_on_nfs=mod.lnx_root_on_nfs, lnx_set_ethdevice=mod.lnx_set_ethdevice
+    )
+    return mod
+
+
+MOUNTS_NFS = """rootfs / rootfs rw 0 0
+192.168.3.1:/srv/nfs/abb/amc-tqm855m/nfs / nfs rw,relatime,vers=3 0 0
+proc /proc proc rw,relatime 0 0
+"""
+
+MOUNTS_FLASH = """/dev/root / jffs2 rw,relatime 0 0
+192.168.3.1:/srv/nfs/data /mnt nfs rw,relatime,vers=3 0 0
+proc /proc proc rw,relatime 0 0
+"""
+
+
+class MountsShell(FakeShell):
+    def __init__(self, commands, mounts):
+        super().__init__(commands)
+        self.mounts = mounts
+
+    def exec0(self, *args):
+        if args == ("cat", "/proc/mounts"):
+            return self.mounts
+        return super().exec0(*args)
+
+
+class TestLnxSetEthdevices:
+    def test_root_on_nfs_skips_the_setup(self):
+        lnx = MountsShell({"ip"}, MOUNTS_NFS)
+        load_set_ethdevices().lnx_set_ethdevices(lnx, {"eth0": ETHCFG})
+        assert lnx.calls == []
+
+    def test_root_on_flash_sets_up_every_device(self):
+        lnx = MountsShell({"ip"}, MOUNTS_FLASH)
+        load_set_ethdevices().lnx_set_ethdevices(lnx, {"eth0": ETHCFG, "eth1": ETHCFG})
+        assert [c[1:] for c in lnx.calls if c[0] == "exec0"] == [
+            ("ip", "link", "set", "eth0", "down"),
+            ("ip", "addr", "add", "192.168.3.20/255.255.255.0", "dev", "eth0"),
+            ("ip", "link", "set", "eth0", "up"),
+            ("ip", "link", "set", "eth1", "down"),
+            ("ip", "addr", "add", "192.168.3.20/255.255.255.0", "dev", "eth1"),
+            ("ip", "link", "set", "eth1", "up"),
+        ]
+
+    def test_nfs4_root(self):
+        mounts = MOUNTS_NFS.replace(" nfs ", " nfs4 ")
+        lnx = MountsShell({"ip"}, mounts)
+        assert load_set_ethdevices().lnx_root_on_nfs(lnx) is True

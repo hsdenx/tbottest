@@ -278,6 +278,38 @@ def lnx_set_ethdevice(lnx, dev: str, ethcfg: dict) -> None:
         )
 
 
+def lnx_root_on_nfs(lnx) -> bool:
+    """
+    :param lnx: linux shell on the board
+    :returns: True if the root filesystem of the board is mounted over NFS
+    """
+    for line in lnx.exec0("cat", "/proc/mounts").splitlines():
+        fields = line.split()
+        if len(fields) >= 3 and fields[1] == "/" and fields[2].startswith("nfs"):
+            return True
+    return False
+
+
+def lnx_set_ethdevices(lnx, ethdevices: dict) -> None:
+    """
+    set up all ethernet devices of the board with lnx_set_ethdevice()
+
+    Nothing is done when the root filesystem is mounted over NFS: the
+    kernel has set up the interface for it already, and taking it down
+    takes the root filesystem away from the board.
+
+    :param lnx: linux shell on the board
+    :param ethdevices: dictionary device name -> ethcfg, see
+        lnx_set_ethdevice()
+    """
+    if lnx_root_on_nfs(lnx):
+        tbot.log.message("root filesystem on NFS, ethernet setup skipped")
+        return
+
+    for dev, ethcfg in ethdevices.items():
+        lnx_set_ethdevice(lnx, dev, ethcfg)
+
+
 def add_death_strings(ch):
     dstr = ast.literal_eval(cfg.get_config("death_strings", "[]"))
     for m in dstr:
@@ -400,10 +432,7 @@ class GenericLinuxBoot(
         if "linux_no_cmd_after_login" in tbot.flags:
             return
         if "noboardethinit" not in tbot.flags:
-            ethdevices = cfglab.ethdevices[ini.generic_get_boardname()]
-            for dev in ethdevices:
-                ethcfg = cfglab.ethdevices[ini.generic_get_boardname()][dev]
-                lnx_set_ethdevice(self, dev, ethcfg)
+            lnx_set_ethdevices(self, cfglab.ethdevices[ini.generic_get_boardname()])
 
             lx_init_timeout = ast.literal_eval(self.cfgp.get_config("linux_init_timeout", "None"))
             if lx_init_timeout is not None:
@@ -456,10 +485,7 @@ class GenericLinuxBootwithoutUBoot(
         if "noboardethinit" in tbot.flags:
             return
 
-        ethdevices = cfglab.ethdevices[ini.generic_get_boardname()]
-        for dev in ethdevices:
-            ethcfg = cfglab.ethdevices[ini.generic_get_boardname()][dev]
-            lnx_set_ethdevice(self, dev, ethcfg)
+        lnx_set_ethdevices(self, cfglab.ethdevices[ini.generic_get_boardname()])
 
 
 class GenericLinuxAlwaysOn(_WorkdirTmpdirMixin, board.Connector, BOARD_LINUX_SHELL):
