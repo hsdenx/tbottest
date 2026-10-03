@@ -125,3 +125,79 @@ class TestGenericGetBoardname:
         assert mod.generic_get_boardname() == "foo"
         tbot.flags = {"boardname:other"}
         assert mod.generic_get_boardname() == "foo"
+
+
+def load_poweron_cmds():
+    return load_definition(
+        "tbottest_initconfig_bdi2000_poweron_cmds_only",
+        INITCONFIG_PATH,
+        "bdi2000_poweron_cmds",
+        extra_src="import tbot",
+    )
+
+
+CMDS = {
+    "default": ["reset run"],
+    "nowdt": ["reset", "go 0x40000100"],
+}
+
+
+class TestBdi2000PoweronCmds:
+    def test_list_without_flag(self):
+        assert load_poweron_cmds().bdi2000_poweron_cmds(["reset run"]) == [
+            "reset run"
+        ]
+
+    def test_list_with_none_flag(self):
+        import tbot
+
+        tbot.flags = {"poweron_cmds:None"}
+        assert load_poweron_cmds().bdi2000_poweron_cmds(["reset run"]) == []
+
+    def test_list_with_name_flag(self):
+        import tbot
+
+        tbot.flags = {"poweron_cmds:nowdt"}
+        with pytest.raises(RuntimeError, match="is a list"):
+            load_poweron_cmds().bdi2000_poweron_cmds(["reset run"])
+
+    def test_dict_without_flag_takes_default(self):
+        assert load_poweron_cmds().bdi2000_poweron_cmds(CMDS) == ["reset run"]
+
+    def test_dict_without_flag_and_default(self):
+        cmds = {"nowdt": CMDS["nowdt"]}
+        assert load_poweron_cmds().bdi2000_poweron_cmds(cmds) == []
+
+    def test_dict_with_name_flag(self):
+        import tbot
+
+        tbot.flags = {"boardname:amc", "poweron_cmds:nowdt"}
+        assert load_poweron_cmds().bdi2000_poweron_cmds(CMDS) == [
+            "reset",
+            "go 0x40000100",
+        ]
+
+    def test_dict_with_none_flag(self):
+        import tbot
+
+        tbot.flags = {"poweron_cmds:None"}
+        assert load_poweron_cmds().bdi2000_poweron_cmds(CMDS) == []
+
+    def test_dict_with_unknown_name(self):
+        import tbot
+
+        tbot.flags = {"poweron_cmds:foo"}
+        with pytest.raises(RuntimeError, match=r"known are \['default', 'nowdt'\]"):
+            load_poweron_cmds().bdi2000_poweron_cmds(CMDS)
+
+    def test_two_flags(self):
+        import tbot
+
+        tbot.flags = {"poweron_cmds:default", "poweron_cmds:nowdt"}
+        with pytest.raises(RuntimeError, match="more than one"):
+            load_poweron_cmds().bdi2000_poweron_cmds(CMDS)
+
+    def test_result_is_a_copy(self):
+        cmds = load_poweron_cmds().bdi2000_poweron_cmds(CMDS)
+        cmds.append("go")
+        assert CMDS["default"] == ["reset run"]

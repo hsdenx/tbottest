@@ -676,11 +676,26 @@ the init list started waits until the BDI reports it ``passed`` (and fails if
 it reports ``failed``), so ``poweron_cmds = ["reset", "go 0x40000100"]``
 starts the target only after the init list ran.
 
+``poweron_cmds`` can also be a dictionary of named command lists, for a
+board that is started in more than one way. The tbot flag
+``-f poweron_cmds:<name>`` selects the list to run; without the flag the
+entry ``default`` is taken, and no commands at all if there is none.
+``-f poweron_cmds:None`` skips the BDI2000 after power on completely,
+``poweron_wait_state`` included, for example when the board is started by
+hand on the BDI (:py:func:`tbottest.initconfig.bdi2000_poweron_cmds`).
+
+.. code-block:: ini
+
+    poweron_cmds = {
+        "default": ["reset run"],
+        "nowdt": ["reset", "go 0x40000100"],
+        }
+
 .. csv-table:: [BDI2000_<boardname>]
         :header: "key", "value", "example"
 
         "ip", "IP address of the BDI2000, reached with telnet from the lab host", "192.168.3.101"
-        "poweron_cmds", "optional list of BDI commands run after each power on of the board", "['reset run']"
+        "poweron_cmds", "optional list of BDI commands run after each power on of the board, or a dictionary of such lists selected with -f poweron_cmds:<name>", "['reset run']"
         "poweron_wait_state", "optional target state, as info reports it, to wait for before poweron_cmds", "debug mode"
         "poweron_timeout", "seconds to wait for poweron_wait_state, default 30", "30"
 

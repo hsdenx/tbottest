@@ -362,7 +362,7 @@ class boardControlSegger(BOARDCTL, machineinit.SeggerLoad):
 # run" while the BDI holds the CPU in reset), run them on the BDI2000
 class boardControlBDI2000(BOARDCTL, machineinit.BDI2000Cmds):
     def get_bdi2000_cmds(self):
-        return cfgt.bdi2000cfg[ini.generic_get_boardname()]["poweron_cmds"]
+        return _BDI2000_POWERON_CMDS
 
     def get_bdi2000_wait_state(self):
         return cfgt.bdi2000cfg[ini.generic_get_boardname()]["poweron_wait_state"]
@@ -381,6 +381,8 @@ class GenericBDI2000(TelnetConnector, BDI2000):
 
 
 _BDI2000CFG = cfgt.bdi2000cfg.get(ini.generic_get_boardname(), {})
+# selected with the flag poweron_cmds:<name>, empty for poweron_cmds:None
+_BDI2000_POWERON_CMDS = ini.bdi2000_poweron_cmds(_BDI2000CFG.get("poweron_cmds", []))
 
 if "uuuloader" in tbot.flags:
     BOARDCTRL = boardControlUUU
@@ -392,7 +394,7 @@ elif "seggerloader" in tbot.flags:
     BOARDCTRL = boardControlSegger
 elif "xmodemloader" in tbot.flags:
     BOARDCTRL = boardControlXmodem
-elif _BDI2000CFG.get("poweron_cmds"):
+elif _BDI2000_POWERON_CMDS:
     BOARDCTRL = boardControlBDI2000
 else:
     BOARDCTRL = BOARDCTL

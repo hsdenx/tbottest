@@ -174,6 +174,48 @@ def generic_get_boardname():
     )
 
 
+def bdi2000_poweron_cmds(cmds):
+    """
+    select the BDI2000 commands run after power on
+
+    poweron_cmds in the BDI2000_<boardname> section of tbot.ini is either
+    a list of commands, or a dictionary of named command lists. The tbot
+    flag poweron_cmds:<name> selects an entry of the dictionary; without
+    the flag the entry "default" is taken, if there is one.
+    poweron_cmds:None runs no commands at all, the board control then does
+    not talk to the BDI2000 after power on.
+
+    :param cmds: poweron_cmds as read from tbot.ini, list or dictionary
+    :returns: list of commands, empty if none are to be run
+    """
+    names = [
+        f.split(":", 1)[1] for f in tbot.flags if f.startswith("poweron_cmds:")
+    ]
+    if len(names) > 1:
+        raise RuntimeError(f"more than one flag poweron_cmds: {sorted(names)}")
+
+    name = names[0] if names else None
+    if name == "None":
+        return []
+
+    if isinstance(cmds, dict):
+        if name is None:
+            return list(cmds.get("default", []))
+        if name not in cmds:
+            raise RuntimeError(
+                f"flag poweron_cmds:{name}: no such entry in poweron_cmds, "
+                f"known are {sorted(cmds)} and None"
+            )
+        return list(cmds[name])
+
+    if name is not None:
+        raise RuntimeError(
+            f"flag poweron_cmds:{name}: poweron_cmds is a list, not a "
+            "dictionary of named lists; only poweron_cmds:None is possible"
+        )
+    return list(cmds)
+
+
 def copy_file(filename, newfile):
     """
     copy file filename to newfile
@@ -406,13 +448,15 @@ class IniTBotConfig(metaclass=_Singleton):
             if s.startswith("BDI2000_"):
                 nm = s.split("_", 1)[1]
                 try:
+                    # list, or dictionary of named lists, see
+                    # bdi2000_poweron_cmds()
                     cmds = ast.literal_eval(self.config_parser.get(s, "poweron_cmds"))
                 except Exception:
                     cmds = []
 
                 cfg = {
                     "ip": self.config_parser.get(s, "ip"),
-                    "poweron_cmds": list(cmds),
+                    "poweron_cmds": cmds,
                     "poweron_wait_state": self.config_parser.get(
                         s, "poweron_wait_state", fallback=None
                     ),
@@ -518,5 +562,10 @@ FLAGS = {
     "boardname": (
         "boardname:<name> sets the name of the board, used when boardspecific.py "
         "does not define board_set_boardname()"
+    ),
+    "poweron_cmds": (
+        "poweron_cmds:<name> selects the entry <name> of the dictionary "
+        "poweron_cmds in the BDI2000_<boardname> section of tbot.ini; "
+        "poweron_cmds:None runs no BDI2000 commands after power on"
     ),
 }
