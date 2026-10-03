@@ -52,6 +52,8 @@ class FakeChannel:
         self.answers = list(answers)
         self.prompt = None
         self.timeouts = []
+        self.log = []
+        self.expect_text = ""
 
     def sendline(self, s=""):
         self.sent.append(s)
@@ -71,7 +73,23 @@ class FakeChannel:
     def read_until_prompt(self, timeout=None):
         assert self.prompt is not None, "read without a prompt set"
         self.timeouts.append(timeout)
+        self.log.append(("prompt", self.sent[-1] if self.sent else None))
         return self.answers.pop(0) if self.answers else ""
+
+    def expect(self, patterns, timeout=None):
+        self.log.append(("expect", tuple(patterns)))
+        text = self.expect_text
+        for i, pat in enumerate(patterns):
+            idx = text.find(pat)
+            if idx != -1:
+                return types.SimpleNamespace(
+                    i=i, match=pat, before=text[:idx], after=text[idx + len(pat):]
+                )
+        raise TimeoutError("pattern not in expect_text")
+
+    def read(self, n=-1, timeout=None):
+        self.log.append(("read",))
+        raise TimeoutError()
 
 
 class FakeBDI(bdi2000.BDI2000Shell):
@@ -166,3 +184,56 @@ def test_wait_target_state_times_out(monkeypatch):
         bdi.wait_target_state("debug mode", timeout=2, interval=0.5)
     assert clock.now >= 2
     assert len(ch.sent) == 5
+
+
+RESET_STARTED = (
+    "reset\n- TARGET: processing user reset request\n"
+    "- TARGET: resetting target passed\n"
+    "- TARGET: processing target init list ...."
+)
+
+
+def test_reset_waits_for_the_end_of_the_init_list():
+    ch = FakeChannel(answers=[RESET_STARTED, "", "Breakpoint identification is 0"])
+    ch.expect_text = "\n- TARGET: processing target init list passed\n"
+    bdi = FakeBDI(ch)
+    with ch.with_prompt(bdi2000.BDI2000_PROMPT):
+        out = bdi.exec("reset")
+        assert "init list passed" in out
+        bdi.exec("bi", "0xc0600980")
+    # the next command goes out only after the wait and a fresh prompt
+    assert ch.sent == ["reset", "", "bi 0xc0600980"]
+    wait = ch.log.index(("expect", ("init list passed", "init list failed")))
+    fresh = ch.log.index(("prompt", ""))
+    bi = ch.log.index(("prompt", "bi 0xc0600980"))
+    assert wait < fresh < bi
+
+
+def test_no_wait_when_the_init_list_already_passed():
+    ch = FakeChannel(answers=[RESET_STARTED + "\n- TARGET: processing target init list passed"])
+    bdi = FakeBDI(ch)
+    with ch.with_prompt(bdi2000.BDI2000_PROMPT):
+        bdi.exec("reset")
+    assert not [e for e in ch.log if e[0] == "expect"]
+    assert ch.sent == ["reset"]
+
+
+def test_failed_init_list_raises():
+    ch = FakeChannel(answers=[RESET_STARTED, ""])
+    ch.expect_text = "\n- TARGET: processing target init list failed\n"
+    bdi = FakeBDI(ch)
+    with ch.with_prompt(bdi2000.BDI2000_PROMPT):
+        try:
+            bdi.exec("reset")
+        except RuntimeError as e:
+            assert "init list failed" in str(e)
+        else:
+            raise AssertionError("no RuntimeError on a failed init list")
+
+
+def test_commands_without_init_list_do_not_wait():
+    ch = FakeChannel(answers=["Breakpoint identification is 0"])
+    bdi = FakeBDI(ch)
+    with ch.with_prompt(bdi2000.BDI2000_PROMPT):
+        bdi.exec("bi", "0xc0600980")
+    assert not [e for e in ch.log if e[0] in ("expect", "read")]

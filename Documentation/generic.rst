@@ -670,6 +670,12 @@ BDI still waits for the target Vcc and a command sent then is lost; with
 ``poweron_wait_state`` set, the commands are only sent once the BDI command
 ``info`` reports that target state.
 
+After ``reset`` the BDI works through the init list of its configuration
+file, but prints its prompt before it is done. A command whose output shows
+the init list started waits until the BDI reports it ``passed`` (and fails if
+it reports ``failed``), so ``poweron_cmds = ["reset", "go 0x40000100"]``
+starts the target only after the init list ran.
+
 .. csv-table:: [BDI2000_<boardname>]
         :header: "key", "value", "example"
 
