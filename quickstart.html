@@ -1,0 +1,258 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Start &mdash; tbottest 0.0.1-348-g82143de documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=0fc419ee" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/documentation_options.js?v=b58b4987"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tbottest.generic" href="generic.html" />
+    <link rel="prev" title="tbot-test Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lab-setup">Lab setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-run">Example run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aliases-for-starting-tbot">Aliases for starting tbot</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Quick Start</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/quickstart.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quick-start">
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">¶</a></h1>
+<p>Please read also chapters <a class="reference internal" href="generic.html#genericconfiguration"><span class="std std-ref">configuration</span></a> and <a class="reference internal" href="generic.html#requirementslabhost"><span class="std std-ref">requirements for lab host</span></a>
+and to get a rough overview for the lab setup check <a class="reference internal" href="tips.html#labsetup"><span class="std std-ref">lab setup</span></a></p>
+<p>To get fast a working setup you can use the script:</p>
+<p><a class="reference external" href="https://github.com/hsdenx/tbottest/tree/master/scripts/create_setup.sh">https://github.com/hsdenx/tbottest/tree/master/scripts/create_setup.sh</a></p>
+<p>which will create you a complete base setup, as described in <a href="#id1"><span class="problematic" id="id2">`configuration`_</span></a>.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">--inter</span></code> it asks for the console access and the power control of
+the board and their settings. The generated <code class="docutils literal notranslate"><span class="pre">tbot.ini</span></code> holds only the
+selected console and power control section, so tbot finds exactly one of
+each. A unique prefix of a choice is enough (<code class="docutils literal notranslate"><span class="pre">tm</span></code> for <code class="docutils literal notranslate"><span class="pre">tm021</span></code>).
+Without <code class="docutils literal notranslate"><span class="pre">--inter</span></code> it creates the setup the github CI uses: board
+<code class="docutils literal notranslate"><span class="pre">foo</span></code>, picocom and sispmctrl.</p>
+<section id="lab-setup">
+<h2>Lab setup<a class="headerlink" href="#lab-setup" title="Link to this heading">¶</a></h2>
+<p>How the tbot host, the lab host, the board (DUT) and a build machine are
+connected is shown in <a class="reference internal" href="tips.html#labsetup"><span class="std std-ref">lab setup</span></a>.</p>
+</section>
+<section id="example-run">
+<h2>Example run<a class="headerlink" href="#example-run" title="Link to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>wget<span class="w"> </span>-q<span class="w"> </span>https://github.com/hsdenx/tbottest/raw/master/scripts/create_setup.sh
+$<span class="w"> </span>chmod<span class="w"> </span><span class="m">777</span><span class="w"> </span>create_setup.sh
+$<span class="w"> </span>./create_setup.sh<span class="w"> </span>--inter
+Cloning<span class="w"> </span>into<span class="w"> </span><span class="s1">'tbot'</span>...
+<span class="o">[</span>...<span class="o">]</span>
+Cloning<span class="w"> </span>into<span class="w"> </span><span class="s1">'tbottest'</span>...
+<span class="o">[</span>...<span class="o">]</span>
+Check<span class="w"> </span>that<span class="w"> </span>ssh<span class="w"> </span>login<span class="w"> </span>without<span class="w"> </span>password<span class="w"> </span>works!
+Name<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>lab:<span class="w"> </span>foolabname
+Hostname<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>lab:<span class="w"> </span><span class="m">192</span>.168.1.113
+Username<span class="w"> </span><span class="k">for</span><span class="w"> </span>login<span class="w"> </span>into<span class="w"> </span>lab:<span class="w"> </span>pi
+Name<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>board<span class="w"> </span><span class="k">in</span><span class="w"> </span>your<span class="w"> </span>lab:<span class="w"> </span>foobar
+Vendor<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>board<span class="w"> </span><span class="o">(</span>used<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>aliases<span class="w"> </span>of<span class="w"> </span>setup.sh<span class="o">)</span>:<span class="w"> </span>foovendor
+Select<span class="w"> </span>console<span class="w"> </span>access<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>board<span class="w"> </span><span class="o">(</span>picocom<span class="p">|</span>kermit<span class="p">|</span>scriptcom<span class="p">|</span>telnet<span class="o">)</span>:<span class="w"> </span>picocom
+picocom<span class="w"> </span>baudrate:<span class="w"> </span><span class="m">115200</span>
+picocom<span class="w"> </span>device:<span class="w"> </span>/dev/ttyUSB0
+picocom<span class="w"> </span>delay<span class="w"> </span>after<span class="w"> </span>exit:<span class="w"> </span><span class="m">3</span>
+picocom<span class="w"> </span>noreset<span class="w"> </span><span class="o">(</span>True<span class="p">|</span>False<span class="o">)</span>:<span class="w"> </span>True
+Select<span class="w"> </span>power<span class="w"> </span>switch<span class="w"> </span>method<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>board<span class="w"> </span><span class="o">(</span>gpio<span class="p">|</span>sispmctrl<span class="p">|</span>shell<span class="p">|</span>tinkerforge<span class="p">|</span>tbox<span class="p">|</span>tm021<span class="o">)</span>:<span class="w"> </span>sispmctrl
+Sispmctl<span class="w"> </span>MAC:<span class="w"> </span><span class="m">01</span>:01:4f:09:5b
+Sispmctl<span class="w"> </span>Port:<span class="w"> </span><span class="m">1</span>
+Created<span class="w"> </span>picocom<span class="w"> </span>console<span class="w"> </span>and<span class="w"> </span>sispmctrl<span class="w"> </span>powerctrl<span class="w"> </span>setup
+add<span class="w"> </span>commandline<span class="w"> </span>completions<span class="w"> </span>with:
+<span class="nb">source</span><span class="w"> </span>tbottest/completions.sh
+
+add<span class="w"> </span>the<span class="w"> </span>aliases<span class="w"> </span><span class="k">for</span><span class="w"> </span>starting<span class="w"> </span>tbot<span class="w"> </span>with:
+<span class="nb">source</span><span class="w"> </span>setup.sh
+
+start<span class="w"> </span>tbot<span class="w"> </span>with<span class="w"> </span>the<span class="w"> </span>aliases<span class="w"> </span>from<span class="w"> </span>setup.sh:
+tbfoobar<span class="w"> </span>&lt;testcase&gt;
+
+Now<span class="w"> </span>edit<span class="w"> </span>lab<span class="w"> </span>config<span class="w"> </span><span class="k">in</span><span class="w"> </span>tbotconfig/foobar/tbot.ini
+
+check<span class="w"> </span>that<span class="w"> </span><span class="s1">'ssh pi@192.168.1.113'</span><span class="w"> </span>works<span class="w"> </span>without<span class="w"> </span>typing<span class="w"> </span>password
+than<span class="w"> </span>interactive<span class="w"> </span>lab<span class="w"> </span>should<span class="w"> </span>work:
+tbfoobarnoeth<span class="w"> </span><span class="nv">$conint</span>.lab
+
+edit<span class="w"> </span>and<span class="w"> </span>adapt<span class="w"> </span>U-Boot<span class="w"> </span>settings<span class="w"> </span><span class="k">in</span><span class="w"> </span>tbotconfig/foobar/foobar.ini<span class="w"> </span>and<span class="w"> </span>interactive<span class="w"> </span>U-Boot<span class="w"> </span>should<span class="w"> </span>work
+tbfoobarnoeth<span class="w"> </span><span class="nv">$conint</span>.uboot
+
+edit<span class="w"> </span>linux<span class="w"> </span>settings<span class="w"> </span><span class="k">in</span><span class="w"> </span>tbotconfig/foobar/foobar.ini<span class="w"> </span>and<span class="w"> </span>interactive<span class="w"> </span>Linux<span class="w"> </span>should<span class="w"> </span>work
+tbfoobarnoeth<span class="w"> </span><span class="nv">$conint</span>.linux
+
+start<span class="w"> </span>CI<span class="w"> </span>tests<span class="w"> </span>with
+tbfoobarnoeth<span class="w"> </span><span class="nv">$con</span>.ci.tests.all
+</pre></div>
+</div>
+</section>
+<section id="aliases-for-starting-tbot">
+<h2>Aliases for starting tbot<a class="headerlink" href="#aliases-for-starting-tbot" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">create_setup.sh</span></code> also writes <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> next to <code class="docutils literal notranslate"><span class="pre">tbot</span></code>,
+<code class="docutils literal notranslate"><span class="pre">tbottest</span></code> and <code class="docutils literal notranslate"><span class="pre">tbotconfig</span></code>, from the example
+<code class="docutils literal notranslate"><span class="pre">tbottest/tbotconfig/setup.sh</span></code>, with the board name and the vendor
+filled in. An existing <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> is left alone. Source it in that
+directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>setup.sh
+</pre></div>
+</div>
+<p>For the example run above it defines:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">tb</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">tbottest/newtbot_starter.py</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tbfoobar</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">tb</span></code> with <code class="docutils literal notranslate"><span class="pre">tbotconfig/foobar/args/argsfoobar</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tbfoobarnoeth</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">tb</span></code> with <code class="docutils literal notranslate"><span class="pre">argsfoobar-noeth</span></code>, which adds
+<code class="docutils literal notranslate"><span class="pre">-fnoethinit</span> <span class="pre">-fnoboardethinit</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tbfoobarssh</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">tb</span></code> with <code class="docutils literal notranslate"><span class="pre">argsfoobar-noeth-ssh</span></code>, which adds
+<code class="docutils literal notranslate"><span class="pre">-fnopoweroff</span> <span class="pre">-falways-on</span> <span class="pre">-fssh</span> <span class="pre">-fnouboot</span></code> to that</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tbfoovendorfoobar</span></code>, <code class="docutils literal notranslate"><span class="pre">tbfoovendorfoobar-noeth</span></code>, <code class="docutils literal notranslate"><span class="pre">tbfoovendorfoobar-ssh</span></code></dt><dd><p>the three above with <code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">boardname:foobar</span></code> added</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">$con</span></code>, <code class="docutils literal notranslate"><span class="pre">$conint</span></code>, <code class="docutils literal notranslate"><span class="pre">$tbtc</span></code></dt><dd><p>the module paths <code class="docutils literal notranslate"><span class="pre">tbotconfig</span></code>, <code class="docutils literal notranslate"><span class="pre">tbotconfig.interactive</span></code> and
+<code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">$foobar</span></code></dt><dd><p>the testcase module of the board, <code class="docutils literal notranslate"><span class="pre">tbotconfig.tc_foobar</span></code></p>
+</dd>
+</dl>
+<p>The commands the script prints at the end use these aliases.</p>
+<p>The board name becomes a shell variable, so it must be a valid shell
+variable name (no <code class="docutils literal notranslate"><span class="pre">-</span></code>).</p>
+<p>Test your new config and setup with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>setup.sh
+$<span class="w"> </span>tbfoobarnoeth<span class="w"> </span><span class="nv">$conint</span>.lab
+tbot<span class="w"> </span>starting<span class="w"> </span>...
+├─TBOT.FLAGS<span class="w"> </span><span class="o">{</span><span class="s1">'boardfile:tbotconfig/foobar/foobar.ini'</span>,<span class="w"> </span><span class="s1">'noethinit'</span>,<span class="w"> </span><span class="s1">'picocom'</span>,<span class="w"> </span><span class="s1">'inifile:tbotconfig/foobar/tbot.ini'</span>,<span class="w"> </span><span class="s1">'do_power'</span>,<span class="w"> </span><span class="s1">'useifconfig'</span><span class="o">}</span>
+├─boardname<span class="w"> </span>now<span class="w"> </span>foobar
+├─Using<span class="w"> </span>kas<span class="w"> </span>file<span class="w"> </span>kas-denx-withdldir.yml
+FILENAME<span class="w">  </span>~/temp/tbotconfig/foobar/tbot.ini-modified
+├─Calling<span class="w"> </span>lab<span class="w"> </span>...
+│<span class="w">   </span>├─<span class="o">[</span>local<span class="o">]</span><span class="w"> </span>ssh<span class="w"> </span>-o<span class="w"> </span><span class="nv">BatchMode</span><span class="o">=</span>yes<span class="w"> </span>-i<span class="w"> </span>/home/pi/.ssh/id_rsa<span class="w"> </span>-p<span class="w"> </span><span class="m">22</span><span class="w"> </span>pi@192.168.1.113
+│<span class="w">   </span>├─Entering<span class="w"> </span>interactive<span class="w"> </span>shell<span class="w"> </span>...
+│<span class="w">   </span>├─Press<span class="w"> </span>CTRL+<span class="o">]</span><span class="w"> </span>three<span class="w"> </span><span class="nb">times</span><span class="w"> </span>within<span class="w"> </span><span class="m">1</span><span class="w"> </span>second<span class="w"> </span>to<span class="w"> </span>exit.
+
+foolabname:<span class="w"> </span>~&gt;<span class="w"> </span><span class="nb">exit</span>
+│<span class="w">   </span>├─Exiting<span class="w"> </span>interactive<span class="w"> </span>shell<span class="w"> </span>...
+│<span class="w">   </span>└─Done.<span class="w"> </span><span class="o">(</span><span class="m">3</span>.496s<span class="o">)</span>
+├─────────────────────────────────────────
+└─SUCCESS<span class="w"> </span><span class="o">(</span><span class="m">3</span>.576s<span class="o">)</span>
+$
+</pre></div>
+</div>
+<p>To be independent of the installed tbot on the system, you can use the
+tbot starter script:</p>
+<p><a class="reference external" href="https://github.com/hsdenx/tbottest/blob/master/newtbot_starter.py">https://github.com/hsdenx/tbottest/blob/master/newtbot_starter.py</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="tbot-test Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="generic.html" class="btn btn-neutral float-right" title="tbottest.generic" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

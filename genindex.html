@@ -1,0 +1,1286 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Index &mdash; tbottest 0.0.1-348-g82143de documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=0fc419ee" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/documentation_options.js?v=b58b4987"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+const defaultStyle = document.createElement('style');
+defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+`;
+document.head.appendChild(defaultStyle);
+
+const fullscreenStyle = document.createElement('style');
+fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+document.head.appendChild(fullscreenStyle);
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+    }
+    return false;
+};
+
+const load = async () => {
+    await mermaid.run();
+
+    const all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(load, 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(load, 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(load, 200);
+        return;
+    }
+
+    const darkTheme = isDarkTheme();
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    const modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    let previousScrollOffset = [window.scrollX, window.scrollY];
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    const allButtons = [];
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        container.appendChild(fullscreenBtn);
+        allButtons.push(fullscreenBtn);
+    });
+
+    // Update theme classes when theme changes
+    const updateTheme = () => {
+        const dark = isDarkTheme();
+        allButtons.forEach(btn => {
+            if (dark) {
+                btn.classList.add('dark-theme');
+            } else {
+                btn.classList.remove('dark-theme');
+            }
+        });
+        if (dark) {
+            modal.classList.add('dark-theme');
+            modalContent.classList.add('dark-theme');
+            closeBtn.classList.add('dark-theme');
+        } else {
+            modal.classList.remove('dark-theme');
+            modalContent.classList.remove('dark-theme');
+            closeBtn.classList.remove('dark-theme');
+        }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+};
+
+window.addEventListener("load", load);
+</script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Index</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#K"><strong>K</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#X"><strong>X</strong></a>
+ 
+</div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="machineinit.html#tbottest.machineinit.DFUUTIL._init_machine">_init_machine() (tbottest.machineinit.DFUUTIL method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_apply_uboot_patches">bm_apply_uboot_patches() (tbottest.common.ubootbuild.UBBUILDMAN method)</a>
+</li>
+      <li><a href="tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_build_board">bm_build_board() (tbottest.common.ubootbuild.UBBUILDMAN method)</a>
+</li>
+      <li><a href="tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_build_prepare">bm_build_prepare() (tbottest.common.ubootbuild.UBBUILDMAN method)</a>
+</li>
+      <li><a href="tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_copy_results2lab">bm_copy_results2lab() (tbottest.common.ubootbuild.UBBUILDMAN method)</a>
+</li>
+      <li><a href="tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_get_uboot_patches">bm_get_uboot_patches() (tbottest.common.ubootbuild.UBBUILDMAN method)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.can.board_lnx_cangen">board_lnx_cangen() (in module tbottest.tc.can)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.swu.board_lnx_check_swu">board_lnx_check_swu() (in module tbottest.tc.swu)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.cpu.board_lnx_cpufreq">board_lnx_cpufreq() (in module tbottest.tc.cpu)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.rs485.board_lnx_rs485">board_lnx_rs485() (in module tbottest.tc.rs485)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.swu.board_lnx_swu">board_lnx_swu() (in module tbottest.tc.swu)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.sensors.board_lnx_tempsensors">board_lnx_tempsensors() (in module tbottest.tc.sensors)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.tpm.board_lnx_tpm2">board_lnx_tpm2() (in module tbottest.tc.tpm)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.watchdog.board_lnx_watchdog_bites">board_lnx_watchdog_bites() (in module tbottest.tc.watchdog)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="boardspecific.html#tbottest.tbotconfig.boardspecific.board_set_boardname">board_set_boardname() (in module tbottest.tbotconfig.boardspecific)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.board_set_default">board_set_default() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.can.board_setup_can">board_setup_can() (in module tbottest.tc.can)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.swupdate.board_swu_update">board_swu_update() (in module tbottest.tc.swupdate)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.bootcount.board_ub_bootcount">board_ub_bootcount() (in module tbottest.tc.bootcount)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.board_ub_delete_emmc">board_ub_delete_emmc() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.board_ub_delete_env">board_ub_delete_env() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.uboot.board_ub_unit_test">board_ub_unit_test() (in module tbottest.tc.uboot)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.board_wait_for_device">board_wait_for_device() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_board_ipaddr">BOARDNAME_get_board_ipaddr() (in module tbottest.tbotconfig.boardspecific)</a>
+</li>
+      <li><a href="boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_lab_serverip">BOARDNAME_get_lab_serverip() (in module tbottest.tbotconfig.boardspecific)</a>
+</li>
+      <li><a href="boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_machinename">BOARDNAME_get_machinename() (in module tbottest.tbotconfig.boardspecific)</a>
+</li>
+      <li><a href="boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_rootfsname">BOARDNAME_get_rootfsname() (in module tbottest.tbotconfig.boardspecific)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="powercontrol.html#tbottest.powercontrol.TinkerforgeControl.channel">channel (tbottest.powercontrol.TinkerforgeControl property)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.yocto.check_yocto_build_install_sdk">check_yocto_build_install_sdk() (in module tbottest.tc.yocto)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tc.html#tbottest.tc.yocto.check_yocto_sdk_get_scriptname">check_yocto_sdk_get_scriptname() (in module tbottest.tc.yocto)</a>
+</li>
+      <li><a href="iniconfig.html#tbottest.initconfig.copy_file">copy_file() (in module tbottest.initconfig)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="machineinit.html#tbottest.machineinit.DFUUTIL">DFUUTIL (class in tbottest.machineinit)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="machineinit.html#tbottest.machineinit.DFUUTIL.dfuutil_loader_steps">dfuutil_loader_steps() (tbottest.machineinit.DFUUTIL method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tc.html#tbottest.tc.common.escape_ansi">escape_ansi() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.exec0_check">exec0_check() (in module tbottest.tc.common)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tc.html#tbottest.tc.common.exec_check">exec_check() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.ExecDeathStringError">ExecDeathStringError</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="iniconfig.html#tbottest.initconfig.find_in_file_and_append">find_in_file_and_append() (in module tbottest.initconfig)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="iniconfig.html#tbottest.initconfig.find_in_file_and_delete">find_in_file_and_delete() (in module tbottest.initconfig)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="iniconfig.html#tbottest.initconfig.generic_get_boardname">generic_get_boardname() (in module tbottest.initconfig)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.cpu.generic_get_socname">generic_get_socname() (in module tbottest.tc.cpu)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.generic_machine_dump">generic_machine_dump() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.generic_machine_dump_write">generic_machine_dump_write() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common_generic.get_bit_range">get_bit_range() (in module tbottest.tc.common_generic)</a>
+</li>
+      <li><a href="iniconfig.html#tbottest.initconfig.IniConfig.get_config">get_config() (tbottest.initconfig.IniConfig method)</a>
+</li>
+      <li><a href="iniconfig.html#tbottest.initconfig.IniConfig.get_config_int">get_config_int() (tbottest.initconfig.IniConfig method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="iniconfig.html#tbottest.initconfig.IniConfig.get_default_config">get_default_config() (tbottest.initconfig.IniConfig method)</a>
+</li>
+      <li><a href="machineinit.html#tbottest.machineinit.UsbSdpLoad.get_imx_usb_loader">get_imx_usb_loader() (tbottest.machineinit.UsbSdpLoad method)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.registermap.REGISTERMAP.get_registername_from_dict">get_registername_from_dict() (tbottest.tc.registermap.REGISTERMAP method)</a>
+</li>
+      <li><a href="machineinit.html#tbottest.machineinit.LauterbachLoad.get_trace32_config">get_trace32_config() (tbottest.machineinit.LauterbachLoad method)</a>
+</li>
+      <li><a href="machineinit.html#tbottest.machineinit.LauterbachLoad.get_trace32_script">get_trace32_script() (tbottest.machineinit.LauterbachLoad method)</a>
+</li>
+      <li><a href="machineinit.html#tbottest.machineinit.UUULoad.get_uuu_tool">get_uuu_tool() (tbottest.machineinit.UUULoad method)</a>
+</li>
+      <li><a href="powercontrol.html#tbottest.powercontrol.GpiopmControl">GpiopmControl (class in tbottest.powercontrol)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="iniconfig.html#tbottest.initconfig.IniConfig">IniConfig (class in tbottest.initconfig)</a>
+</li>
+      <li><a href="iniconfighelper.html#tbottest.initconfighelper.inifile_get_tbotboardfilename">inifile_get_tbotboardfilename() (in module tbottest.initconfighelper)</a>
+</li>
+      <li><a href="iniconfighelper.html#tbottest.initconfighelper.inifile_get_tbotfilename">inifile_get_tbotfilename() (in module tbottest.initconfighelper)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="iniconfig.html#tbottest.initconfig.init_get_config">init_get_config() (in module tbottest.initconfig)</a>
+</li>
+      <li><a href="iniconfig.html#tbottest.initconfig.IniTBotConfig">IniTBotConfig (class in tbottest.initconfig)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.process.is_busybox">is_busybox() (in module tbottest.tc.process)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tc.html#tbottest.tc.kas.KAS">KAS (class in tbottest.tc.kas)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.kas.KAS.kas_build">kas_build() (tbottest.tc.kas.KAS method)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.kas.kas_check_mounts">kas_check_mounts() (in module tbottest.tc.kas)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.kas.KAS.kas_checkout">kas_checkout() (tbottest.tc.kas.KAS method)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.kas.KAS.kas_copy">kas_copy() (tbottest.tc.kas.KAS method)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.kas.KAS.kas_get_basepath">kas_get_basepath() (tbottest.tc.kas.KAS method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tc.html#tbottest.tc.kas.KAS.kas_get_buildpath">kas_get_buildpath() (tbottest.tc.kas.KAS method)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.kas.KAS.kas_get_deploypath">kas_get_deploypath() (tbottest.tc.kas.KAS method)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.kas.KAS.kas_keep_config_args">kas_keep_config_args() (tbottest.tc.kas.KAS method)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.kas.kas_runtime_args_with_mounts">kas_runtime_args_with_mounts() (in module tbottest.tc.kas)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.kas.KAS.kas_shell">kas_shell() (tbottest.tc.kas.KAS method)</a>
+</li>
+      <li><a href="connector.html#tbottest.connector.KermitConnector.kermit_cfg_file">kermit_cfg_file (tbottest.connector.KermitConnector property)</a>
+</li>
+      <li><a href="connector.html#tbottest.connector.KermitConnector">KermitConnector (class in tbottest.connector)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tc.html#tbottest.tc.common.lab_check_part_exists_and_create">lab_check_part_exists_and_create() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="boardlocking.html#tbottest.common.boardlocking.lab_get_lock">lab_get_lock() (in module tbottest.common.boardlocking)</a>
+</li>
+      <li><a href="boardlocking.html#tbottest.common.boardlocking.lab_get_lock_info">lab_get_lock_info() (in module tbottest.common.boardlocking)</a>
+</li>
+      <li><a href="boardlocking.html#tbottest.common.boardlocking.lab_get_lockname">lab_get_lockname() (in module tbottest.common.boardlocking)</a>
+</li>
+      <li><a href="boardlocking.html#tbottest.common.boardlocking.lab_rm_lock">lab_rm_lock() (in module tbottest.common.boardlocking)</a>
+</li>
+      <li><a href="machineinit.html#tbottest.machineinit.LauterbachLoad">LauterbachLoad (class in tbottest.machineinit)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.bootcount.lnx_bootcount_reset_fw_setenv">lnx_bootcount_reset_fw_setenv() (in module tbottest.tc.bootcount)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.bootcount.lnx_bootcount_reset_nvmem">lnx_bootcount_reset_nvmem() (in module tbottest.tc.bootcount)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.swupdate.lnx_bootenv">lnx_bootenv() (in module tbottest.tc.swupdate)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.can.lnx_can_write_dump_compare">lnx_can_write_dump_compare() (in module tbottest.tc.can)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_check_beeper">lnx_check_beeper() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_check_cmd">lnx_check_cmd() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_check_dmesg">lnx_check_dmesg() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_check_revfile">lnx_check_revfile() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_command_check_dump_file">lnx_command_check_dump_file() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_command_create_dump_file">lnx_command_create_dump_file() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_compare_files">lnx_compare_files() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_create_file">lnx_create_file() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_create_random">lnx_create_random() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_create_revfile">lnx_create_revfile() (in module tbottest.tc.common)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tc.html#tbottest.tc.process.lnx_get_cpu_stats">lnx_get_cpu_stats() (in module tbottest.tc.process)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_get_hwaddr">lnx_get_hwaddr() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_get_ipaddr">lnx_get_ipaddr() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.process.lnx_get_process_cpu_usage">lnx_get_process_cpu_usage() (in module tbottest.tc.process)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_install_package">lnx_install_package() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.process.lnx_measure_process">lnx_measure_process() (in module tbottest.tc.process)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.process.lnx_measure_top">lnx_measure_top() (in module tbottest.tc.process)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.swupdate.lnx_mount_source">lnx_mount_source() (in module tbottest.tc.swupdate)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.mtd.lnx_mtd_dump">lnx_mtd_dump() (in module tbottest.tc.mtd)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.mtd.lnx_mtd_nvram">lnx_mtd_nvram() (in module tbottest.tc.mtd)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.mtd.lnx_mtd_nvram_reboot">lnx_mtd_nvram_reboot() (in module tbottest.tc.mtd)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.watchdog.lnx_pid_holds">lnx_pid_holds() (in module tbottest.tc.watchdog)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.watchdog.lnx_service_main_pid">lnx_service_main_pid() (in module tbottest.tc.watchdog)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_start_bin_with_timeout">lnx_start_bin_with_timeout() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.leds.lnx_test_led_simple">lnx_test_led_simple() (in module tbottest.tc.leds)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_wait_for_file">lnx_wait_for_file() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_wait_for_ip">lnx_wait_for_ip() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_wait_for_module">lnx_wait_for_module() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lnx_wait_for_process">lnx_wait_for_process() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lx_cmd_exists">lx_cmd_exists() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.lx_devmem2_get">lx_devmem2_get() (in module tbottest.tc.common)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    module
+
+      <ul>
+        <li><a href="boardlocking.html#module-0">tbottest.common.boardlocking</a>, <a href="boardlocking.html#module-tbottest.common.boardlocking">[1]</a>
+</li>
+        <li><a href="tc.html#module-tbottest.common.ubootbuild">tbottest.common.ubootbuild</a>
+</li>
+        <li><a href="connector.html#module-tbottest.connector">tbottest.connector</a>
+</li>
+        <li><a href="decorators.html#module-tbottest.decorators.py">tbottest.decorators.py</a>
+</li>
+        <li><a href="generic.html#module-tbottest.generic">tbottest.generic</a>
+</li>
+        <li><a href="iniconfig.html#module-tbottest.initconfig.py">tbottest.initconfig.py</a>
+</li>
+        <li><a href="iniconfighelper.html#module-tbottest.initconfighelper.py">tbottest.initconfighelper.py</a>
+</li>
+        <li><a href="machineinit.html#module-tbottest.machineinit">tbottest.machineinit</a>
+</li>
+        <li><a href="powercontrol.html#module-tbottest.powercontrol">tbottest.powercontrol</a>
+</li>
+        <li><a href="boardspecific.html#module-tbottest.tbotconfig.boardspecific">tbottest.tbotconfig.boardspecific</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.bootcount">tbottest.tc.bootcount</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.can">tbottest.tc.can</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.common">tbottest.tc.common</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.common_generic">tbottest.tc.common_generic</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.cpu">tbottest.tc.cpu</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.hab">tbottest.tc.hab</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.kas">tbottest.tc.kas</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.leds">tbottest.tc.leds</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.mtd">tbottest.tc.mtd</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.network">tbottest.tc.network</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.process">tbottest.tc.process</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.registermap">tbottest.tc.registermap</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.rs485">tbottest.tc.rs485</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.sensors">tbottest.tc.sensors</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.swu">tbottest.tc.swu</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.swupdate">tbottest.tc.swupdate</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.systemd">tbottest.tc.systemd</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.tpm">tbottest.tc.tpm</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.uboot">tbottest.tc.uboot</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.watchdog">tbottest.tc.watchdog</a>
+</li>
+        <li><a href="tc.html#module-tbottest.tc.yocto">tbottest.tc.yocto</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tc.html#tbottest.tc.network.network_linux_iperf">network_linux_iperf() (in module tbottest.tc.network)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="connector.html#tbottest.connector.PicocomConnector">PicocomConnector (class in tbottest.connector)</a>
+</li>
+      <li><a href="powercontrol.html#tbottest.powercontrol.PowerShellScriptControl">PowerShellScriptControl (class in tbottest.powercontrol)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.process.process_get_gnuplot_work_and_configpath">process_get_gnuplot_work_and_configpath() (in module tbottest.tc.process)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tc.html#tbottest.tc.process.ps_create_measurement_png">ps_create_measurement_png() (in module tbottest.tc.process)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.process.ps_parse_ps">ps_parse_ps() (in module tbottest.tc.process)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.process.ps_parse_top">ps_parse_top() (in module tbottest.tc.process)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tc.html#tbottest.tc.registermap.REGISTERMAP.register_load_map">register_load_map() (tbottest.tc.registermap.REGISTERMAP method)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.registermap.REGISTERMAP">REGISTERMAP (class in tbottest.tc.registermap)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_dump_register">registermap_dump_register() (tbottest.tc.registermap.REGISTERMAP method)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_dump_register_file">registermap_dump_register_file() (tbottest.tc.registermap.REGISTERMAP method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_nxp_search_address">registermap_nxp_search_address() (tbottest.tc.registermap.REGISTERMAP method)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_search_address">registermap_search_address() (tbottest.tc.registermap.REGISTERMAP method)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_stm32mp1_search_address">registermap_stm32mp1_search_address() (tbottest.tc.registermap.REGISTERMAP method)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.registermap.REGISTERMAP.registername_to_address">registername_to_address() (tbottest.tc.registermap.REGISTERMAP method)</a>
+</li>
+      <li><a href="iniconfig.html#tbottest.initconfig.replace_in_file">replace_in_file() (in module tbottest.initconfig)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="connector.html#tbottest.connector.ScriptConnector">ScriptConnector (class in tbottest.connector)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.search_multistring_in_multiline">search_multistring_in_multiline() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.search_string_in_multiline">search_string_in_multiline() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="boardspecific.html#tbottest.tbotconfig.boardspecific.set_board_cfg">set_board_cfg() (in module tbottest.tbotconfig.boardspecific)</a>
+</li>
+      <li><a href="boardspecific.html#tbottest.tbotconfig.boardspecific.set_ub_board_specific">set_ub_board_specific() (in module tbottest.tbotconfig.boardspecific)</a>
+</li>
+      <li><a href="powercontrol.html#tbottest.powercontrol.PowerShellScriptControl.shell_script">shell_script (tbottest.powercontrol.PowerShellScriptControl property)</a>
+</li>
+      <li><a href="powercontrol.html#tbottest.powercontrol.SispmControl">SispmControl (class in tbottest.powercontrol)</a>
+</li>
+      <li><a href="powercontrol.html#tbottest.powercontrol.SispmControl.sispmctl_device">sispmctl_device (tbottest.powercontrol.SispmControl property)</a>
+</li>
+      <li><a href="powercontrol.html#tbottest.powercontrol.SispmControl.sispmctl_port">sispmctl_port (tbottest.powercontrol.SispmControl property)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.sudo_subshell">sudo_subshell() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.swupdate.swu_check_bootenv">swu_check_bootenv() (in module tbottest.tc.swupdate)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tc.html#tbottest.tc.swupdate.swu_check_mounts">swu_check_mounts() (in module tbottest.tc.swupdate)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.swupdate.swu_curl_upload">swu_curl_upload() (in module tbottest.tc.swupdate)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.swupdate.SWU_DONE_OK">SWU_DONE_OK (in module tbottest.tc.swupdate)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.swupdate.swu_install">swu_install() (in module tbottest.tc.swupdate)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.swupdate.swu_journal_cursor">swu_journal_cursor() (in module tbottest.tc.swupdate)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.swupdate.SWU_PORT">SWU_PORT (in module tbottest.tc.swupdate)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.swupdate.swu_stop_progress">swu_stop_progress() (in module tbottest.tc.swupdate)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.swu.swu_swupdate_from_file">swu_swupdate_from_file() (in module tbottest.tc.swu)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.swupdate.swu_wait_result">swu_wait_result() (in module tbottest.tc.swupdate)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.systemd.systemd_active">systemd_active() (in module tbottest.tc.systemd)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.systemd.systemd_get_log_from_service">systemd_get_log_from_service() (in module tbottest.tc.systemd)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.systemd.systemd_stop_service">systemd_stop_service() (in module tbottest.tc.systemd)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tc.html#tbottest.tc.common.tbot_copy_file_to_board">tbot_copy_file_to_board() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="decorators.html#tbottest.decorators.tbot_save_flags">tbot_save_flags() (in module tbottest.decorators)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.tbot_start_script_on_board">tbot_start_script_on_board() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.tbot_start_script_on_lab">tbot_start_script_on_lab() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.tbot_start_thread">tbot_start_thread() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.tbot_stop_thread">tbot_stop_thread() (in module tbottest.tc.common)</a>
+</li>
+      <li>
+    tbottest.common.boardlocking
+
+      <ul>
+        <li><a href="boardlocking.html#module-0">module</a>, <a href="boardlocking.html#module-tbottest.common.boardlocking">[1]</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.common.ubootbuild
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.common.ubootbuild">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.connector
+
+      <ul>
+        <li><a href="connector.html#module-tbottest.connector">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.decorators.py
+
+      <ul>
+        <li><a href="decorators.html#module-tbottest.decorators.py">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.generic
+
+      <ul>
+        <li><a href="generic.html#module-tbottest.generic">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.initconfig.py
+
+      <ul>
+        <li><a href="iniconfig.html#module-tbottest.initconfig.py">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.initconfighelper.py
+
+      <ul>
+        <li><a href="iniconfighelper.html#module-tbottest.initconfighelper.py">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.machineinit
+
+      <ul>
+        <li><a href="machineinit.html#module-tbottest.machineinit">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.powercontrol
+
+      <ul>
+        <li><a href="powercontrol.html#module-tbottest.powercontrol">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tbotconfig.boardspecific
+
+      <ul>
+        <li><a href="boardspecific.html#module-tbottest.tbotconfig.boardspecific">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.bootcount
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.bootcount">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.can
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.can">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.common
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.common">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.common_generic
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.common_generic">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.cpu
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.cpu">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.hab
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.hab">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    tbottest.tc.kas
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.kas">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.leds
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.leds">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.mtd
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.mtd">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.network
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.network">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.process
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.process">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.registermap
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.registermap">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.rs485
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.rs485">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.sensors
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.sensors">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.swu
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.swu">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.swupdate
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.swupdate">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.systemd
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.systemd">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.tpm
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.tpm">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.uboot
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.uboot">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.watchdog
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.watchdog">module</a>
+</li>
+      </ul></li>
+      <li>
+    tbottest.tc.yocto
+
+      <ul>
+        <li><a href="tc.html#module-tbottest.tc.yocto">module</a>
+</li>
+      </ul></li>
+      <li><a href="powercontrol.html#tbottest.powercontrol.TboxCtrlControl.tbox_pid">tbox_pid (tbottest.powercontrol.TboxCtrlControl property)</a>
+</li>
+      <li><a href="powercontrol.html#tbottest.powercontrol.TboxCtrlControl.tbox_powerpin">tbox_powerpin (tbottest.powercontrol.TboxCtrlControl property)</a>
+</li>
+      <li><a href="powercontrol.html#tbottest.powercontrol.TboxCtrlControl.tbox_vid">tbox_vid (tbottest.powercontrol.TboxCtrlControl property)</a>
+</li>
+      <li><a href="powercontrol.html#tbottest.powercontrol.TboxCtrlControl">TboxCtrlControl (class in tbottest.powercontrol)</a>
+</li>
+      <li><a href="powercontrol.html#tbottest.powercontrol.TinkerforgeControl">TinkerforgeControl (class in tbottest.powercontrol)</a>
+</li>
+      <li><a href="powercontrol.html#tbottest.powercontrol.TM021Control">TM021Control (class in tbottest.powercontrol)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.process.top_create_measurement_png">top_create_measurement_png() (in module tbottest.tc.process)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tc.html#tbottest.tc.bootcount.ub_bootcount">ub_bootcount() (in module tbottest.tc.bootcount)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.hab.ub_check_hab_state">ub_check_hab_state() (in module tbottest.tc.hab)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.common.ub_check_i2c_dump">ub_check_i2c_dump() (in module tbottest.tc.common)</a>
+</li>
+      <li><a href="tc.html#tbottest.tc.uboot.ub_read_register">ub_read_register() (in module tbottest.tc.uboot)</a>
+</li>
+      <li><a href="tc.html#tbottest.common.ubootbuild.UBBUILDMAN">UBBUILDMAN (class in tbottest.common.ubootbuild)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="powercontrol.html#tbottest.powercontrol.TinkerforgeControl.uid">uid (tbottest.powercontrol.TinkerforgeControl property)</a>
+</li>
+      <li><a href="machineinit.html#tbottest.machineinit.UsbSdpLoad.usb_loader_bins">usb_loader_bins() (tbottest.machineinit.UsbSdpLoad method)</a>
+</li>
+      <li><a href="machineinit.html#tbottest.machineinit.UsbSdpLoad">UsbSdpLoad (class in tbottest.machineinit)</a>
+</li>
+      <li><a href="machineinit.html#tbottest.machineinit.UUULoad.uuu_loader_steps">uuu_loader_steps() (tbottest.machineinit.UUULoad method)</a>
+</li>
+      <li><a href="machineinit.html#tbottest.machineinit.UUULoad">UUULoad (class in tbottest.machineinit)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="X">X</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="machineinit.html#tbottest.machineinit.XMODEMLoad.xmodem_loader_device">xmodem_loader_device() (tbottest.machineinit.XMODEMLoad method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="machineinit.html#tbottest.machineinit.XMODEMLoad.xmodem_loader_steps">xmodem_loader_steps() (tbottest.machineinit.XMODEMLoad method)</a>
+</li>
+      <li><a href="machineinit.html#tbottest.machineinit.XMODEMLoad">XMODEMLoad (class in tbottest.machineinit)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
