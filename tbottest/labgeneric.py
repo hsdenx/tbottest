@@ -567,7 +567,9 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
         from tbottest.boardgeneric import cfggeneric
 
         cfg = cfggeneric
-        tmp = cfg.cfgp.get("default", "nfs_path")
+        tmp = cfg.get_default_config("nfs_path", None)
+        if tmp is None:
+            raise RuntimeError("nfs_path missing in section [default] of the board ini")
         if self.nfsboardbasedir is False:
             ret, log = self.exec("ls", tmp)
             if ret != 0:
