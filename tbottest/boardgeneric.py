@@ -227,6 +227,57 @@ class GenericUBoot(
             set_ub_board_specific(self)
 
 
+# command lnx_set_ethdevice() sets up the network with, "ip" or "ifconfig",
+# chosen by its first call
+LNX_NETCMD = None
+
+
+def lnx_set_ethdevice(lnx, dev: str, ethcfg: dict) -> None:
+    """
+    set ipaddr and netmask from ethcfg on the ethernet device dev of the
+    board, with ip or with ifconfig
+
+    Which of the two is taken, is configured with the key linux_netcmd in
+    the [TC] section of the board ini (BOARDNAME.ini):
+
+    - auto (default): ip if the board has it, else ifconfig. Checked with
+      "command -v ip", not with the exit code of "ip --help": iproute2
+      ends that with 255, busybox with 0.
+    - ip: always ip
+    - ifconfig: always ifconfig
+
+    The flag useifconfig takes ifconfig, whatever linux_netcmd says.
+    The choice is made once per tbot run and kept in LNX_NETCMD.
+
+    :param lnx: linux shell on the board
+    :param dev: name of the ethernet device, e.g. eth0
+    :param ethcfg: dictionary with the keys ipaddr and netmask
+    """
+    global LNX_NETCMD
+
+    if LNX_NETCMD is None:
+        if "useifconfig" in tbot.flags:
+            netcmd = "ifconfig"
+        else:
+            netcmd = cfg.get_config("linux_netcmd", "auto")
+            if netcmd == "auto":
+                netcmd = "ip" if lnx.test("command", "-v", "ip") else "ifconfig"
+            elif netcmd not in ("ip", "ifconfig"):
+                raise RuntimeError(
+                    f"linux_netcmd = {netcmd}: must be auto, ip or ifconfig"
+                )
+        LNX_NETCMD = netcmd
+
+    if LNX_NETCMD == "ip":
+        lnx.exec0("ip", "link", "set", dev, "down")
+        lnx.exec0("ip", "addr", "add", f'{ethcfg["ipaddr"]}/{ethcfg["netmask"]}', "dev", dev)
+        lnx.exec0("ip", "link", "set", dev, "up")
+    else:
+        lnx.exec0(
+            "ifconfig", dev, "down", ethcfg["ipaddr"], "netmask", ethcfg["netmask"], "up"
+        )
+
+
 def add_death_strings(ch):
     dstr = ast.literal_eval(cfg.get_config("death_strings", "[]"))
     for m in dstr:
@@ -352,46 +403,7 @@ class GenericLinuxBoot(
             ethdevices = cfglab.ethdevices[ini.generic_get_boardname()]
             for dev in ethdevices:
                 ethcfg = cfglab.ethdevices[ini.generic_get_boardname()][dev]
-                # try with ip
-                ret, out = self.exec("ip", "--help")
-                if "useifconfig" in tbot.flags:
-                    ret = 0
-
-                if ret == 255:
-                    # Yes, ip --help return 255 !?!?!?!?!
-                    self.exec0(
-                        "ip",
-                        "link",
-                        "set",
-                        dev,
-                        "down",
-                    )
-                    self.exec0(
-                        "ip",
-                        "addr",
-                        "add",
-                        f'{ethcfg["ipaddr"]}/{ethcfg["netmask"]}',
-                        "dev",
-                        dev,
-                    )
-                    self.exec0(
-                        "ip",
-                        "link",
-                        "set",
-                        dev,
-                        "up",
-                    )
-                else:
-                    # try with ifconfig
-                    self.exec0(
-                        "ifconfig",
-                        dev,
-                        "down",
-                        ethcfg["ipaddr"],
-                        "netmask",
-                        ethcfg["netmask"],
-                        "up",
-                    )
+                lnx_set_ethdevice(self, dev, ethcfg)
 
             lx_init_timeout = ast.literal_eval(self.cfgp.get_config("linux_init_timeout", "None"))
             if lx_init_timeout is not None:
@@ -447,15 +459,7 @@ class GenericLinuxBootwithoutUBoot(
         ethdevices = cfglab.ethdevices[ini.generic_get_boardname()]
         for dev in ethdevices:
             ethcfg = cfglab.ethdevices[ini.generic_get_boardname()][dev]
-            self.exec0(
-                "ifconfig",
-                dev,
-                "down",
-                ethcfg["ipaddr"],
-                "netmask",
-                ethcfg["netmask"],
-                "up",
-            )
+            lnx_set_ethdevice(self, dev, ethcfg)
 
 
 class GenericLinuxAlwaysOn(_WorkdirTmpdirMixin, board.Connector, BOARD_LINUX_SHELL):
@@ -530,5 +534,5 @@ FLAGS = {
     "set-ethconfig": "set ethernet config in u-boot",
     "nobootcon": "silent bootlogs on console",
     "bootcmd": "run bootcommand command in U-Boot shell format: bootcmd:<command>",
-    "useifconfig": "use oldstyle ifconfig instead of ip",
+    "useifconfig": "use oldstyle ifconfig instead of ip, overrides linux_netcmd",
 }

@@ -776,6 +776,7 @@ settings needed for linux testcases.
         "linux_login_delay", "login delay in seconds", "5", "1"
         "linux_boot_timeout", "Maximum time for Linux to reach the login prompt.", "None", "30"
         "linux_init_timeout", "If not None, timeout in seconds after ethernetconfig", "None", "2.0"
+        "linux_netcmd", "command the ethernet setup after login uses: auto takes ip if the board has it (checked once with command -v ip), else ifconfig; ip or ifconfig always take that one. The flag useifconfig takes ifconfig in any case", "auto", "ifconfig"
         "linux_init", "list of commands send after login. mode = exec or exec0", "[]", "[{'"mode'":'"exec0'", '"cmd'":'"echo Hallo'"}]"
         "shelltype", "linux login shell type (bash|ash)", "ash", "bash"
         "linux_plain_prompt", "True gives the interactive linux shell a plain <name>> prompt, without the color escapes and the directory that an old busybox ash prints literally (tbot's interactive_plain_prompt)", "False", "True"
