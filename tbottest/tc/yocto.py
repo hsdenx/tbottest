@@ -3,6 +3,17 @@ from tbot.machine import linux
 
 ENVCMD = None
 
+# hello world for checking an installed SDK
+SDK_HELLO_C = """#include <stdio.h>
+
+int main(void)
+{
+    printf("Hello World from the SDK\\n");
+    return 0;
+}
+"""
+SDK_HELLO_OUTPUT = "Hello World from the SDK"
+
 
 def yocto_sdk_envcmd_from_log(log: str, sdk_install_path: str):
     """
@@ -69,3 +80,42 @@ def check_yocto_sdk_get_scriptname(
     :param lnx: board linux machine
     """
     return ENVCMD
+
+
+@tbot.testcase
+def check_yocto_sdk_build_hello(
+    lnx: linux.LinuxShell = None,
+    envcmd: str = None,
+    builddir: linux.Path = None,
+) -> linux.Path:  # noqa: D107
+    """
+    build a hello world program with an installed SDK
+
+    :param lnx: linux machine the SDK is installed on
+    :param envcmd: environment setup script of the SDK, as
+        check_yocto_build_install_sdk() returns it
+    :param builddir: directory on lnx, created if missing
+    :returns: path of the program on lnx; run on the target it prints
+        SDK_HELLO_OUTPUT
+    """
+    if lnx is None:
+        raise RuntimeError("Please set linux shell machine")
+    if envcmd is None:
+        raise RuntimeError("Please set the environment setup script of the SDK")
+    if builddir is None:
+        raise RuntimeError("Please set the build directory")
+
+    lnx.exec0("mkdir", "-p", builddir)
+    src = builddir / "hello.c"
+    src.write_text(SDK_HELLO_C)
+    hello = builddir / "hello"
+    lnx.exec0("rm", "-f", hello)
+    # the environment script sets CC with the target flags, so it has to
+    # stay unquoted; a subshell keeps the SDK environment out of lnx
+    lnx.exec0(
+        linux.Raw(
+            f"(. {envcmd} && cd {builddir._local_str()} && $CC -o hello hello.c)"
+        )
+    )
+    lnx.exec0("ls", "-l", hello)
+    return hello
