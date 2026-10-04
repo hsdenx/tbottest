@@ -522,6 +522,17 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
         tmp = cfgt.config_parser.get(LABSECTIONNAME, "workdir")
         return linux.Workdir.static(self, tmp)
 
+    def testdir(self) -> "linux.path.Path[GenericLab]":
+        """
+        returns the directory for what testcases install or build on this
+        lab, key testdir in the lab section of tbot.ini, default
+        <workdir>/tbottests
+        """
+        tmp = cfgt.config_parser.get(LABSECTIONNAME, "testdir", fallback=None)
+        if not tmp:
+            tmp = self.workdir()._local_str() + "/tbottests"
+        return linux.Workdir.static(self, tmp)
+
     def tmpdir(self) -> "linux.path.Path[GenericLab]":
         """
         returns tbot tmpdir for this lab
@@ -832,6 +843,17 @@ class SSHMachine(connector.SSHConnector, linux.Bash):
     @property
     def workdir(self) -> "linux.Path[SSHMachine]":
         return linux.Workdir.static(self, self.wdir)
+
+    @property
+    def testdir(self) -> "linux.Path[SSHMachine]":
+        """
+        directory for what testcases install or build on this machine,
+        key testdir in [SSHMACHINE], default <workdir>/tbottests
+        """
+        tmp = cfgt.config_parser.get("SSHMACHINE", "testdir", fallback=None)
+        if not tmp:
+            tmp = self.wdir + "/tbottests"
+        return linux.Workdir.static(self, tmp)
 
     def init(self) -> None:
         # do stuff after login

@@ -20,6 +20,17 @@ LABGENERIC_PATH = os.path.join(
 )
 
 
+class _ConfigParser:
+    def __init__(self):
+        self.values = {}
+
+    def get(self, section, key, fallback=None):
+        return self.values.get((section, key), fallback)
+
+
+CFGT = types.SimpleNamespace(config_parser=_ConfigParser())
+
+
 def load_method(classname, methodname):
     src = open(LABGENERIC_PATH).read()
     for node in ast.parse(src).body:
@@ -37,7 +48,7 @@ def load_method(classname, methodname):
     linux = types.SimpleNamespace(
         Workdir=types.SimpleNamespace(static=lambda host, path: ("workdir", path))
     )
-    ns = {"linux": linux}
+    ns = {"linux": linux, "LABSECTIONNAME": "LABHOST", "cfgt": CFGT}
     exec(compile(def_src, LABGENERIC_PATH, "exec"), ns)
     return ns[methodname]
 
@@ -74,3 +85,30 @@ class TestNfsboardbasedir:
         nfsboardbasedir = load_method("GenericLab", "nfsboardbasedir")
         with pytest.raises(RuntimeError, match="nfs_path missing"):
             nfsboardbasedir(Lab())
+
+
+class _LocalPath(str):
+    def _local_str(self):
+        return str(self)
+
+
+class LabWithWorkdir:
+    def workdir(self):
+        return _LocalPath("/work/hs/tbot-workdir/amc")
+
+
+class TestLabTestdir:
+    def setup_method(self):
+        CFGT.config_parser.values = {}
+
+    def test_default_below_workdir(self):
+        testdir = load_method("GenericLab", "testdir")
+        assert testdir(LabWithWorkdir()) == (
+            "workdir",
+            "/work/hs/tbot-workdir/amc/tbottests",
+        )
+
+    def test_from_lab_section(self):
+        CFGT.config_parser.values[("LABHOST", "testdir")] = "/srv/tbottests"
+        testdir = load_method("GenericLab", "testdir")
+        assert testdir(LabWithWorkdir()) == ("workdir", "/srv/tbottests")

@@ -319,6 +319,14 @@ def add_death_strings(ch):
 _Self = TypeVar("_Self", bound="_WorkdirTmpdirMixin")
 
 
+def board_testdir() -> str:
+    """
+    path of the board's testdir, without a connection to the board:
+    testdir from the board ini, default /run/tbot-testdata/tbottests
+    """
+    return cfg.get_config("testdir", "/run/tbot-testdata/tbottests")
+
+
 class _WorkdirTmpdirMixin:
     """
     Shared workdir/tmpdir for the Generic* board classes below: they
@@ -340,6 +348,15 @@ class _WorkdirTmpdirMixin:
         returns tbot tmpdir for this lab
         """
         return linux.Workdir.static(self, "/tmp")
+
+    @property
+    def testdir(self: _Self) -> "linux.Path[_Self]":
+        """
+        directory for what testcases put on the board, key testdir
+        in the board ini, default <workdir>/tbottests. It has to be in the
+        root filesystem if testcases put files there through an NFS root.
+        """
+        return linux.Workdir.static(self, board_testdir())
 
 
 class GenericLinuxBoot(

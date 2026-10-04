@@ -37,6 +37,20 @@ class _BuilderPathsMixin:
             workdir = os.getcwd() + "/" + workdir
         return linux.Workdir.static(self, workdir)
 
+    @property
+    def testdir(self) -> "linux.Path[genericbuilder]":
+        """
+        directory for what testcases install or build on the build host,
+        key testdir, default <workdir>/tbottests; a relative path is taken
+        from the current directory, as for workdir
+        """
+        testdir = cfgt.config_parser.get(self.sn, "testdir", fallback=None)
+        if not testdir:
+            testdir = self.workdir._local_str() + "/tbottests"
+        elif testdir[0] != "/":
+            testdir = os.getcwd() + "/" + testdir
+        return linux.Workdir.static(self, testdir)
+
     def init(self) -> None:
         # cache key is per-class (not a shared literal): genericbuilder
         # and genericbuilderlocal each need their own initcmd run once,

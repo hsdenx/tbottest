@@ -88,6 +88,36 @@ class TestGenericbuilderConfig:
         assert gb.port == 2222
 
 
+class TestTestdir:
+    def test_default_below_workdir(self):
+        builders = load_builders(BASE_SECTIONS)
+        gb = builders.genericbuilder()
+        gb.exec0 = FakeExecHost().exec0
+        assert str(gb.testdir).endswith(os.getcwd() + "/relwork/tbottests")
+
+    def test_absolute_testdir(self):
+        sections = dict(BASE_SECTIONS)
+        sections["BUILDHOST"] = dict(sections["BUILDHOST"], testdir="/abs/tests")
+        builders = load_builders(sections)
+        gb = builders.genericbuilder()
+        gb.exec0 = FakeExecHost().exec0
+        assert str(gb.testdir).endswith("/abs/tests")
+
+    def test_relative_testdir_is_prefixed_with_cwd(self):
+        sections = dict(BASE_SECTIONS)
+        sections["BUILDHOST"] = dict(sections["BUILDHOST"], testdir="reltests")
+        builders = load_builders(sections)
+        gb = builders.genericbuilder()
+        gb.exec0 = FakeExecHost().exec0
+        assert str(gb.testdir).endswith(os.getcwd() + "/reltests")
+
+    def test_local_builder_has_it_too(self):
+        builders = load_builders(BASE_SECTIONS)
+        gbl = builders.genericbuilderlocal()
+        gbl.exec0 = FakeExecHost().exec0
+        assert str(gbl.testdir).endswith("/abs/localwork/tbottests")
+
+
 class TestGenericbuilderlocalConfig:
     def test_reads_buildhost_local_section(self):
         builders = load_builders(BASE_SECTIONS)

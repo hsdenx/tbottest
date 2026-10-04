@@ -188,3 +188,23 @@ class TestLnxSetEthdevices:
         mounts = MOUNTS_NFS.replace(" nfs ", " nfs4 ")
         lnx = MountsShell({"ip"}, mounts)
         assert load_set_ethdevices().lnx_root_on_nfs(lnx) is True
+
+
+def load_board_testdir(values):
+    mod = load_definition(
+        "tbottest_boardgeneric_board_testdir_only",
+        BOARDGENERIC_PATH,
+        "board_testdir",
+        extra_src="cfg = None",
+    )
+    mod.cfg = FakeIni(values)
+    return mod
+
+
+class TestBoardTestdir:
+    def test_default(self):
+        assert load_board_testdir({}).board_testdir() == "/run/tbot-testdata/tbottests"
+
+    def test_from_board_ini(self):
+        mod = load_board_testdir({"testdir": "/home/root/tbottests"})
+        assert mod.board_testdir() == "/home/root/tbottests"
