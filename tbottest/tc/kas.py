@@ -147,6 +147,17 @@ class KAS:
     kas shell and kas build get --keep-config-unchanged. It needs one
     earlier run without the flag, which set the build tree up.
 
+    kas_build_dir
+
+    optional build directory, relative to kas_get_basepath(), default
+    "build". It is passed to kas as KAS_BUILD_DIR, so several kas
+    configurations of one board, e.g. glibc and musl, each keep their own
+    build/conf and can be built one after the other with kaskeepconfig:
+
+    .. code-block:: python
+
+        "kas_build_dir" : "build-musl",
+
     kas_mounts
 
     list of directories the kas container gets mounted, each as
@@ -260,6 +271,7 @@ class KAS:
         self.kasconfigpath = None
         self.autoconf = None
         self.deploypath = None
+        self.kas_build_dir = None
 
         def _require(key: str, msg: str):
             if key not in self.cfg:
@@ -308,6 +320,9 @@ class KAS:
         self.build_machine = _require("build_machine", "please define build_machine")
         self.subdir = _require("subdir", "please configure subdir")
         self.deploypath = self.cfg.get("deploypath")
+        self.kas_build_dir = self.cfg.get("kas_build_dir")
+        if self.kas_build_dir:
+            self.buildsubpath = self.kas_build_dir
         self.kaslayer = _require("kaslayer", "please configure kaslayer")
         self.kaslayername = self.cfg.get("kaslayername")
         self.kaslayerbranch = _require(
@@ -403,6 +418,16 @@ class KAS:
                 for env in self.envinit:
                     self.bh.exec0(linux.Raw(env))
 
+    def kas_build_dir_env(self) -> list:
+        """
+        returns the KAS_BUILD_DIR setting for a kas call, if kas_build_dir
+        is configured
+        """
+        if not self.kas_build_dir:
+            return []
+        bd = self.kas_get_basepath() / self.buildsubpath
+        return [linux.Raw(f'KAS_BUILD_DIR="{bd._local_str()}"')]
+
     def kas_keep_config_args(self) -> list:
         """
         returns the kas option that keeps repo checkouts and build/conf
@@ -473,7 +498,11 @@ class KAS:
         # do not execute in case we use docker
         if self.container is False:
             self.bh.exec0(
-                *pre, self.kascmd, "checkout", self.kasconfigpath / self.kasconfigfile
+                *pre,
+                *self.kas_build_dir_env(),
+                self.kascmd,
+                "checkout",
+                self.kasconfigpath / self.kasconfigfile,
             )
 
         self.kas_create_autoconf()
@@ -534,6 +563,7 @@ class KAS:
         pre.append(linux.Raw(f"KAS_TARGET='{target}'"))
         # set KAS_TASK
         pre.append(f"KAS_TASK={task}")
+        pre += self.kas_build_dir_env()
         if self.bitbakeoptions:
             bitopt = " ".join(self.bitbakeoptions)
             post.append(linux.Raw(f"-- {bitopt}"))

@@ -212,3 +212,39 @@ class TestKeepConfig:
     def test_without_flag_checkout_does_work(self, flags):
         with pytest.raises(RuntimeError, match="no real host"):
             kas.KAS(base_cfg()).kas_checkout()
+
+
+class TestKasBuildDir:
+    """kas_build_dir: own build directory, passed as KAS_BUILD_DIR"""
+
+    class Host(FakeHost):
+        # kas_get_basepath() creates its workdir with exec0
+        def exec0(self, *a, **kw):
+            return ""
+
+    def test_default_is_build(self):
+        obj = kas.KAS(base_cfg())
+        assert obj.kas_build_dir is None
+        assert obj.buildsubpath == "build"
+        assert obj.kas_build_dir_env() == []
+
+    def test_build_dir_sets_buildpath_and_env(self):
+        obj = kas.KAS(base_cfg(buildhost=self.Host(), kas_build_dir="build-musl"))
+        assert obj.buildsubpath == "build-musl"
+        assert obj.kas_get_buildpath()._local_str() == "/work/bh/toptica/scale/build-musl"
+        env = obj.kas_build_dir_env()
+        assert [str(e) for e in env] == [
+            'KAS_BUILD_DIR="/work/bh/toptica/scale/build-musl"'
+        ]
+
+    def test_deploypath_is_below_the_build_dir(self):
+        obj = kas.KAS(
+            base_cfg(
+                buildhost=self.Host(),
+                kas_build_dir="build-glibc",
+                deploypath="deploy-abb-amc-glibc/images/amc-tqm855m",
+            )
+        )
+        assert obj.kas_get_deploypath()._local_str() == (
+            "/work/bh/toptica/scale/build-glibc/deploy-abb-amc-glibc/images/amc-tqm855m"
+        )
