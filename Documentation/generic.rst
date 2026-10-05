@@ -1029,41 +1029,56 @@ It is recommended to collect arguments in so called argumentsfiles, else you are
 ======================== ====================================================
 tbot flag                Description
 ======================== ====================================================
+always-on                board is already on, log into linux
+boardfile                format boardfile:<path>, the board ini file, relative to the tbotconfig directory or absolute; default the BOARDNAME.ini template
+boardname                format boardname:<name>, name of the board, used when boardspecific.py does not define board_set_boardname()
 bootcmd                  format bootcmd:<real bootcmd>, example bootcmd:net_nfs will execute "run net_nfs"
-buildname                format buildname:<name of builder>, select the used buildhost.
-labname                  format labname:<name of lab host>, select the used lab host (configure in tbot.ini with LABHOST_<name>] section)
-gpiopower                use a gpio pin for boards power control
-powershellscript         use a shellscript for boards power control
-tinkerforge              use tinkerforge for boards power control
-picocom                  use picocom for serial console
-scriptcom                use a script for serial console
-telnet                   use telnet for serial console
+buildername              format buildername:<name>, select the used build host, section BUILDHOST_<name> in tbot.ini; buildername:local builds on the host tbot runs on
+cmdtimestamp             prefix each command log line with a H:M:S timestamp, e.g. [boardname 07:22:26]
 dfuutilloader            load SPL/U-Boot with dfu-util tool
-uuuloader                load SPL/U-Boot with uuu tool from NXP
-xmodemloader             load SPL/U-Boot with sb tool (xmodem/ymodem)
-ignore_loglevel          add ignore_level to miscargs (deprecated, use set_ub_board_specific)
-enterinitramfs           enter initramfs, add enterinitramfs to miscargs(deprecated, use set_ub_board_specific)
+do_power                 tbot handles boards power
+docker                   if you need to login to a docker container with proxyjump
+emmc                     u-boot bootcmd "run boot_emmc" (deprecated, use flag bootcmd)
+enterinitramfs           enter initramfs, add enterinitramfs to miscargs (deprecated, use set_ub_board_specific)
+gpiopower                use a gpio pin for boards power control
+ignore_loglevel          add ignore_loglevel to miscargs (deprecated, use set_ub_board_specific)
+inifile                  format inifile:<path>, the tbot.ini file, relative to the tbotconfig directory or absolute; default the tbot.ini template
+kas                      u-boot bootcmd "run bootcmdkas"
+kaskeepconfig            keep the repo checkouts and build/conf of the kas build as they are, like kas --keep-config-unchanged
+kasskipcheckout          skip the kas checkout step
+lablockid                format lablockid:<yourlockid>, the lock id for board locking
+labname                  format labname:<name of lab host>, select the used lab host (configure in tbot.ini with LABHOST_<name> section)
+lauterbachloader         load SPL/U-Boot with Lauterbach TRACE32
+lauterbachusesshmachine  with lauterbachloader, run TRACE32 on the SSH machine of tbot.ini instead of the lab host
 linux_no_cmd_after_login set nothing after linux login (beside disable clutter)
 local                    enable if labhost and tbot host are the same (use SubprocessConnector)
+no-bootfit               with ssh, read the board's IP address from "ip route get 1" output that has two spaces before "src"
 noboardethinit           do no board ethinit in linux after login
-cmdtimestamp             prefix each command log line with a H:M:S timestamp, e.g. [boardname 07:22:26]
 nobootcon                set console to silent (deprecated, use set_ub_board_specific)
-yoctobuild               use images from yoctobuild
-ssh                      login to linux console through ssh (only possible if board already on and in linux)
-do_power                 tbot handles boards power
-always-on                board is already on, log into linux
+noethinit                do not set up the lab host's ethernet devices for the board (lab init)
+nopoweroff               do not power the board off
+nouboot                  boot into linux without U-Boot interaction; with ssh also without a login on the console
+outside                  if lab host is only reachable with proxyjump
+panic                    add death string "Kernel panic"
+picocom                  use picocom for serial console
+poweroffonstart          if set, power off board before powering on
+poweron_cmds             format poweron_cmds:<name>, select an entry of the dictionary poweron_cmds in the BDI2000 section of tbot.ini; poweron_cmds:None runs no BDI2000 commands after power on
+powershellscript         use a shellscript for boards power control
 rescue                   boot rescue system (deprecated, use flag bootcmd)
 rescuetftp               boot rescue system, rescue image loaded through tftp (deprecated, use flag bootcmd)
-emmc                     u-boot bootcmd "run boot_emmc" (deprecated, use flag bootcmd)
+rescueuuu                load the bootloader with the uuu tool and boot into the rescue image loaded with fastboot
+scriptcom                use a script for serial console
 sdcard                   u-boot bootcmd "run boot_mmc" (deprecated, use flag bootcmd)
-tftpfit                  u-boot bootcmd "run tftp_mmc" (deprecated, use flag bootcmd)
-panic                    add death string "Kernel panic"
-docker                   if you need to login to a docker container with proxyjump
-uboot_no_env_set         do not set any U-Boot Environment after U-Boot login
-set-ethconfig            setup ip config in U-Boot
-useifconfig              use ifconfig for ip setup, else ip
-poweroffonstart          if set, power off board before powering on
 seggerloader             use segger debugger for breathing life into board
-outside                  if lab host is only reachable with proxyjump
-lablockid                pass lab lockid with lockid:<yourlockid>
+set-ethconfig            setup ip config in U-Boot
+ssh                      login to linux console through ssh (only possible if board already on and in linux)
+telnet                   use telnet for serial console
+tftpfit                  u-boot bootcmd "run tftp_mmc" (deprecated, use flag bootcmd)
+tinkerforge              use tinkerforge for boards power control
+tmpfilepath              format tmpfilepath:<directory>, where tbot writes its copies of tbot.ini and the board ini; default next to them
+uboot_no_env_set         do not set any U-Boot Environment after U-Boot login
+usbloader                load SPL/U-Boot with imx_usb_loader
+useifconfig              use ifconfig instead of ip on every machine, also over linux_netcmd of the board ini
+uuuloader                load SPL/U-Boot with uuu tool from NXP
+xmodemloader             load SPL/U-Boot with sb tool (xmodem/ymodem)
 ======================== ====================================================

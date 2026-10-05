@@ -568,4 +568,7 @@ FLAGS = {
         "poweron_cmds in the BDI2000_<boardname> section of tbot.ini; "
         "poweron_cmds:None runs no BDI2000 commands after power on"
     ),
+    "boardfile": "boardfile:<path> board ini file, relative to the tbotconfig directory or absolute",
+    "inifile": "inifile:<path> tbot.ini file, relative to the tbotconfig directory or absolute",
+    "tmpfilepath": "tmpfilepath:<directory> where tbot writes its copies of tbot.ini and the board ini",
 }

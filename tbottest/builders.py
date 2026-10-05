@@ -152,4 +152,5 @@ FLAGS = {
         "section if passed to tbot. If not searches for BUILDHOST section. use "
         "name local to build on the machine, on which tbot is started"
     ),
+    "docker": "log in to a docker container with proxyjump",
 }

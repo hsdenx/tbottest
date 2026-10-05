@@ -529,4 +529,10 @@ FLAGS = {
     "nobootcon": "silent bootlogs on console",
     "bootcmd": "run bootcommand command in U-Boot shell format: bootcmd:<command>",
     "useifconfig": "use oldstyle ifconfig instead of ip on every machine, overrides linux_netcmd",
+    "enterinitramfs": "enter initramfs, add enterinitramfs to miscargs",
+    "kas": 'U-Boot bootcmd "run bootcmdkas"',
+    "linux_no_cmd_after_login": "set nothing after linux login (beside disable clutter)",
+    "no-bootfit": 'with ssh, read the board IP from "ip route get 1" output with two spaces before src',
+    "noboardethinit": "no ethernet setup of the board in linux after login",
+    "uboot_no_env_set": "do not set any U-Boot environment after U-Boot login",
 }

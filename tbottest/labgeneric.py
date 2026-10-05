@@ -927,9 +927,7 @@ def register_machines(ctx):
 
 FLAGS = {
     "local": "enable if labhost and tbot host are the same (use SubprocessConnector)",
-    "yoctobuild": "use u-boot images from yocto build",
     "ssh": "use as boards console login with ssh",
-    "withscript": "also load a script with uuu tool into ram",
     "uuuloader": "load SPL/U-Boot with uuu tool into RAM",
     "picocom": "use piccom for accessing serial console",
     "scriptcom": "use a script for accessing serial console",
@@ -938,4 +936,10 @@ FLAGS = {
     "powershellscript": "use a shell script for switching power",
     "poweroffonstart": "always power off board on tbot start",
     "labname": "select which labhost we use",
+    "cmdtimestamp": "prefix each command log line with a H:M:S timestamp",
+    "lablockid": "lablockid:<yourlockid> lock id for board locking",
+    "lauterbachusesshmachine": "with lauterbachloader, run TRACE32 on the SSH machine",
+    "noethinit": "no ethernet setup of the lab host for the board",
+    "outside": "lab host is only reachable with proxyjump",
+    "telnet": "use telnet for accessing serial console",
 }
