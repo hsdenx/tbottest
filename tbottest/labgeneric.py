@@ -928,7 +928,6 @@ def register_machines(ctx):
 FLAGS = {
     "local": "enable if labhost and tbot host are the same (use SubprocessConnector)",
     "ssh": "use as boards console login with ssh",
-    "uuuloader": "load SPL/U-Boot with uuu tool into RAM",
     "picocom": "use piccom for accessing serial console",
     "scriptcom": "use a script for accessing serial console",
     "tinkerforge": "use tinkerforge for switching power",
