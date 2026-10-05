@@ -123,116 +123,7 @@ https://docs.python.org/3/library/configparser.html
 
 Find an example file here: tbottest:/tbottest/tbotconfig/BOARDNAME/tbot.ini
 
-.. _boardspecificruntimeadaption:
-
-boardspecfic runtime adaptions
-..............................
-
-The ini file approach is static, which means we cannot change
-configuration @runtime. This generic approach searches in **tbotconfig**
-for a **boardspecific.py** file, which can contains several
-functions, the generic approach tries to call.
-
-In this functions you can adapt settings dependend on the usecase.
-Or may do special stuff in machine shells.
-
-In the default ini files there are placeholders beginning with **@@**
-and ending with **@@**. You can easily replace them with
-:ref:`iniconfighelperfunctions`.
-
-Therefore the following functions are used:
-
-set_board_cfg(temp: str = None, filename: str = None)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This file is called early in bootup before any ini file
-is parsed. So you can adapt the ini files for your needs
-
-.. code-block:: python
-
-    import tbot
-    from tbottest.generic.iniconfig import replace_in_file
-
-    tbot.selectable.printed = False
-
-    def print_log(msg):
-         if tbot.selectable.printed:
-                return
-
-            tbot.log.message(tbot.log.c(msg).yellow)
-
-    def set_board_cfg(temp: str = None, filename: str = None):
-        """
-        setup board specific stuff in ini files before they get parsed
-        """
-        # print tbot.flags, as tbot prints them not longer
-        print_log(f"TBOT.FLAGS {tbot.flags}")
-
-        replace_in_file(filename, "@@TBOTBOARD@@", "<boardname in your lab setup>")
-        replace_in_file(filename, "@@TBOTDATE@@", "20230221")
-        replace_in_file(filename, "@@TBOTMACHINE@@", "<yocto machine name>")
-
-        tbot.selectable.boardname = None
-        for f in tbot.flags:
-            if f.startswith("boardname:"):
-                tbot.selectable.boardname = f.split(":", 1)[1]
-
-        if tbot.selectable.boardname == None:
-            tbot.selectable.boardname = "wandboard"
-
-
-board_set_boardname
-^^^^^^^^^^^^^^^^^^^
-
-called from initconfig.py generic_get_boardname()
-
-.. code-block:: python
-
-    import tbot
-
-
-    def board_set_boardname() -> str:
-        # do not use boardname flag
-        BOARDNAME = "foo"
-        for f in tbot.flags:
-            if "8G" in f:
-                if len(f) == 2:
-                    BOARDNAME = "foo-8G"
-
-        return BOARDNAME
-
-
-set_ub_board_specific
-^^^^^^^^^^^^^^^^^^^^^
-
-called from boardgeneric.py in init function.
-
-setup U-Boot specific parts after entering the U-Boot shell
-
-.. code-block:: python
-
-    def set_ub_board_specific(self):
-        optargs = self.env("optargs")
-        optupd = False
-        if "bootchartd" in tbot.flags:
-            optargs = f"{optargs} init=/lib/systemd/systemd-bootchart"
-            optupd = True
-
-        if "debug_initcalls" in tbot.flags:
-            optargs = f"{optargs} initcall_debug"
-            optupd = True
-
-        if optupd == True:
-            self.env("optargs", optargs)
-
-        if "silent" in tbot.flags:
-            self.env("console", "silent")
-
-
 Currently there are the following sections in tbot.ini:
-
-tbot.ini sections
-.................
 
 [LABHOST]
 ^^^^^^^^^
@@ -700,6 +591,111 @@ hand on the BDI (:py:func:`tbottest.initconfig.bdi2000_poweron_cmds`).
         "poweron_cmds", "optional list of BDI commands run after each power on of the board, or a dictionary of such lists selected with -f poweron_cmds:<name>", "['reset run']"
         "poweron_wait_state", "optional target state, as info reports it, to wait for before poweron_cmds", "debug mode"
         "poweron_timeout", "seconds to wait for poweron_wait_state, default 30", "30"
+
+.. _boardspecificruntimeadaption:
+
+boardspecfic runtime adaptions
+..............................
+
+The ini file approach is static, which means we cannot change
+configuration @runtime. This generic approach searches in **tbotconfig**
+for a **boardspecific.py** file, which can contains several
+functions, the generic approach tries to call.
+
+In this functions you can adapt settings dependend on the usecase.
+Or may do special stuff in machine shells.
+
+In the default ini files there are placeholders beginning with **@@**
+and ending with **@@**. You can easily replace them with
+:ref:`iniconfighelperfunctions`.
+
+Therefore the following functions are used:
+
+set_board_cfg(temp: str = None, filename: str = None)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This file is called early in bootup before any ini file
+is parsed. So you can adapt the ini files for your needs
+
+.. code-block:: python
+
+    import tbot
+    from tbottest.generic.iniconfig import replace_in_file
+
+    tbot.selectable.printed = False
+
+    def print_log(msg):
+         if tbot.selectable.printed:
+                return
+
+            tbot.log.message(tbot.log.c(msg).yellow)
+
+    def set_board_cfg(temp: str = None, filename: str = None):
+        """
+        setup board specific stuff in ini files before they get parsed
+        """
+        # print tbot.flags, as tbot prints them not longer
+        print_log(f"TBOT.FLAGS {tbot.flags}")
+
+        replace_in_file(filename, "@@TBOTBOARD@@", "<boardname in your lab setup>")
+        replace_in_file(filename, "@@TBOTDATE@@", "20230221")
+        replace_in_file(filename, "@@TBOTMACHINE@@", "<yocto machine name>")
+
+        tbot.selectable.boardname = None
+        for f in tbot.flags:
+            if f.startswith("boardname:"):
+                tbot.selectable.boardname = f.split(":", 1)[1]
+
+        if tbot.selectable.boardname == None:
+            tbot.selectable.boardname = "wandboard"
+
+
+board_set_boardname
+^^^^^^^^^^^^^^^^^^^
+
+called from initconfig.py generic_get_boardname()
+
+.. code-block:: python
+
+    import tbot
+
+
+    def board_set_boardname() -> str:
+        # do not use boardname flag
+        BOARDNAME = "foo"
+        for f in tbot.flags:
+            if "8G" in f:
+                if len(f) == 2:
+                    BOARDNAME = "foo-8G"
+
+        return BOARDNAME
+
+
+set_ub_board_specific
+^^^^^^^^^^^^^^^^^^^^^
+
+called from boardgeneric.py in init function.
+
+setup U-Boot specific parts after entering the U-Boot shell
+
+.. code-block:: python
+
+    def set_ub_board_specific(self):
+        optargs = self.env("optargs")
+        optupd = False
+        if "bootchartd" in tbot.flags:
+            optargs = f"{optargs} init=/lib/systemd/systemd-bootchart"
+            optupd = True
+
+        if "debug_initcalls" in tbot.flags:
+            optargs = f"{optargs} initcall_debug"
+            optupd = True
+
+        if optupd == True:
+            self.env("optargs", optargs)
+
+        if "silent" in tbot.flags:
+            self.env("console", "silent")
 
 
 boardconfiguration file
