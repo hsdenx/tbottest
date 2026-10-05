@@ -14,6 +14,7 @@ import tbottest.initconfig as ini
 from tbottest.labgeneric import cfgt as cfglab
 from tbottest.dynamicimport import get_boardmodule_import
 from tbottest.dynamicimport import get_boardmodulepath_import
+from tbottest.tc.network import lnx_set_ethdevice
 
 try:
     set_ub_board_specific = getattr(get_boardmodule_import(), "set_ub_board_specific")
@@ -227,57 +228,6 @@ class GenericUBoot(
             set_ub_board_specific(self)
 
 
-# command lnx_set_ethdevice() sets up the network with, "ip" or "ifconfig",
-# chosen by its first call
-LNX_NETCMD = None
-
-
-def lnx_set_ethdevice(lnx, dev: str, ethcfg: dict) -> None:
-    """
-    set ipaddr and netmask from ethcfg on the ethernet device dev of the
-    board, with ip or with ifconfig
-
-    Which of the two is taken, is configured with the key linux_netcmd in
-    the [TC] section of the board ini (BOARDNAME.ini):
-
-    - auto (default): ip if the board has it, else ifconfig. Checked with
-      "command -v ip", not with the exit code of "ip --help": iproute2
-      ends that with 255, busybox with 0.
-    - ip: always ip
-    - ifconfig: always ifconfig
-
-    The flag useifconfig takes ifconfig, whatever linux_netcmd says.
-    The choice is made once per tbot run and kept in LNX_NETCMD.
-
-    :param lnx: linux shell on the board
-    :param dev: name of the ethernet device, e.g. eth0
-    :param ethcfg: dictionary with the keys ipaddr and netmask
-    """
-    global LNX_NETCMD
-
-    if LNX_NETCMD is None:
-        if "useifconfig" in tbot.flags:
-            netcmd = "ifconfig"
-        else:
-            netcmd = cfg.get_config("linux_netcmd", "auto")
-            if netcmd == "auto":
-                netcmd = "ip" if lnx.test("command", "-v", "ip") else "ifconfig"
-            elif netcmd not in ("ip", "ifconfig"):
-                raise RuntimeError(
-                    f"linux_netcmd = {netcmd}: must be auto, ip or ifconfig"
-                )
-        LNX_NETCMD = netcmd
-
-    if LNX_NETCMD == "ip":
-        lnx.exec0("ip", "link", "set", dev, "down")
-        lnx.exec0("ip", "addr", "add", f'{ethcfg["ipaddr"]}/{ethcfg["netmask"]}', "dev", dev)
-        lnx.exec0("ip", "link", "set", dev, "up")
-    else:
-        lnx.exec0(
-            "ifconfig", dev, "down", ethcfg["ipaddr"], "netmask", ethcfg["netmask"], "up"
-        )
-
-
 def lnx_root_on_nfs(lnx) -> bool:
     """
     :param lnx: linux shell on the board
@@ -306,8 +256,9 @@ def lnx_set_ethdevices(lnx, ethdevices: dict) -> None:
         tbot.log.message("root filesystem on NFS, ethernet setup skipped")
         return
 
+    netcmd = cfg.get_config("linux_netcmd", "auto")
     for dev, ethcfg in ethdevices.items():
-        lnx_set_ethdevice(lnx, dev, ethcfg)
+        lnx_set_ethdevice(lnx, dev, ethcfg, netcmd)
 
 
 def add_death_strings(ch):
@@ -577,5 +528,5 @@ FLAGS = {
     "set-ethconfig": "set ethernet config in u-boot",
     "nobootcon": "silent bootlogs on console",
     "bootcmd": "run bootcommand command in U-Boot shell format: bootcmd:<command>",
-    "useifconfig": "use oldstyle ifconfig instead of ip, overrides linux_netcmd",
+    "useifconfig": "use oldstyle ifconfig instead of ip on every machine, overrides linux_netcmd",
 }

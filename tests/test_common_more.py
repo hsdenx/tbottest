@@ -8,7 +8,7 @@ tbot_start_thread/tbot_stop_thread).
 Focus is on: the bugs fixed in this pass (each with a regression
 test reproduced against the pre-fix code first, see conversation
 history) and the pure-logic parsers (escape_ansi, lx_devmem2_get,
-lnx_get_hwaddr, _lnx_get_ipaddr/lnx_get_ipaddr, lnx_check_cmd,
+lnx_get_hwaddr, lnx_check_cmd,
 ub_check_i2c_dump). tbot.ctx()-based functions (board_wait_for_device,
 board_ub_delete_env, board_set_default) use a small FakeCtx matching
 common.py's usage shape: `with tbot.ctx() as cx: cx.request(role)`
@@ -197,73 +197,16 @@ class TestLnxCreateRevfile:
 
 
 class TestLnxGetHwaddr:
-    def test_parses_hwaddr(self):
-        lnx = FakeLinuxShell()
-        lnx.responses[("ifconfig",)] = "eth0 Link encap:Ethernet HWaddr 00:11:22:33:44:55"
-        assert common.lnx_get_hwaddr(lnx, "eth0") == "00:11:22:33:44:55"
+    """common.lnx_get_hwaddr() hands over to tbottest.tc.network, whose
+    parsers test_network.py covers"""
 
-    def test_missing_hwaddr_raises(self):
-        lnx = FakeLinuxShell()
-        lnx.responses[("ifconfig",)] = "eth0 Link encap:Ethernet"
-        with pytest.raises(RuntimeError, match="Could not get hwaddr"):
-            common.lnx_get_hwaddr(lnx, "eth0")
-
-
-class TestLnxGetIpaddr:
-    def test_parses_ipv4(self):
-        lnx = FakeLinuxShell()
-        lnx.responses[("ifconfig",)] = "eth0\n          inet addr:10.0.0.5  Bcast:10.0.0.255"
-        assert common._lnx_get_ipaddr(lnx, "eth0") == "10.0.0.5"
-
-    def test_parses_ipv6_old_style_net_tools(self):
-        """
-        Regression test: the ip6 regex used to be "\\d+.\\d+.\\d+.\\d+"
-        (decimal digits only), so it could never match a real IPv6
-        address (hex letters, "::" compression, "/prefixlen" suffix
-        with no space before it).
-        """
-        lnx = FakeLinuxShell()
-        lnx.responses[("ifconfig",)] = (
-            "eth0\n          inet6 addr: fe80::1234:5678:9abc:def0/64 Scope:Link"
-        )
-        assert (
-            common._lnx_get_ipaddr(lnx, "eth0", ip6=True) == "fe80::1234:5678:9abc:def0"
-        )
-
-    def test_parses_ipv6_newer_style_net_tools(self):
-        lnx = FakeLinuxShell()
-        lnx.responses[("ifconfig",)] = (
-            "eth0\n        inet6 fe80::1234:5678:9abc:def0  prefixlen 64  scopeid 0x20<link>"
-        )
-        assert (
-            common._lnx_get_ipaddr(lnx, "eth0", ip6=True) == "fe80::1234:5678:9abc:def0"
-        )
-
-    def test_parses_ipv6_compressed_address(self):
-        lnx = FakeLinuxShell()
-        lnx.responses[("ifconfig",)] = "eth0\n          inet6 addr: ::1/128 Scope:Host"
-        assert common._lnx_get_ipaddr(lnx, "eth0", ip6=True) == "::1"
-
-    def test_polls_until_ip_appears(self, monkeypatch):
-        monkeypatch.setattr(common.time, "sleep", lambda s: None)
-        calls = {"n": 0}
-
-        class FlakyHost(FakeLinuxShell):
-            def exec0(self, *args):
-                calls["n"] += 1
-                if calls["n"] < 3:
-                    return "eth0"
-                return "eth0\n          inet addr:10.0.0.5  Bcast:10.0.0.255"
-
-        lnx = FlakyHost()
-        assert common.lnx_get_ipaddr(lnx, "eth0", poll=5, sleep=0) == "10.0.0.5"
-
-    def test_gives_up_after_poll_attempts(self, monkeypatch):
-        monkeypatch.setattr(common.time, "sleep", lambda s: None)
-        lnx = FakeLinuxShell()
-        lnx.responses[("ifconfig",)] = "eth0"
-        with pytest.raises(RuntimeError, match="Could not get ip"):
-            common.lnx_get_ipaddr(lnx, "eth0", poll=2, sleep=0)
+    def test_calls_network(self, monkeypatch):
+        calls = []
+        fake = type(sys)("tbottest.tc.network")
+        fake.lnx_get_hwaddr = lambda lnx, name: calls.append(name) or "00:11:22:33:44:55"
+        monkeypatch.setitem(sys.modules, "tbottest.tc.network", fake)
+        assert common.lnx_get_hwaddr(FakeLinuxShell(), "eth0") == "00:11:22:33:44:55"
+        assert calls == ["eth0"]
 
 
 class TestLnxCheckCmd:

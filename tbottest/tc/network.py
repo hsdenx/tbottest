@@ -1,9 +1,301 @@
+import re
 import tbot
 import time
 from tbot.machine import linux
 import math
 
-from tbottest.tc.common import lnx_install_package
+# "ip" or "ifconfig" per (machine, prefer), see lnx_netcmd()
+_NETCMD = {}
+NETCMDS = ("ip", "ifconfig")
+
+
+def lnx_netcmd(lnx: linux.LinuxShell, prefer: str = "auto") -> str:
+    """
+    command to configure the network of lnx with, "ip" or "ifconfig"
+
+    :param lnx: linux machine
+    :param prefer: auto (default): ip if lnx has it, else ifconfig, checked
+        once per machine (by its name) with "command -v ip", not with the
+        exit code of "ip --help", which iproute2 ends with 255 and busybox
+        with 0. ip or ifconfig: that one, without a check.
+
+    The tbot flag useifconfig takes ifconfig on every machine.
+
+    The answer is worked out on the first call for a machine and prefer,
+    and returned from _NETCMD on every later one.
+    """
+    key = (getattr(lnx, "name", None) or id(lnx), prefer)
+    netcmd = _NETCMD.get(key)
+    if netcmd is not None:
+        return netcmd
+
+    if "useifconfig" in tbot.flags:
+        netcmd = "ifconfig"
+    elif prefer in NETCMDS:
+        netcmd = prefer
+    elif prefer == "auto":
+        netcmd = "ip" if lnx.test("command", "-v", "ip") else "ifconfig"
+    else:
+        raise RuntimeError(f"netcmd {prefer}: must be auto, ip or ifconfig")
+    _NETCMD[key] = netcmd
+    return netcmd
+
+
+def netmask_to_prefix(netmask: str) -> int:
+    """
+    prefix length of a dotted IPv4 netmask, e.g. 24 for 255.255.255.0
+    """
+    parts = netmask.split(".")
+    try:
+        bits = "".join(f"{int(b):08b}" for b in parts)
+    except ValueError:
+        bits = ""
+    if len(parts) != 4 or len(bits) != 32 or "01" in bits:
+        raise RuntimeError(f"{netmask}: not an IPv4 netmask")
+    return bits.count("1")
+
+
+def classful_prefix(ipaddr: str) -> int:
+    """
+    prefix length the kernel gives an IPv4 address set without netmask
+    (ifconfig <dev> <ipaddr>): by its class, 8 for A, 16 for B, 24 for C
+    """
+    first = int(ipaddr.split(".")[0])
+    if first < 128:
+        return 8
+    if first < 192:
+        return 16
+    return 24
+
+
+def _sudo(sudo: bool) -> list:
+    return ["sudo"] if sudo else []
+
+
+def lnx_ifdown(
+    lnx: linux.LinuxShell, dev: str, sudo: bool = False, netcmd: str = "auto"
+) -> None:
+    """
+    take the network device dev down, with ip or ifconfig (lnx_netcmd())
+    """
+    if lnx_netcmd(lnx, netcmd) == "ip":
+        lnx.exec0(*_sudo(sudo), "ip", "link", "set", dev, "down")
+    else:
+        lnx.exec0(*_sudo(sudo), "ifconfig", dev, "down")
+
+
+def lnx_ifup(
+    lnx: linux.LinuxShell, dev: str, sudo: bool = False, netcmd: str = "auto"
+) -> None:
+    """
+    bring the network device dev up, with ip or ifconfig (lnx_netcmd())
+    """
+    if lnx_netcmd(lnx, netcmd) == "ip":
+        lnx.exec0(*_sudo(sudo), "ip", "link", "set", dev, "up")
+    else:
+        lnx.exec0(*_sudo(sudo), "ifconfig", dev, "up")
+
+
+def lnx_set_ipaddr(
+    lnx: linux.LinuxShell,
+    dev: str,
+    ipaddr: str,
+    netmask: str = None,
+    sudo: bool = False,
+    netcmd: str = "auto",
+) -> None:
+    """
+    set the IPv4 address of dev, taking it down and up again, as
+    "ifconfig <dev> down <ipaddr> [netmask <netmask>] up" does
+
+    With ip the old IPv4 addresses of dev are flushed first, as ifconfig
+    replaces the address, and a second call does not fail on an address
+    that is already there. Without netmask the prefix follows the address
+    class, as with ifconfig (classful_prefix()).
+
+    :param lnx: linux machine
+    :param dev: network device, e.g. eth0
+    :param ipaddr: IPv4 address
+    :param netmask: dotted netmask, or None
+    :param sudo: run the commands with sudo
+    :param netcmd: auto, ip or ifconfig, see lnx_netcmd()
+    """
+    s = _sudo(sudo)
+    if lnx_netcmd(lnx, netcmd) == "ip":
+        prefix = netmask_to_prefix(netmask) if netmask else classful_prefix(ipaddr)
+        lnx.exec0(*s, "ip", "link", "set", dev, "down")
+        lnx.exec0(*s, "ip", "-4", "addr", "flush", "dev", dev)
+        lnx.exec0(*s, "ip", "addr", "add", f"{ipaddr}/{prefix}", "dev", dev)
+        lnx.exec0(*s, "ip", "link", "set", dev, "up")
+    else:
+        mask = ["netmask", netmask] if netmask else []
+        lnx.exec0(*s, "ifconfig", dev, "down", ipaddr, *mask, "up")
+
+
+def lnx_set_ethdevice(
+    lnx: linux.LinuxShell, dev: str, ethcfg: dict, netcmd: str = "auto"
+) -> None:
+    """
+    set ipaddr and netmask from ethcfg on the ethernet device dev of the
+    board, with ip or with ifconfig
+
+    The board configuration sets netcmd with the key linux_netcmd in the
+    [TC] section of the board ini (BOARDNAME.ini): auto (default), ip or
+    ifconfig, see lnx_netcmd(). The flag useifconfig takes ifconfig,
+    whatever linux_netcmd says.
+
+    :param lnx: linux shell on the board
+    :param dev: name of the ethernet device, e.g. eth0
+    :param ethcfg: dictionary with the keys ipaddr and netmask
+    :param netcmd: auto, ip or ifconfig
+    """
+    lnx_set_ipaddr(lnx, dev, ethcfg["ipaddr"], ethcfg["netmask"], netcmd=netcmd)
+
+
+def lnx_has_netdev(lnx: linux.LinuxShell, dev: str, netcmd: str = "auto") -> bool:
+    """
+    :returns: True if lnx has the network device dev
+    """
+    if lnx_netcmd(lnx, netcmd) == "ip":
+        ret, _ = lnx.exec("ip", "link", "show", "dev", dev)
+    else:
+        ret, _ = lnx.exec("ifconfig", dev)
+    return ret == 0
+
+
+@tbot.testcase
+def lnx_get_hwaddr(lnx: linux.LinuxShell, name: str, netcmd: str = "auto") -> str:
+    """
+    get the MAC address of a network device
+
+    :param lnx: linux machine from which we want to get the hwaddr
+    :param name: name of the interface
+    :param netcmd: auto, ip or ifconfig, see lnx_netcmd()
+    """
+    mac = r"(?P<hwaddr>[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5})"
+    if lnx_netcmd(lnx, netcmd) == "ip":
+        out = lnx.exec0("ip", "link", "show", "dev", name)
+        # "    link/ether 00:11:22:33:44:55 brd ff:ff:ff:ff:ff:ff"
+        patterns = [r"\s*link/ether\s+" + mac]
+    else:
+        out = lnx.exec0("ifconfig", name)
+        # old net-tools and busybox: "... HWaddr 00:11:22:33:44:55"
+        # newer net-tools: "        ether 00:11:22:33:44:55  txqueuelen ..."
+        patterns = [r".*HWaddr\s+" + mac, r"\s+ether\s+" + mac]
+    for line in out.split("\n"):
+        for pattern in patterns:
+            match = re.match(pattern, line)
+            if match is not None:
+                return match.group("hwaddr")
+
+    raise RuntimeError(f"Could not get hwaddr for device {name}")
+
+
+def _ipaddr_from_ip(out: str, ip6: bool):
+    # "    inet 192.168.3.20/24 brd ...", "    inet6 fe80::1/64 scope link"
+    if ip6:
+        pattern = r"\s+inet6\s+(?P<ipaddr>[0-9a-fA-F:]+)/"
+    else:
+        pattern = r"\s+inet\s+(?P<ipaddr>\d+\.\d+\.\d+\.\d+)/"
+    for line in out.split("\n"):
+        match = re.match(pattern, line)
+        if match is not None:
+            return match.group("ipaddr")
+    return None
+
+
+def _ipaddr_from_ifconfig(out: str, ip6: bool):
+    for line in out.split("\n"):
+        if ip6:
+            if "inet6" in line:
+                # old-style net-tools: "inet6 addr: fe80::1/64  Scope:Link"
+                match = re.match(
+                    r"\s+inet6\s+addr:\s*(?P<ipaddr>[0-9a-fA-F:]+)",
+                    line,
+                )
+                if match is None:
+                    # newer net-tools: "inet6 fe80::1  prefixlen 64  scopeid ..."
+                    match = re.match(
+                        r"\s+inet6\s+(?P<ipaddr>[0-9a-fA-F:]+)",
+                        line,
+                    )
+
+                if match is None:
+                    continue
+                return match.group("ipaddr")
+        else:
+            if "inet6" in line:
+                continue
+            if "inet" in line:
+                match = re.match(
+                    r"\s+inet\s+addr:(?P<ipaddr>\d+.\d+.\d+.\d+)\s+",
+                    line,
+                )
+                if match is None:
+                    match = re.match(
+                        r"\s+inet\s(?P<ipaddr>\d+.\d+.\d+.\d+)\s+",
+                        line,
+                    )
+
+                if match is None:
+                    continue
+                return match.group("ipaddr")
+    return None
+
+
+@tbot.testcase
+def _lnx_get_ipaddr(
+    lnx: linux.LinuxShell, name: str, ip6: bool = False, netcmd: str = "auto"
+) -> str:
+    """
+    get the IP address of a network device, from "ip addr show" or
+    "ifconfig" (lnx_netcmd())
+
+    :param lnx: linux machine from which we want to get the ipaddr
+    :param name: name of the interface
+    :param ip6: set to true if you want the ipv6 addr
+    :param netcmd: auto, ip or ifconfig
+    """
+    if lnx_netcmd(lnx, netcmd) == "ip":
+        out = lnx.exec0("ip", "-6" if ip6 else "-4", "addr", "show", "dev", name)
+        ipaddr = _ipaddr_from_ip(out, ip6)
+    else:
+        out = lnx.exec0("ifconfig", name)
+        ipaddr = _ipaddr_from_ifconfig(out, ip6)
+    if ipaddr is None:
+        raise RuntimeError(f"Could not get ip for device {name}")
+    return ipaddr
+
+
+@tbot.testcase
+def lnx_get_ipaddr(
+    lnx: linux.LinuxShell,
+    name: str,
+    ip6: bool = False,
+    poll: int = 5,
+    sleep: int = 2,
+    netcmd: str = "auto",
+) -> str:
+    """
+    get the IP address of a network device, polling until it is there
+
+    :param lnx: linux machine from which we want to get the ipaddr
+    :param name: name of the interface
+    :param ip6: set to true if you want the ipv6 addr
+    :param poll: if != 0 poll n times to get the ip
+    :param sleep: sleep in seconds between polls
+    :param netcmd: auto, ip or ifconfig, see lnx_netcmd()
+    """
+    i = 0
+    while i <= poll:
+        try:
+            return _lnx_get_ipaddr(lnx, name, ip6, netcmd)
+        except Exception:
+            if sleep:
+                time.sleep(sleep)
+            i += 1
+
+    raise RuntimeError(f"Could not get ip for device {name}")
 
 
 def lnx_network_ping(
@@ -50,7 +342,10 @@ def _check_iperf_installed(
     if not try_install:
         return False
 
-    # Try to install iperf3 on OS
+    # Try to install iperf3 on OS; imported here, as tbottest.tc.common
+    # imports from this module
+    from tbottest.tc.common import lnx_install_package
+
     return lnx_install_package(lnx, "iperf3")
 
 

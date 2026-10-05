@@ -567,104 +567,16 @@ def lnx_compare_files(
 @tbot.testcase
 def lnx_get_hwaddr(lnx: linux.LinuxShell, name: str) -> str:
     """
-    get MAC address from interface output
-
-    ToDo: add a cache if often called
+    get the MAC address of a network device, with ip or ifconfig; see
+    tbottest.tc.network.lnx_get_hwaddr(), which this calls
 
     :param lnx: linux machine from which we want to get the hwaddr
     :param name: name of the interface
     """
-    out = lnx.exec0("ifconfig", name)
-    for line in out.split("\n"):
-        if "HWaddr" in line:
-            match = re.match(
-                r".*HWaddr (?P<hwaddr>[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+:"
-                r"[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+)",
-                line,
-            )
-            if match is None:
-                continue
-            return match.group("hwaddr")
+    # imported here: tbottest.tc.network imports from this module
+    from tbottest.tc.network import lnx_get_hwaddr as network_get_hwaddr
 
-    raise RuntimeError(f"Could not get hwaddr for device {name}")
-
-
-@tbot.testcase
-def _lnx_get_ipaddr(lnx: linux.LinuxShell, name: str, ip6: bool = False) -> str:
-    """
-    get ipaddr from ifconfig output
-
-    ToDo: add a cache if often called
-
-    :param lnx: linux machine from which we want to get the ipaddr
-    :param name: name of the interface
-    :param ip6: set to true if you want the ipv6 addr
-    """
-    out = lnx.exec0("ifconfig", name)
-    for line in out.split("\n"):
-        if ip6:
-            if "inet6" in line:
-                # old-style net-tools: "inet6 addr: fe80::1/64  Scope:Link"
-                match = re.match(
-                    r"\s+inet6\s+addr:\s*(?P<ipaddr>[0-9a-fA-F:]+)",
-                    line,
-                )
-                if match is None:
-                    # newer net-tools: "inet6 fe80::1  prefixlen 64  scopeid ..."
-                    match = re.match(
-                        r"\s+inet6\s+(?P<ipaddr>[0-9a-fA-F:]+)",
-                        line,
-                    )
-
-                if match is None:
-                    continue
-                return match.group("ipaddr")
-        else:
-            if "inet6" in line:
-                continue
-            if "inet" in line:
-                match = re.match(
-                    r"\s+inet\s+addr:(?P<ipaddr>\d+.\d+.\d+.\d+)\s+",  # noqa: E501
-                    line,
-                )
-                if match is None:
-                    match = re.match(
-                        r"\s+inet\s(?P<ipaddr>\d+.\d+.\d+.\d+)\s+",  # noqa: E501
-                        line,
-                    )
-
-                if match is None:
-                    continue
-                return match.group("ipaddr")
-
-    raise RuntimeError(f"Could not get ip for device {name}")
-
-
-@tbot.testcase
-def lnx_get_ipaddr(
-    lnx: linux.LinuxShell, name: str, ip6: bool = False, poll: int = 5, sleep: int = 2
-) -> str:
-    """
-    get ipaddr from ifconfig output
-
-    ToDo: add a cache if often called
-
-    :param lnx: linux machine from which we want to get the ipaddr
-    :param name: name of the interface
-    :param ip6: set to true if you want the ipv6 addr
-    :param poll: if != 0 poll n times to get the ip
-    :param sleep: sleep in seconds between polls
-    """
-    i = 0
-    while i <= poll:
-        try:
-            return _lnx_get_ipaddr(lnx, name, ip6)
-        except Exception:
-            if sleep:
-                time.sleep(sleep)
-            i += 1
-
-    raise RuntimeError(f"Could not get ip for device {name}")
+    return network_get_hwaddr(lnx, name)
 
 
 @tbot.testcase
@@ -719,6 +631,9 @@ def lnx_wait_for_ip(
     :param timeout: timeout if process is not found
     :return: ip addr
     """
+    # imported here: tbottest.tc.network imports from this module
+    from tbottest.tc.network import lnx_get_ipaddr
+
     loop = 0
     while loop < loops:
         try:
