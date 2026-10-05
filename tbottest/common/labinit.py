@@ -62,22 +62,51 @@ def lab_init_once(
 
     # imported here, so this module stays importable without the board
     # environment that tbottest.tc pulls in
-    from tbottest.tc.network import lnx_has_netdev, lnx_set_ipaddr
+    from tbottest.tc.network import (
+        _lnx_get_ipaddr,
+        classful_prefix,
+        ipv4_in_net,
+        lnx_has_netdev,
+        lnx_set_ipaddr,
+    )
 
+    refused = False
     for ethdev in ethdevices.values():
         labdev = ethdev["labdevice"]
+        serverip = ethdev["serverip"]
         if not lnx_has_netdev(lab, labdev):
             tbot.log.message(
                 tbot.log.c(f"ethernet device {labdev} not found on lab host").yellow
             )
             continue
 
+        # Do not take over a device that is in another network: with a
+        # wrong labdevice that may be the connection tbot reaches the lab
+        # host on, and setting serverip there cuts it off.
+        try:
+            current = _lnx_get_ipaddr(lab, labdev)
+        except RuntimeError:
+            current = None
+        prefix = classful_prefix(serverip)
+        if current is not None and not ipv4_in_net(current, serverip, prefix):
+            tbot.log.message(
+                tbot.log.c(
+                    f"lab device {labdev} has {current}, outside {serverip}/{prefix}: "
+                    "not set up, check labdevice in the IPSETUP section of tbot.ini"
+                ).red
+            )
+            refused = True
+            continue
+
         # without netmask, as before: the prefix follows the address class
-        lnx_set_ipaddr(lab, labdev, ethdev["serverip"], sudo=True)
+        lnx_set_ipaddr(lab, labdev, serverip, sudo=True)
         out = lab.exec0("ip", "link", "show", "dev", labdev)
         while "NO-CARRIER" in out:
             lab.exec0("sudo", "ethtool", "-s", labdev, "autoneg", "on")
             time.sleep(1)
             out = lab.exec0("ip", "link", "show", "dev", labdev)
 
-    lab.exec0("date", linux.Raw(">"), ethmarker)
+    # no marker after a refused device, so the setup runs again once the
+    # configuration is fixed
+    if not refused:
+        lab.exec0("date", linux.Raw(">"), ethmarker)

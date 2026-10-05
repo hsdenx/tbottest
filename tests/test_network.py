@@ -151,6 +151,18 @@ class TestPrefixes:
         assert network.classful_prefix(ip) == prefix
 
 
+class TestIpv4InNet:
+    @pytest.mark.parametrize(
+        "addr,net,prefix,inside",
+        [("192.168.3.7", "192.168.3.1", 24, True),
+         ("192.168.1.123", "192.168.3.1", 24, False),
+         ("10.9.8.7", "10.0.0.1", 8, True),
+         ("192.168.4.1", "192.168.3.1", 24, False)],
+    )
+    def test_ipv4_in_net(self, addr, net, prefix, inside):
+        assert network.ipv4_in_net(addr, net, prefix) is inside
+
+
 class TestSetIpaddr:
     def test_ip_with_netmask(self):
         lnx = FakeShell({"ip"})

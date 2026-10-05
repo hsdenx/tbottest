@@ -1,3 +1,4 @@
+import ipaddress
 import re
 import tbot
 import time
@@ -66,6 +67,15 @@ def classful_prefix(ipaddr: str) -> int:
     if first < 192:
         return 16
     return 24
+
+
+def ipv4_in_net(addr: str, netaddr: str, prefix: int) -> bool:
+    """
+    :returns: True if the IPv4 address addr is in the network of
+        netaddr/prefix
+    """
+    net = ipaddress.ip_interface(f"{netaddr}/{prefix}").network
+    return ipaddress.ip_address(addr) in net
 
 
 def _sudo(sudo: bool) -> list:

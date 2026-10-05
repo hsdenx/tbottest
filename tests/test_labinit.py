@@ -51,11 +51,13 @@ class CommandFailed(Exception):
 class FakeLab:
     name = "lab"
 
-    def __init__(self, files=(), interfaces=("eth0",), fail=None, netcmd="ip"):
+    def __init__(self, files=(), interfaces=("eth0",), fail=None, netcmd="ip", addrs=None):
         self.files = set(files)
         self.interfaces = interfaces
         self.fail = fail
         self.netcmd = netcmd
+        # IPv4 address per device, as "ip -4 addr show" / ifconfig report it
+        self.addrs = addrs or {}
         self.log = []
 
     def test(self, *args):
@@ -74,6 +76,12 @@ class FakeLab:
         if args[0] == "date":
             self.files.add(args[2])
             return ""
+        if args[:5] == ("ip", "-4", "addr", "show", "dev"):
+            addr = self.addrs.get(args[5])
+            return f"    inet {addr}/24 brd x scope global {args[5]}" if addr else ""
+        if args[:1] == ("ifconfig",) and len(args) == 2:
+            addr = self.addrs.get(args[1])
+            return f"{args[1]}\n          inet addr:{addr}  Bcast:x" if addr else args[1]
         if args[:3] == ("ip", "link", "show"):
             return "2: eth0: <BROADCAST,UP,LOWER_UP> state UP"
         if self.fail is not None and args == (self.fail,):
@@ -151,6 +159,41 @@ def test_missing_lab_interface_is_skipped():
 
     assert lab.ifconfig_up() == []
     assert f"{MARKER}-board" in lab.files
+
+
+def test_device_in_another_network_is_refused():
+    lab = FakeLab(addrs={"eth0": "192.168.1.123"})
+    labinit.lab_init_once(lab, [], "board", ETHDEVICES)
+
+    assert lab.ifconfig_up() == []
+    # no marker: the setup runs again once labdevice is fixed
+    assert f"{MARKER}-board" not in lab.files
+
+
+def test_refused_device_does_not_stop_the_others():
+    devices = dict(ETHDEVICES, eth1={"labdevice": "eth1", "serverip": "192.168.3.1"})
+    lab = FakeLab(interfaces=("eth0", "eth1"), addrs={"eth0": "192.168.1.123"})
+    labinit.lab_init_once(lab, [], "board", devices)
+
+    assert ("sudo", "ip", "addr", "add", "192.168.3.1/24", "dev", "eth1") in lab.log
+    assert not any("eth0" in a for a in lab.ifconfig_up())
+    assert f"{MARKER}-board" not in lab.files
+
+
+def test_device_already_in_the_network_is_set_up():
+    lab = FakeLab(addrs={"eth0": "192.168.3.7"})
+    labinit.lab_init_once(lab, [], "board", ETHDEVICES)
+
+    assert ("sudo", "ip", "addr", "add", "192.168.3.1/24", "dev", "eth0") in lab.log
+    assert f"{MARKER}-board" in lab.files
+
+
+def test_device_in_another_network_is_refused_with_ifconfig():
+    lab = FakeLab(netcmd="ifconfig", addrs={"eth0": "192.168.1.123"})
+    labinit.lab_init_once(lab, [], "board", ETHDEVICES)
+
+    assert lab.ifconfig_up() == []
+    assert f"{MARKER}-board" not in lab.files
 
 
 def _parser(text):
