@@ -729,3 +729,26 @@ may you need to add:
     # dhcp-lease-list
 
     # udhcpc -i eth0
+
+documentation
+-------------
+
+Build this documentation with sphinx_rtd_theme into ``Documentation/output``:
+
+.. code-block:: bash
+
+    $ export PYTHONPATH=<path to tbot>
+    $ ./Documentation/build-docs.sh
+
+``--all-themes`` builds it once more with piccolo_theme, cloud_sptheme and
+sphinx-nefertiti into ``Documentation/output/piccolo``, ``cloud`` and
+``nefertiti``, and every page gets a menu at the bottom right to open the
+same page in another theme. sphinx-nefertiti needs Sphinx 7 or newer:
+
+.. code-block:: bash
+
+    $ pip install sphinx sphinx_rtd_theme piccolo-theme cloud_sptheme sphinx-nefertiti
+    $ ./Documentation/build-docs.sh --all-themes
+
+``TBOTTEST_DOC_THEME=<rtd|piccolo|cloud|nefertiti>`` selects the theme of a
+single ``sphinx-build`` run.

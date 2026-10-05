@@ -69,8 +69,24 @@ language = "en"
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["output", "Thumbs.db", ".DS_Store"]
 
-# The name of the Pygments (syntax highlighting) style to use.
-if globals()["tags"].has("pygments-light"):
+# The HTML theme: sphinx_rtd_theme, or one of DOC_THEMES set with the
+# environment variable TBOTTEST_DOC_THEME (see build-docs.sh --all-themes).
+# The key is also the subdirectory of the build in output/.
+DOC_THEMES = {
+    "rtd": "sphinx_rtd_theme",
+    "piccolo": "piccolo_theme",
+    "cloud": "cloud",
+    "nefertiti": "sphinx_nefertiti",
+}
+doc_theme = os.environ.get("TBOTTEST_DOC_THEME", "rtd")
+if doc_theme not in DOC_THEMES:
+    raise ValueError(
+        "TBOTTEST_DOC_THEME=%s unknown, use one of %s" % (doc_theme, ", ".join(DOC_THEMES))
+    )
+
+# The name of the Pygments (syntax highlighting) style to use. monokai has
+# light text and needs the dark code background only sphinx_rtd_theme has.
+if globals()["tags"].has("pygments-light") or doc_theme != "rtd":
     pygments_style = "default"
 else:
     pygments_style = "monokai"
@@ -82,25 +98,34 @@ intersphinx_mapping = {
 }
 
 # -- Options for HTML output ------------------------------------------------- {{{
-# The Read the Docs theme is available from
-# - https://github.com/snide/sphinx_rtd_theme
-# - https://pypi.python.org/pypi/sphinx_rtd_theme
-# - python-sphinx-rtd-theme package (on Debian)
-try:
-    import sphinx_rtd_theme
-
-    html_theme = "sphinx_rtd_theme"
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-except ImportError:
-    logger.warning(
-        'The Sphinx "sphinx_rtd_theme" HTML theme was not found. Make sure you have the theme installed to produce pretty HTML output. Falling back to the default theme.'
-    )
-
 html_logo = "static/tbot-logo-white.png"
-html_theme_options = {"logo_only": True, "style_external_links": True}
 html_static_path = ["static"]
-# full window width for the page, table cells wrap (see static/custom.css)
-html_css_files = ["custom.css"]
+html_theme = DOC_THEMES[doc_theme]
+if doc_theme == "rtd":
+    try:
+        import sphinx_rtd_theme  # noqa: F401
+    except ImportError:
+        logger.warning(
+            'The Sphinx "sphinx_rtd_theme" HTML theme was not found. Make sure you have the theme installed to produce pretty HTML output. Falling back to the default theme.'
+        )
+        html_theme = "alabaster"
+    html_theme_options = {"logo_only": True, "style_external_links": True}
+    # full window width for the page, table cells wrap (see static/custom.css)
+    html_css_files = ["custom.css"]
+elif doc_theme == "piccolo":
+    # the middle column uses the window width (see static/piccolo.css)
+    html_css_files = ["piccolo.css"]
+elif doc_theme == "cloud":
+    # the table of contents of all pages in the sidebar, as in the
+    # other themes, down to the sections of the current page
+    html_sidebars = {"**": ["globaltoc.html", "searchbox.html"]}
+    html_theme_options = {"globaltoc_maxdepth": 3}
+
+# With TBOTTEST_DOC_THEMESWITCH set, every page gets a menu to open the
+# same page in the other themes (see static/themeswitch.js).
+doc_themeswitch = "TBOTTEST_DOC_THEMESWITCH" in os.environ
+if doc_themeswitch:
+    html_js_files = [("themeswitch.js", {"data-doc-theme": doc_theme})]
 # }}}
 
 # -- Options for LaTeX output ------------------------------------------------ {{{
@@ -229,5 +254,30 @@ if sphinx.version_info < (4, 0, 0):
 
 
 # -- Sphinx Setup ------------------------------------------------------------
+def toctree_with_sections(
+    app: typing.Any,
+    pagename: str,
+    templatename: str,
+    context: typing.Dict,
+    doctree: typing.Any,
+) -> None:
+    """
+    piccolo_theme and sphinx_nefertiti list only the page titles in their
+    table of contents (titles_only=True); list the sections of the pages
+    too, as sphinx_rtd_theme does.
+    """
+    toctree = context.get("toctree")
+    if toctree is None:
+        return
+
+    def toctree_all(**kwargs: typing.Any) -> str:
+        kwargs["titles_only"] = False
+        return toctree(**kwargs)
+
+    context["toctree"] = toctree_all
+
+
 def setup(app: typing.Any) -> None:
     app.add_directive("html-console", HtmlConsoleDirective)
+    if doc_theme in ("piccolo", "nefertiti"):
+        app.connect("html-page-context", toctree_with_sections)
