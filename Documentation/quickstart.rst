@@ -8,7 +8,7 @@ To get fast a working setup you can use the script:
 
 https://github.com/hsdenx/tbottest/tree/master/scripts/create_setup.sh
 
-which will create you a complete base setup, as described in `configuration`_.
+which will create you a complete base setup, as described in :ref:`genericconfiguration`.
 
 With ``--inter`` it asks for the console access and the power control of
 the board and their settings. The generated ``tbot.ini`` holds only the
