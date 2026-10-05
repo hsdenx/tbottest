@@ -319,11 +319,17 @@ def lnx_network_up(
     ip: str,
     sip: str,
     retry: int,
+    netmask: str = None,
 ) -> None:
-    lnx.exec0("ifconfig", device, "down", ip, "up")
-    lnx_network_ping(lnx, sip, 5)
+    """
+    set ip on device, with ip or ifconfig (lnx_netcmd()), and ping sip
 
-    raise RuntimeError(f"Could not bring up device {device}")
+    :param retry: pings to sip before giving up
+    :param netmask: dotted netmask, default by the address class, as
+        ifconfig without netmask
+    """
+    lnx_set_ipaddr(lnx, device, ip, netmask)
+    lnx_network_ping(lnx, sip, retry)
 
 
 def _check_iperf_installed(

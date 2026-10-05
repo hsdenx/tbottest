@@ -319,3 +319,18 @@ class TestGetIpaddr:
         with pytest.raises(RuntimeError, match="Could not get ip"):
             network.lnx_get_ipaddr(lnx, "eth0", poll=2, sleep=0)
         assert len([c for c in lnx.calls if c[0] == "exec0"]) == 3
+
+
+class TestNetworkUp:
+    def test_sets_address_and_returns_after_ping(self):
+        lnx = FakeShell({"ip"})
+        network.lnx_network_up(lnx, "eth0", "192.168.3.20", "192.168.3.1", 3)
+        run = lnx.commands_run()
+        assert ("ip", "addr", "add", "192.168.3.20/24", "dev", "eth0") in run
+        assert run[-1] == ("ping", "192.168.3.1", "-c", "1", "-W", "1")
+
+    def test_failing_ping_raises_after_retry_pings(self):
+        lnx = FakeShell({"ip"}, missing={"192.168.3.1"})
+        with pytest.raises(RuntimeError, match="Could not bring up"):
+            network.lnx_network_up(lnx, "eth0", "192.168.3.20", "192.168.3.1", 2)
+        assert len([c for c in lnx.commands_run() if c[0] == "ping"]) == 2
