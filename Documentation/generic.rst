@@ -47,34 +47,10 @@ other hardware (nor to make stupid stuff)!
 configuration
 -------------
 
-Best, use the following directory structure:
-
-.. code-block:: shell
-
-        $ tree .
-        tbotconfig
-        tbot (checkout from https://github.com/Rahix/tbot)
-        tbottest (this repo, checkout from github)
-
-Create for your tbot configuration and own testcases your own repo
-**tbotconfig** and use the following directory structure there:
-
-.. code-block:: shell
-
-        $ tree -I log*
-        newtbot_starter.py
-        tbotconfig
-        └── BOARDNAME
-            ├── args
-            │   ├── argsbase (from tbottest/tbotconfig/BOARDNAME/args/argsbase, replace BOARDNAME with real name)
-            │   ├── argsBOARDNAME
-            │   └── [...]
-            ├── boardspecific.py
-            ├── README.BOARDNAME
-            ├── tbot.ini
-            ├── BOARDNAME.ini
-
-see example in tbottest/tbotconfig.
+Create a directory, e.g. **tbotsetup**, which holds the sources of tbot
+and tbottest and a subdirectory **tbotconfig** with all your project
+specific settings and testcases. The layout, file by file, is in
+`file/directory overview`_; the example is tbottest/tbotconfig.
 
 .. Note::
 
@@ -111,7 +87,7 @@ What scripts/create_setup.sh sets up, with tbotconfig for one board:
 
 .. code-block:: text
 
-        <workdir>/
+        tbotsetup/
         ├── setup.sh                     aliases for starting tbot (source setup.sh)
         ├── tbot/                        tbot, from github.com/Rahix/tbot, with tbottest/patches applied
         ├── tbottest/                    this repository; newtbot_starter.py starts tbot
