@@ -107,12 +107,45 @@ README.BOARDNAME is not mandatory, but it is helpfull to collect/document at lea
 file/directory overview
 .......................
 
-.. csv-table:: subdirectories
+What scripts/create_setup.sh sets up, with tbotconfig for one board:
+
+.. code-block:: text
+
+        <workdir>/
+        ├── setup.sh                     aliases for starting tbot (source setup.sh)
+        ├── tbot/                        tbot, from github.com/Rahix/tbot, with tbottest/patches applied
+        ├── tbottest/                    this repository; newtbot_starter.py starts tbot
+        └── tbotconfig/                  your own repository: configuration and testcases
+            ├── interactive.py           testcases for interactive sessions
+            ├── ci/                      testcases of the tbottest CI on github
+            ├── tc_BOARDNAME.py          testcases of the board
+            └── BOARDNAME/
+                ├── args/                argumentfiles
+                │   ├── argsbase
+                │   ├── argsBOARDNAME
+                │   ├── argsBOARDNAME-noeth
+                │   └── argsBOARDNAME-noeth-ssh
+                ├── boardspecific.py     runtime adaptions of the configuration
+                ├── BOARDNAME.ini        settings of the board for the testcases
+                ├── files/
+                │   └── dumpfiles/       files of the register dump testcases
+                ├── README.BOARDNAME     notes on the tbot setup of the board
+                └── tbot.ini             lab host, build hosts, console, power, ...
+
+.. csv-table:: files and directories
         :header: "Name", "content", "fastlink to documentation"
 
-        "args", "contains tbot arguments files, for easier usage", "`argumentfiles`_"
-        "tbot.ini", "init file for easy configuration", "`tbot ini file (tbot.ini)`_"
-        "BOARDNAME.ini", "init file with boardspecific onfigs for generic testcases", "boardconfiguration file"
+        "setup.sh", "aliases for starting tbot, from tbottest/tbotconfig/setup.sh", ":doc:`quickstart`"
+        "tbotconfig/interactive.py", "testcases for interactive sessions: lab host, build host, kas shell, board, U-Boot, Linux, BDI2000", ""
+        "tbotconfig/ci", "testcases the github CI of tbottest runs", ""
+        "tbotconfig/tc_BOARDNAME.py", "testcases of the board, from tbottest/tbotconfig/BOARDNAME/BOARDNAME.py", ""
+        "BOARDNAME/args", "argumentfiles: argsbase, argsBOARDNAME, and the variants -noeth (flags noethinit, noboardethinit) and -noeth-ssh (adds nopoweroff, always-on, ssh, nouboot)", "`argumentfiles`_"
+        "BOARDNAME/boardspecific.py", "functions that adapt the configuration at runtime, e.g. replace the @@...@@ placeholders", ":ref:`boardspecificruntimeadaption`"
+        "BOARDNAME/BOARDNAME.ini", "ini file with the board specific settings for the generic testcases", "`boardconfiguration file`_"
+        "BOARDNAME/files/dumpfiles", "reference files of the register dump testcases (lnx_dump_files in BOARDNAME.ini)", ""
+        "BOARDNAME/README.BOARDNAME", "notes on the tbot setup of the board, not mandatory", ""
+        "BOARDNAME/tbot.ini", "ini file for lab host, build hosts and how tbot reaches and controls the board", "`tbot ini file (tbot.ini)`_"
+        "BOARDNAME/tbot.ini-<id>, BOARDNAME/BOARDNAME.ini-<id>", "copies tbot writes at every start, with the placeholders replaced; flag tmpfilepath:<dir> writes them elsewhere", "`tbot flags`_"
 
 tbot ini file (tbot.ini)
 ........................
@@ -121,7 +154,8 @@ we use for configuring lab and board settings with:
 
 https://docs.python.org/3/library/configparser.html
 
-Find an example file here: tbottest:/tbottest/tbotconfig/BOARDNAME/tbot.ini
+Find an example file here: `tbottest/tbotconfig/BOARDNAME/tbot.ini
+<https://github.com/hsdenx/tbottest/blob/master/tbottest/tbotconfig/BOARDNAME/tbot.ini>`_
 
 Currently there are the following sections in tbot.ini:
 
