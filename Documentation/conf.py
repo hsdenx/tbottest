@@ -99,6 +99,8 @@ except ImportError:
 html_logo = "static/tbot-logo-white.png"
 html_theme_options = {"logo_only": True, "style_external_links": True}
 html_static_path = ["static"]
+# full window width for the page, table cells wrap (see static/custom.css)
+html_css_files = ["custom.css"]
 # }}}
 
 # -- Options for LaTeX output ------------------------------------------------ {{{
