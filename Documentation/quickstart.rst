@@ -23,7 +23,7 @@ Lab setup
 ^^^^^^^^^
 
 How the tbot host, the lab host, the board (DUT) and a build machine are
-connected is shown in :ref:`labsetup`.
+connected is shown in :ref:`labsetup`. Get more info here: :doc:`generic`.
 
 Example run
 ^^^^^^^^^^^
