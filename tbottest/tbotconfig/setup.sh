@@ -22,3 +22,8 @@ alias tbBOARDNAMEssh="tb @$TBOTARGSPATH/argsBOARDNAME-noeth-ssh"
 alias tbVENDORBOARDNAME="tbBOARDNAME -f boardname:BOARDNAME"
 alias tbVENDORBOARDNAME-noeth="tbBOARDNAMEnoeth -f boardname:BOARDNAME"
 alias tbVENDORBOARDNAME-ssh="tbBOARDNAMEssh -f boardname:BOARDNAME"
+
+# complete these aliases too when tbottest/completions.sh is sourced already
+if declare -F _newbot_aliases > /dev/null; then
+    _newbot_aliases
+fi
