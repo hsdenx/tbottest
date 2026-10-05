@@ -94,17 +94,17 @@ class TestBoardSetupCan:
     def test_default_devices_used_when_none_given(self):
         lnx = FakeLinuxShell()
         can.board_setup_can(lnx)
-        downs = [c for c in lnx.commands if c[:2] == ("ifconfig", "can0") and c[-1] == "down"]
+        downs = [c for c in lnx.commands if c[:4] == ("ip", "link", "set", "can0") and c[-1] == "down"]
         assert len(downs) == 1
 
     def test_sequence_is_down_then_configure_then_up(self):
         lnx = FakeLinuxShell()
         can.board_setup_can(lnx, candev=["can0"], br="250000", tql="100")
         assert lnx.commands == [
-            ("ifconfig", "can0", "down"),
+            ("ip", "link", "set", "can0", "down"),
             ("ip", "link", "set", "can0", "type", "can", "bitrate", "250000"),
             ("ip", "link", "set", "can0", "txqueuelen", "100"),
-            ("ifconfig", "can0", "up"),
+            ("ip", "link", "set", "can0", "up"),
         ]
 
     def test_usesudo_prefixes_every_command(self):
@@ -161,9 +161,11 @@ class TestLnxCanWriteDumpCompare:
         can.lnx_can_write_dump_compare(
             lab, lab, lab, ["can0"], lab, ["can0"], "500000", "500", self.DATA
         )
-        sudo_setup_calls = [c for c in lab.commands if c[0] == "sudo" and c[1] == "ifconfig"]
-        # 2 ifconfig calls (down, up) per board_setup_can(), once for
-        # senddev and once for readdev
+        sudo_setup_calls = [
+            c for c in lab.commands if c[:3] == ("sudo", "ip", "link") and c[-1] in ("down", "up")
+        ]
+        # 2 calls (down, up) per board_setup_can(), once for senddev and
+        # once for readdev
         assert len(sudo_setup_calls) == 4
 
 

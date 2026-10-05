@@ -56,14 +56,14 @@ def board_setup_can(
         candev = ["can0", "can1"]
 
     for n in candev:
-        sudo_exec0(lnx, usesudo, "ifconfig", n, "down")
+        sudo_exec0(lnx, usesudo, "ip", "link", "set", n, "down")
 
     for n in candev:
         sudo_exec0(lnx, usesudo, "ip", "link", "set", n, "type", "can", "bitrate", br)
         sudo_exec0(lnx, usesudo, "ip", "link", "set", n, "txqueuelen", tql)
 
     for n in candev:
-        sudo_exec0(lnx, usesudo, "ifconfig", n, "up")
+        sudo_exec0(lnx, usesudo, "ip", "link", "set", n, "up")
 
 
 def lnx_can_write_dump_compare(
