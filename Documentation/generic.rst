@@ -127,7 +127,7 @@ What scripts/create_setup.sh sets up, with tbotconfig for one board:
 .. csv-table:: files and directories
         :header: "Name", "content", "fastlink to documentation"
 
-        "setup.sh", "aliases for starting tbot, from tbottest/tbotconfig/setup.sh", ":doc:`quickstart`"
+        "setup.sh", "aliases for starting tbot", "`tbottest/tbotconfig/setup.sh <https://github.com/hsdenx/tbottest/blob/master/tbottest/tbotconfig/setup.sh>`__"
         "tbotconfig/interactive.py", "testcases for interactive sessions: lab host, build host, kas shell, board, U-Boot, Linux, BDI2000", ""
         "tbotconfig/ci", "testcases the github CI of tbottest runs", ""
         "tbotconfig/tc_BOARDNAME.py", "testcases of the board, from tbottest/tbotconfig/BOARDNAME/BOARDNAME.py", ""
