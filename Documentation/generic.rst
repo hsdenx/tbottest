@@ -155,7 +155,7 @@ For login with ssh key set key 'sshkeyfile', for password login set key 'passwor
         "sshkeyfile", "path to the ssh keyfile, tbot uses", "/home/USERNAME/.ssh/id_rsa"
         "password", "set password to login into lab host", "FooBar"
         "date", "subdirectory in boards tftp path", "20210803-ml"
-        "shelltype", "type of the linux shell (bash|ash)"
+        "shelltype","type of the linux shell (bash|ash)","bash"
         "toolsdir", "where does tbot find tools installed on lab host", "/home/USERNAME/source"
         "tftproot", "rootpath to tftp directory on lab host. tbot stores there build results.", "/srv/tftpboot"
         "tftpsubdir", "boards subdir in tftproot", "BOARD/DATE"
@@ -745,13 +745,12 @@ u-boot settings
 settings needed for U-Boot testcases.
 
 .. csv-table:: [TC]
-        :escape: '
         :header: "key", "description", "default", "example"
 
         "uboot_boot_timeout", "config boot_timeout, set None if None", "90", "None"
-        "uboot_autoboot_keys", "string with which U-Boot boot is interrupted. It is possible to set also a bytearray", "SPACE", "None"
-        "autoboot_prompt", "set autoboot_prompt, None if None", b'"autoboot:\\s{0,5}\\d{0,3}\\s{0,3}.{0,80}'", "None"
-        "autoboot_timeout", "UBootAutobootInterceptSimple timeout for waiting for U-Boot prompt", '0.05', "0.1"
+        "uboot_autoboot_keys","string with which U-Boot boot is interrupted. It is possible to set also a bytearray, see the table below","None","SPACE"
+        "uboot_autoboot_prompt","regular expression of the U-Boot autoboot prompt, None if U-Boot prints none","autoboot:\s{0,5}\d{0,3}\s{0,3}.{0,80}","None"
+        "uboot_autoboot_timeout","UBootAutobootInterceptSimple timeout for waiting for U-Boot prompt","0.1","0.05"
         "uboot_has_retcode", "tbot reads the return code of every U-Boot command with echo $?, which only the hush parser supports. Set to False for a U-Boot without hush: exec() then skips that query and reports 0, so exec0() cannot detect a failing command", "True", "False"
         "rescueimage", "name of rescueimage", "None", "rescueimage-fit.itb"
         "qspiheader", "name of qspi header", "None", "qspiheader.bin"
@@ -759,7 +758,7 @@ settings needed for U-Boot testcases.
         "fb_res_setup", "u-boot commands for setting up rescue image boot with fastboot and uuu tool", "None", "run ramargs addcon addmtd addopt"
         "fb_res_boot", "u-boot command for booting rescue image with fastboot and uuu tool", "None", "bootm 94000000"
         "fb_cmd", "fastboot init command", "None", "fastboot usb 0"
-        "ub_env", "list dict of u-boot environment variables which get set after login into u-boot", "[]", "[{'"name'":'"optargs'", '"val'":'"earlycon clk_ignore_unused'"}]"
+        "ub_env","list dict of u-boot environment variables which get set after login into u-boot","[]","[{""name"":""optargs"", ""val"":""earlycon clk_ignore_unused""}]"
 
 .. csv-table:: uboot_autoboot_keys example
         :escape: '
@@ -775,7 +774,6 @@ linux settings
 settings needed for linux testcases.
 
 .. csv-table:: [TC]
-        :escape: '
         :header: "key", "description", "default", "example"
 
         "linux_user", "username for linux login. Set to empty (linux_user = ) to just send Enter instead of a username, e.g. for boards that already auto-login", "root", "root"
@@ -785,34 +783,34 @@ settings needed for linux testcases.
         "linux_boot_timeout", "Maximum time for Linux to reach the login prompt.", "None", "30"
         "linux_init_timeout", "If not None, timeout in seconds after ethernetconfig", "None", "2.0"
         "linux_netcmd", "command the ethernet setup after login uses: auto takes ip if the board has it (checked once with command -v ip), else ifconfig; ip or ifconfig always take that one. The flag useifconfig takes ifconfig in any case", "auto", "ifconfig"
-        "linux_init", "list of commands send after login. mode = exec or exec0", "[]", "[{'"mode'":'"exec0'", '"cmd'":'"echo Hallo'"}]"
+        "linux_init","list of commands send after login. mode = exec or exec0","[]","[{""mode"":""exec0"", ""cmd"":""echo Hallo""}]"
         "testdir", "directory on the board for what testcases put there; in the root filesystem if a testcase puts files there through an NFS root", "/run/tbot-testdata/tbottests", "/home/root/tbottests"
         "shelltype", "linux login shell type (bash|ash)", "ash", "bash"
         "linux_plain_prompt", "True gives the interactive linux shell a plain <name>> prompt, without the color escapes and the directory that an old busybox ash prints literally (tbot's interactive_plain_prompt)", "False", "True"
-        "beep", "list of dictionary of commands for beep command", "[]", "[{'"freq'": '"440'", '"length'":'"1000'"}]"
+        "beep","list of dictionary of commands for beep command","[]","[{""freq"": ""440"", ""length"":""1000""}]"
         "cyclictestmaxvalue", "maximum allowed value from stress-ng 'Max' colum", "100", "cyclictestmaxvalue = 100"
-        "dmesg", "list of strings, which should be in dmesg output", "[]", "dmesg = ['"OF: fdt: Machine model:'", '"gpio-193 (eeprom-wc): hogged as output/low'",]"
-        "dmesg_false", "list of strings, which should be not in dmesg output", "[]", "dmesg = ['"crash'"]"
-        "iperf", "list of dictionary for iperf test", "[]", 'iperf = [{"intervall":"1","minval":"290000000","cycles":"30"}]'
-        "leds", "list of dictionary for checking leds", "[]", "leds = [{'"path'":'"/sys/class/leds/led-orange'", #bootval'":'"0'", '"onval'":'"1'},]"
-        "lnx_commands", "list of dictionary for checking linux commands", "[]", "lnx_commands = [{'"cmd'":'"<your linux command'", '"val'":'"<string which is in output of command> or undef'"},]"
+        "dmesg","list of strings, which should be in dmesg output","[]","dmesg = [""OF: fdt: Machine model:"", ""gpio-193 (eeprom-wc): hogged as output/low"",]"
+        "dmesg_false","list of strings, which should be not in dmesg output","[]","dmesg_false = [""crash""]"
+        "iperf","list of dictionary for iperf test","[]","iperf = [{""intervall"":""1"",""minval"":""290000000"",""cycles"":""30""}]"
+        "leds","list of dictionary for checking leds","[]","leds = [{""path"":""/sys/class/leds/led-orange"", ""bootval"":""0"", ""onval"":""1""},]"
+        "lnx_commands","list of dictionary for checking linux commands","[]","lnx_commands = [{""cmd"":""<your linux command>"", ""val"":""<string which is in output of command> or undef""},]"
         "network_iperf_intervall", "iperf intervall", "1", "network_iperf_intervall = 1"
         "network_iperf_minval", "iperf minimum network throughput", "1", "network_iperf_minval = 9000000"
         "network_iperf_cylces", "iperf cycles", "1", "network_iperf_cycles = 30"
         "nvramdev", "nvram device", "6", "nvramdev = 6"
         "nvramcomp", "compatibility string of nvram device", "microchip,48l640", "nvramcomp = 'microchip,48l640'"
         "nvramsz", "size of nvram device", "8192", "nvramsz = 8192"
-        "ping", "list of dict for ping config.", "[]", 'ping = [{"ip":"${default:serverip}","retry":"10"}]'
-        "regdump", "list of dict for generic regdump", "[]", 'regdump = [{"address":"0x30340004"}, {"address":"0x30330070"}]'
-        "rs485labdev", "path to device", "/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0", 'rs485labdev = "/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0"'
-        "rs485baud", "baudrate used for test", "115200", 'rs485baud = "115200"'
-        "rs485boarddev", "list of strings, each string contains a path to device which used in test", '["/dev/ttymxc2"]', 'rs485boarddev = ["/dev/ttymxc2"]'
-        "rs485lengths", "list of strings. Each string is a length of data send over rs485 line", '["20", "100", "1024"]', 'rs485lengths = ["20", "100", "1024"]'
-        "sensors", "list of dictionary for checking temperature sensors", "[]", "sensors = [{'path':''/sys/class/hwmon/hwmon0, "name":"tmp102", "tmpvalues":[{"valname" : "temp1_input", "min":"0", "max" : "100000" }]},]"
-        "mtd_parts", "list of dictionary for MTD parts definition", "[]", "leds = [{'name':'SPL', 'size':'10000'},]"
-        "ub_mtd_delete", "list of strings with MTD names which are allowed to delete", "[]", "ub_mtd_delete = ['SPL", "uboot"]"
-        "ssh_keyfile"; "ssh setup: authentication using private key file ssh_keyfile", "None", "/home/{user}/.ssh/id_rsa"
-        "ssh_password"; "ssh setup: set password for password ssh login", "None", "foobar"
+        "ping","list of dict for ping config.","[]","ping = [{""ip"":""${default:serverip}"",""retry"":""10""}]"
+        "regdump","list of dict for generic regdump","[]","regdump = [{""address"":""0x30340004""}, {""address"":""0x30330070""}]"
+        "rs485labdev","path to device","/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0","rs485labdev = ""/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0"""
+        "rs485baud","baudrate used for test","115200","rs485baud = ""115200"""
+        "rs485boarddev","list of strings, each string contains a path to device which used in test","[""/dev/ttymxc2""]","rs485boarddev = [""/dev/ttymxc2""]"
+        "rs485lengths","list of strings. Each string is a length of data send over rs485 line","[""20"", ""100"", ""1024""]","rs485lengths = [""20"", ""100"", ""1024""]"
+        "sensors","list of dictionary for checking temperature sensors","[]","sensors = [{""path"":""/sys/class/hwmon/hwmon0"", ""name"":""tmp102"", ""tmpvalues"":[{""valname"":""temp1_input"", ""min"":""0"", ""max"":""100000""}]},]"
+        "mtd_parts","list of dictionary for MTD parts definition","[]","mtd_parts = [{""name"":""SPL"", ""size"":""10000""},]"
+        "ub_mtd_delete","list of strings with MTD names which are allowed to delete","[]","ub_mtd_delete = [""SPL"", ""uboot""]"
+        "ssh_keyfile","ssh setup: authentication using private key file ssh_keyfile","None","/home/{user}/.ssh/id_rsa"
+        "ssh_password","ssh setup: set password for password ssh login","None","foobar"
 
 
 swupdate settings
