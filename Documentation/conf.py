@@ -120,6 +120,8 @@ elif doc_theme == "cloud":
     # other themes, down to the sections of the current page
     html_sidebars = {"**": ["globaltoc.html", "searchbox.html"]}
     html_theme_options = {"globaltoc_maxdepth": 3}
+    # the page uses the window width (see static/cloud-wide.css)
+    html_css_files = ["cloud-wide.css"]
 
 # With TBOTTEST_DOC_THEMESWITCH set, every page gets a menu to open the
 # same page in the other themes (see static/themeswitch.js).
