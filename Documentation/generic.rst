@@ -28,16 +28,32 @@ without entering a password or something else!
 supported hardware/tools
 ------------------------
 
-serial console access with:
+Console access to the board with:
 
-* piccom
-* kermit
+* picocom, see `[PICOCOM_BOARDNAME]`_
+* kermit, see `[KERMIT_BOARDNAME]`_
+* telnet, see `[TELNET_BOARDNAME]`_
+* a script of your own, see `[SCRIPTCOM_BOARDNAME]`_
+* ssh into the running Linux of the board, flag ssh
 
-Powercontrol:
+Power control with:
 
-* sispmctl
-* TinkerForge
-* simple GPIO
+* sispmctl, see `[SISPMCTRL_BOARDNAME]`_
+* Tinkerforge, see `[TF_BOARDNAME]`_
+* a GPIO pin, see `[GPIOPMCTRL_BOARDNAME]`_
+* a shell script, see `[POWERSHELLSCRIPT_BOARDNAME]`_
+* a tbox SYSTEM Controller Modul through tbox-ctrl (USB HID), see `[TBOX_BOARDNAME]`_
+* the DH electronics TM-021 relay module, see `[TM021_BOARDNAME]`_
+
+Loading SPL/U-Boot after power on, or a debugger, with:
+
+* uuu from NXP, see `setup for uuu tool`_
+* dfu-util, see `setup for dfu-util tool`_
+* sb, xmodem/ymodem over the serial line, see `setup for sb tool`_
+* Lauterbach TRACE32, see `setup for Lauterbacher debugger`_
+* Segger J-Link, see `setup for Segger debugger`_
+* Abatron BDI2000, commands after power on and a telnet session, see
+  `setup for BDI2000 debugger`_
 
 It should be easy to extend this! tbot does not prevent you to use
 other hardware (nor to make stupid stuff)!
