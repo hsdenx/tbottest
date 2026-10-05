@@ -8,6 +8,7 @@ __all__ = (
     "KermitConnector",
     "PicocomConnector",
     "TelnetConnector",
+    "ScriptConnector",
 )
 
 

@@ -182,3 +182,15 @@ class TestPicocomSlowSend:
         with PicocomBoardSlow().picocomconnect(mach):
             pass
         assert mach.args == ("picocom", "-b", "115200", "-l", "/dev/ttyUSB0")
+
+
+def test_all_lists_every_connector():
+    defined = sorted(
+        name
+        for name, obj in vars(connector).items()
+        if isinstance(obj, type)
+        and obj.__module__ == connector.__name__
+        and name.endswith("Connector")
+    )
+    assert defined
+    assert sorted(connector.__all__) == defined
