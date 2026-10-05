@@ -57,7 +57,7 @@ jobs:
           # set some git default values so git am works
           git config --global user.email "hs@denx.de"
           git config --global user.name "Heiko Schocher"
-          ../scripts/create_setup.sh
+          ../scripts/create_setup.sh --ci
           # test if ssh works
           echo "--------------------- try forwarder ------------------"
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/staging.key pi@xeidos.ddns.net /home/pi/hello.sh

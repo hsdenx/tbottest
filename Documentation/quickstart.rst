@@ -15,7 +15,9 @@ the board and their settings. The generated ``tbot.ini`` holds only the
 selected console and power control section, so tbot finds exactly one of
 each. A unique prefix of a choice is enough (``tm`` for ``tm021``).
 Without ``--inter`` it creates the setup the github CI uses: board
-``foo``, picocom and sispmctrl.
+``foo``, picocom and sispmctrl. ``--ci`` also copies the testcases the
+github CI of tbottest runs to ``tbotconfig/ci``; a normal setup does not
+need them.
 
 Lab setup
 ^^^^^^^^^

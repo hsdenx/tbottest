@@ -98,13 +98,15 @@ POWERS = {
 }
 
 
-def run_setup(tmp_path, answers, inter=True):
+def run_setup(tmp_path, answers, inter=True, ci=False):
     if not (tmp_path / "tbot").exists():
         os.mkdir(tmp_path / "tbot")
         os.symlink(REPO, tmp_path / "tbottest")
     args = ["bash", SCRIPT]
     if inter:
         args.append("--inter")
+    if ci:
+        args.append("--ci")
     return subprocess.run(
         args,
         cwd=tmp_path,
@@ -305,3 +307,22 @@ def test_setup_sh_kept(tmp_path):
     assert res.returncode == 0, res.stdout + res.stderr
     assert (tmp_path / "setup.sh").read_text() == "# my own\n"
     assert "Found existing setup.sh" in res.stdout
+
+
+def test_no_ci_testcases_by_default(tmp_path):
+    res = run_setup(tmp_path, [], inter=False)
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert not (tmp_path / "tbotconfig" / "ci").exists()
+    assert (tmp_path / "tbotconfig" / "interactive.py").is_file()
+    assert "ci.tests.all" not in res.stdout
+
+
+def test_ci_option_copies_the_ci_testcases(tmp_path):
+    res = run_setup(tmp_path, [], inter=False, ci=True)
+    assert res.returncode == 0, res.stdout + res.stderr
+    ci = tmp_path / "tbotconfig" / "ci"
+    template = os.path.join(REPO, "tbottest", "tbotconfig", "ci")
+    assert sorted(os.listdir(ci)) == sorted(
+        f for f in os.listdir(template) if os.path.isfile(os.path.join(template, f))
+    )
+    assert "tbfoonoeth $con.ci.tests.all" in res.stdout

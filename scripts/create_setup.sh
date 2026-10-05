@@ -62,6 +62,8 @@ IPSETUPIP=192.168.3.40
 IPSETUPSERVERIP=192.168.3.1
 
 INTER=no
+# --ci: also copy the testcases the github CI of tbottest runs
+CISETUP=no
 
 while [[ $# -gt 0 ]]
 do
@@ -71,6 +73,12 @@ case $key in
     -i|--inter)
     shift # past argument
     INTER=yes
+    ;;
+
+    # copy tbotconfig/ci, only needed for the github CI of tbottest
+    --ci)
+    shift # past argument
+    CISETUP=yes
     ;;
 
     # checkout specific tbottest branch
@@ -306,9 +314,11 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	cd tbotconfig
 
 	cp ../tbottest/tbottest/tbotconfig/interactive.py .
-	# and only for github CI from interest
-	mkdir ci
-	cp ../tbottest/tbottest/tbotconfig/ci/* ci
+	# only for the github CI of tbottest
+	if [ "${CISETUP}" == "yes" ];then
+		mkdir ci
+		cp ../tbottest/tbottest/tbotconfig/ci/* ci
+	fi
 
 	if [ "${INTER}" == "yes" ];then
 		echo "Check that ssh login without password works!"
@@ -415,5 +425,7 @@ echo
 echo "edit linux settings in tbotconfig/$BOARDNAME/${BOARDNAME}.ini and interactive Linux should work"
 echo "tb${BOARDNAME}noeth \$conint.linux"
 echo
-echo "start CI tests with"
-echo "tb${BOARDNAME}noeth \$con.ci.tests.all"
+if [ "${CISETUP}" == "yes" ];then
+	echo "start CI tests with"
+	echo "tb${BOARDNAME}noeth \$con.ci.tests.all"
+fi

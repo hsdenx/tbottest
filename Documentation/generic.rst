@@ -109,7 +109,7 @@ What scripts/create_setup.sh sets up, with tbotconfig for one board:
         ├── tbottest/                    this repository; newtbot_starter.py starts tbot
         └── tbotconfig/                  your own repository: configuration and testcases
             ├── interactive.py           testcases for interactive sessions
-            ├── ci/                      testcases of the tbottest CI on github
+            ├── ci/                      testcases of the tbottest CI on github (only with --ci)
             ├── tc_BOARDNAME.py          testcases of the board
             └── BOARDNAME/
                 ├── args/                argumentfiles
@@ -129,7 +129,7 @@ What scripts/create_setup.sh sets up, with tbotconfig for one board:
 
         "setup.sh", "aliases for starting tbot", "`tbottest/tbotconfig/setup.sh <https://github.com/hsdenx/tbottest/blob/master/tbottest/tbotconfig/setup.sh>`__"
         "tbotconfig/interactive.py", "testcases for interactive sessions: lab host, build host, kas shell, board, U-Boot, Linux, BDI2000", ""
-        "tbotconfig/ci", "testcases the github CI of tbottest runs", ""
+        "tbotconfig/ci", "testcases the github CI of tbottest runs; create_setup.sh copies them only with ``--ci``", ""
         "tbotconfig/tc_BOARDNAME.py", "testcases of the board, from tbottest/tbotconfig/BOARDNAME/BOARDNAME.py", ""
         "BOARDNAME/args", "argumentfiles: argsbase, argsBOARDNAME, and the variants -noeth (flags noethinit, noboardethinit) and -noeth-ssh (adds nopoweroff, always-on, ssh, nouboot)", "`argumentfiles`_"
         "BOARDNAME/boardspecific.py", "functions that adapt the configuration at runtime, e.g. replace the @@...@@ placeholders", ":ref:`boardspecificruntimeadaption`"
