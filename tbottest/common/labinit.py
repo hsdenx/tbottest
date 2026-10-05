@@ -60,16 +60,20 @@ def lab_init_once(
     if ret == 0:
         return
 
+    # imported here, so this module stays importable without the board
+    # environment that tbottest.tc pulls in
+    from tbottest.tc.network import lnx_has_netdev, lnx_set_ipaddr
+
     for ethdev in ethdevices.values():
         labdev = ethdev["labdevice"]
-        out = lab.exec0("ifconfig", "-a")
-        if labdev not in out:
+        if not lnx_has_netdev(lab, labdev):
             tbot.log.message(
                 tbot.log.c(f"ethernet device {labdev} not found on lab host").yellow
             )
             continue
 
-        lab.exec0("sudo", "ifconfig", labdev, "down", ethdev["serverip"], "up")
+        # without netmask, as before: the prefix follows the address class
+        lnx_set_ipaddr(lab, labdev, ethdev["serverip"], sudo=True)
         out = lab.exec0("ip", "link", "show", "dev", labdev)
         while "NO-CARRIER" in out:
             lab.exec0("sudo", "ethtool", "-s", labdev, "autoneg", "on")

@@ -10,6 +10,7 @@ and optionally one labinit command that fails like exec0() does.
 
 import configparser
 import os
+import sys
 
 import pytest
 
@@ -19,6 +20,22 @@ labinit = load_module(
     "tbottest_common_labinit",
     os.path.join(os.path.dirname(__file__), "..", "tbottest", "common", "labinit.py"),
 )
+
+# labinit imports the ip/ifconfig helpers from tbottest.tc.network when it
+# sets up the lab's ethernet devices
+network = load_module(
+    "tbottest_tc_network_for_labinit",
+    os.path.join(os.path.dirname(__file__), "..", "tbottest", "tc", "network.py"),
+)
+
+
+@pytest.fixture(autouse=True)
+def network_module(monkeypatch):
+    monkeypatch.setitem(sys.modules, "tbottest.tc.network", network)
+    network._NETCMD.clear()
+    yield
+    network._NETCMD.clear()
+
 
 MARKER = labinit.LABINIT_MARKER
 
@@ -32,16 +49,24 @@ class CommandFailed(Exception):
 
 
 class FakeLab:
-    def __init__(self, files=(), interfaces=("eth0",), fail=None):
+    name = "lab"
+
+    def __init__(self, files=(), interfaces=("eth0",), fail=None, netcmd="ip"):
         self.files = set(files)
         self.interfaces = interfaces
         self.fail = fail
+        self.netcmd = netcmd
         self.log = []
+
+    def test(self, *args):
+        return args[:2] == ("command", "-v") and args[2] == self.netcmd
 
     def exec(self, *args):
         self.log.append(args)
         if args[:2] == ("test", "-f"):
             return (0 if args[2] in self.files else 1, "")
+        if args[:4] == ("ip", "link", "show", "dev") or args[:1] == ("ifconfig",):
+            return (0 if args[-1] in self.interfaces else 1, "")
         return (0, "")
 
     def exec0(self, *args):
@@ -49,8 +74,6 @@ class FakeLab:
         if args[0] == "date":
             self.files.add(args[2])
             return ""
-        if args == ("ifconfig", "-a"):
-            return "\n".join(f"{i}: flags=4163<UP>" for i in self.interfaces)
         if args[:3] == ("ip", "link", "show"):
             return "2: eth0: <BROADCAST,UP,LOWER_UP> state UP"
         if self.fail is not None and args == (self.fail,):
@@ -61,7 +84,8 @@ class FakeLab:
         return args in self.log
 
     def ifconfig_up(self):
-        return [a for a in self.log if a[:2] == ("sudo", "ifconfig")]
+        """commands that set an address on a lab device"""
+        return [a for a in self.log if a[:2] in (("sudo", "ifconfig"), ("sudo", "ip"))]
 
 
 def test_first_run_does_labinit_and_ethernet():
@@ -69,8 +93,20 @@ def test_first_run_does_labinit_and_ethernet():
     labinit.lab_init_once(lab, ["cmd1", "cmd2"], "board", ETHDEVICES)
 
     assert lab.ran("cmd1") and lab.ran("cmd2")
-    assert lab.ifconfig_up() == [("sudo", "ifconfig", "eth0", "down", "192.168.3.1", "up")]
+    assert lab.ifconfig_up() == [
+        ("sudo", "ip", "link", "set", "eth0", "down"),
+        ("sudo", "ip", "-4", "addr", "flush", "dev", "eth0"),
+        ("sudo", "ip", "addr", "add", "192.168.3.1/24", "dev", "eth0"),
+        ("sudo", "ip", "link", "set", "eth0", "up"),
+    ]
     assert lab.files == {MARKER, f"{MARKER}-board"}
+
+
+def test_lab_without_ip_uses_ifconfig():
+    lab = FakeLab(netcmd="ifconfig")
+    labinit.lab_init_once(lab, [], "board", ETHDEVICES)
+
+    assert lab.ifconfig_up() == [("sudo", "ifconfig", "eth0", "down", "192.168.3.1", "up")]
 
 
 def test_second_run_does_nothing():
@@ -86,7 +122,7 @@ def test_second_board_gets_its_ethernet_setup():
     labinit.lab_init_once(lab, ["cmd1"], "other", ETHDEVICES)
 
     assert not lab.ran("cmd1")
-    assert len(lab.ifconfig_up()) == 1
+    assert len(lab.ifconfig_up()) == 4
     assert f"{MARKER}-other" in lab.files
 
 
