@@ -35,6 +35,11 @@ class _Event:
 
 tbot.log_event = types.SimpleNamespace(command=lambda *a, **kw: _Event())
 
+if not hasattr(tbot, "error"):
+    tbot.error = types.SimpleNamespace()
+if not hasattr(tbot.error, "ChannelClosedError"):
+    tbot.error.ChannelClosedError = type("ChannelClosedError", (Exception,), {})
+
 shell_mod = types.ModuleType("tbot.machine.shell")
 shell_mod.Shell = type("Shell", (), {})
 sys.modules["tbot.machine.shell"] = shell_mod
@@ -237,3 +242,197 @@ def test_commands_without_init_list_do_not_wait():
     with ch.with_prompt(bdi2000.BDI2000_PROMPT):
         bdi.exec("bi", "0xc0600980")
     assert not [e for e in ch.log if e[0] in ("expect", "read")]
+
+
+CONFIG_OUT = (
+    "    BDI Firmware: 1.18\n"
+    "    BDI MAC     : 00-0c-01-93-19-70\n"
+    "    BDI IP      : 192.168.3.101\n"
+    "    BDI Subnet  : 255.255.255.255\n"
+    "    BDI Gateway : 255.255.255.255\n"
+    "    Config IP   : 192.168.3.1\n"
+    "    Config File : {}\n"
+)
+CFG = "amc/bdi/tqm855-AMC.cfg"
+CFG_NOWDT = "amc/bdi/tqm855-AMC-nowdt.cfg"
+
+
+def test_split_configname_takes_the_entry_out():
+    cfg, cmds = bdi2000.split_configname(["reset", "configname:" + CFG_NOWDT, "go 0x40000100"])
+    assert cfg == CFG_NOWDT
+    assert cmds == ["reset", "go 0x40000100"]
+
+
+def test_split_configname_without_entry():
+    assert bdi2000.split_configname(["reset run"]) == (None, ["reset run"])
+
+
+def test_split_configname_rejects_two_entries_and_an_empty_one():
+    import pytest
+
+    with pytest.raises(RuntimeError):
+        bdi2000.split_configname(["configname:" + CFG, "configname:" + CFG_NOWDT])
+    with pytest.raises(RuntimeError):
+        bdi2000.split_configname(["configname:", "reset"])
+
+
+def test_config_reads_file_and_host(monkeypatch):
+    bdi, ch, _ = _bdi_with_info([CONFIG_OUT.format(CFG)], monkeypatch)
+    assert bdi.config() == (CFG, "192.168.3.1")
+    assert ch.sent == ["config"]
+
+
+def test_config_without_file_raises(monkeypatch):
+    import pytest
+
+    bdi, _, _ = _bdi_with_info(["unknown command\n"], monkeypatch)
+    with pytest.raises(RuntimeError):
+        bdi.config()
+
+
+UPDATED = (
+    b"config amc/bdi/tqm855-AMC.cfg 192.168.3.1\r\n"
+    b"Updating configuration passed. Booting ....."
+)
+
+
+class BootChannel(FakeChannel):
+    """
+    after config <file> <host>: returns ``chunks`` one per read, then
+    closes; with close=False it stays open and only times out
+    """
+
+    def __init__(self, chunks, close=True):
+        super().__init__()
+        self.chunks = list(chunks)
+        self.close = close
+        self.clock = None
+
+    def read(self, n=-1, timeout=None):
+        self.log.append(("read",))
+        if self.chunks:
+            return self.chunks.pop(0)
+        if self.close:
+            raise tbot.error.ChannelClosedError()
+        # a read that times out takes its time
+        if self.clock is not None and timeout is not None:
+            self.clock.now += timeout
+        raise TimeoutError()
+
+
+def _boot_bdi(ch, monkeypatch, current=CFG):
+    bdi = FakeBDI(ch)
+
+    def fake_exec(*args):
+        ch.sent.append(" ".join(args))
+        return CONFIG_OUT.format(current) if args == ("config",) else ""
+
+    monkeypatch.setattr(bdi, "exec", fake_exec)
+    clock = FakeClock()
+    monkeypatch.setattr(bdi2000.time, "monotonic", clock.monotonic)
+    monkeypatch.setattr(bdi2000.time, "sleep", clock.sleep)
+    ch.clock = clock
+    return bdi, clock
+
+
+def test_boot_config_sets_the_file_with_the_current_host(monkeypatch):
+    ch = BootChannel([UPDATED[:20], UPDATED[20:]])
+    bdi, _ = _boot_bdi(ch, monkeypatch)
+    bdi.boot_config(CFG_NOWDT)
+    # no boot of its own: config makes the BDI boot
+    assert ch.sent == ["config", "config " + CFG_NOWDT + " 192.168.3.1"]
+    assert ch.log.count(("read",)) == 3
+
+
+def test_boot_config_raises_if_the_bdi_shows_its_prompt_again(monkeypatch):
+    import pytest
+
+    ch = BootChannel([b"config foo.cfg 192.168.3.1\r\n# TFTP error\r\nBDI>"], close=False)
+    bdi, _ = _boot_bdi(ch, monkeypatch)
+    with pytest.raises(RuntimeError):
+        bdi.boot_config("foo.cfg")
+
+
+def test_boot_config_raises_if_closed_without_update(monkeypatch):
+    import pytest
+
+    ch = BootChannel([b"config foo.cfg 192.168.3.1\r\n"])
+    bdi, _ = _boot_bdi(ch, monkeypatch)
+    with pytest.raises(RuntimeError):
+        bdi.boot_config("foo.cfg")
+
+
+def test_boot_config_times_out_if_the_session_stays_open(monkeypatch):
+    import pytest
+
+    ch = BootChannel([], close=False)
+    bdi, clock = _boot_bdi(ch, monkeypatch)
+    with pytest.raises(TimeoutError):
+        bdi.boot_config(CFG_NOWDT, timeout=5)
+    assert clock.now >= 5
+
+
+class FakeBDIConfig:
+    """what ensure_config() needs from a BDI2000 machine"""
+
+    def __init__(self, world):
+        self.world = world
+
+    def config(self):
+        return self.world["cfg"], "192.168.3.1"
+
+    def boot_config(self, cfgfile, timeout=30.0):
+        self.world["booted"].append(cfgfile)
+        self.world["cfg"] = self.world.get("cfg_after_boot", cfgfile)
+
+
+def _ensure(monkeypatch, cfg, refused=0, cfg_after_boot=None, timeout=30.0):
+    world = {"cfg": cfg, "booted": [], "requests": 0, "refused": refused}
+    if cfg_after_boot is not None:
+        world["cfg_after_boot"] = cfg_after_boot
+
+    @contextlib.contextmanager
+    def request():
+        world["requests"] += 1
+        if world["booted"] and world["refused"] > 0:
+            world["refused"] -= 1
+            raise RuntimeError("telnet connection refused")
+        yield FakeBDIConfig(world)
+
+    clock = FakeClock()
+    monkeypatch.setattr(bdi2000.time, "monotonic", clock.monotonic)
+    monkeypatch.setattr(bdi2000.time, "sleep", clock.sleep)
+    return world, clock, request
+
+
+def test_ensure_config_keeps_the_bdi_with_the_right_file(monkeypatch):
+    world, _, request = _ensure(monkeypatch, CFG_NOWDT)
+    assert bdi2000.ensure_config(request, CFG_NOWDT) is False
+    assert world["booted"] == []
+    assert world["requests"] == 1
+
+
+def test_ensure_config_boots_and_reconnects(monkeypatch):
+    world, clock, request = _ensure(monkeypatch, CFG, refused=3)
+    assert bdi2000.ensure_config(request, CFG_NOWDT, interval=2.0) is True
+    assert world["booted"] == [CFG_NOWDT]
+    # the first request, three refused ones, the one that answers
+    assert world["requests"] == 5
+    assert clock.now == 6.0
+
+
+def test_ensure_config_times_out_if_the_bdi_does_not_come_back(monkeypatch):
+    import pytest
+
+    world, clock, request = _ensure(monkeypatch, CFG, refused=1000)
+    with pytest.raises(TimeoutError):
+        bdi2000.ensure_config(request, CFG_NOWDT, timeout=10, interval=2.0)
+    assert clock.now >= 10
+
+
+def test_ensure_config_raises_if_the_bdi_kept_the_old_file(monkeypatch):
+    import pytest
+
+    _, _, request = _ensure(monkeypatch, CFG, cfg_after_boot=CFG)
+    with pytest.raises(RuntimeError):
+        bdi2000.ensure_config(request, CFG_NOWDT)

@@ -610,13 +610,34 @@ hand on the BDI (:py:func:`tbottest.initconfig.bdi2000_poweron_cmds`).
         "nowdt": ["reset", "go 0x40000100"],
         }
 
+A list may contain the entry ``configname:<file>``, the configuration
+file the BDI has to run with for the other commands. It is not sent as a
+command: before the other commands, the board control asks the BDI with
+``config`` which file it runs with. If it is ``<file>``, the commands run
+as usual. Otherwise it sets ``<file>`` with ``config <file> <host>``, the
+host being the one the BDI loads its current file from. The BDI answers
+``Updating configuration passed. Booting .....``, boots with the new file
+right away and ends the telnet session; tbot connects again until the BDI
+answers, within ``poweron_timeout`` seconds, and checks that it runs with
+``<file>`` before it waits for
+``poweron_wait_state`` and sends the commands
+(:py:func:`tbottest.bdi2000.ensure_config`). So each command list can
+bring the configuration file it needs:
+
+.. code-block:: ini
+
+    poweron_cmds = {
+        "default": ["configname:amc/bdi/tqm855-AMC-nowdt.cfg", "reset", "go 0x40000100"],
+        "reset": ["configname:amc/bdi/tqm855-AMC.cfg", "reset run"],
+        }
+
 .. csv-table:: [BDI2000_<boardname>]
         :header: "key", "value", "example"
 
         "ip", "IP address of the BDI2000, reached with telnet from the lab host", "192.168.3.101"
-        "poweron_cmds", "optional list of BDI commands run after each power on of the board, or a dictionary of such lists selected with -f poweron_cmds:<name>", "['reset run']"
+        "poweron_cmds", "optional list of BDI commands run after each power on of the board, or a dictionary of such lists selected with -f poweron_cmds:<name>; an entry configname:<file> selects the configuration file of the BDI first", "['reset run']"
         "poweron_wait_state", "optional target state, as info reports it, to wait for before poweron_cmds", "debug mode"
-        "poweron_timeout", "seconds to wait for poweron_wait_state, default 30", "30"
+        "poweron_timeout", "seconds to wait for poweron_wait_state, and for the BDI to boot for configname:<file>, default 30", "30"
 
 .. _boardspecificruntimeadaption:
 

@@ -291,6 +291,12 @@ class BDI2000Cmds(machine.Initializer):
     requested through the role tbottest.bdi2000.BDI2000. If
     get_bdi2000_wait_state() returns a target state, the commands are only
     sent once the BDI reports it.
+
+    An entry ``configname:<file>`` in the commands is not sent: before the
+    other commands, the BDI is made to run with the configuration file
+    <file>, which makes it boot if it runs with another one (see
+    tbottest.bdi2000.ensure_config()). get_bdi2000_timeout() also limits
+    the wait for the BDI to boot.
     """
 
     def get_bdi2000_wait_state(self) -> typing.Optional[str]:
@@ -317,13 +323,23 @@ class BDI2000Cmds(machine.Initializer):
         pass
 
     def _run_bdi2000_cmds(self) -> None:
-        from tbottest.bdi2000 import BDI2000
+        from tbottest.bdi2000 import BDI2000, ensure_config, split_configname
+
+        cfgfile, cmds = split_configname(self.get_bdi2000_cmds())
+        if cfgfile is not None:
+            # exclusive: the machine is torn down after each request, as
+            # the BDI ends the telnet session when it boots
+            ensure_config(
+                lambda: tbot.ctx.request(BDI2000, exclusive=True),
+                cfgfile,
+                timeout=self.get_bdi2000_timeout(),
+            )
 
         with tbot.ctx.request(BDI2000) as bdi:
             state = self.get_bdi2000_wait_state()
             if state:
                 bdi.wait_target_state(state, timeout=self.get_bdi2000_timeout())
-            for cmd in self.get_bdi2000_cmds():
+            for cmd in cmds:
                 bdi.exec(cmd)
 
     @contextlib.contextmanager

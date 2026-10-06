@@ -32,6 +32,42 @@ TARGET_STATE = re.compile(r"Target state\s*:\s*(.*\S)")
 INIT_LIST_STARTED = "processing target init list"
 INIT_LIST_DONE = re.compile(r"init list (passed|failed)")
 
+# "Config IP   : 192.168.3.1" and "Config File : amc/bdi/tqm855-AMC.cfg" in
+# the output of the BDI command config without arguments
+CONFIG_IP = re.compile(r"Config IP\s*:\s*(\S+)")
+CONFIG_FILE = re.compile(r"Config File\s*:\s*(\S+)")
+
+# config <file> <host> answers "Updating configuration passed. Booting ....."
+# and the BDI boots with the new file at once, ending the telnet session
+CONFIG_UPDATED = "Updating configuration passed"
+
+# poweron_cmds entry that selects the BDI configuration file, see
+# split_configname()
+CONFIGNAME = "configname:"
+
+
+def split_configname(
+    cmds: typing.List[str],
+) -> typing.Tuple[typing.Optional[str], typing.List[str]]:
+    """
+    Take the entry ``configname:<file>`` out of a list of BDI commands.
+
+    It names the configuration file the BDI has to run with before the
+    other commands are sent, see ensure_config().
+
+    :returns: the file, or None without such an entry, and the other
+        commands in their order
+    :raises RuntimeError: if there is more than one such entry, or one
+        without a file
+    """
+    names = [c[len(CONFIGNAME):].strip() for c in cmds if c.startswith(CONFIGNAME)]
+    if len(names) > 1:
+        raise RuntimeError(f"more than one {CONFIGNAME} entry in {cmds}")
+    if names and not names[0]:
+        raise RuntimeError(f"{CONFIGNAME} without a configuration file in {cmds}")
+    rest = [c for c in cmds if not c.startswith(CONFIGNAME)]
+    return (names[0] if names else None), rest
+
 
 class BDI2000Shell(shell.Shell):
     """
@@ -130,6 +166,63 @@ class BDI2000Shell(shell.Shell):
                 )
             time.sleep(interval)
 
+    def config(self) -> typing.Tuple[str, str]:
+        """
+        :returns: the configuration file the BDI runs with and the host
+            it loads it from, as the BDI command config reports them
+        :raises RuntimeError: if config reports neither
+        """
+        out = self.exec("config")
+        cfgfile = CONFIG_FILE.search(out)
+        host = CONFIG_IP.search(out)
+        if cfgfile is None or host is None:
+            raise RuntimeError(f"BDI2000 config reports no Config File or Config IP: {out}")
+        return cfgfile.group(1), host.group(1)
+
+    def boot_config(self, cfgfile: str, timeout: float = 30.0) -> None:
+        """
+        Set the configuration file, loaded from the same host as the
+        current one, with config <file> <host>.
+
+        The BDI stores it, reports "Updating configuration passed.
+        Booting ....." and boots with it right away, which ends the telnet
+        session; this waits until the channel is closed. Request a new
+        BDI2000 machine afterwards.
+
+        :raises RuntimeError: if the BDI shows its prompt again instead of
+            booting, or the channel closes without the update reported
+        :raises TimeoutError: if the channel is still open after
+            ``timeout`` seconds
+        """
+        _, host = self.config()
+        cmd = f"config {cfgfile} {host}"
+        out = b""
+        with tbot.log_event.command(self.name, cmd) as ev:
+            self.ch.sendline(cmd)
+            end = time.monotonic() + timeout
+            try:
+                while time.monotonic() < end:
+                    try:
+                        out += self.ch.read(timeout=1.0)
+                    except TimeoutError:
+                        pass
+                    if BDI2000_PROMPT.search(out):
+                        ev.data["stdout"] = out.decode(errors="replace")
+                        raise RuntimeError(
+                            f"BDI2000 did not boot with {cfgfile}: {ev.data['stdout']}"
+                        )
+            except tbot.error.ChannelClosedError:
+                ev.data["stdout"] = out.decode(errors="replace")
+                if CONFIG_UPDATED not in ev.data["stdout"]:
+                    raise RuntimeError(
+                        f"BDI2000 closed the session without updating its "
+                        f"configuration to {cfgfile}: {ev.data['stdout']}"
+                    )
+                return
+        raise TimeoutError(
+            f"BDI2000 telnet session still open {timeout} s after config {cfgfile}"
+        )
+
     def interactive(self) -> None:
         """
         Connect tbot's terminal to the BDI's command line.
@@ -145,3 +238,52 @@ class BDI2000(BDI2000Shell, tbot.role.Role):
     """
 
     pass
+
+
+def ensure_config(
+    request: typing.Callable[[], typing.ContextManager[BDI2000Shell]],
+    cfgfile: str,
+    timeout: float = 30.0,
+    interval: float = 2.0,
+) -> bool:
+    """
+    Make the BDI run with the configuration file ``cfgfile``.
+
+    Ask the BDI which file it runs with; if it is another one, set
+    ``cfgfile``, which makes the BDI boot with it, then connect again until
+    it answers and check that it runs with ``cfgfile`` now.
+
+    :param request: returns a context manager that yields a fresh BDI2000
+        machine and tears it down on exit, e.g.
+        ``lambda: tbot.ctx.request(BDI2000, exclusive=True)``
+    :param timeout: seconds to wait for the BDI to boot and answer again
+    :param interval: seconds between two connection attempts
+    :returns: True if the BDI was restarted, False if it already ran with
+        ``cfgfile``
+    :raises TimeoutError: if the BDI does not answer within ``timeout``
+        seconds after boot
+    :raises RuntimeError: if the BDI runs with another file after boot
+    """
+    with request() as bdi:
+        current, _ = bdi.config()
+        if current == cfgfile:
+            return False
+        bdi.boot_config(cfgfile, timeout=timeout)
+
+    end = time.monotonic() + timeout
+    while True:
+        try:
+            with request() as bdi:
+                current, _ = bdi.config()
+            break
+        except (RuntimeError, TimeoutError, tbot.error.ChannelClosedError) as e:
+            # the BDI refuses or does not answer telnet while it restarts
+            if time.monotonic() >= end:
+                raise TimeoutError(
+                    f"BDI2000 does not answer {timeout} s after boot: {e}"
+                ) from e
+            time.sleep(interval)
+
+    if current != cfgfile:
+        raise RuntimeError(f"BDI2000 runs with {current} after boot, not {cfgfile}")
+    return True
