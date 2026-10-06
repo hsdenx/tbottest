@@ -29,10 +29,11 @@ connector = load_module(
 
 
 class FakeChannel:
-    def __init__(self, initial_read: bytes = b""):
+    def __init__(self, initial_read: bytes = b"", closed: bool = False):
         self.sent = []
         self._initial_read = initial_read
         self._read_done = False
+        self.closed = closed
 
     def read(self, n, timeout=None):
         if not self._read_done:
@@ -101,6 +102,13 @@ class TestTelnetConnect:
             ("prompt", b"telnet> "),
             ("line", "quit"),
         ]
+
+    def test_no_exit_sequence_when_the_remote_closed_the_session(self):
+        mach = FakeMach()
+        with Board().telnetconnect(mach) as ch:
+            # e.g. a BDI2000 ends the session on boot
+            ch.closed = True
+        assert ch.sent == []
 
     def test_connect_delegates_to_telnetconnect(self):
         mach = FakeMach()

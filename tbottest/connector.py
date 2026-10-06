@@ -295,9 +295,12 @@ class TelnetConnector(connector.ConsoleConnector):
 
             yield ch
         finally:
-            ch.sendcontrol(TELNET_ESCAPE)
-            ch.read_until_prompt(TELNET_PROMPT)
-            ch.sendline("quit")
+            # the remote side may have ended the session already (e.g. a
+            # BDI2000 on boot); telnet and the channel are gone then
+            if not ch.closed:
+                ch.sendcontrol(TELNET_ESCAPE)
+                ch.read_until_prompt(TELNET_PROMPT)
+                ch.sendline("quit")
 
             if self.telnet_delay != 0.0:
                 time.sleep(self.telnet_delay)
