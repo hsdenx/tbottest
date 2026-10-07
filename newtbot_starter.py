@@ -25,6 +25,7 @@ add newtbot_starter.py
 import inspect
 import os
 import sys
+import time
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 try:
@@ -43,6 +44,9 @@ except:
 from tbot.newbot import main  # noqa: E402
 
 if __name__ == "__main__":
+    # start time of this run for argumentfiles, which tbot expands shell
+    # variables in, e.g. "--json-log-stream" "log/${TBOT_STARTTIME}.log"
+    os.environ.setdefault("TBOT_STARTTIME", time.strftime("%Y%m%d-%H%M%S"))
     args = sys.argv[1:]
     sys.argv = args
     sys.exit(main(args))

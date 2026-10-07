@@ -894,6 +894,16 @@ a base "argsBOARDNAME" file, which than other files include.
 
     You can use shell variables also in argumentfiles!
 
+``newtbot_starter.py`` sets ``TBOT_STARTTIME`` to the start time of the
+run, ``YYYYMMDD-HHMMSS``, if it is not set already. With it, every run
+writes its log to a file of its own, here in ``log/`` below the directory
+tbot is started from, which has to exist:
+
+.. code-block:: bash
+
+    --json-log-stream
+    log/${TBOT_STARTTIME}.log
+
 The following example uses piccom for accessing serial console and
 sispmctl for boards power control.
 
