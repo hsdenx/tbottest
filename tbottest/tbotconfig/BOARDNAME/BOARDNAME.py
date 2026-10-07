@@ -143,23 +143,36 @@ def BOARDNAME_ub_all(
                     f"---- start test {t} {count} / {tests} suc: {success} fail: {failed} ----"
                 ).yellow
             )
-            try:
-                func = getattr(tc_abb, t)
-                ret = func()
-            except Exception:
+            func = getattr(tc_BOARDNAME, t, None)
+            if func is None:
                 tbot.log.message(tbot.log.c(f"---- test {t} not found ----").red)
+                failed += 1
                 continue
+
+            try:
+                ret = func()
+            except Exception as e:
+                tbot.log.message(tbot.log.c(f"---- test {t} failed: {e} ----").red)
+                failed += 1
+                continue
+
+            # testcases without a result return None, only False fails
+            if ret is False:
+                tbot.log.message(tbot.log.c(f"---- test {t} failed ----").red)
+                failed += 1
+            else:
+                success += 1
 
         if failed == 0:
             tbot.log.message(
                 tbot.log.c(
-                    f"---- tests {t} {count} / {tests} suc: {success} fail: {failed} ----"
+                    f"---- tests {count} / {tests} suc: {success} fail: {failed} ----"
                 ).green
             )
         else:
             tbot.log.message(
                 tbot.log.c(
-                    f"---- tests {t} {count} / {tests} suc: {success} fail: {failed} ----"
+                    f"---- tests {count} / {tests} suc: {success} fail: {failed} ----"
                 ).red
             )
 
