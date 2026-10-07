@@ -313,6 +313,7 @@ def test_no_ci_testcases_by_default(tmp_path):
     res = run_setup(tmp_path, [], inter=False)
     assert res.returncode == 0, res.stdout + res.stderr
     assert not (tmp_path / "tbotconfig" / "ci").exists()
+    assert (tmp_path / "tbotconfig" / "__init__.py").is_file()
     assert (tmp_path / "tbotconfig" / "interactive.py").is_file()
     assert "ci.tests.all" not in res.stdout
 

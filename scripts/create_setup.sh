@@ -313,6 +313,9 @@ fi
 if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	cd tbotconfig
 
+	# tbotconfig must be a regular package, the board modules are
+	# imported as tbotconfig.<board>.boardspecific
+	cp ../tbottest/tbottest/tbotconfig/__init__.py .
 	cp ../tbottest/tbottest/tbotconfig/interactive.py .
 	# only for the github CI of tbottest
 	if [ "${CISETUP}" == "yes" ];then
