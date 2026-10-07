@@ -12,11 +12,81 @@ from tbot.machine import connector
 
 from tbottest.boardgeneric import cfggeneric
 from tbottest.labgeneric import cfgt as cfglab
+import tbottest.labgeneric as labgeneric
 
 cfg = cfggeneric
 server_nfs_path = cfg.get_default_config("nfs_path", "None")
 si = cfg.get_default_config("serverip", "None")
 nfspath = f"{cfg.tmpdir}/nfs"
+
+
+################################################
+# Lab
+################################################
+class BOARDNAMEPower(labgeneric.BOARDCON, labgeneric.BOARDCTL, board.Board):
+    """
+    the board with the power control configured in tbot.ini, only to
+    call poweron() and poweroff(). It is never entered as a machine, so
+    nothing powers the board on when it starts or off when it ends, and
+    the console stays closed.
+    """
+
+    pass
+
+
+@tbot.testcase
+def BOARDNAME_power(
+    lab: Optional[linux.LinuxShell] = None,
+    state: str = "on",
+) -> None:  # noqa: D107
+    """
+    switch the power of the board on or off, state is "on" or "off"
+
+    The board stays in this state when tbot ends.
+    """
+    if state not in ("on", "off"):
+        raise RuntimeError(f'power state {state} not supported, use "on" or "off"')
+
+    with tbot.ctx() as cx:
+        if lab is None:
+            lab = cx.request(tbot.role.LabHost)
+
+        power = BOARDNAMEPower(lab)
+        if state == "on":
+            power.poweron()
+        else:
+            # poweroff() does nothing while the flag nopoweroff is set,
+            # which keeps the end of a board machine from switching the
+            # board off. Here switching off is what is asked for.
+            had_nopoweroff = "nopoweroff" in tbot.flags
+            tbot.flags.discard("nopoweroff")
+            try:
+                power.poweroff()
+            finally:
+                if had_nopoweroff:
+                    tbot.flags.add("nopoweroff")
+
+        tbot.log.message(tbot.log.c(f"board BOARDNAME power {state}").green)
+
+
+@tbot.testcase
+def BOARDNAME_power_on(
+    lab: Optional[linux.LinuxShell] = None,
+) -> None:  # noqa: D107
+    """
+    switch the power of the board on
+    """
+    BOARDNAME_power(lab, "on")
+
+
+@tbot.testcase
+def BOARDNAME_power_off(
+    lab: Optional[linux.LinuxShell] = None,
+) -> None:  # noqa: D107
+    """
+    switch the power of the board off
+    """
+    BOARDNAME_power(lab, "off")
 
 
 ################################################
