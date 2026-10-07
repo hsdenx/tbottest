@@ -730,6 +730,26 @@ may you need to add:
 
     # udhcpc -i eth0
 
+console output from a JSON log
+------------------------------
+
+With ``--json-log-stream <file>`` tbot writes every event of a run to a
+JSON log (see ``TBOT_STARTTIME`` in :doc:`generic` for a log file per
+run). ``generators/console.py`` prints such a log the way tbot showed the
+run on the console: the tree of testcases, the commands with their
+output, the boot logs of U-Boot and Linux, messages and exceptions.
+
+.. code-block:: bash
+
+    $ tbottest/generators/console.py log/20261006-121930.log
+    $ tbottest/generators/console.py -v log/20261006-121930.log | less -R
+
+``-v`` and ``-q`` change the verbosity as tbot's own options do, colors are
+on when the output is a terminal (``--color``, ``--no-color``). tbot does
+not log the line ``tbot starting ...``, the generator prints it first; an
+event is in the log when tbot is done with it, so output tbot printed while
+an event was still running shows up in one piece.
+
 documentation
 -------------
 
