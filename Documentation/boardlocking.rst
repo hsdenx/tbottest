@@ -107,3 +107,4 @@ Functions
 
 .. automodule:: tbottest.common.boardlocking
    :members:
+   :noindex:

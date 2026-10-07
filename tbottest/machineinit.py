@@ -301,8 +301,9 @@ class BDI2000Cmds(machine.Initializer):
 
     def get_bdi2000_wait_state(self) -> typing.Optional[str]:
         """
-        :returns: target state to wait for before the commands, e.g.
-            "debug mode", or None to send them right away
+        target state to wait for before the commands
+
+        :returns: e.g. "debug mode", or None to send them right away
         """
         return None
 
@@ -567,7 +568,7 @@ class UUULoad(machine.Initializer):
     @abc.abstractmethod
     def uuu_loader_steps(self) -> List[str]:
         """
-        return list of steps to do for uuu tool
+        return list of steps to do for uuu tool, for example::
 
             def uuu_loader_steps(self):
                 p = self.host.yocto_result_dir()

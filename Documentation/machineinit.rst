@@ -10,6 +10,7 @@ are:
 - :py:class:`~tbottest.machineinit.DFUUTIL` - loading bootloader with `dfuutil`_.
 - :py:class:`~tbottest.machineinit.UUULoad` - loading bootloader with `uuu`_.
 
+.. _Lauterbach debugger trace32: https://www.lauterbach.com/
 .. _dfuutil: https://dfu-util.sourceforge.net/
 .. _imx_usb_loader: https://github.com/boundarydevices/imx_usb_loader
 .. _uuu: https://github.com/NXPmicro/mfgtools
