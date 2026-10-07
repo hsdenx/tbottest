@@ -26,7 +26,7 @@ are:
    :members: shell_script
 
 .. autoclass:: tbottest.powercontrol.ShellyControl
-   :members: shelly_device, shelly_id, shelly_command, shelly_tooldir, shelly_repo, shelly_timeout
+   :members: shelly_device, shelly_id, shelly_command, shelly_tooldir, shelly_repo, shelly_install, shelly_timeout
 
 .. autoclass:: tbottest.powercontrol.SispmControl
    :members: sispmctl_device, sispmctl_port

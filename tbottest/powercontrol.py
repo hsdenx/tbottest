@@ -118,6 +118,10 @@ class PowerShellScriptControl(board.PowerControl):
             )
 
 
+# shelly-ctrl command line found per (lab host, shelly_command)
+_SHELLY_CMDLINE: typing.Dict[typing.Tuple[str, typing.Optional[str]], typing.List[str]] = {}
+
+
 class ShellyControl(board.PowerControl):
     """
     control Power On/off with a Shelly device through shelly-ctrl
@@ -125,10 +129,12 @@ class ShellyControl(board.PowerControl):
     https://github.com/EmbLux-Kft/shelly-ctrl
 
     shelly-ctrl runs on the lab host, which must reach the Shelly
-    device in its network. By default tbot uses shelly-ctrl from the
-    directory shelly-ctrl in the toolsdir of the lab host. If it is not
-    there, tbot clones it into this directory and installs its python
-    dependencies into a virtual environment .venv in it.
+    device in its network. By default tbot uses shelly-ctrl.py from the
+    PATH of the lab host, else shelly-ctrl from the directory
+    shelly-ctrl in the toolsdir of the lab host. If it is in neither
+    place, tbot clones it into this directory and installs its python
+    dependencies into a virtual environment .venv in it, unless
+    shelly_install is False. tbot looks for it only once per run.
 
     **Example**: (board config)
 
@@ -162,10 +168,10 @@ class ShellyControl(board.PowerControl):
     @property
     def shelly_command(self) -> typing.Optional[str]:
         """
-        shelly-ctrl command on the lab host. Leave unset to use, and if
-        needed install, shelly-ctrl in :py:meth:`shelly_tooldir`. A
-        command given here is not installed, tbot stops if it is not
-        found.
+        shelly-ctrl command on the lab host. Leave unset to use
+        shelly-ctrl.py from the PATH of the lab host, else shelly-ctrl in
+        :py:meth:`shelly_tooldir`, installed there if needed. A command
+        given here is not installed, tbot stops if it is not found.
         """
         return None
 
@@ -185,6 +191,15 @@ class ShellyControl(board.PowerControl):
         return "https://github.com/EmbLux-Kft/shelly-ctrl.git"
 
     @property
+    def shelly_install(self) -> bool:
+        """
+        clone and install shelly-ctrl into :py:meth:`shelly_tooldir` if
+        it is in neither place, default True. With False tbot stops
+        instead.
+        """
+        return True
+
+    @property
     def shelly_timeout(self) -> typing.Optional[str]:
         """
         maximum time in seconds to look up MAC or mDNS name, leave unset
@@ -192,7 +207,7 @@ class ShellyControl(board.PowerControl):
         """
         return None
 
-    def _shelly_install(self) -> list:
+    def _shelly_install(self) -> typing.List[str]:
         d = self.shelly_tooldir
         python = d / ".venv/bin/python"
         script = d / "shelly-ctrl.py"
@@ -201,6 +216,11 @@ class ShellyControl(board.PowerControl):
         if ret == 0:
             ret, _ = self.host.exec("test", "-f", script)
         if ret != 0:
+            if not self.shelly_install:
+                raise RuntimeError(
+                    f"shelly-ctrl.py not found in PATH or {d} on the lab host, "
+                    "and installing it is switched off"
+                )
             tbot.log.message(
                 tbot.log.c(f"shelly-ctrl not installed in {d}. Try to install it").green
             )
@@ -213,22 +233,34 @@ class ShellyControl(board.PowerControl):
                 d / ".venv/bin/pip", "install", "-r", d / "requirements.txt"
             )
 
-        return [python, script]
+        return [python._local_str(), script._local_str()]
+
+    def _shelly_find(self) -> typing.List[str]:
+        if self.shelly_command is not None:
+            ret, _ = self.host.exec("command", "-v", linux.Raw(self.shelly_command))
+            if ret != 0:
+                raise RuntimeError(
+                    f"shelly-ctrl command {self.shelly_command} not found on the lab host"
+                )
+            return [self.shelly_command]
+
+        ret, out = self.host.exec("command", "-v", "shelly-ctrl.py")
+        if ret == 0:
+            tbot.log.message(f"using shelly-ctrl {out.strip()} of the lab host")
+            return ["shelly-ctrl.py"]
+
+        return self._shelly_install()
 
     def _shelly_cmd(self) -> list:
-        if not hasattr(self, "_shelly_cmdline"):
-            if self.shelly_command is None:
-                self._shelly_cmdline = self._shelly_install()
-            else:
-                ret, _ = self.host.exec(
-                    "command", "-v", linux.Raw(self.shelly_command)
-                )
-                if ret != 0:
-                    raise RuntimeError(
-                        f"shelly-ctrl command {self.shelly_command} not found on the lab host"
-                    )
-                self._shelly_cmdline = [linux.Raw(self.shelly_command)]
-        return self._shelly_cmdline
+        # look for shelly-ctrl only once per run and lab host, every
+        # board machine and every power testcase has its own instance
+        key = (self.host.name, self.shelly_command)
+        if key not in _SHELLY_CMDLINE:
+            _SHELLY_CMDLINE[key] = self._shelly_find()
+        cmdline = _SHELLY_CMDLINE[key]
+        if self.shelly_command is not None:
+            return [linux.Raw(cmdline[0])]
+        return list(cmdline)
 
     def _shelly_switch(self, state: str) -> str:
         cmd = self._shelly_cmd() + [

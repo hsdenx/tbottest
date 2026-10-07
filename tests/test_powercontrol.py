@@ -119,19 +119,27 @@ class TestPowerShellScriptControl:
         assert ctl.host.commands == []
 
 
+class ShellyPath(pathlib.PurePosixPath):
+    """linux.Path stand-in, with the _local_str() tbot's Path has"""
+
+    def _local_str(self):
+        return str(self)
+
+
 class FakeShellyHost:
     """Records exec0() calls; exec() answers "test -x/-f" from the set
     of existing files and "command -v" from the set of known commands,
     and git clone creates the files of the shelly-ctrl checkout, so the
     install steps can be followed."""
 
-    def __init__(self, files=(), commands=()):
+    def __init__(self, files=(), commands=(), name="lab"):
         self.files = set(files)
         self.known_commands = set(commands)
         self.commands = []
+        self.name = name
 
     def toolsdir(self):
-        return pathlib.PurePosixPath("/opt/tools")
+        return ShellyPath("/opt/tools")
 
     def exec(self, *args):
         args = tuple(str(a) for a in args)
@@ -139,7 +147,9 @@ class FakeShellyHost:
         if args[0] == "test":
             return (0 if args[2] in self.files else 1), ""
         if args[:2] == ("command", "-v"):
-            return (0 if args[2] in self.known_commands else 1), ""
+            if args[2] in self.known_commands:
+                return 0, f"/usr/local/bin/{args[2]}\n"
+            return 1, ""
         raise AssertionError(f"unexpected exec {args}")
 
     def exec0(self, *args):
@@ -166,6 +176,17 @@ def make_shelly_control(host=None, **props):
     attrs.update(props)
     Ctl = type("Ctl", (powercontrol.ShellyControl,), attrs)
     return Ctl()
+
+
+@pytest.fixture(autouse=True)
+def forget_shelly_ctrl():
+    # the place of shelly-ctrl is kept for the whole run, start every
+    # test without it
+    powercontrol._SHELLY_CMDLINE.clear()
+
+
+def lookups(host):
+    return [c for c in host.commands if c[0] in ("test", "command")]
 
 
 def switches(ctl):
@@ -197,12 +218,40 @@ class TestShellyControl:
             (SHELLYPY, SHELLYSCRIPT, "switch", "192.168.1.86", "off", "--id", "0")
         ]
 
-    def test_installation_is_checked_once(self, monkeypatch):
+    def test_looked_up_once_per_run(self, monkeypatch):
         monkeypatch.setattr(powercontrol.time, "sleep", lambda s: None)
-        ctl = make_shelly_control()
+        host = FakeShellyHost(INSTALLED)
+        ctl = make_shelly_control(host)
         ctl.poweron()
         ctl.poweroff()
-        assert len([c for c in ctl.host.commands if c[0] == "test"]) == 2
+        first = len(lookups(host))
+        assert first > 0
+        # a new instance, as every board machine and power testcase has
+        make_shelly_control(host).poweron()
+        assert len(lookups(host)) == first
+        assert len(switches(ctl)) == 3
+
+    def test_looked_up_per_lab_host(self):
+        make_shelly_control(FakeShellyHost(INSTALLED, name="lab1")).poweron()
+        host2 = FakeShellyHost(name="lab2")
+        ctl2 = make_shelly_control(host2)
+        ctl2.poweron()
+        assert installs(ctl2) != []
+
+    def test_command_in_path_is_used(self):
+        host = FakeShellyHost(commands=["shelly-ctrl.py"])
+        ctl = make_shelly_control(host)
+        ctl.poweron()
+        assert switches(ctl) == [
+            ("shelly-ctrl.py", "switch", "192.168.1.86", "on", "--id", "0")
+        ]
+        assert installs(ctl) == []
+        assert [c for c in host.commands if c[0] == "test"] == []
+
+    def test_command_in_path_wins_over_tooldir(self):
+        ctl = make_shelly_control(FakeShellyHost(INSTALLED, commands=["shelly-ctrl.py"]))
+        ctl.poweron()
+        assert switches(ctl)[0][0] == "shelly-ctrl.py"
 
     def test_missing_shelly_ctrl_is_cloned_and_installed(self):
         ctl = make_shelly_control(FakeShellyHost())
@@ -221,10 +270,29 @@ class TestShellyControl:
         ctl.poweron()
         assert [c[0] for c in installs(ctl)] == ["python3", SHELLYDIR + "/.venv/bin/pip"]
 
+    def test_install_switched_off_stops(self):
+        ctl = make_shelly_control(FakeShellyHost(), shelly_install=False)
+        with pytest.raises(RuntimeError, match="installing it is switched off"):
+            ctl.poweron()
+        assert installs(ctl) == []
+        assert switches(ctl) == []
+
+    def test_install_switched_off_uses_tooldir(self):
+        ctl = make_shelly_control(FakeShellyHost(INSTALLED), shelly_install=False)
+        ctl.poweron()
+        assert switches(ctl)[0][:2] == (SHELLYPY, SHELLYSCRIPT)
+
+    def test_install_switched_off_uses_path(self):
+        ctl = make_shelly_control(
+            FakeShellyHost(commands=["shelly-ctrl.py"]), shelly_install=False
+        )
+        ctl.poweron()
+        assert switches(ctl)[0][0] == "shelly-ctrl.py"
+
     def test_tooldir_can_be_set(self):
         ctl = make_shelly_control(
             FakeShellyHost(["/srv/shelly/.venv/bin/python", "/srv/shelly/shelly-ctrl.py"]),
-            shelly_tooldir=pathlib.PurePosixPath("/srv/shelly"),
+            shelly_tooldir=ShellyPath("/srv/shelly"),
         )
         ctl.poweron()
         assert switches(ctl)[0][:2] == ("/srv/shelly/.venv/bin/python", "/srv/shelly/shelly-ctrl.py")
@@ -252,6 +320,15 @@ class TestShellyControl:
             )
         ]
         assert installs(ctl) == []
+
+    def test_explicit_command_is_checked_once(self):
+        host = FakeShellyHost(commands=["/usr/local/bin/shelly-ctrl.py"])
+        for _ in range(2):
+            make_shelly_control(
+                host, shelly_command="/usr/local/bin/shelly-ctrl.py"
+            ).poweron()
+        assert lookups(host) == [("command", "-v", "/usr/local/bin/shelly-ctrl.py")]
+        assert len([c for c in host.commands if "switch" in c]) == 2
 
     def test_missing_explicit_command_is_not_installed(self):
         ctl = make_shelly_control(

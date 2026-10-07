@@ -189,6 +189,7 @@ class boardShellyControl(powercontrol.ShellyControl):
             shelly_id = cfgt.config_parser.get(s, "id", fallback="0")
             shelly_command = cfgt.config_parser.get(s, "command", fallback=None)
             shelly_timeout = cfgt.config_parser.get(s, "timeout", fallback=None)
+            shelly_install = cfgt.config_parser.getboolean(s, "install", fallback=True)
 
 
 class boardSisControl(powercontrol.SispmControl):

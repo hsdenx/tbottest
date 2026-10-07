@@ -395,10 +395,12 @@ Here as example wandboard.
 If you want to control boards power with a Shelly device. tbot calls
 `shelly-ctrl <https://github.com/EmbLux-Kft/shelly-ctrl>`_ on the lab
 host, which must reach the Shelly device. Without ``command`` tbot uses
-shelly-ctrl in ``shelly-ctrl`` in the ``toolsdir`` of the lab host. If it
-is not there, tbot clones it into this directory and installs its python
+``shelly-ctrl.py`` from the PATH of the lab host, else shelly-ctrl in
+``shelly-ctrl`` in the ``toolsdir`` of the lab host. If it is in neither
+place, tbot clones it into this directory and installs its python
 dependencies into a virtual environment ``.venv`` in it, so the lab host
-needs git and python3 with the venv module.
+needs git and python3 with the venv module. With ``install = no`` tbot
+stops instead. tbot looks for shelly-ctrl only once per run.
 
 :py:meth:`tbottest.powercontrol.ShellyControl`
 
@@ -412,6 +414,7 @@ Here as example wandboard.
         "id", "optional channel of multi channel devices, default 0", "0"
         "command", "optional shelly-ctrl command on the lab host, it is not installed by tbot", "shelly-ctrl.py"
         "timeout", "optional maximum time in seconds to look up MAC or mDNS name", "5"
+        "install", "optional, no if tbot should not install shelly-ctrl, default yes", "no"
 
 [TBOX_BOARDNAME]
 ^^^^^^^^^^^^^^^^
