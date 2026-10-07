@@ -13,7 +13,8 @@ which will create you a complete base setup, as described in :ref:`genericconfig
 With ``--inter`` it asks for the console access and the power control of
 the board and their settings. The generated ``tbot.ini`` holds only the
 selected console and power control section, so tbot finds exactly one of
-each. A unique prefix of a choice is enough (``tm`` for ``tm021``).
+each. A unique prefix of a choice is enough (``tm`` for ``tm021``), the
+full name always selects (``shell`` although ``shelly`` starts with it).
 Without ``--inter`` it creates the setup the github CI uses: board
 ``foo``, picocom and sispmctrl. ``--ci`` also copies the testcases the
 github CI of tbottest runs to ``tbotconfig/ci``; a normal setup does not
@@ -48,7 +49,7 @@ Example run
     picocom device: /dev/ttyUSB0
     picocom delay after exit: 3
     picocom noreset (True|False): True
-    Select power switch method for the board (gpio|sispmctrl|shell|tinkerforge|tbox|tm021): sispmctrl
+    Select power switch method for the board (gpio|sispmctrl|shell|shelly|tinkerforge|tbox|tm021): sispmctrl
     Sispmctl MAC: 01:01:4f:09:5b
     Sispmctl Port: 1
     Created picocom console and sispmctrl powerctrl setup

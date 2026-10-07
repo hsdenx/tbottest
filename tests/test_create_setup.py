@@ -73,6 +73,11 @@ POWERS = {
         # tbottest reads it with ast.literal_eval(), so it stays quoted
         {"script": '"/home/pi/power_test.sh"'},
     ),
+    "shelly": (
+        "SHELLY",
+        ["shelly1pmg3-dcb4d9d722fc", "1"],
+        {"device": "shelly1pmg3-dcb4d9d722fc", "id": "1"},
+    ),
     "tinkerforge": (
         "TF",
         ["Abc", "3"],
@@ -214,7 +219,9 @@ def test_ci_defaults(tmp_path):
         (["pi"], ["tm"], "PICOCOM", "TM021"),
         (["k"], ["ti"], "KERMIT", "TF"),
         # empty, ambiguous and unknown input is asked again
-        (["", "te"], ["s", "sh"], "TELNET", "POWERSHELLSCRIPT"),
+        (["", "te"], ["s", "sh", "shell"], "TELNET", "POWERSHELLSCRIPT"),
+        # a full name selects, even if another choice starts with it
+        (["picocom"], ["shelly"], "PICOCOM", "SHELLY"),
         (["foo", "scriptcom"], ["t", "gpio2", "tbox"], "SCRIPTCOM", "TBOX"),
     ],
 )
