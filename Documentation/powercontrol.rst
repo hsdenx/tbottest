@@ -7,11 +7,13 @@ are:
 
 - :py:class:`~tbottest.powercontrol.GpiopmControl` - Power using a gpio pin
 - :py:class:`~tbottest.powercontrol.PowerShellScriptControl` - Power using a shell script.
+- :py:class:`~tbottest.powercontrol.ShellyControl` - Power using a Shelly device through `shelly-ctrl`_.
 - :py:class:`~tbottest.powercontrol.SispmControl` - Power using `sispmctl`_.
 - :py:class:`~tbottest.powercontrol.TboxCtrlControl` - Power using `tbox-ctrl`_.
 - :py:class:`~tbottest.powercontrol.TinkerforgeControl` - Power using DH Electronic TM-021 4-fach Relaismodul `dh`_.
 - :py:class:`~tbottest.powercontrol.TM021Control` - Power using ``_.
 
+.. _shelly-ctrl: https://github.com/EmbLux-Kft/shelly-ctrl
 .. _sispmctl: http://sispmctl.sourceforge.net/
 .. _tinkerforge: https://www.tinkerforge.com/
 .. _tbox-ctrl: https://gitlab.nabladev.com/nabla/tbox/tbox-ctrl
@@ -22,6 +24,9 @@ are:
 
 .. autoclass:: tbottest.powercontrol.PowerShellScriptControl
    :members: shell_script
+
+.. autoclass:: tbottest.powercontrol.ShellyControl
+   :members: shelly_device, shelly_id, shelly_command, shelly_tooldir, shelly_repo, shelly_timeout
 
 .. autoclass:: tbottest.powercontrol.SispmControl
    :members: sispmctl_device, sispmctl_port

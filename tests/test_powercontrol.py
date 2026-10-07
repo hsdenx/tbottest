@@ -1,11 +1,11 @@
 """
 Unit tests for tbottest/powercontrol.py's GpiopmControl,
-PowerShellScriptControl, SispmControl and TM021Control.
+PowerShellScriptControl, ShellyControl, SispmControl and TM021Control.
 
 GpiopmControl is tested against a stub tbot_contrib.gpio.Gpio (the
 real one talks to a live /sys/class/gpio, see conftest's
-install_gpio_stub). PowerShellScriptControl/SispmControl are tested
-via a FakeExecHost that just records exec0() calls, since they are
+install_gpio_stub). PowerShellScriptControl/ShellyControl/SispmControl are
+tested via a FakeExecHost that just records exec0() calls, since they are
 pure one-liners with no cached/lazily-initialized state.
 TM021Control's copy_script()/poweron()/poweroff() are tested against
 a real temp directory (via a small linux.Path stand-in scoped to
@@ -21,6 +21,8 @@ Tinkerforge-specific behavior needed a regression test.
 import os
 import pathlib
 import sys
+
+import pytest
 
 from conftest import install_gpio_stub, load_module
 
@@ -112,6 +114,157 @@ class TestPowerShellScriptControl:
 
     def test_poweroff_respects_nopoweroff_flag(self):
         ctl = make_shell_control()
+        sys.modules["tbot"].flags = {"nopoweroff"}
+        ctl.poweroff()
+        assert ctl.host.commands == []
+
+
+class FakeShellyHost:
+    """Records exec0() calls; exec() answers "test -x/-f" from the set
+    of existing files and "command -v" from the set of known commands,
+    and git clone creates the files of the shelly-ctrl checkout, so the
+    install steps can be followed."""
+
+    def __init__(self, files=(), commands=()):
+        self.files = set(files)
+        self.known_commands = set(commands)
+        self.commands = []
+
+    def toolsdir(self):
+        return pathlib.PurePosixPath("/opt/tools")
+
+    def exec(self, *args):
+        args = tuple(str(a) for a in args)
+        self.commands.append(args)
+        if args[0] == "test":
+            return (0 if args[2] in self.files else 1), ""
+        if args[:2] == ("command", "-v"):
+            return (0 if args[2] in self.known_commands else 1), ""
+        raise AssertionError(f"unexpected exec {args}")
+
+    def exec0(self, *args):
+        args = tuple(str(a) for a in args)
+        self.commands.append(args)
+        if args[:2] == ("git", "clone"):
+            self.files.add(args[3] + "/shelly-ctrl.py")
+        if args[:3] == ("python3", "-m", "venv"):
+            self.files.add(args[3] + "/bin/python")
+        return ""
+
+
+SHELLYDIR = "/opt/tools/shelly-ctrl"
+SHELLYPY = SHELLYDIR + "/.venv/bin/python"
+SHELLYSCRIPT = SHELLYDIR + "/shelly-ctrl.py"
+INSTALLED = (SHELLYPY, SHELLYSCRIPT)
+
+
+def make_shelly_control(host=None, **props):
+    attrs = {
+        "shelly_device": "192.168.1.86",
+        "host": host or FakeShellyHost(INSTALLED),
+    }
+    attrs.update(props)
+    Ctl = type("Ctl", (powercontrol.ShellyControl,), attrs)
+    return Ctl()
+
+
+def switches(ctl):
+    return [c for c in ctl.host.commands if "switch" in c]
+
+
+def installs(ctl):
+    return [
+        c
+        for c in ctl.host.commands
+        if c[0] in ("mkdir", "git", "python3") or c[0].endswith("/pip")
+    ]
+
+
+class TestShellyControl:
+    def test_poweron_switches_channel_0_on_by_default(self):
+        ctl = make_shelly_control()
+        ctl.poweron()
+        assert switches(ctl) == [
+            (SHELLYPY, SHELLYSCRIPT, "switch", "192.168.1.86", "on", "--id", "0")
+        ]
+        assert installs(ctl) == []
+
+    def test_poweroff_switches_off(self, monkeypatch):
+        monkeypatch.setattr(powercontrol.time, "sleep", lambda s: None)
+        ctl = make_shelly_control()
+        ctl.poweroff()
+        assert switches(ctl) == [
+            (SHELLYPY, SHELLYSCRIPT, "switch", "192.168.1.86", "off", "--id", "0")
+        ]
+
+    def test_installation_is_checked_once(self, monkeypatch):
+        monkeypatch.setattr(powercontrol.time, "sleep", lambda s: None)
+        ctl = make_shelly_control()
+        ctl.poweron()
+        ctl.poweroff()
+        assert len([c for c in ctl.host.commands if c[0] == "test"]) == 2
+
+    def test_missing_shelly_ctrl_is_cloned_and_installed(self):
+        ctl = make_shelly_control(FakeShellyHost())
+        ctl.poweron()
+        assert installs(ctl) == [
+            ("mkdir", "-p", "/opt/tools"),
+            ("git", "clone", "https://github.com/EmbLux-Kft/shelly-ctrl.git", SHELLYDIR),
+            ("python3", "-m", "venv", SHELLYDIR + "/.venv"),
+            (SHELLYDIR + "/.venv/bin/pip", "install", "-r", SHELLYDIR + "/requirements.txt"),
+        ]
+        # installed before it is used
+        assert ctl.host.commands[-1][:3] == (SHELLYPY, SHELLYSCRIPT, "switch")
+
+    def test_existing_checkout_without_venv_is_not_cloned_again(self):
+        ctl = make_shelly_control(FakeShellyHost([SHELLYSCRIPT]))
+        ctl.poweron()
+        assert [c[0] for c in installs(ctl)] == ["python3", SHELLYDIR + "/.venv/bin/pip"]
+
+    def test_tooldir_can_be_set(self):
+        ctl = make_shelly_control(
+            FakeShellyHost(["/srv/shelly/.venv/bin/python", "/srv/shelly/shelly-ctrl.py"]),
+            shelly_tooldir=pathlib.PurePosixPath("/srv/shelly"),
+        )
+        ctl.poweron()
+        assert switches(ctl)[0][:2] == ("/srv/shelly/.venv/bin/python", "/srv/shelly/shelly-ctrl.py")
+        assert installs(ctl) == []
+
+    def test_optional_settings_are_passed(self):
+        ctl = make_shelly_control(
+            FakeShellyHost(commands=["/usr/local/bin/shelly-ctrl.py"]),
+            shelly_device="DC:B4:D9:CD:25:B4",
+            shelly_id="1",
+            shelly_command="/usr/local/bin/shelly-ctrl.py",
+            shelly_timeout="10",
+        )
+        ctl.poweron()
+        assert switches(ctl) == [
+            (
+                "/usr/local/bin/shelly-ctrl.py",
+                "switch",
+                "DC:B4:D9:CD:25:B4",
+                "on",
+                "--id",
+                "1",
+                "-t",
+                "10",
+            )
+        ]
+        assert installs(ctl) == []
+
+    def test_missing_explicit_command_is_not_installed(self):
+        ctl = make_shelly_control(
+            FakeShellyHost(), shelly_command="/usr/local/bin/shelly-ctrl.py"
+        )
+        with pytest.raises(RuntimeError, match="not found on the lab host"):
+            ctl.poweron()
+        assert installs(ctl) == []
+        assert switches(ctl) == []
+
+    def test_poweroff_respects_nopoweroff_flag(self, monkeypatch):
+        monkeypatch.setattr(powercontrol.time, "sleep", lambda s: None)
+        ctl = make_shelly_control()
         sys.modules["tbot"].flags = {"nopoweroff"}
         ctl.poweroff()
         assert ctl.host.commands == []

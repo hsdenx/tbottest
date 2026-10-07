@@ -42,6 +42,7 @@ Power control with:
 * Tinkerforge, see `[TF_BOARDNAME]`_
 * a GPIO pin, see `[GPIOPMCTRL_BOARDNAME]`_
 * a shell script, see `[POWERSHELLSCRIPT_BOARDNAME]`_
+* a Shelly device through shelly-ctrl, see `[SHELLY_BOARDNAME]`_
 * a tbox SYSTEM Controller Modul through tbox-ctrl (USB HID), see `[TBOX_BOARDNAME]`_
 * the DH electronics TM-021 relay module, see `[TM021_BOARDNAME]`_
 
@@ -387,6 +388,30 @@ Here as example wandboard.
 
         "device", "id of sispmctl device", "01:01:4f:d4:b1"
         "port", "sispmctl port used for the boards power", "3"
+
+[SHELLY_BOARDNAME]
+^^^^^^^^^^^^^^^^^^
+
+If you want to control boards power with a Shelly device. tbot calls
+`shelly-ctrl <https://github.com/EmbLux-Kft/shelly-ctrl>`_ on the lab
+host, which must reach the Shelly device. Without ``command`` tbot uses
+shelly-ctrl in ``shelly-ctrl`` in the ``toolsdir`` of the lab host. If it
+is not there, tbot clones it into this directory and installs its python
+dependencies into a virtual environment ``.venv`` in it, so the lab host
+needs git and python3 with the venv module.
+
+:py:meth:`tbottest.powercontrol.ShellyControl`
+
+replace BOARDNAME with the name of your board!
+Here as example wandboard.
+
+.. csv-table:: [SHELLY_wandboard]
+        :header: "key", "value", "example"
+
+        "device", "Shelly device, given by IP, by MAC or by its mDNS name", "192.168.1.86"
+        "id", "optional channel of multi channel devices, default 0", "0"
+        "command", "optional shelly-ctrl command on the lab host, it is not installed by tbot", "shelly-ctrl.py"
+        "timeout", "optional maximum time in seconds to look up MAC or mDNS name", "5"
 
 [TBOX_BOARDNAME]
 ^^^^^^^^^^^^^^^^

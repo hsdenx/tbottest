@@ -11,6 +11,7 @@ from tbot_contrib.gpio import Gpio
 __all__ = (
     "GpiopmControl",
     "PowerShellScriptControl",
+    "ShellyControl",
     "SispmControl",
     "TboxCtrlControl",
     "TinkerforgeControl",
@@ -115,6 +116,144 @@ class PowerShellScriptControl(board.PowerControl):
                 linux.Raw(self.shell_script),
                 "off",
             )
+
+
+class ShellyControl(board.PowerControl):
+    """
+    control Power On/off with a Shelly device through shelly-ctrl
+
+    https://github.com/EmbLux-Kft/shelly-ctrl
+
+    shelly-ctrl runs on the lab host, which must reach the Shelly
+    device in its network. By default tbot uses shelly-ctrl from the
+    directory shelly-ctrl in the toolsdir of the lab host. If it is not
+    there, tbot clones it into this directory and installs its python
+    dependencies into a virtual environment .venv in it.
+
+    **Example**: (board config)
+
+    .. code-block:: python
+
+        from tbot.machine import board
+        from tbottest.powercontrol import ShellyControl
+
+        class MyControl(ShellyControl, board.Board):
+            shelly_device = "192.168.1.86"
+            shelly_id = "0"
+    """
+
+    @property
+    @abc.abstractmethod
+    def shelly_device(self) -> str:
+        """
+        the Shelly device, given by IP, by MAC or by its mDNS name
+
+        This property is **required**.
+        """
+        raise Exception("abstract method")
+
+    @property
+    def shelly_id(self) -> str:
+        """
+        channel of multi channel devices, default "0"
+        """
+        return "0"
+
+    @property
+    def shelly_command(self) -> typing.Optional[str]:
+        """
+        shelly-ctrl command on the lab host. Leave unset to use, and if
+        needed install, shelly-ctrl in :py:meth:`shelly_tooldir`. A
+        command given here is not installed, tbot stops if it is not
+        found.
+        """
+        return None
+
+    @property
+    def shelly_tooldir(self) -> linux.Path:
+        """
+        directory of shelly-ctrl on the lab host, default shelly-ctrl
+        in the toolsdir of the lab host
+        """
+        return self.host.toolsdir() / "shelly-ctrl"
+
+    @property
+    def shelly_repo(self) -> str:
+        """
+        git repository tbot clones shelly-ctrl from
+        """
+        return "https://github.com/EmbLux-Kft/shelly-ctrl.git"
+
+    @property
+    def shelly_timeout(self) -> typing.Optional[str]:
+        """
+        maximum time in seconds to look up MAC or mDNS name, leave unset
+        to use the default of shelly-ctrl
+        """
+        return None
+
+    def _shelly_install(self) -> list:
+        d = self.shelly_tooldir
+        python = d / ".venv/bin/python"
+        script = d / "shelly-ctrl.py"
+
+        ret, _ = self.host.exec("test", "-x", python)
+        if ret == 0:
+            ret, _ = self.host.exec("test", "-f", script)
+        if ret != 0:
+            tbot.log.message(
+                tbot.log.c(f"shelly-ctrl not installed in {d}. Try to install it").green
+            )
+            ret, _ = self.host.exec("test", "-f", script)
+            if ret != 0:
+                self.host.exec0("mkdir", "-p", d.parent)
+                self.host.exec0("git", "clone", self.shelly_repo, d)
+            self.host.exec0("python3", "-m", "venv", d / ".venv")
+            self.host.exec0(
+                d / ".venv/bin/pip", "install", "-r", d / "requirements.txt"
+            )
+
+        return [python, script]
+
+    def _shelly_cmd(self) -> list:
+        if not hasattr(self, "_shelly_cmdline"):
+            if self.shelly_command is None:
+                self._shelly_cmdline = self._shelly_install()
+            else:
+                ret, _ = self.host.exec(
+                    "command", "-v", linux.Raw(self.shelly_command)
+                )
+                if ret != 0:
+                    raise RuntimeError(
+                        f"shelly-ctrl command {self.shelly_command} not found on the lab host"
+                    )
+                self._shelly_cmdline = [linux.Raw(self.shelly_command)]
+        return self._shelly_cmdline
+
+    def _shelly_switch(self, state: str) -> str:
+        cmd = self._shelly_cmd() + [
+            "switch",
+            self.shelly_device,
+            state,
+            "--id",
+            str(self.shelly_id),
+        ]
+        if self.shelly_timeout is not None:
+            cmd += ["-t", str(self.shelly_timeout)]
+        return self.host.exec0(*cmd)
+
+    def poweron(self) -> None:
+        self._shelly_switch("on")
+
+    def poweroff(self) -> None:
+        if "nopoweroff" in tbot.flags:
+            tbot.log.message("Do not power off ...")
+            return
+
+        self._shelly_switch("off")
+
+        tbot.log.message("Waiting a bit to let power settle down ...")
+        time.sleep(2)
 
 
 class SispmControl(board.PowerControl):

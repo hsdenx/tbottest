@@ -174,6 +174,23 @@ class boardPowerShellControl(powercontrol.PowerShellScriptControl):
             shell_script = ast.literal_eval(cfgt.config_parser.get(s, "script"))
 
 
+class boardShellyControl(powercontrol.ShellyControl):
+    def power_check(self) -> bool:
+        if "poweroffonstart" in tbot.flags:
+            self.poweroff()
+
+        return True
+
+    bn = ini.generic_get_boardname()
+    cfg = f"SHELLY_{bn}"
+    for s in cfgt.config_parser.sections():
+        if cfg == s:
+            shelly_device = cfgt.config_parser.get(s, "device")
+            shelly_id = cfgt.config_parser.get(s, "id", fallback="0")
+            shelly_command = cfgt.config_parser.get(s, "command", fallback=None)
+            shelly_timeout = cfgt.config_parser.get(s, "timeout", fallback=None)
+
+
 class boardSisControl(powercontrol.SispmControl):
     def power_check(self) -> bool:
         if "poweroffonstart" in tbot.flags:
@@ -257,6 +274,8 @@ else:
         BOARDCTL = boardTMControl
     elif cfgt.tbox:
         BOARDCTL = boardTboxControl
+    elif cfgt.shelly:
+        BOARDCTL = boardShellyControl
     else:
         bn = ini.generic_get_boardname()
         raise RuntimeError(f"please configure powerctrl for board {bn}")
