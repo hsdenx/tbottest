@@ -10,8 +10,8 @@ are:
 - :py:class:`~tbottest.powercontrol.ShellyControl` - Power using a Shelly device through `shelly-ctrl`_.
 - :py:class:`~tbottest.powercontrol.SispmControl` - Power using `sispmctl`_.
 - :py:class:`~tbottest.powercontrol.TboxCtrlControl` - Power using `tbox-ctrl`_.
-- :py:class:`~tbottest.powercontrol.TinkerforgeControl` - Power using DH Electronic TM-021 4-fach Relaismodul `dh`_.
-- :py:class:`~tbottest.powercontrol.TM021Control` - Power using ``_.
+- :py:class:`~tbottest.powercontrol.TinkerforgeControl` - Power using `tinkerforge`_.
+- :py:class:`~tbottest.powercontrol.TM021Control` - Power using DH Electronic TM-021 4-fach Relaismodul `dh`_.
 
 .. _shelly-ctrl: https://github.com/EmbLux-Kft/shelly-ctrl
 .. _sispmctl: http://sispmctl.sourceforge.net/
@@ -38,4 +38,4 @@ are:
    :members: channel, uid
 
 .. autoclass:: tbottest.powercontrol.TM021Control
-   :members: device, baudrate, timeout, address, port, debug
+   :members: tm021_device, tm021_baudrate, tm021_timeout, tm021_address, tm021_port, tm021_debug
