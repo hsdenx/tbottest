@@ -185,8 +185,10 @@ def set_board_cfg(temp: str = None, filename: str = None):  # noqa: C901
     replace_in_file(filename, "@@TBOTSERVERIP@@", BOARDNAME_get_lab_serverip(filename))
     replace_in_file(filename, "@@TBOTIPADDR@@", BOARDNAME_get_board_ipaddr(filename))
 
-    # only for creating docs!
+    # only for creating docs! labgeneric.py reads these as numbers
     replace_in_file(filename, "@@PICOCOMDELAY@@", "3")
+    replace_in_file(filename, "@@KERMITDELAY@@", "3")
+    replace_in_file(filename, "@@TELNETPORT@@", "2013")
 
     # replace in board file setttings from tbot.ini
     if "tbot.ini" not in str(filename):
