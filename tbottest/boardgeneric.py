@@ -15,6 +15,7 @@ from tbottest.labgeneric import cfgt as cfglab
 from tbottest.dynamicimport import get_boardmodule_import
 from tbottest.dynamicimport import get_boardmodulepath_import
 from tbottest.tc.network import lnx_set_ethdevice
+from tbottest.tc.common import lnx_sudo
 
 try:
     set_ub_board_specific = getattr(get_boardmodule_import(), "set_ub_board_specific")
@@ -347,6 +348,8 @@ class GenericLinuxBoot(
             with tbot.ctx() as cx:
                 lab = cx.request(tbot.role.LabHost)
                 up = lab.toolsdir()._local_str() + "/mfgtools/uuu/uuu"
+                # root rights: sudo, unless the lab host is logged in as root
+                up = " ".join(lnx_sudo(lab) + [up])
                 bd = lab.tftp_dir()._local_str()
                 # get U-Boot into fastboot mode
                 cmd = cfggeneric.fb_cmd
@@ -355,13 +358,13 @@ class GenericLinuxBoot(
                 # load images and boot
                 cmd = f"{bd}/{cfggeneric.rescueimage}"
                 cmd = cmd.strip('"')
-                lab.exec0(linux.Raw(f"sudo {up} FB: download -f {cmd}"))
+                lab.exec0(linux.Raw(f"{up} FB: download -f {cmd}"))
                 cmd = f"{cfggeneric.fb_res_setup}"
                 cmd = cmd.strip('"')
-                lab.exec0(linux.Raw(f"sudo {up} FB: ucmd {cmd}"))
+                lab.exec0(linux.Raw(f"{up} FB: ucmd {cmd}"))
                 cmd = f"{cfggeneric.fb_res_boot}"
                 cmd = cmd.strip('"')
-                lab.exec0(linux.Raw(f"sudo {up} FB: acmd {cmd}"))
+                lab.exec0(linux.Raw(f"{up} FB: acmd {cmd}"))
             ch = ub.boot("")
         elif "tftpfit" in tbot.flags:
             ch = ub.boot("run", "tftp_mmc")

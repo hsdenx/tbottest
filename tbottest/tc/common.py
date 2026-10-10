@@ -873,7 +873,7 @@ def lab_check_part_exists_and_create(
         if lab is None:
             lab = cx.request(tbot.role.LabHost)
 
-        rcode, log = lab.exec("sudo", "fdisk", "-l", device)
+        rcode, log = lab.exec(*lnx_sudo(lab), "fdisk", "-l", device)
         if rcode == 0:
             return
 
@@ -914,14 +914,14 @@ def board_prepare_tmpmnt(
         tmppath = lab.tmpmntdir(tmpdev)._local_str()
         rcode, log = lab.exec("mount", linux.Pipe, "grep", tmppath)
         if rcode == 0:
-            lab.exec0("sudo", "umount", tmppath)
+            lab.exec0(*lnx_sudo(lab), "umount", tmppath)
         else:
             lab.exec0("mkdir", "-p", tmppath)
             # check if part exists, if not create it
             lab_check_part_exists_and_create(lab, device, partition)
 
         # mount tmpdir
-        lab.exec0("sudo", "mount", tmpdev, tmppath)
+        lab.exec0(*lnx_sudo(lab), "mount", tmpdev, tmppath)
 
         return tmppath
 
@@ -1196,7 +1196,7 @@ def common_install_debian(
     package,
 ) -> bool:
     # may convert package into real package name on OS
-    lnx.exec0("sudo", "apt-get", "-y", "install", package)
+    lnx.exec0(*lnx_sudo(lnx), "apt-get", "-y", "install", package)
     return True
 
 
@@ -1205,7 +1205,7 @@ def common_install_fedora(
     package,
 ) -> bool:
     # may convert package into real package name on OS
-    lnx.exec0("sudo", "dnf", "-y", "install", package)
+    lnx.exec0(*lnx_sudo(lnx), "dnf", "-y", "install", package)
     return True
 
 
@@ -1466,6 +1466,38 @@ def tbot_stop_thread(
     return THREADS.pop(tid)
 
 
+# user id per machine name, worked out by lnx_sudo()
+_UID: dict = {}
+
+
+def lnx_sudo(lnx: linux.LinuxShell) -> List[str]:
+    """
+    prefix for a command that needs root rights on lnx
+
+    A lab host may be logged in to as root, often without sudo installed
+    (e.g. a lab host built with Yocto), or as a normal user, who needs
+    sudo. Use it as
+
+    .. code-block:: python
+
+        lab.exec0(*lnx_sudo(lab), "mkdir", "-p", path)
+
+    The user id is asked with "id -u" on the first call for a machine (by
+    its name) and kept for every later one; a machine without a name is
+    asked every time.
+
+    :param lnx: linux machine
+    :returns: [] when logged in as root, else ["sudo"]
+    """
+    key = getattr(lnx, "name", None)
+    uid = _UID.get(key) if key else None
+    if uid is None:
+        uid = lnx.exec0("id", "-u").strip()
+        if key:
+            _UID[key] = uid
+    return [] if uid == "0" else ["sudo"]
+
+
 @tbot.testcase
 def sudo_subshell(
     lnx: linux.LinuxShell = None,
@@ -1499,6 +1531,12 @@ def sudo_subshell(
 
     ret = []
     if len(cmds) == 0:
+        return ret
+
+    if not lnx_sudo(lnx):
+        # already root, no sudo needed (and maybe not installed)
+        for cmd in cmds:
+            ret.append(lnx.exec0(linux.Raw(cmd)))
         return ret
 
     if password is None:

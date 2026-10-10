@@ -316,6 +316,10 @@ don;t forget to reload rules with:
 sudo without password
 ---------------------
 
+Only needed when tbot logs in to the lab host as a normal user; as root,
+tbottest runs these commands without sudo (see
+:ref:`requirementslabhost`).
+
 https://linuxconfig.org/configure-sudo-without-password-on-ubuntu-20-04-focal-fossa-linux
 
 gpio

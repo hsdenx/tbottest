@@ -66,7 +66,8 @@ class TestSudoExec0:
     def test_with_sudo_prepends_sudo(self):
         lnx = FakeLinuxShell()
         can.sudo_exec0(lnx, True, "ifconfig", "can0", "up")
-        assert lnx.commands == [("sudo", "ifconfig", "can0", "up")]
+        # not logged in as root: id -u, then the command with sudo
+        assert lnx.commands == [("id", "-u"), ("sudo", "ifconfig", "can0", "up")]
 
 
 class TestGetLines:
@@ -110,7 +111,7 @@ class TestBoardSetupCan:
     def test_usesudo_prefixes_every_command(self):
         lnx = FakeLinuxShell()
         can.board_setup_can(lnx, candev=["can0"], usesudo=True)
-        assert all(c[0] == "sudo" for c in lnx.commands)
+        assert all(c[0] == "sudo" for c in lnx.commands if c != ("id", "-u"))
 
 
 class TestLnxCanWriteDumpCompare:

@@ -6,6 +6,7 @@ from tbot.machine import machine
 from tbot.machine import linux
 from typing import List
 import time
+from tbottest.tc.common import lnx_sudo
 from tbottest.tc.common import search_string_in_multiline
 
 import platform
@@ -425,7 +426,7 @@ class UsbSdpLoad(machine.Initializer):
             while loop:
                 if i:
                     time.sleep(2)
-                ret, out = self.host.exec("sudo", imx / "imx_usb", bina)
+                ret, out = self.host.exec(*lnx_sudo(self.host), imx / "imx_usb", bina)
                 if "no matching USB device found" in out and ret == 1:
                     i += 1
                 elif ret:
@@ -589,7 +590,7 @@ class UUULoad(machine.Initializer):
         https://github.com/NXPmicro/mfgtools
         """
         uuu = self.get_uuu_tool()  # type: ignore
-        ret, out = self.host.exec("sudo", "ls", uuu / "mfgtools/build/uuu/uuu")
+        ret, out = self.host.exec(*lnx_sudo(self.host), "ls", uuu / "mfgtools/build/uuu/uuu")
         if ret != 0:
             # uuu tool not installed try to install
             tbot.log.message(
@@ -614,7 +615,7 @@ class UUULoad(machine.Initializer):
         uuu = self.get_uuu_tool()  # type: ignore
         steps = self.uuu_loader_steps()  # type: List[str]
         for st in steps:
-            self.host.exec0("sudo", uuu / "mfgtools/build/uuu/uuu", st)  # type: ignore
+            self.host.exec0(*lnx_sudo(self.host), uuu / "mfgtools/build/uuu/uuu", st)  # type: ignore
 
     def _init_machine(self) -> typing.ContextManager:
         return _flag_gated_load("uuuloader", self._load)

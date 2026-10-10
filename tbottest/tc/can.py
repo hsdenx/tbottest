@@ -11,11 +11,13 @@ from tbot.machine import linux
 from tbot.context import Optional
 from tbottest.tc.common import tbot_start_thread
 from tbottest.tc.common import tbot_stop_thread
+from tbottest.tc.common import lnx_sudo
 
 
 def sudo_exec0(lnx: linux.LinuxShell, usesudo: bool, *args) -> str:
     if usesudo:
-        return lnx.exec0("sudo", *args)
+        # root rights: sudo, unless lnx is logged in as root
+        return lnx.exec0(*lnx_sudo(lnx), *args)
 
     return lnx.exec0(*args)
 

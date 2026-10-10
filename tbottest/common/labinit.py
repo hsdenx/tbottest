@@ -69,6 +69,7 @@ def lab_init_once(
         lnx_has_netdev,
         lnx_set_ipaddr,
     )
+    from tbottest.tc.common import lnx_sudo
 
     refused = False
     for ethdev in ethdevices.values():
@@ -102,7 +103,7 @@ def lab_init_once(
         lnx_set_ipaddr(lab, labdev, serverip, sudo=True)
         out = lab.exec0("ip", "link", "show", "dev", labdev)
         while "NO-CARRIER" in out:
-            lab.exec0("sudo", "ethtool", "-s", labdev, "autoneg", "on")
+            lab.exec0(*lnx_sudo(lab), "ethtool", "-s", labdev, "autoneg", "on")
             time.sleep(1)
             out = lab.exec0("ip", "link", "show", "dev", labdev)
 

@@ -653,8 +653,10 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
 
         try:
             sdwireserial = cfgt.config_parser.get("SDWIRE", "serial")
+            from tbottest.tc.common import lnx_sudo
+
             self.exec0(
-                "sudo",
+                *lnx_sudo(self),
                 "/usr/local/bin/sd-mux-ctrl",
                 f"--device-serial={sdwireserial}",
                 md,

@@ -78,8 +78,16 @@ def ipv4_in_net(addr: str, netaddr: str, prefix: int) -> bool:
     return ipaddress.ip_address(addr) in net
 
 
-def _sudo(sudo: bool) -> list:
-    return ["sudo"] if sudo else []
+def _sudo(lnx: linux.LinuxShell, sudo: bool) -> list:
+    """
+    prefix for the commands: sudo=True means "with root rights", which
+    needs no sudo when lnx is logged in as root (lnx_sudo())
+    """
+    if not sudo:
+        return []
+    from tbottest.tc.common import lnx_sudo
+
+    return lnx_sudo(lnx)
 
 
 def lnx_ifdown(
@@ -89,9 +97,9 @@ def lnx_ifdown(
     take the network device dev down, with ip or ifconfig (lnx_netcmd())
     """
     if lnx_netcmd(lnx, netcmd) == "ip":
-        lnx.exec0(*_sudo(sudo), "ip", "link", "set", dev, "down")
+        lnx.exec0(*_sudo(lnx, sudo), "ip", "link", "set", dev, "down")
     else:
-        lnx.exec0(*_sudo(sudo), "ifconfig", dev, "down")
+        lnx.exec0(*_sudo(lnx, sudo), "ifconfig", dev, "down")
 
 
 def lnx_ifup(
@@ -101,9 +109,9 @@ def lnx_ifup(
     bring the network device dev up, with ip or ifconfig (lnx_netcmd())
     """
     if lnx_netcmd(lnx, netcmd) == "ip":
-        lnx.exec0(*_sudo(sudo), "ip", "link", "set", dev, "up")
+        lnx.exec0(*_sudo(lnx, sudo), "ip", "link", "set", dev, "up")
     else:
-        lnx.exec0(*_sudo(sudo), "ifconfig", dev, "up")
+        lnx.exec0(*_sudo(lnx, sudo), "ifconfig", dev, "up")
 
 
 def lnx_set_ipaddr(
@@ -127,10 +135,11 @@ def lnx_set_ipaddr(
     :param dev: network device, e.g. eth0
     :param ipaddr: IPv4 address
     :param netmask: dotted netmask, or None
-    :param sudo: run the commands with sudo
+    :param sudo: run the commands with root rights (sudo, unless lnx is
+        logged in as root)
     :param netcmd: auto, ip or ifconfig, see lnx_netcmd()
     """
-    s = _sudo(sudo)
+    s = _sudo(lnx, sudo)
     if lnx_netcmd(lnx, netcmd) == "ip":
         prefix = netmask_to_prefix(netmask) if netmask else classful_prefix(ipaddr)
         lnx.exec0(*s, "ip", "link", "set", dev, "down")

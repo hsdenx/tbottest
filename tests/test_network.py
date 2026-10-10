@@ -191,7 +191,7 @@ class TestSetIpaddr:
     def test_sudo_prefixes_every_command(self):
         lnx = FakeShell({"ip"})
         network.lnx_set_ipaddr(lnx, "eth0", "192.168.3.1", sudo=True)
-        assert all(c[0] == "sudo" for c in lnx.commands_run())
+        assert all(c[0] == "sudo" for c in lnx.commands_run() if c != ("id", "-u"))
 
     def test_set_ethdevice(self):
         lnx = FakeShell({"ifconfig"})

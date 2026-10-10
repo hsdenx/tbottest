@@ -19,8 +19,23 @@ to edit a tbot.ini file and start!
 requirements for lab host
 -------------------------
 
-sudo command should work without entering a password (or add support for this
-in tbot!)
+Commands that need root rights on the lab host (setting up the board's
+ethernet device, mounting an SD card, sd-mux, imx_usb, uuu, installing
+packages) run with sudo when tbot is logged in to the lab host as a normal
+user; sudo then has to work without entering a password. When tbot is
+logged in as root, they run without sudo, so a lab host without sudo (for
+example one built with Yocto) works as well. tbottest asks ``id -u`` once
+per machine, see :py:func:`tbottest.tc.common.lnx_sudo`. Use it in your own
+testcases instead of a fixed ``sudo``:
+
+.. code-block:: python
+
+    from tbottest.tc.common import lnx_sudo
+
+    lab.exec0(*lnx_sudo(lab), "mkdir", "-p", path)
+
+Commands you write into ``tbot.ini`` yourself (e.g. ``labinit``) are run as
+written, so leave out ``sudo`` there on a lab host you log in to as root.
 
 You should be able to ssh between lab host, build host and board
 without entering a password or something else!
