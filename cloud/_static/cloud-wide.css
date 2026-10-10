@@ -1,0 +1,7 @@
+/* the cloud theme limits the page to its max_width option (11.5in); use
+ * the whole width of the window, so wide tables fit. Not set through
+ * max_width, which also drives the theme's media queries. */
+div.related,
+div.document {
+    max-width: none;
+}

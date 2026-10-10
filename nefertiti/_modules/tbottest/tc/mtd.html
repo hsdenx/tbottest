@@ -1,0 +1,1501 @@
+
+<!DOCTYPE html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    
+    <meta name="docsearch:name" content="tbottest" />
+    <meta name="docsearch:package_type" content="" />
+    <meta name="docsearch:release" content="0.0.1-391-g1d197d3" />
+    <meta name="docsearch:version" content="0.0.1-391-g1d197d3" />
+    
+      <meta name="theme-color" content="#0DCAF0" />
+    
+    
+      <title>tbottest.tc.mtd &mdash; tbottest 0.0.1-391-g1d197d3 documentation</title>
+    
+    <link rel="canonical" href="_modules/tbottest/tc/mtd" />
+          <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../../../_static/fonts/nunito/stylesheet.css?v=abf98f06" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../../../_static/fonts/ubuntu-sans-mono/stylesheet.css?v=8616a587" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../../../_static/pygments-dark.css?v=31d0ecc6" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../../../_static/pygments-light.css?v=970f37b1" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-icons.min.css?v=44730005" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-nefertiti-default.min.css?v=af73fa67" /><!-- add (1) -->
+        <link rel="index" title="Index" href="../../../genindex.html" />
+        <link rel="search" title="Search" href="../../../search.html" />
+        <link rel="top" title="tbottest 0.0.1-391-g1d197d3 documentation" href="#" />
+        <link rel="up" title="Module code" href="../../index.html" />
+    <style>
+      :root {
+        --nftt-body-font-family: "Nunito", var(--nftt-font-sans-serif) !important;
+        --nftt-font-monospace: "Ubuntu Sans Mono", var(--nftt-font-family-monospace) !important;
+        --nftt-project-name-font: var(--nftt-body-font-family);
+        --nftt-documentation-font: var(--nftt-body-font-family);
+        --nftt-doc-headers-font: "Georgia", var(--nftt-documentation-font);}
+    </style>
+  </head>
+  <body>
+    <div id="back-to-top-container" class="position-fixed start-50 translate-middle-x">
+      <button id="back-to-top" type="button" class="d-none btn btn-neutral btn-sm shadow px-4" data-bs-toggle="button">Back to top</button>
+    </div>
+    <header id="snftt-nav-bar" class="navbar navbar-expand-xl navbar-dark nftt-navbar flex-column fixed-top">
+      <div class="skip-links container-fluid visually-hidden-focusable overflow-hidden justify-content-start flex-grow-1">
+        <div class="border-bottom mb-2 pb-2 w-100">
+          <a class="d-none d-md-inline-flex p-2 m-1" href="#sidebar-filter">Skip to index filter</a>
+          <a class="d-inline-flex p-2 m-1" href="#content">Skip to main content</a>
+        </div>
+      </div>
+      <nav class="container-xxl nftt-gutter flex-nowrap" aria-label="Main navigation">
+        <div class="nftt-navbar-toggler">
+          <button class="navbar-toggler p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar" aria-label="Toggle documentation navigation">
+            <i class="bi bi-list"></i>
+          </button>
+        </div>
+          <a href="../../../index.html"
+             class="navbar-brand"
+          ><span class="brand-text">tbottest</span><span class="brand-short-text">tbottest</span></a>
+        
+        
+        <div class="d-flex d-xl-none">
+          <button class="navbar-toggler p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#nfttSearch" aria-controls="nfttSearch" aria-label="Search">
+            <i class="bi bi-search"></i>
+          </button>
+          <button class="navbar-toggler p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#nfttNavbar" aria-controls="nfttNavbar" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+        </div>
+        
+<div class="offcanvas-xl offcanvas-end flex-grow-1" tabindex="-1" id="nfttSearch" aria-labelledby="nfttSearchOffcanvasLabel" data-bs-scroll="true">
+  <div class="offcanvas-header px-4 pb-0">
+    <h5 class="offcanvas-title fw-bold" id="nfttSearchOffcanvasLabel">Search the documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#nfttSearch"></button>
+  </div>
+  <div class="offcanvas-body p-4 pt-0 p-xl-0 ps-xl-4">
+    <hr class="d-xl-none text-white-50">
+    <ul class="navbar-nav flex-row align-items-center flex-wrap ms-md-auto">
+      <li class="nav-item col-12 col-xl-auto">
+        <form id="nftt-search-form" action="../../../search.html" method="get">
+          <div class="input-group">
+            <input type="text" name="q" class="form-control search-input" placeholder="Search" aria-label="Search" aria-describedby="button-search">
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+            <button class="btn btn-primary" type="submit" id="button-search" aria-label="Search"><i class="bi bi-search"></i></button>
+          </div>
+        </form>
+      </li>
+    </ul>
+  </div>
+</div>
+
+        <div class="offcanvas-xl offcanvas-end" tabindex="-1" id="nfttNavbar" aria-labelledby="nfttNavbarOffcanvasLabel" data-bs-scroll="true">
+          <div class="offcanvas-header px-4 pb-0">
+            <div class="offcanvas-title navbar-brand" id="nfttNavbarOffcanvasLabel"><span class="brand-short-text">tbottest</span></div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#nfttNavbar"></button>
+          </div>
+          <div class="offcanvas-body p-4 pt-0 p-xl-0 px-xl-3">
+            <hr class="d-xl-none text-white-50">
+            <ul class="navbar-nav flex-row align-items-center flex-wrap ms-lg-auto">
+              
+              
+              
+              
+              
+              <!-- lightdark-dropdown.html -->
+<li class="nav-item dropdown">
+  <a class="nav-link d-flex py-2 px-0 px-xl-2 dropdown-toggle align-items-center" id="snftt-luz" href="#" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" aria-label="Change appearance">
+    <i class="bi bi-circle-half" data-snftt-luz-icon-active></i>
+    <span id="snftt-luz-text" class="d-xl-none ms-2">Change appearance</span>
+  </a>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="snftt-luz-text">
+    <li>
+      <h6 class="dropdown-header">Change appearance</h6>
+    </li>
+    <li>
+      <a class="dropdown-item d-flex align-items-center" data-snftt-luz="light" href="#" aria-pressed="false">
+        <span>
+          <i class="bi bi-sun" data-snftt-luz-icon="light"></i>
+        </span>
+        <span class="ms-3">Light</span>
+        <i class="bi bi-check ms-auto"></i>
+      </a>
+    </li>
+    <li>
+      <a class="dropdown-item d-flex align-items-center" data-snftt-luz="dark" href="#" aria-pressed="false">
+        <span>
+          <i class="bi bi-moon-stars" data-snftt-luz-icon="dark"></i>
+        </span>
+        <span class="ms-3">Dark</span>
+        <i class="bi bi-check ms-auto"></i>
+      </a>
+    </li>
+    <li>
+      <a class="dropdown-item current d-flex align-items-center" data-snftt-luz="default" href="#" aria-pressed="false">
+        <span>
+          <i class="bi bi-circle-half" data-snftt-luz-icon="default"></i>
+        </span>
+        <span class="ms-3">Automatic</span>
+        <i class="bi bi-check ms-auto"></i>
+      </a>
+    </li>
+  </ul>
+</li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      
+    </header>
+
+    <div class="container-fluid flex-grow-1">
+      <div class="nftt-gutter nftt-page">
+        <aside class="nftt-sidebar ">
+          <div class="nftt-sidebar-content">
+            
+            <div class="title d-none d-xl-none">
+              <i class="bi bi-book"></i>&nbsp;&nbsp;<span>Index</span>
+            </div>
+            <div id="sidebar" tabindex="-1" class="offcanvas-xl offcanvas-start" aria-labelledby="nfttSidebarOffcanvasLabel">
+                <!-- sidebartemplate: "globaltoc.html" --><div class="offcanvas-header border-bottom">
+  <h5 class="offcanvas-title fw-bold" id="nfttSidebarOffcanvasLabel">
+    Index
+  </h5>
+  <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#sidebar"></button>
+</div>
+
+<div class="offcanvas-body">
+  <nav class="toc" aria-label="Main menu">
+    <div class="mb-3 p-1 pb-4 border-bottom">
+      <input id="sidebar-filter" type="text" name="filter" class="form-control form-control-sm" placeholder="index filter" aria-label="index filter">
+    </div>
+    <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../quickstart.html#lab-setup">Lab setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quickstart.html#example-run">Example run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quickstart.html#aliases-for-starting-tbot">Aliases for starting tbot</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../generic.html#requirements-for-lab-host">requirements for lab host</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generic.html#supported-hardware-tools">supported hardware/tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generic.html#configuration">configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../generic.html#start-script">start script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../generic.html#tbotconfig">tbotconfig</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../generic.html#readme">README</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../generic.html#file-directory-overview">file/directory overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../generic.html#tbot-ini-file-tbot-ini">tbot ini file (tbot.ini)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#labhost">[LABHOST]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#buildhost">[BUILDHOST]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#bootmode-boardname">[BOOTMODE_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#picocom-boardname">[PICOCOM_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#kermit-boardname">[KERMIT_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#scriptcom-boardname">[SCRIPTCOM_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#telnet-boardname">[TELNET_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#gpiopmctrl-boardname">[GPIOPMCTRL_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#powershellscript-boardname">[POWERSHELLSCRIPT_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#sispmctrl-boardname">[SISPMCTRL_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#shelly-boardname">[SHELLY_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#tbox-boardname">[TBOX_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#tm021-boardname">[TM021_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#tf-boardname">[TF_BOARDNAME]</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#ethernet-config">ethernet config</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../generic.html#ipsetup-boardname-ethdevice-board">[IPSETUP_BOARDNAME_&lt;ethdevice_board&gt;]</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../generic.html#ubcfg-boardname">[UBCFG_BOARDNAME]</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#setup-for-dfu-util-tool">setup for dfu-util tool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#setup-for-uuu-tool">setup for uuu tool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#setup-for-sb-tool">setup for sb tool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#setup-for-lauterbacher-debugger">setup for Lauterbacher debugger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#setup-for-segger-debugger">setup for Segger debugger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#setup-for-bdi2000-debugger">setup for BDI2000 debugger</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../generic.html#boardspecfic-runtime-adaptions">boardspecfic runtime adaptions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#set-board-cfg-temp-str-none-filename-str-none">set_board_cfg(temp: str = None, filename: str = None)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#board-set-boardname">board_set_boardname</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#set-ub-board-specific">set_ub_board_specific</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../generic.html#boardconfiguration-file">boardconfiguration file</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#common-settings">common settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#u-boot-settings">u-boot settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#linux-settings">linux settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#swupdate-settings">swupdate settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#kas-settings">kas settings</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../generic.html#argumentfiles">argumentfiles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../generic.html#argumentfile-for-ssh-login">Argumentfile for ssh login</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generic.html#tbot-flags">tbot flags</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../boardlocking.html#example-run">Example run</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../boardlocking.html#reserve-a-board-on-the-lab-host">reserve a board on the lab host</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../boardlocking.html#remove-the-reservation">remove the reservation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../boardlocking.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tips.html#newtbot-starter-py">newtbot_starter.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tips.html#fast-testcase-development">fast testcase development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tips.html#linux">linux</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#reboot">reboot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tips.html#lab-setup">lab setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#setup-ssh">setup ssh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#bash-and-git">bash and git</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#picocom">picocom</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#sispmctl">sispmctl</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tips.html#sudo-without-password">sudo without password</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tips.html#gpio">gpio</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#usb-hub-power-control">usb hub power control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#add-static-ip">add static IP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#tftpserver">tftpserver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#libftdi1-1-4">libftdi1 1.4</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#sdmux">sdmux</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#jlink">jlink</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#swupdate">swupdate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#nfsserver">nfsserver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#dhcp-server-installation-on-pi">dhcp server installation on PI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#install-chrony-on-pi">install chrony on PI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#pass-ntp-server-address-through-dhcp-to-the-dut">pass NTP server address through DHCP to the DUT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#configure-chrony-to-get-ntp-server-address-from-dhcp">configure chrony to get NTP server address from DHCP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tips.html#enable-internet-access-from-dut-over-ethernet">enable Internet access from DUT over ethernet</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tips.html#console-output-from-a-json-log">console output from a JSON log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tips.html#documentation">documentation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.common">Common Testcases</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.escape_ansi"><code class="docutils literal notranslate"><span class="pre">escape_ansi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.search_string_in_multiline"><code class="docutils literal notranslate"><span class="pre">search_string_in_multiline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.search_multistring_in_multiline"><code class="docutils literal notranslate"><span class="pre">search_multistring_in_multiline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.ExecDeathStringError"><code class="docutils literal notranslate"><span class="pre">ExecDeathStringError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.exec_check"><code class="docutils literal notranslate"><span class="pre">exec_check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.exec0_check"><code class="docutils literal notranslate"><span class="pre">exec0_check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lx_cmd_exists"><code class="docutils literal notranslate"><span class="pre">lx_cmd_exists()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lx_devmem2_get"><code class="docutils literal notranslate"><span class="pre">lx_devmem2_get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_check_revfile"><code class="docutils literal notranslate"><span class="pre">lnx_check_revfile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_command_check_dump_file"><code class="docutils literal notranslate"><span class="pre">lnx_command_check_dump_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_command_create_dump_file"><code class="docutils literal notranslate"><span class="pre">lnx_command_create_dump_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_create_revfile"><code class="docutils literal notranslate"><span class="pre">lnx_create_revfile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.generic_machine_dump"><code class="docutils literal notranslate"><span class="pre">generic_machine_dump()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.generic_machine_dump_write"><code class="docutils literal notranslate"><span class="pre">generic_machine_dump_write()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_check_cmd"><code class="docutils literal notranslate"><span class="pre">lnx_check_cmd()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_create_random"><code class="docutils literal notranslate"><span class="pre">lnx_create_random()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_compare_files"><code class="docutils literal notranslate"><span class="pre">lnx_compare_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_get_hwaddr"><code class="docutils literal notranslate"><span class="pre">lnx_get_hwaddr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_start_bin_with_timeout"><code class="docutils literal notranslate"><span class="pre">lnx_start_bin_with_timeout()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_wait_for_ip"><code class="docutils literal notranslate"><span class="pre">lnx_wait_for_ip()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_wait_for_file"><code class="docutils literal notranslate"><span class="pre">lnx_wait_for_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_wait_for_module"><code class="docutils literal notranslate"><span class="pre">lnx_wait_for_module()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_wait_for_process"><code class="docutils literal notranslate"><span class="pre">lnx_wait_for_process()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.board_ub_delete_env"><code class="docutils literal notranslate"><span class="pre">board_ub_delete_env()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.board_ub_delete_emmc"><code class="docutils literal notranslate"><span class="pre">board_ub_delete_emmc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.board_wait_for_device"><code class="docutils literal notranslate"><span class="pre">board_wait_for_device()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.board_set_default"><code class="docutils literal notranslate"><span class="pre">board_set_default()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lab_check_part_exists_and_create"><code class="docutils literal notranslate"><span class="pre">lab_check_part_exists_and_create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.ub_check_i2c_dump"><code class="docutils literal notranslate"><span class="pre">ub_check_i2c_dump()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_check_beeper"><code class="docutils literal notranslate"><span class="pre">lnx_check_beeper()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_check_dmesg"><code class="docutils literal notranslate"><span class="pre">lnx_check_dmesg()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_create_file"><code class="docutils literal notranslate"><span class="pre">lnx_create_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_install_package"><code class="docutils literal notranslate"><span class="pre">lnx_install_package()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.tbot_copy_file_to_board"><code class="docutils literal notranslate"><span class="pre">tbot_copy_file_to_board()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.tbot_start_script_on_board"><code class="docutils literal notranslate"><span class="pre">tbot_start_script_on_board()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.tbot_start_script_on_lab"><code class="docutils literal notranslate"><span class="pre">tbot_start_script_on_lab()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.tbot_start_thread"><code class="docutils literal notranslate"><span class="pre">tbot_start_thread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.tbot_stop_thread"><code class="docutils literal notranslate"><span class="pre">tbot_stop_thread()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.lnx_sudo"><code class="docutils literal notranslate"><span class="pre">lnx_sudo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common.sudo_subshell"><code class="docutils literal notranslate"><span class="pre">sudo_subshell()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#common-generic-testcases">Common generic Testcases</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.common_generic.get_bit_range"><code class="docutils literal notranslate"><span class="pre">get_bit_range()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.bootcount">Boot counter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.bootcount.lnx_bootcount_reset_nvmem"><code class="docutils literal notranslate"><span class="pre">lnx_bootcount_reset_nvmem()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.bootcount.lnx_bootcount_reset_fw_setenv"><code class="docutils literal notranslate"><span class="pre">lnx_bootcount_reset_fw_setenv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.bootcount.ub_bootcount"><code class="docutils literal notranslate"><span class="pre">ub_bootcount()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.bootcount.board_ub_bootcount"><code class="docutils literal notranslate"><span class="pre">board_ub_bootcount()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.can">CAN Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.can.board_setup_can"><code class="docutils literal notranslate"><span class="pre">board_setup_can()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.can.lnx_can_write_dump_compare"><code class="docutils literal notranslate"><span class="pre">lnx_can_write_dump_compare()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.can.board_lnx_cangen"><code class="docutils literal notranslate"><span class="pre">board_lnx_cangen()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.cpu">CPU Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.cpu.board_lnx_cpufreq"><code class="docutils literal notranslate"><span class="pre">board_lnx_cpufreq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.cpu.generic_get_socname"><code class="docutils literal notranslate"><span class="pre">generic_get_socname()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.generic_board">generic board test</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_check_dump_files"><code class="docutils literal notranslate"><span class="pre">generic_lnx_check_dump_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_create_dump_files"><code class="docutils literal notranslate"><span class="pre">generic_lnx_create_dump_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_lx_dump_register"><code class="docutils literal notranslate"><span class="pre">generic_lx_dump_register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_network_iperf"><code class="docutils literal notranslate"><span class="pre">generic_lnx_network_iperf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_network_ping"><code class="docutils literal notranslate"><span class="pre">generic_lnx_network_ping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_test_beep"><code class="docutils literal notranslate"><span class="pre">generic_lnx_test_beep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_commands"><code class="docutils literal notranslate"><span class="pre">generic_lnx_commands()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_test_dmesg"><code class="docutils literal notranslate"><span class="pre">generic_lnx_test_dmesg()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_test_led"><code class="docutils literal notranslate"><span class="pre">generic_lnx_test_led()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_lnx_all"><code class="docutils literal notranslate"><span class="pre">generic_lnx_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_kas_get_config"><code class="docutils literal notranslate"><span class="pre">generic_kas_get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_kas_checkout"><code class="docutils literal notranslate"><span class="pre">generic_kas_checkout()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_kas_build"><code class="docutils literal notranslate"><span class="pre">generic_kas_build()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_kas_check_build"><code class="docutils literal notranslate"><span class="pre">generic_kas_check_build()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_kas_copy"><code class="docutils literal notranslate"><span class="pre">generic_kas_copy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.generic_board.generic_kas_all"><code class="docutils literal notranslate"><span class="pre">generic_kas_all()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.hab">HAB (imx specific)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.hab.ub_check_hab_state"><code class="docutils literal notranslate"><span class="pre">ub_check_hab_state()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.kas">KAS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.kas.kas_check_mounts"><code class="docutils literal notranslate"><span class="pre">kas_check_mounts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.kas.kas_runtime_args_with_mounts"><code class="docutils literal notranslate"><span class="pre">kas_runtime_args_with_mounts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.kas.KAS"><code class="docutils literal notranslate"><span class="pre">KAS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.kas.KAS.kas_get_basepath"><code class="docutils literal notranslate"><span class="pre">KAS.kas_get_basepath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.kas.KAS.kas_get_buildpath"><code class="docutils literal notranslate"><span class="pre">KAS.kas_get_buildpath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.kas.KAS.kas_get_deploypath"><code class="docutils literal notranslate"><span class="pre">KAS.kas_get_deploypath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.kas.KAS.kas_build_dir_env"><code class="docutils literal notranslate"><span class="pre">KAS.kas_build_dir_env()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.kas.KAS.kas_keep_config_args"><code class="docutils literal notranslate"><span class="pre">KAS.kas_keep_config_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.kas.KAS.kas_checkout"><code class="docutils literal notranslate"><span class="pre">KAS.kas_checkout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.kas.KAS.kas_build"><code class="docutils literal notranslate"><span class="pre">KAS.kas_build()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.kas.KAS.kas_shell"><code class="docutils literal notranslate"><span class="pre">KAS.kas_shell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.kas.KAS.kas_copy"><code class="docutils literal notranslate"><span class="pre">KAS.kas_copy()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.leds">LED</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.leds.lnx_test_led_simple"><code class="docutils literal notranslate"><span class="pre">lnx_test_led_simple()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.mtd">MTD</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.mtd.lnx_mtd_nvram"><code class="docutils literal notranslate"><span class="pre">lnx_mtd_nvram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.mtd.lnx_mtd_nvram_reboot"><code class="docutils literal notranslate"><span class="pre">lnx_mtd_nvram_reboot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.mtd.lnx_mtd_dump"><code class="docutils literal notranslate"><span class="pre">lnx_mtd_dump()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.network">network</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.network.lnx_netcmd"><code class="docutils literal notranslate"><span class="pre">lnx_netcmd()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.network.netmask_to_prefix"><code class="docutils literal notranslate"><span class="pre">netmask_to_prefix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.network.classful_prefix"><code class="docutils literal notranslate"><span class="pre">classful_prefix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.network.ipv4_in_net"><code class="docutils literal notranslate"><span class="pre">ipv4_in_net()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.network.lnx_ifdown"><code class="docutils literal notranslate"><span class="pre">lnx_ifdown()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.network.lnx_ifup"><code class="docutils literal notranslate"><span class="pre">lnx_ifup()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.network.lnx_set_ipaddr"><code class="docutils literal notranslate"><span class="pre">lnx_set_ipaddr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.network.lnx_set_ethdevice"><code class="docutils literal notranslate"><span class="pre">lnx_set_ethdevice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.network.lnx_has_netdev"><code class="docutils literal notranslate"><span class="pre">lnx_has_netdev()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.network.lnx_get_hwaddr"><code class="docutils literal notranslate"><span class="pre">lnx_get_hwaddr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.network.lnx_get_ipaddr"><code class="docutils literal notranslate"><span class="pre">lnx_get_ipaddr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.network.lnx_network_up"><code class="docutils literal notranslate"><span class="pre">lnx_network_up()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.network.network_linux_iperf"><code class="docutils literal notranslate"><span class="pre">network_linux_iperf()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.process">process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.process.process_get_gnuplot_work_and_configpath"><code class="docutils literal notranslate"><span class="pre">process_get_gnuplot_work_and_configpath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.process.ps_parse_ps"><code class="docutils literal notranslate"><span class="pre">ps_parse_ps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.process.ps_parse_top"><code class="docutils literal notranslate"><span class="pre">ps_parse_top()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.process.lnx_get_process_cpu_usage"><code class="docutils literal notranslate"><span class="pre">lnx_get_process_cpu_usage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.process.lnx_get_cpu_stats"><code class="docutils literal notranslate"><span class="pre">lnx_get_cpu_stats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.process.lnx_measure_process"><code class="docutils literal notranslate"><span class="pre">lnx_measure_process()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.process.is_busybox"><code class="docutils literal notranslate"><span class="pre">is_busybox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.process.lnx_measure_top"><code class="docutils literal notranslate"><span class="pre">lnx_measure_top()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.process.ps_create_measurement_png"><code class="docutils literal notranslate"><span class="pre">ps_create_measurement_png()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.process.top_create_measurement_png"><code class="docutils literal notranslate"><span class="pre">top_create_measurement_png()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.registermap">register map</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.get_registername_from_dict"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.get_registername_from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.registername_to_address"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.registername_to_address()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.register_load_map"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.register_load_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_nxp_search_address"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.registermap_nxp_search_address()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_stm32mp1_search_address"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.registermap_stm32mp1_search_address()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_search_address"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.registermap_search_address()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_dump_register"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.registermap_dump_register()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.tc.registermap.REGISTERMAP.registermap_dump_register_file"><code class="docutils literal notranslate"><span class="pre">REGISTERMAP.registermap_dump_register_file()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.rs485">RS485</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.rs485.board_lnx_rs485"><code class="docutils literal notranslate"><span class="pre">board_lnx_rs485()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.sensors">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.sensors.board_lnx_tempsensors"><code class="docutils literal notranslate"><span class="pre">board_lnx_tempsensors()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#swupdate">SWUpdate</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.swu.board_lnx_check_swu"><code class="docutils literal notranslate"><span class="pre">board_lnx_check_swu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.swu.board_lnx_swu"><code class="docutils literal notranslate"><span class="pre">board_lnx_swu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.swu.swu_swupdate_from_file"><code class="docutils literal notranslate"><span class="pre">swu_swupdate_from_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.swupdate.SWU_PORT"><code class="docutils literal notranslate"><span class="pre">SWU_PORT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.swupdate.SWU_DONE_OK"><code class="docutils literal notranslate"><span class="pre">SWU_DONE_OK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.swupdate.swu_stop_progress"><code class="docutils literal notranslate"><span class="pre">swu_stop_progress()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.swupdate.lnx_bootenv"><code class="docutils literal notranslate"><span class="pre">lnx_bootenv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.swupdate.lnx_mount_source"><code class="docutils literal notranslate"><span class="pre">lnx_mount_source()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.swupdate.swu_journal_cursor"><code class="docutils literal notranslate"><span class="pre">swu_journal_cursor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.swupdate.swu_wait_result"><code class="docutils literal notranslate"><span class="pre">swu_wait_result()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.swupdate.swu_curl_upload"><code class="docutils literal notranslate"><span class="pre">swu_curl_upload()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.swupdate.swu_install"><code class="docutils literal notranslate"><span class="pre">swu_install()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.swupdate.swu_check_bootenv"><code class="docutils literal notranslate"><span class="pre">swu_check_bootenv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.swupdate.swu_check_mounts"><code class="docutils literal notranslate"><span class="pre">swu_check_mounts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.swupdate.board_swu_update"><code class="docutils literal notranslate"><span class="pre">board_swu_update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.systemd">SystemD</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.systemd.systemd_stop_service"><code class="docutils literal notranslate"><span class="pre">systemd_stop_service()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.systemd.systemd_get_log_from_service"><code class="docutils literal notranslate"><span class="pre">systemd_get_log_from_service()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.systemd.systemd_active"><code class="docutils literal notranslate"><span class="pre">systemd_active()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.tpm">TPM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.tpm.board_lnx_tpm2"><code class="docutils literal notranslate"><span class="pre">board_lnx_tpm2()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.watchdog">Watchdog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.watchdog.lnx_service_main_pid"><code class="docutils literal notranslate"><span class="pre">lnx_service_main_pid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.watchdog.lnx_pid_holds"><code class="docutils literal notranslate"><span class="pre">lnx_pid_holds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.watchdog.board_lnx_watchdog_bites"><code class="docutils literal notranslate"><span class="pre">board_lnx_watchdog_bites()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.common.ubootbuild">U-Boot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.common.ubootbuild.UBBUILDMAN"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_get_uboot_patches"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN.bm_get_uboot_patches()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_apply_uboot_patches"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN.bm_apply_uboot_patches()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_build_prepare"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN.bm_build_prepare()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_build_board"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN.bm_build_board()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tc.html#tbottest.common.ubootbuild.UBBUILDMAN.bm_copy_results2lab"><code class="docutils literal notranslate"><span class="pre">UBBUILDMAN.bm_copy_results2lab()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.uboot.ub_read_register"><code class="docutils literal notranslate"><span class="pre">ub_read_register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.uboot.board_ub_unit_test"><code class="docutils literal notranslate"><span class="pre">board_ub_unit_test()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tc.html#module-tbottest.tc.yocto">Yocto</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.yocto.yocto_sdk_envcmd_from_log"><code class="docutils literal notranslate"><span class="pre">yocto_sdk_envcmd_from_log()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.yocto.check_yocto_build_install_sdk"><code class="docutils literal notranslate"><span class="pre">check_yocto_build_install_sdk()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.yocto.check_yocto_sdk_get_scriptname"><code class="docutils literal notranslate"><span class="pre">check_yocto_sdk_get_scriptname()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tc.html#tbottest.tc.yocto.check_yocto_sdk_build_hello"><code class="docutils literal notranslate"><span class="pre">check_yocto_sdk_build_hello()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../iniconfig.html#helper-functions">helper functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../iniconfig.html#tbottest.initconfig.init_get_config"><code class="docutils literal notranslate"><span class="pre">init_get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../iniconfig.html#tbottest.initconfig.generic_get_boardname"><code class="docutils literal notranslate"><span class="pre">generic_get_boardname()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../iniconfig.html#tbottest.initconfig.copy_file"><code class="docutils literal notranslate"><span class="pre">copy_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../iniconfig.html#tbottest.initconfig.replace_in_file"><code class="docutils literal notranslate"><span class="pre">replace_in_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../iniconfig.html#tbottest.initconfig.find_in_file_and_append"><code class="docutils literal notranslate"><span class="pre">find_in_file_and_append()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../iniconfig.html#tbottest.initconfig.find_in_file_and_delete"><code class="docutils literal notranslate"><span class="pre">find_in_file_and_delete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../iniconfig.html#classes">classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../iniconfig.html#tbottest.initconfig.IniTBotConfig"><code class="docutils literal notranslate"><span class="pre">IniTBotConfig</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../iniconfig.html#tbottest.initconfig.IniConfig"><code class="docutils literal notranslate"><span class="pre">IniConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../iniconfig.html#tbottest.initconfig.IniConfig.get_config"><code class="docutils literal notranslate"><span class="pre">IniConfig.get_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../iniconfig.html#tbottest.initconfig.IniConfig.get_config_int"><code class="docutils literal notranslate"><span class="pre">IniConfig.get_config_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../iniconfig.html#tbottest.initconfig.IniConfig.get_default_config"><code class="docutils literal notranslate"><span class="pre">IniConfig.get_default_config()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../iniconfighelper.html#libhelper-functions">libhelper functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../iniconfighelper.html#tbottest.initconfighelper.inifile_get_tbotfilename"><code class="docutils literal notranslate"><span class="pre">inifile_get_tbotfilename()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../iniconfighelper.html#tbottest.initconfighelper.inifile_get_tbotboardfilename"><code class="docutils literal notranslate"><span class="pre">inifile_get_tbotboardfilename()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../machineinit.html#tbottest.machineinit.DFUUTIL"><code class="docutils literal notranslate"><span class="pre">DFUUTIL</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../machineinit.html#tbottest.machineinit.DFUUTIL.dfuutil_loader_steps"><code class="docutils literal notranslate"><span class="pre">DFUUTIL.dfuutil_loader_steps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../machineinit.html#tbottest.machineinit.DFUUTIL._init_machine"><code class="docutils literal notranslate"><span class="pre">DFUUTIL._init_machine()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../machineinit.html#tbottest.machineinit.UsbSdpLoad"><code class="docutils literal notranslate"><span class="pre">UsbSdpLoad</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../machineinit.html#tbottest.machineinit.UsbSdpLoad.get_imx_usb_loader"><code class="docutils literal notranslate"><span class="pre">UsbSdpLoad.get_imx_usb_loader()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../machineinit.html#tbottest.machineinit.UsbSdpLoad.usb_loader_bins"><code class="docutils literal notranslate"><span class="pre">UsbSdpLoad.usb_loader_bins()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../machineinit.html#tbottest.machineinit.UUULoad"><code class="docutils literal notranslate"><span class="pre">UUULoad</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../machineinit.html#tbottest.machineinit.UUULoad.get_uuu_tool"><code class="docutils literal notranslate"><span class="pre">UUULoad.get_uuu_tool()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../machineinit.html#tbottest.machineinit.UUULoad.uuu_loader_steps"><code class="docutils literal notranslate"><span class="pre">UUULoad.uuu_loader_steps()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../machineinit.html#tbottest.machineinit.LauterbachLoad"><code class="docutils literal notranslate"><span class="pre">LauterbachLoad</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../machineinit.html#tbottest.machineinit.LauterbachLoad.get_trace32_config"><code class="docutils literal notranslate"><span class="pre">LauterbachLoad.get_trace32_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../machineinit.html#tbottest.machineinit.LauterbachLoad.get_trace32_script"><code class="docutils literal notranslate"><span class="pre">LauterbachLoad.get_trace32_script()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../machineinit.html#tbottest.machineinit.XMODEMLoad"><code class="docutils literal notranslate"><span class="pre">XMODEMLoad</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../machineinit.html#tbottest.machineinit.XMODEMLoad.xmodem_loader_steps"><code class="docutils literal notranslate"><span class="pre">XMODEMLoad.xmodem_loader_steps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../machineinit.html#tbottest.machineinit.XMODEMLoad.xmodem_loader_device"><code class="docutils literal notranslate"><span class="pre">XMODEMLoad.xmodem_loader_device()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../connector.html#tbottest.connector.KermitConnector"><code class="docutils literal notranslate"><span class="pre">KermitConnector</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../connector.html#tbottest.connector.KermitConnector.kermit_cfg_file"><code class="docutils literal notranslate"><span class="pre">KermitConnector.kermit_cfg_file</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../connector.html#tbottest.connector.PicocomConnector"><code class="docutils literal notranslate"><span class="pre">PicocomConnector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../connector.html#tbottest.connector.TelnetConnector"><code class="docutils literal notranslate"><span class="pre">TelnetConnector</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../connector.html#tbottest.connector.TelnetConnector.telnet_host"><code class="docutils literal notranslate"><span class="pre">TelnetConnector.telnet_host</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../connector.html#tbottest.connector.TelnetConnector.telnet_port"><code class="docutils literal notranslate"><span class="pre">TelnetConnector.telnet_port</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../connector.html#tbottest.connector.TelnetConnector.telnet_delay"><code class="docutils literal notranslate"><span class="pre">TelnetConnector.telnet_delay</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../connector.html#tbottest.connector.ScriptConnector"><code class="docutils literal notranslate"><span class="pre">ScriptConnector</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../decorators.html#tbottest.decorators.tbot_save_flags"><code class="docutils literal notranslate"><span class="pre">tbot_save_flags()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.GpiopmControl"><code class="docutils literal notranslate"><span class="pre">GpiopmControl</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.PowerShellScriptControl"><code class="docutils literal notranslate"><span class="pre">PowerShellScriptControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.PowerShellScriptControl.shell_script"><code class="docutils literal notranslate"><span class="pre">PowerShellScriptControl.shell_script</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.ShellyControl"><code class="docutils literal notranslate"><span class="pre">ShellyControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.ShellyControl.shelly_device"><code class="docutils literal notranslate"><span class="pre">ShellyControl.shelly_device</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.ShellyControl.shelly_id"><code class="docutils literal notranslate"><span class="pre">ShellyControl.shelly_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.ShellyControl.shelly_command"><code class="docutils literal notranslate"><span class="pre">ShellyControl.shelly_command</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.ShellyControl.shelly_tooldir"><code class="docutils literal notranslate"><span class="pre">ShellyControl.shelly_tooldir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.ShellyControl.shelly_repo"><code class="docutils literal notranslate"><span class="pre">ShellyControl.shelly_repo</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.ShellyControl.shelly_install"><code class="docutils literal notranslate"><span class="pre">ShellyControl.shelly_install</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.ShellyControl.shelly_timeout"><code class="docutils literal notranslate"><span class="pre">ShellyControl.shelly_timeout</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.SispmControl"><code class="docutils literal notranslate"><span class="pre">SispmControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.SispmControl.sispmctl_device"><code class="docutils literal notranslate"><span class="pre">SispmControl.sispmctl_device</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.SispmControl.sispmctl_port"><code class="docutils literal notranslate"><span class="pre">SispmControl.sispmctl_port</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.TboxCtrlControl"><code class="docutils literal notranslate"><span class="pre">TboxCtrlControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.TboxCtrlControl.tbox_powerpin"><code class="docutils literal notranslate"><span class="pre">TboxCtrlControl.tbox_powerpin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.TboxCtrlControl.tbox_vid"><code class="docutils literal notranslate"><span class="pre">TboxCtrlControl.tbox_vid</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.TboxCtrlControl.tbox_pid"><code class="docutils literal notranslate"><span class="pre">TboxCtrlControl.tbox_pid</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.TinkerforgeControl"><code class="docutils literal notranslate"><span class="pre">TinkerforgeControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.TinkerforgeControl.channel"><code class="docutils literal notranslate"><span class="pre">TinkerforgeControl.channel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.TinkerforgeControl.uid"><code class="docutils literal notranslate"><span class="pre">TinkerforgeControl.uid</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.TM021Control"><code class="docutils literal notranslate"><span class="pre">TM021Control</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.TM021Control.tm021_baudrate"><code class="docutils literal notranslate"><span class="pre">TM021Control.tm021_baudrate</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.TM021Control.tm021_timeout"><code class="docutils literal notranslate"><span class="pre">TM021Control.tm021_timeout</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.TM021Control.tm021_device"><code class="docutils literal notranslate"><span class="pre">TM021Control.tm021_device</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.TM021Control.tm021_address"><code class="docutils literal notranslate"><span class="pre">TM021Control.tm021_address</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.TM021Control.tm021_port"><code class="docutils literal notranslate"><span class="pre">TM021Control.tm021_port</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../powercontrol.html#tbottest.powercontrol.TM021Control.tm021_debug"><code class="docutils literal notranslate"><span class="pre">TM021Control.tm021_debug</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../labgeneric.html">Generic tbot config implementation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardPicocomConnector"><code class="docutils literal notranslate"><span class="pre">boardPicocomConnector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardScriptConnector"><code class="docutils literal notranslate"><span class="pre">boardScriptConnector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardKermitConnector"><code class="docutils literal notranslate"><span class="pre">boardKermitConnector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardTelnetConnector"><code class="docutils literal notranslate"><span class="pre">boardTelnetConnector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardSSHConnector"><code class="docutils literal notranslate"><span class="pre">boardSSHConnector</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardSSHConnector.authenticator"><code class="docutils literal notranslate"><span class="pre">boardSSHConnector.authenticator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardGpioControl"><code class="docutils literal notranslate"><span class="pre">boardGpioControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardGpioControl.power_check"><code class="docutils literal notranslate"><span class="pre">boardGpioControl.power_check()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardPowerShellControl"><code class="docutils literal notranslate"><span class="pre">boardPowerShellControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardPowerShellControl.power_check"><code class="docutils literal notranslate"><span class="pre">boardPowerShellControl.power_check()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardShellyControl"><code class="docutils literal notranslate"><span class="pre">boardShellyControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardShellyControl.power_check"><code class="docutils literal notranslate"><span class="pre">boardShellyControl.power_check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardShellyControl.shelly_command"><code class="docutils literal notranslate"><span class="pre">boardShellyControl.shelly_command</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardShellyControl.shelly_timeout"><code class="docutils literal notranslate"><span class="pre">boardShellyControl.shelly_timeout</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardSisControl"><code class="docutils literal notranslate"><span class="pre">boardSisControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardSisControl.power_check"><code class="docutils literal notranslate"><span class="pre">boardSisControl.power_check()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardTboxControl"><code class="docutils literal notranslate"><span class="pre">boardTboxControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardTboxControl.power_check"><code class="docutils literal notranslate"><span class="pre">boardTboxControl.power_check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardTboxControl.tbox_vid"><code class="docutils literal notranslate"><span class="pre">boardTboxControl.tbox_vid</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardTboxControl.tbox_pid"><code class="docutils literal notranslate"><span class="pre">boardTboxControl.tbox_pid</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardTMControl"><code class="docutils literal notranslate"><span class="pre">boardTMControl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardTMControl.power_check"><code class="docutils literal notranslate"><span class="pre">boardTMControl.power_check()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardTFControl"><code class="docutils literal notranslate"><span class="pre">boardTFControl</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.BOARDCTL"><code class="docutils literal notranslate"><span class="pre">BOARDCTL</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlUUU"><code class="docutils literal notranslate"><span class="pre">boardControlUUU</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlUUU.get_uuu_tool"><code class="docutils literal notranslate"><span class="pre">boardControlUUU.get_uuu_tool()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlUUU.uuu_loader_steps"><code class="docutils literal notranslate"><span class="pre">boardControlUUU.uuu_loader_steps()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlXmodem"><code class="docutils literal notranslate"><span class="pre">boardControlXmodem</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlXmodem.xmodem_loader_device"><code class="docutils literal notranslate"><span class="pre">boardControlXmodem.xmodem_loader_device()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlXmodem.xmodem_loader_steps"><code class="docutils literal notranslate"><span class="pre">boardControlXmodem.xmodem_loader_steps()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlDFUUTIL"><code class="docutils literal notranslate"><span class="pre">boardControlDFUUTIL</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlDFUUTIL.dfuutil_loader_steps"><code class="docutils literal notranslate"><span class="pre">boardControlDFUUTIL.dfuutil_loader_steps()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlLauterbach"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlLauterbach.get_host"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.get_host()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlLauterbach.get_trace32_install_path"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.get_trace32_install_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlLauterbach.get_trace32_cmd"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.get_trace32_cmd()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlLauterbach.get_trace32_config"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.get_trace32_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlLauterbach.get_trace32_script"><code class="docutils literal notranslate"><span class="pre">boardControlLauterbach.get_trace32_script()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlSegger"><code class="docutils literal notranslate"><span class="pre">boardControlSegger</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlSegger.get_host"><code class="docutils literal notranslate"><span class="pre">boardControlSegger.get_host()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlSegger.get_segger_cmds"><code class="docutils literal notranslate"><span class="pre">boardControlSegger.get_segger_cmds()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlBDI2000"><code class="docutils literal notranslate"><span class="pre">boardControlBDI2000</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlBDI2000.get_bdi2000_cmds"><code class="docutils literal notranslate"><span class="pre">boardControlBDI2000.get_bdi2000_cmds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlBDI2000.get_bdi2000_wait_state"><code class="docutils literal notranslate"><span class="pre">boardControlBDI2000.get_bdi2000_wait_state()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlBDI2000.get_bdi2000_timeout"><code class="docutils literal notranslate"><span class="pre">boardControlBDI2000.get_bdi2000_timeout()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericBDI2000"><code class="docutils literal notranslate"><span class="pre">GenericBDI2000</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericBDI2000.telnet_host"><code class="docutils literal notranslate"><span class="pre">GenericBDI2000.telnet_host</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.BOARDCTRL"><code class="docutils literal notranslate"><span class="pre">BOARDCTRL</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.BOARDCON"><code class="docutils literal notranslate"><span class="pre">BOARDCON</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardControlFull"><code class="docutils literal notranslate"><span class="pre">boardControlFull</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.boardExtPower"><code class="docutils literal notranslate"><span class="pre">boardExtPower</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab"><code class="docutils literal notranslate"><span class="pre">GenericLab</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.ssh_config"><code class="docutils literal notranslate"><span class="pre">GenericLab.ssh_config</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.authenticator"><code class="docutils literal notranslate"><span class="pre">GenericLab.authenticator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.tftp_root_path"><code class="docutils literal notranslate"><span class="pre">GenericLab.tftp_root_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.tftp_dir_board"><code class="docutils literal notranslate"><span class="pre">GenericLab.tftp_dir_board()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.workdir"><code class="docutils literal notranslate"><span class="pre">GenericLab.workdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.testdir"><code class="docutils literal notranslate"><span class="pre">GenericLab.testdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.tmpdir"><code class="docutils literal notranslate"><span class="pre">GenericLab.tmpdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.tmpmntdir"><code class="docutils literal notranslate"><span class="pre">GenericLab.tmpmntdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.nfsbasedir"><code class="docutils literal notranslate"><span class="pre">GenericLab.nfsbasedir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.nfsboardbasedir"><code class="docutils literal notranslate"><span class="pre">GenericLab.nfsboardbasedir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.toolsdir"><code class="docutils literal notranslate"><span class="pre">GenericLab.toolsdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.yocto_result_dir"><code class="docutils literal notranslate"><span class="pre">GenericLab.yocto_result_dir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.toolchains"><code class="docutils literal notranslate"><span class="pre">GenericLab.toolchains</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.lab_set_sd_mux_mode"><code class="docutils literal notranslate"><span class="pre">GenericLab.lab_set_sd_mux_mode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.set_bootmode"><code class="docutils literal notranslate"><span class="pre">GenericLab.set_bootmode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.GenericLab.init"><code class="docutils literal notranslate"><span class="pre">GenericLab.init()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.SSHMachine"><code class="docutils literal notranslate"><span class="pre">SSHMachine</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.SSHMachine.workdir"><code class="docutils literal notranslate"><span class="pre">SSHMachine.workdir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.SSHMachine.testdir"><code class="docutils literal notranslate"><span class="pre">SSHMachine.testdir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.SSHMachine.init"><code class="docutils literal notranslate"><span class="pre">SSHMachine.init()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.LocalHostTest"><code class="docutils literal notranslate"><span class="pre">LocalHostTest</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.LocalHostTest.workdir"><code class="docutils literal notranslate"><span class="pre">LocalHostTest.workdir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../labgeneric.html#tbottest.labgeneric.LocalHostTest.sourcedir"><code class="docutils literal notranslate"><span class="pre">LocalHostTest.sourcedir()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../boardspecific.html#module-tbottest.tbotconfig.boardspecific">boardspecific setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_lab_serverip"><code class="docutils literal notranslate"><span class="pre">BOARDNAME_get_lab_serverip()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_board_ipaddr"><code class="docutils literal notranslate"><span class="pre">BOARDNAME_get_board_ipaddr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../boardspecific.html#tbottest.tbotconfig.boardspecific.board_set_boardname"><code class="docutils literal notranslate"><span class="pre">board_set_boardname()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_rootfsname"><code class="docutils literal notranslate"><span class="pre">BOARDNAME_get_rootfsname()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../boardspecific.html#tbottest.tbotconfig.boardspecific.BOARDNAME_get_machinename"><code class="docutils literal notranslate"><span class="pre">BOARDNAME_get_machinename()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../boardspecific.html#tbottest.tbotconfig.boardspecific.set_ub_board_specific"><code class="docutils literal notranslate"><span class="pre">set_ub_board_specific()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../boardspecific.html#tbottest.tbotconfig.boardspecific.set_board_cfg"><code class="docutils literal notranslate"><span class="pre">set_board_cfg()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../CHANGELOG.html#unreleased">[Unreleased]</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../CHANGELOG.html#added">Added</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CONTRIBUTING.html">Contributing to tbot-test</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../CONTRIBUTING.html#commit-style">Commit Style</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../CONTRIBUTING.html#pre-commit"><code class="docutils literal notranslate"><span class="pre">pre-commit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../CONTRIBUTING.html#commit-messages">Commit Messages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../CONTRIBUTING.html#licensing">Licensing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../CONTRIBUTING.html#coding-style">Coding Style</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../CONTRIBUTING.html#formatting">Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../CONTRIBUTING.html#imports">Imports</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../CONTRIBUTING.html#developer-certificate-of-origin">Developer Certificate of Origin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../LICENSE.html">License</a></li>
+</ul>
+
+  </nav>
+  <template data-toggle-item-template>
+    <button class="btn btn-sm btn-link toctree-expand" type="button">
+      <i class="bi bi-caret-right"></i>
+      <span class="visually-hidden">Toggle menu contents</span>
+    </button>
+  </template>
+</div>
+            </div>
+            
+          </div>
+        </aside>
+        <article id="content" class="nftt-content" role="main">
+          <div><div class="d-flex flex-row justify-content-between">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="../../../index.html">Start</a></li>
+        <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active" aria-current="page">tbottest.tc.mtd</li>
+    </ol>
+  </nav>
+  
+    <div class="fs085">
+    </div>
+  
+</div>
+            
+    <h1>Source code for tbottest.tc.mtd</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">tbot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbot.machine</span><span class="w"> </span><span class="kn">import</span> <span class="n">linux</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">tbottest.initconfig</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ini</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.tc.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">lnx_create_random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.tc.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">lnx_compare_files</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_random_and_verify</span><span class="p">(</span><span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">tmpf</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dev</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">lnx_create_random</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">tmpf</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s2">"cnt"</span><span class="p">])</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s2">"bs"</span><span class="p">]))</span>
+    <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+        <span class="s2">"dd"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"if=</span><span class="si">{</span><span class="n">tmpf</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"of=</span><span class="si">{</span><span class="n">dev</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"bs=</span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="s1">'bs'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"count=</span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="s1">'cnt'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"seek=</span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="s1">'seek'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">lnx_compare_files</span><span class="p">(</span>
+            <span class="n">lnx</span><span class="p">,</span>
+            <span class="n">tmpf</span><span class="p">,</span>
+            <span class="mi">0</span><span class="p">,</span>
+            <span class="n">dev</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s2">"seek"</span><span class="p">])</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s2">"bs"</span><span class="p">]),</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s2">"cnt"</span><span class="p">])</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s2">"bs"</span><span class="p">]),</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_hexdump</span><span class="p">(</span><span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">skipflag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"hexdump"</span><span class="p">,</span> <span class="s2">"-e"</span><span class="p">,</span> <span class="s1">'"</span><span class="si">%03.2x</span><span class="s1">"'</span><span class="p">,</span> <span class="n">skipflag</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">,</span> <span class="s2">"-n"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">length</span><span class="p">),</span> <span class="n">path</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="lnx_mtd_nvram">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.mtd.lnx_mtd_nvram">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_mtd_nvram</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">dev</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/dev/mtd0"</span><span class="p">,</span>
+    <span class="n">tests</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    write and reread random data on device dev</span>
+<span class="sd">    offsets, bytesize and length is defined in</span>
+<span class="sd">    array tests which contain dictionary of form</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        {"bs" : "1", "cnt" : "2", "seek" : "0"}</span>
+
+<span class="sd">    example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        tests = [</span>
+<span class="sd">            {"bs" : "1", "cnt" : "2", "seek" : "0"},</span>
+<span class="sd">            {"bs" : "1", "cnt" : "2", "seek" : "5"},</span>
+<span class="sd">            {"bs" : "1", "cnt" : "20", "seek" : "5"},</span>
+<span class="sd">            {"bs" : "1", "cnt" : "26", "seek" : "0"},</span>
+<span class="sd">        ]</span>
+
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">tests</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"please define tests"</span><span class="p">)</span>
+
+    <span class="n">tmpf</span> <span class="o">=</span> <span class="s2">"/tmp/gnlmpf"</span>
+
+    <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"date"</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="s2">"&gt;"</span><span class="p">),</span> <span class="n">tmpf</span><span class="p">)</span>
+    <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"cat"</span><span class="p">,</span> <span class="n">tmpf</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tests</span><span class="p">:</span>
+        <span class="n">_write_random_and_verify</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">tmpf</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="lnx_mtd_nvram_reboot">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.mtd.lnx_mtd_nvram_reboot">[docs]</a>
+<span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_mtd_nvram_reboot</span><span class="p">(</span>
+    <span class="n">dev</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/dev/mtd0"</span><span class="p">,</span>
+    <span class="n">tests</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    prerequisite: Board boots into linux</span>
+
+<span class="sd">    fill device with random data, as defined in tests an</span>
+<span class="sd">    reboot and check if the nvram contains the same data</span>
+<span class="sd">    after the reboot.</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        {"bs" : "1", "cnt" : "2", "seek" : "0"}</span>
+
+<span class="sd">    example:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        tests = [</span>
+<span class="sd">            {"bs" : "1", "cnt" : "2", "seek" : "0"},</span>
+<span class="sd">            {"bs" : "1", "cnt" : "2", "seek" : "5"},</span>
+<span class="sd">            {"bs" : "1", "cnt" : "20", "seek" : "5"},</span>
+<span class="sd">            {"bs" : "1", "cnt" : "26", "seek" : "0"},</span>
+<span class="sd">        ]</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">tests</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"please define tests"</span><span class="p">)</span>
+
+    <span class="n">tmpf</span> <span class="o">=</span> <span class="s2">"/tmp/gnlmpf"</span>
+
+    <span class="c1"># -s is the skip-offset flag for both busybox and non-busybox hexdump</span>
+    <span class="n">option</span> <span class="o">=</span> <span class="s2">"-s"</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tests</span><span class="p">:</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s2">"cnt"</span><span class="p">])</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s2">"bs"</span><span class="p">])</span>
+
+        <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span> <span class="k">as</span> <span class="n">lnx</span><span class="p">:</span>
+            <span class="n">_write_random_and_verify</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">tmpf</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">_hexdump</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">tmpf</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">lnx</span><span class="p">:</span>
+            <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+                <span class="s2">"dd"</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"if=</span><span class="si">{</span><span class="n">dev</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"of=</span><span class="si">{</span><span class="n">tmpf</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"bs=</span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="s1">'bs'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"count=</span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="s1">'cnt'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"skip=</span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="s1">'seek'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">outn</span> <span class="o">=</span> <span class="n">_hexdump</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">tmpf</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">out</span> <span class="o">!=</span> <span class="n">outn</span><span class="p">:</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">"content differ:</span><span class="se">\n</span><span class="s2">original:</span><span class="se">\n</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="se">\n</span><span class="s2">new</span><span class="se">\n</span><span class="si">{</span><span class="n">outn</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">red</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"files have not same content"</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_proc_mtd</span><span class="p">(</span><span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Parse /proc/mtd into a list of (index, size in bytes, name).</span>
+<span class="sd">    """</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"cat"</span><span class="p">,</span> <span class="s2">"/proc/mtd"</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">'^mtd(\d+):\s+([0-9a-fA-F]+)\s+[0-9a-fA-F]+\s+"([^"]*)"'</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">16</span><span class="p">),</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">parts</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"no MTD partitions found in /proc/mtd"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parts</span>
+
+
+<div class="viewcode-block" id="lnx_mtd_dump">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.mtd.lnx_mtd_dump">[docs]</a>
+<span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_mtd_dump</span><span class="p">(</span>
+    <span class="n">ethdevice</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"eth0"</span><span class="p">,</span>
+    <span class="n">subdir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"dump"</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    prerequisite: Board boots into linux, reachable with ssh as root</span>
+
+<span class="sd">    Works with the board's linux on the console or, with -fssh, over ssh.</span>
+<span class="sd">    Over ssh the md5sums on the board are not disturbed by whatever</span>
+<span class="sd">    userspace writes to the console.</span>
+
+<span class="sd">    Dump every MTD partition of the board into the lab host's tftp</span>
+<span class="sd">    directory, below subdir, and verify each dump against the board.</span>
+
+<span class="sd">    The board side only reads, through the /dev/mtdrN nodes, which the</span>
+<span class="sd">    kernel opens read only. The data goes from the board to the lab host</span>
+<span class="sd">    with ssh ("ssh root@&lt;ipaddr&gt; cat /dev/mtdrN"), straight into a file on</span>
+<span class="sd">    the lab host. The lab host needs sshpass: the root password from</span>
+<span class="sd">    linux_password is handed over with "sshpass -e" in the SSHPASS variable</span>
+<span class="sd">    of a subshell, set with tbot's PasswordAuthenticator.export_sshpass(),</span>
+<span class="sd">    so it shows up neither in the command log, nor in a channel trace, nor</span>
+<span class="sd">    in the process list. The board computes md5sum of every partition over</span>
+<span class="sd">    its console, the lab host does the same on the files, and sizes and sums</span>
+<span class="sd">    have to match.</span>
+
+<span class="sd">    Files written: mtd&lt;N&gt;-&lt;name&gt;.bin per partition, proc-mtd.txt with the</span>
+<span class="sd">    board's /proc/mtd, and md5sums.txt.</span>
+<span class="sd">    """</span>
+    <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+        <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+        <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">)</span>
+
+        <span class="n">ip</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">ethdevices</span><span class="p">[</span><span class="n">ini</span><span class="o">.</span><span class="n">generic_get_boardname</span><span class="p">()][</span><span class="n">ethdevice</span><span class="p">][</span><span class="s2">"ipaddr"</span><span class="p">]</span>
+        <span class="c1"># The linux classes that log in on the console carry the password,</span>
+        <span class="c1"># the ssh one (-fssh) does not; then take it from the board ini.</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="s2">"password"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ini</span><span class="o">.</span><span class="n">init_get_config</span><span class="p">(</span>
+            <span class="n">ini</span><span class="o">.</span><span class="n">IniConfig</span><span class="p">()</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="s2">"linux_password"</span><span class="p">,</span> <span class="s2">"None"</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"no linux_password in the board ini"</span><span class="p">)</span>
+        <span class="n">dumpdir</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">tftp_dir</span><span class="p">()</span> <span class="o">/</span> <span class="n">subdir</span>
+        <span class="n">lab</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"mkdir"</span><span class="p">,</span> <span class="s2">"-p"</span><span class="p">,</span> <span class="n">dumpdir</span><span class="p">)</span>
+
+        <span class="n">procmtd</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"cat"</span><span class="p">,</span> <span class="s2">"/proc/mtd"</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">dumpdir</span> <span class="o">/</span> <span class="s2">"proc-mtd.txt"</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">procmtd</span><span class="p">)</span>
+
+        <span class="n">sums</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">with</span> <span class="n">lab</span><span class="o">.</span><span class="n">subshell</span><span class="p">():</span>
+            <span class="n">linux</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">PasswordAuthenticator</span><span class="p">(</span><span class="n">password</span><span class="p">)</span><span class="o">.</span><span class="n">export_sshpass</span><span class="p">(</span><span class="n">lab</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_proc_mtd</span><span class="p">(</span><span class="n">lnx</span><span class="p">):</span>
+                <span class="n">sums</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_dump_one</span><span class="p">(</span><span class="n">lab</span><span class="p">,</span> <span class="n">lnx</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">dumpdir</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+
+        <span class="p">(</span><span class="n">dumpdir</span> <span class="o">/</span> <span class="s2">"md5sums.txt"</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sums</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_dump_one</span><span class="p">(</span><span class="n">lab</span><span class="p">,</span> <span class="n">lnx</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">dumpdir</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Dump one MTD partition to the lab host and verify it. Needs SSHPASS</span>
+<span class="sd">    set in the lab host's shell. Returns the md5sums.txt line.</span>
+<span class="sd">    """</span>
+    <span class="n">dev</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"/dev/mtdr</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"mtd</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.bin"</span>
+    <span class="n">dst</span> <span class="o">=</span> <span class="n">dumpdir</span> <span class="o">/</span> <span class="n">fname</span>
+
+    <span class="n">boardsum</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"md5sum"</span><span class="p">,</span> <span class="n">dev</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">lab</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span>
+        <span class="s2">"sshpass"</span><span class="p">,</span>
+        <span class="s2">"-e"</span><span class="p">,</span>
+        <span class="s2">"ssh"</span><span class="p">,</span>
+        <span class="s2">"-o"</span><span class="p">,</span>
+        <span class="s2">"StrictHostKeyChecking=no"</span><span class="p">,</span>
+        <span class="s2">"-o"</span><span class="p">,</span>
+        <span class="s2">"UserKnownHostsFile=/dev/null"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"root@</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"cat </span><span class="si">{</span><span class="n">dev</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="n">linux</span><span class="o">.</span><span class="n">RedirStdout</span><span class="p">(</span><span class="n">dst</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">labsize</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lab</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"stat"</span><span class="p">,</span> <span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">labsize</span> <span class="o">!=</span> <span class="n">size</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">labsize</span><span class="si">}</span><span class="s2"> bytes, partition has </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="n">labsum</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"md5sum"</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">labsum</span> <span class="o">!=</span> <span class="n">boardsum</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">: md5sum </span><span class="si">{</span><span class="n">labsum</span><span class="si">}</span><span class="s2">, board has </span><span class="si">{</span><span class="n">boardsum</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2"> bytes, md5sum </span><span class="si">{</span><span class="n">labsum</span><span class="si">}</span><span class="s2">, verified"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">labsum</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">"</span>
+</pre></div>
+</div>
+        </article>
+        <aside class="nftt-toc">
+          
+          <div class="my-sm-1 my-lg-0 ps-xl-3 text-muted">
+            <button class="btn btn-link p-lg-0 mb-2 mb-lg-0 text-decoration-none nftt-toc-toggle d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#tocContents" aria-expanded="false" aria-controls="tocContents"
+            >On this page <i class="ms-2 bi bi-chevron-expand"></i></button>
+            <div class="title d-none d-lg-block">
+              <i class="bi bi-file-earmark-text"></i>&nbsp;&nbsp;<span class="small">On this page</span>
+            </div>
+            <div class="collapse nftt-toc-collapse" id="tocContents">
+              <nav id="TableOfContents">
+                
+              </nav>
+            </div>
+          </div>
+          
+        </aside>
+      </div>
+    </div>
+
+    <footer class="nftt-footer">
+      
+<nav id="paginator"></nav>
+
+      <div class="py-5 px-4 px-md-3">
+  <div class="container">
+    
+
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <a class="brand-text d-inline-flex align-items-center mb-2 text-decoration-none" href="/" aria-label="tbottest">
+          <span class="fs-6 fw-bold">tbottest</span>
+        </a>
+        
+          <ul class="list-unstyled small text-muted">
+            <li>2023, Heiko Schocher</li>
+          </ul>
+        
+        <div class="built-with pt-2">
+          Built with <a href="http://sphinx-doc.org">Sphinx 7.4.7</a> and <a href="https://github.com/danirus/sphinx-nefertiti">Nefertiti 0.9.10</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    </footer>
+
+    <div class="modal modal-xl fade" id="nftt-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen-xxl-down modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="nftt-modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="nftt-modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <script src="../../../_static/documentation_options.js?v=5bf45a52"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/docs-versions.js?v=08b0cbfb"></script>
+    <script src="../../../_static/sphinx-nefertiti.min.js?v=434d3d25"></script>
+    <script src="../../../_static/bootstrap.bundle.min.js?v=c066362f"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+const defaultStyle = document.createElement('style');
+defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+`;
+document.head.appendChild(defaultStyle);
+
+const fullscreenStyle = document.createElement('style');
+fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+document.head.appendChild(fullscreenStyle);
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+    }
+    return false;
+};
+
+const load = async () => {
+    await mermaid.run();
+
+    const all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(load, 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(load, 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(load, 200);
+        return;
+    }
+
+    const darkTheme = isDarkTheme();
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    const modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    let previousScrollOffset = [window.scrollX, window.scrollY];
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    const allButtons = [];
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        container.appendChild(fullscreenBtn);
+        allButtons.push(fullscreenBtn);
+    });
+
+    // Update theme classes when theme changes
+    const updateTheme = () => {
+        const dark = isDarkTheme();
+        allButtons.forEach(btn => {
+            if (dark) {
+                btn.classList.add('dark-theme');
+            } else {
+                btn.classList.remove('dark-theme');
+            }
+        });
+        if (dark) {
+            modal.classList.add('dark-theme');
+            modalContent.classList.add('dark-theme');
+            closeBtn.classList.add('dark-theme');
+        } else {
+            modal.classList.remove('dark-theme');
+            modalContent.classList.remove('dark-theme');
+            closeBtn.classList.remove('dark-theme');
+        }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+};
+
+window.addEventListener("load", load);
+</script>
+    <script data-doc-theme="nefertiti" src="../../../_static/themeswitch.js?v=8de3ea61"></script>
+  </body>
+</html>

@@ -1,0 +1,1188 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Tips &#8212; tbottest 0.0.1-391-g1d197d3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/cloud.css?v=f9ae72be" />
+    <link rel="stylesheet" type="text/css" href="_static/cloud-wide.css?v=7d17dfa2" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script src="_static/documentation_options.js?v=5bf45a52"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+const defaultStyle = document.createElement('style');
+defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+`;
+document.head.appendChild(defaultStyle);
+
+const fullscreenStyle = document.createElement('style');
+fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+document.head.appendChild(fullscreenStyle);
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+    }
+    return false;
+};
+
+const load = async () => {
+    await mermaid.run();
+
+    const all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(load, 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(load, 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(load, 200);
+        return;
+    }
+
+    const darkTheme = isDarkTheme();
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    const modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    let previousScrollOffset = [window.scrollX, window.scrollY];
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    const allButtons = [];
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        container.appendChild(fullscreenBtn);
+        allButtons.push(fullscreenBtn);
+    });
+
+    // Update theme classes when theme changes
+    const updateTheme = () => {
+        const dark = isDarkTheme();
+        allButtons.forEach(btn => {
+            if (dark) {
+                btn.classList.add('dark-theme');
+            } else {
+                btn.classList.remove('dark-theme');
+            }
+        });
+        if (dark) {
+            modal.classList.add('dark-theme');
+            modalContent.classList.add('dark-theme');
+            closeBtn.classList.add('dark-theme');
+        } else {
+            modal.classList.remove('dark-theme');
+            modalContent.classList.remove('dark-theme');
+            closeBtn.classList.remove('dark-theme');
+        }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+};
+
+window.addEventListener("load", load);
+</script>
+    <script data-doc-theme="cloud" src="_static/themeswitch.js?v=8de3ea61"></script>
+
+    
+    
+     
+        <script src="_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tbottest.tc - Testcases" href="tc.html" />
+    <link rel="prev" title="tbottest.boardlocking" href="boardlocking.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="tc.html" title="tbottest.tc - Testcases"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="boardlocking.html" title="tbottest.boardlocking"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">tbottest 0.0.1-391-g1d197d3 documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href="">Tips</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="tips">
+<h1>Tips<a class="headerlink" href="#tips" title="Link to this heading">¶</a></h1>
+<section id="newtbot-starter-py">
+<h2>newtbot_starter.py<a class="headerlink" href="#newtbot-starter-py" title="Link to this heading">¶</a></h2>
+<p>enable commandline completions with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>tbottest/completions.sh
+</pre></div>
+</div>
+</section>
+<section id="fast-testcase-development">
+<h2>fast testcase development<a class="headerlink" href="#fast-testcase-development" title="Link to this heading">¶</a></h2>
+<p>If you develop linux testcases it is a timeconsuming task always to power on
+the board and boot into linux. Best you open a shell window and boot
+into the boards linux.</p>
+<p>Than open a second shell window and use ssh for login into the linux
+running on the board. This will save you a lot of time.</p>
+<p>Example</p>
+<p>shell window one:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./tbottest/newtbot_starter.py<span class="w"> </span>@tbotconfig/BOARDNAME/args/argsBOARDNAME<span class="w"> </span>tbottest.inter.linux
+
+tbot<span class="w"> </span>starting<span class="w"> </span>...
+├─TBOT.FLAGS<span class="w"> </span><span class="o">{</span><span class="s1">'boardfile:tbotconfig/BOARDNAME/BOARDNAME.ini'</span>,<span class="w"> </span><span class="s1">'noethinit'</span>,<span class="w"> </span><span class="s1">'picocom'</span>,<span class="w"> </span><span class="s1">'inifile:tbotconfig/BOARDNAME/tbot.ini'</span>,<span class="w"> </span><span class="s1">'do_power'</span>,<span class="w"> </span><span class="s1">'useifconfig'</span><span class="o">}</span>
+├─boardname<span class="w"> </span>now<span class="w"> </span>foobar
+├─Using<span class="w"> </span>kas<span class="w"> </span>file<span class="w"> </span>kas-denx-withdldir.yml
+FILENAME<span class="w">  </span>~/temp/tbotconfig/foobar/tbot.ini-modified
+├─Calling<span class="w"> </span>linux<span class="w"> </span>...
+<span class="o">[</span>...<span class="o">]</span>
+│<span class="w">   </span>├─Press<span class="w"> </span>CTRL+<span class="o">]</span><span class="w"> </span>three<span class="w"> </span><span class="nb">times</span><span class="w"> </span>within<span class="w"> </span><span class="m">1</span><span class="w"> </span>second<span class="w"> </span>to<span class="w"> </span>exit.
+
+BOARDNAME-linux:<span class="w"> </span>~&gt;
+</pre></div>
+</div>
+<p>Now, you cannot use the serial console, as it is already used,
+so be sure ssh login works for you on your board!</p>
+<p>So create a new argumentsfile for login into a running linux,
+see <a class="reference internal" href="generic.html#argumentfilesshlogin"><span class="std std-ref">Argumentfile for ssh login</span></a></p>
+<p>Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>tbotconfig/BOARDNAME/args/argsBOARDNAME-ssh
+@tbotconfig/BOARDNAME/args/argsBOARDNAME
+-fnopoweroff
+-falways-on
+-fssh
+-fnouboot
+</pre></div>
+</div>
+<p>in another shell window, start tbot with argsBOARDNAME-ssh file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./tbottest/newtbot_starter.py<span class="w"> </span>@tbotconfig/BOARDNAME/args/argsBOARDNAME-ssh<span class="w"> </span>tbotconfig.tc.&lt;your<span class="w"> </span>fancy<span class="w"> </span>testcasename&gt;
+tbot<span class="w"> </span>starting<span class="w"> </span>...
+├─TBOT.FLAGS<span class="w"> </span><span class="o">{</span><span class="s1">'nouboot'</span>,<span class="w"> </span><span class="s1">'do_power'</span>,<span class="w"> </span><span class="s1">'boardfile:tbotconfig/BOARDNAME/BOARDNAME.ini'</span>,<span class="w"> </span><span class="s1">'inifile:tbotconfig/BOARDNAME/tbot.ini'</span>,<span class="w"> </span><span class="s1">'ssh'</span>,<span class="w"> </span><span class="s1">'useifconfig'</span>,<span class="w"> </span><span class="s1">'always-on'</span>,<span class="w"> </span><span class="s1">'nopoweroff'</span>,<span class="w"> </span><span class="s1">'noethinit'</span><span class="o">}</span>
+├─boardname<span class="w"> </span>now<span class="w"> </span>foobar
+FILENAME<span class="w">  </span>~/temp/tbotconfig/BOARDNAME/tbot.ini-modified
+├─Calling<span class="w"> </span>&lt;your<span class="w"> </span>fancy<span class="w"> </span>testcasename&gt;<span class="w"> </span>...
+<span class="o">[</span>...<span class="o">]</span>
+</pre></div>
+</div>
+</section>
+<section id="linux">
+<h2>linux<a class="headerlink" href="#linux" title="Link to this heading">¶</a></h2>
+<section id="reboot">
+<h3>reboot<a class="headerlink" href="#reboot" title="Link to this heading">¶</a></h3>
+<p>If you need to test the linux <strong>reboot</strong> command use this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_check_reboot</span><span class="p">(</span>
+    <span class="n">lab</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: D107</span>
+<span class="sd">"""</span>
+<span class="sd">simply try 50 reboots without power off</span>
+<span class="sd">"""</span>
+<span class="n">failure</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">oldflags</span> <span class="o">=</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"nopoweroff"</span><span class="p">)</span>
+    <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"linux_no_cmd_after_login"</span><span class="p">)</span>
+
+    <span class="n">loop</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">loopmax</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">while</span> <span class="n">loop</span> <span class="o">&lt;</span> <span class="n">loopmax</span><span class="p">:</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">"loop </span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">loopmax</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">yellow</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">tbot</span><span class="o">.</span><span class="n">ctx</span><span class="p">()</span> <span class="k">as</span> <span class="n">cx</span><span class="p">:</span>
+            <span class="n">lab</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">LabHost</span><span class="p">)</span>
+
+            <span class="n">lnx</span> <span class="o">=</span> <span class="n">cx</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">BoardLinux</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="n">res</span><span class="p">)</span>
+            <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">"(sleep </span><span class="si">{</span><span class="n">REBOOT_SLEEP</span><span class="si">}</span><span class="s2"> &amp;&amp; reboot) &amp;"</span><span class="p">))</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">loop</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">failure</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">tbot</span><span class="o">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">oldflags</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">board_power_off</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">failure</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"lnx_check_reboot failed"</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="lab-setup">
+<span id="labsetup"></span><h2>lab setup<a class="headerlink" href="#lab-setup" title="Link to this heading">¶</a></h2>
+<p>I mostly use as a lab host an raspberry pi as a lab host. It is cheap,
+does not consume much power and it has a wifi and an ethernet interface.</p>
+<p>If I need a new “lab”, I simply clone a sd card, do some setup stuff and
+I am ready to go!</p>
+<p>So for connecting to the world I use the wifi interface and for local
+testing the board, the ethernet interface. This approach is very
+flexible, as I put the lab host with the DUT and all needed stuff into
+a plastic box. And I only need a powerconnector for running it.</p>
+<p>Here some setup tricks to get PI working as lab host</p>
+<p>My setup is always</p>
+<pre  class="mermaid">
+        %%{init: {&quot;flowchart&quot;: {&quot;curve&quot;: &quot;linear&quot;}}}%%
+flowchart LR
+    subgraph world[&quot;somewhere in the world&quot;]
+        A[&quot;&lt;b&gt;tbot host&lt;/b&gt;&lt;br/&gt;Linux PC&quot;]
+    end
+    subgraph local[&quot;local hardware setup&quot;]
+        B[&quot;&lt;div style='text-align:left'&gt;&lt;b&gt;Lab Host&lt;/b&gt;&lt;br/&gt;OS Linux&lt;br/&gt;- tftp server&lt;br/&gt;- nfs server&lt;br/&gt;- dhcp server&lt;br/&gt;- ...&lt;/div&gt;&quot;]
+        C[&quot;&lt;b&gt;DUT&lt;/b&gt;&quot;]
+    end
+    A --&gt;|ssh| B
+    B --&gt;|power on/off| C
+    B --&gt;|serial| C
+    B --&gt;|ethernet| C
+    B --&gt;|more...| C
+    </pre><p>with a raspberry PI as lab host.</p>
+<p>If tbot also builds the images, a build machine is added, connected to
+the lab host over ssh:</p>
+<pre  class="mermaid">
+        %%{init: {&quot;flowchart&quot;: {&quot;curve&quot;: &quot;linear&quot;}}}%%
+flowchart LR
+    subgraph world[&quot;somewhere in the world&quot;]
+        A[&quot;&lt;b&gt;tbot host&lt;/b&gt;&lt;br/&gt;Linux PC&quot;]
+    end
+    subgraph local[&quot;local hardware setup&quot;]
+        B[&quot;&lt;div style='text-align:left'&gt;&lt;b&gt;Lab Host&lt;/b&gt;&lt;br/&gt;OS Linux&lt;br/&gt;- tftp server&lt;br/&gt;- nfs server&lt;br/&gt;- dhcp server&lt;br/&gt;- ...&lt;/div&gt;&quot;]
+        C[&quot;&lt;b&gt;DUT&lt;/b&gt;&quot;]
+    end
+    subgraph build[&quot;build setup&quot;]
+        D[&quot;&lt;div style='text-align:left'&gt;&lt;b&gt;Build Machine&lt;/b&gt;&lt;br/&gt;OS Linux&lt;/div&gt;&quot;]
+    end
+    style build fill:#ffd8a8,stroke:#e8590c
+    A --&gt;|ssh| B
+    A ~~~ D
+    D &lt;--&gt;|ssh| B
+    B --&gt;|power on/off| C
+    B --&gt;|serial| C
+    B --&gt;|ethernet| C
+    B --&gt;|more...| C
+    </pre><section id="setup-ssh">
+<h3>setup ssh<a class="headerlink" href="#setup-ssh" title="Link to this heading">¶</a></h3>
+<p>check that all ssh commands work without sudo or password!</p>
+<p>Setup your hostname in</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/etc/hostname
+/ets/hosts
+</pre></div>
+</div>
+<p>Install vim and create .vimrc</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pi@pilab-9:~<span class="w">  </span>$<span class="w"> </span>cat<span class="w"> </span>/home/pi/.vimrc
+<span class="nb">set</span><span class="w"> </span><span class="nv">tabstop</span><span class="o">=</span><span class="m">4</span>
+<span class="nb">set</span><span class="w"> </span><span class="nv">shiftwidth</span><span class="o">=</span><span class="m">4</span>
+<span class="nb">set</span><span class="w"> </span>expandtab
+<span class="nb">set</span><span class="w"> </span>mouse-<span class="o">=</span>a
+syntax<span class="w"> </span>on
+<span class="k">if</span><span class="w"> </span>has<span class="o">(</span><span class="s2">"autocmd"</span><span class="o">)</span>
+<span class="w">  </span>au<span class="w"> </span>BufReadPost<span class="w"> </span>*<span class="w"> </span><span class="k">if</span><span class="w"> </span>line<span class="o">(</span><span class="s2">"'\""</span><span class="o">)</span><span class="w"> </span>&gt;<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>line<span class="o">(</span><span class="s2">"'\""</span><span class="o">)</span><span class="w"> </span>&lt;<span class="o">=</span><span class="w"> </span>line<span class="o">(</span><span class="s2">"</span>$<span class="s2">"</span><span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>exe<span class="w"> </span><span class="s2">"normal! g'\""</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>endif
+endif
+</pre></div>
+</div>
+<p>activate ssh and generate keys</p>
+<p><a class="reference external" href="https://www.raspberrypi.org/documentation/remote-access/ssh/passwordless.md">https://www.raspberrypi.org/documentation/remote-access/ssh/passwordless.md</a></p>
+<p><a class="reference external" href="https://www.raspberrypi.org/documentation/remote-access/ssh/">https://www.raspberrypi.org/documentation/remote-access/ssh/</a></p>
+</section>
+<section id="bash-and-git">
+<h3>bash and git<a class="headerlink" href="#bash-and-git" title="Link to this heading">¶</a></h3>
+<p>for bash and git do this:</p>
+<p>add in /home/pi/.bashrc</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>parse_git_branch_and_add_brackets<span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>git<span class="w"> </span>branch<span class="w"> </span>--no-color<span class="w"> </span><span class="m">2</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span>-e<span class="w"> </span><span class="s1">'/^[^*]/d'</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">'s/* \(.*\)/\ \[\1\]/'</span>
+<span class="o">}</span>
+<span class="nv">PS1</span><span class="o">=</span><span class="s2">"\u@\h:\W \[\033[0;32m\]\$(parse_git_branch_and_add_brackets) \[\033[0m\]\$ "</span>
+
+git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>core.editor<span class="w"> </span><span class="s2">"vim"</span>
+
+<span class="c1"># ignore commands beginning with space in history</span>
+<span class="c1"># and ignore duplicates</span>
+<span class="nv">HISTCONTROL</span><span class="o">=</span>ignoreboth:erasedups
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>/home/pi/.bash_aliases
+<span class="nb">alias</span><span class="w"> </span><span class="nv">vi</span><span class="o">=</span>vim
+<span class="nb">alias</span><span class="w"> </span><span class="nv">gcp</span><span class="o">=</span><span class="s2">"git cherry-pick"</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">gl</span><span class="o">=</span><span class="s2">"git log --decorate=full"</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">gll</span><span class="o">=</span><span class="s1">'git log --decorate=full --pretty=format:"%h %an, %ar : %s"'</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">glg</span><span class="o">=</span><span class="s2">"git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset' --abbrev-commit --date=relative"</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">lst</span><span class="o">=</span><span class="s2">"ls -al --sort=time -r"</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">lss</span><span class="o">=</span><span class="s2">"ls -a | sort"</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">gs</span><span class="o">=</span><span class="s2">"git status"</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">gr</span><span class="o">=</span><span class="s1">'f(){ git rebase -i HEAD~"$1";  unset -f f; }; f'</span>
+</pre></div>
+</div>
+<p>add search in bash history with ctrl and arrow up:</p>
+<p><a class="reference external" href="https://askubuntu.com/questions/59846/bash-history-search-partial-up-arrow">https://askubuntu.com/questions/59846/bash-history-search-partial-up-arrow</a></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>~/.inputrc
+<span class="s2">"\e[1;5A"</span>:<span class="w">      </span>history-search-backward
+<span class="s2">"\e[1;5B"</span>:<span class="w">      </span>history-search-forward
+<span class="s2">"\e[1;5C"</span>:<span class="w">      </span>forward-word
+<span class="s2">"\e[1;5D"</span>:<span class="w">      </span>backward-word
+</pre></div>
+</div>
+</section>
+<section id="picocom">
+<h3>picocom<a class="headerlink" href="#picocom" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>picocom
+</pre></div>
+</div>
+</section>
+<section id="sispmctl">
+<h3>sispmctl<a class="headerlink" href="#sispmctl" title="Link to this heading">¶</a></h3>
+<p>I use this powercontorller for powering on boards (or other stuff)
+in my lab setup:</p>
+<p><a class="reference external" href="https://www.amazon.de/dp/B00BAQZJ4K/?coliid=I21YAY7IT7ES40&amp;colid=SY29AF3OT28X&amp;psc=0&amp;ref_=lv_ov_lig_dp_it">https://www.amazon.de/dp/B00BAQZJ4K/?coliid=I21YAY7IT7ES40&amp;colid=SY29AF3OT28X&amp;psc=0&amp;ref_=lv_ov_lig_dp_it</a></p>
+<p>It works very reliable for me.</p>
+<p>For powering on/off use the commandline tool:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>sispmctl
+</pre></div>
+</div>
+<p>did not worked for me, so I build it from source:</p>
+<p><a class="reference external" href="https://github.com/xypron/sispmctl">https://github.com/xypron/sispmctl</a></p>
+<p>you need the following udev rules:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>/lib/udev/rules.d/60-sispmctl.rules
+<span class="nv">SUBSYSTEM</span><span class="o">==</span><span class="s2">"usb"</span>,<span class="w"> </span>ATTR<span class="o">{</span>idVendor<span class="o">}==</span><span class="s2">"04b4"</span>,<span class="w"> </span>ATTR<span class="o">{</span>idProduct<span class="o">}==</span><span class="s2">"fd10"</span>,<span class="w"> </span><span class="nv">GROUP</span><span class="o">=</span><span class="s2">"sispmctl"</span>,<span class="w"> </span><span class="nv">MODE</span><span class="o">=</span><span class="s2">"660"</span>
+<span class="nv">SUBSYSTEM</span><span class="o">==</span><span class="s2">"usb"</span>,<span class="w"> </span>ATTR<span class="o">{</span>idVendor<span class="o">}==</span><span class="s2">"04b4"</span>,<span class="w"> </span>ATTR<span class="o">{</span>idProduct<span class="o">}==</span><span class="s2">"fd11"</span>,<span class="w"> </span><span class="nv">GROUP</span><span class="o">=</span><span class="s2">"sispmctl"</span>,<span class="w"> </span><span class="nv">MODE</span><span class="o">=</span><span class="s2">"660"</span>
+<span class="nv">SUBSYSTEM</span><span class="o">==</span><span class="s2">"usb"</span>,<span class="w"> </span>ATTR<span class="o">{</span>idVendor<span class="o">}==</span><span class="s2">"04b4"</span>,<span class="w"> </span>ATTR<span class="o">{</span>idProduct<span class="o">}==</span><span class="s2">"fd12"</span>,<span class="w"> </span><span class="nv">GROUP</span><span class="o">=</span><span class="s2">"sispmctl"</span>,<span class="w"> </span><span class="nv">MODE</span><span class="o">=</span><span class="s2">"660"</span>
+<span class="nv">SUBSYSTEM</span><span class="o">==</span><span class="s2">"usb"</span>,<span class="w"> </span>ATTR<span class="o">{</span>idVendor<span class="o">}==</span><span class="s2">"04b4"</span>,<span class="w"> </span>ATTR<span class="o">{</span>idProduct<span class="o">}==</span><span class="s2">"fd13"</span>,<span class="w"> </span><span class="nv">GROUP</span><span class="o">=</span><span class="s2">"sispmctl"</span>,<span class="w"> </span><span class="nv">MODE</span><span class="o">=</span><span class="s2">"660"</span>
+<span class="nv">SUBSYSTEM</span><span class="o">==</span><span class="s2">"usb"</span>,<span class="w"> </span>ATTR<span class="o">{</span>idVendor<span class="o">}==</span><span class="s2">"04b4"</span>,<span class="w"> </span>ATTR<span class="o">{</span>idProduct<span class="o">}==</span><span class="s2">"fd15"</span>,<span class="w"> </span><span class="nv">GROUP</span><span class="o">=</span><span class="s2">"sispmctl"</span>,<span class="w"> </span><span class="nv">MODE</span><span class="o">=</span><span class="s2">"660"</span>
+</pre></div>
+</div>
+<p>and add sispmctl in /etc groups</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sispmctl:x:125:pi
+</pre></div>
+</div>
+<p>don;t forget to reload rules with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>udevadm<span class="w"> </span>control<span class="w"> </span>--reload-rules
+</pre></div>
+</div>
+</section>
+</section>
+<section id="sudo-without-password">
+<h2>sudo without password<a class="headerlink" href="#sudo-without-password" title="Link to this heading">¶</a></h2>
+<p>Only needed when tbot logs in to the lab host as a normal user; as root,
+tbottest runs these commands without sudo (see
+<a class="reference internal" href="generic.html#requirementslabhost"><span class="std std-ref">requirements for lab host</span></a>).</p>
+<p><a class="reference external" href="https://linuxconfig.org/configure-sudo-without-password-on-ubuntu-20-04-focal-fossa-linux">https://linuxconfig.org/configure-sudo-without-password-on-ubuntu-20-04-focal-fossa-linux</a></p>
+</section>
+<section id="gpio">
+<h2>gpio<a class="headerlink" href="#gpio" title="Link to this heading">¶</a></h2>
+<p>a very good and (at least for me) stable gpio adapter for the raspberry PI is:</p>
+<p><a class="reference external" href="https://www.reichelt.de/de/de/raspberry-pi-relais-modul-8-channel-hutschiene-hls8l-dc5v-s-rpi-relais-8ch-p253984.html?PROVID=2788&amp;gclid=EAIaIQobChMIk4qooNbpgwMVM6dmAh1IFAbrEAQYAyABEgImo_D_BwE&amp;&amp;r=1">https://www.reichelt.de/de/de/raspberry-pi-relais-modul-8-channel-hutschiene-hls8l-dc5v-s-rpi-relais-8ch-p253984.html?PROVID=2788&amp;gclid=EAIaIQobChMIk4qooNbpgwMVM6dmAh1IFAbrEAQYAyABEgImo_D_BwE&amp;&amp;r=1</a></p>
+<p>based on</p>
+<p><a class="reference external" href="https://www.waveshare.com/wiki/RPi_Relay_Board_(B">https://www.waveshare.com/wiki/RPi_Relay_Board_(B</a>)</p>
+<p>see the links for the description and for downloading drivers.</p>
+<section id="usb-hub-power-control">
+<h3>usb hub power control<a class="headerlink" href="#usb-hub-power-control" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/hevz/hubpower.git
+
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>hubpower
+
+$<span class="w"> </span>gcc<span class="w"> </span>-o<span class="w"> </span>hubpower<span class="w"> </span>hubpower.c
+
+
+$<span class="w"> </span>sudo<span class="w"> </span>./hubpower<span class="w"> </span><span class="m">1</span>:2<span class="w"> </span>status
+Port<span class="w">  </span><span class="m">1</span><span class="w"> </span>status:<span class="w"> </span><span class="m">0503</span><span class="w">  </span>High-Speed<span class="w"> </span>Power-On<span class="w"> </span>Enabled<span class="w"> </span>Connected
+Port<span class="w">  </span><span class="m">2</span><span class="w"> </span>status:<span class="w"> </span><span class="m">0100</span><span class="w">  </span>Power-On
+Port<span class="w">  </span><span class="m">3</span><span class="w"> </span>status:<span class="w"> </span><span class="m">0503</span><span class="w">  </span>High-Speed<span class="w"> </span>Power-On<span class="w"> </span>Enabled<span class="w"> </span>Connected
+Port<span class="w">  </span><span class="m">4</span><span class="w"> </span>status:<span class="w"> </span><span class="m">0100</span><span class="w">  </span>Power-On
+Port<span class="w">  </span><span class="m">5</span><span class="w"> </span>status:<span class="w"> </span><span class="m">0303</span><span class="w">  </span>Low-Speed<span class="w"> </span>Power-On<span class="w"> </span>Enabled<span class="w"> </span>Connected
+
+$<span class="w"> </span>./hubpower<span class="w"> </span><span class="m">1</span>:2<span class="w"> </span>power<span class="w"> </span><span class="m">1</span><span class="w"> </span>off
+
+$<span class="w"> </span>./hubpower<span class="w"> </span><span class="m">1</span>:2<span class="w"> </span>power<span class="w"> </span><span class="m">1</span><span class="w"> </span>oon
+$<span class="w"> </span>./hubpower<span class="w"> </span><span class="m">1</span>:2<span class="w"> </span><span class="nb">bind</span>
+</pre></div>
+</div>
+</section>
+<section id="add-static-ip">
+<h3>add static IP<a class="headerlink" href="#add-static-ip" title="Link to this heading">¶</a></h3>
+<p>I did not get it yet, how I really setup PI with a static IP.</p>
+<p>:-(</p>
+<p>Hope I can update this her e soon.</p>
+</section>
+<section id="tftpserver">
+<h3>tftpserver<a class="headerlink" href="#tftpserver" title="Link to this heading">¶</a></h3>
+<p>install tftpd-hpa with config file</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pi@pilab-3:~<span class="w">  </span>$<span class="w"> </span>cat<span class="w"> </span>/etc/default/tftpd-hpa
+<span class="c1"># /etc/default/tftpd-hpa</span>
+
+<span class="nv">TFTP_USERNAME</span><span class="o">=</span><span class="s2">"tftp"</span>
+<span class="nv">TFTP_DIRECTORY</span><span class="o">=</span><span class="s2">"/srv/tftpboot"</span>
+<span class="nv">TFTP_ADDRESS</span><span class="o">=</span><span class="s2">"0.0.0.0:69"</span>
+<span class="nv">TFTP_OPTIONS</span><span class="o">=</span><span class="s2">"--secure --ipv4 -v -v"</span>
+</pre></div>
+</div>
+<p>useful commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>netstat<span class="w"> </span>-anp<span class="p">|</span>grep<span class="w"> </span><span class="m">69</span>
+$<span class="w"> </span>journalctl<span class="w"> </span>--all<span class="w"> </span>--no-pager<span class="w"> </span>-u<span class="w"> </span>tftpd-hpa
+$<span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>--all<span class="w"> </span>--no-pager<span class="w"> </span>restart<span class="w"> </span>tftpd-hpa
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>remove<span class="w"> </span>--purge<span class="w"> </span>tftpd
+</pre></div>
+</div>
+</section>
+<section id="libftdi1-1-4">
+<h3>libftdi1 1.4<a class="headerlink" href="#libftdi1-1-4" title="Link to this heading">¶</a></h3>
+<p><a class="reference external" href="https://www.intra2net.com/en/developer/libftdi/download.php">https://www.intra2net.com/en/developer/libftdi/download.php</a></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>libusb-1.0<span class="w"> </span>libconfuse-dev
+</pre></div>
+</div>
+<p>install as described in readme</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>make<span class="w"> </span>install
+</pre></div>
+</div>
+</section>
+<section id="sdmux">
+<h3>sdmux<a class="headerlink" href="#sdmux" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>git://git.tizen.org/tools/testlab/sd-mux
+</pre></div>
+</div>
+<p>install as described in readme, may you need to install some packages</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>cmake<span class="w"> </span>libpopt-dev<span class="w"> </span>libftdi1-dev
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>As the PI mounts the sd card automagically, disable this!</p>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>/etc/udev/rules.d/80-udisks2-nosdcard.rules
+<span class="c1"># do not automount sd card</span>
+
+<span class="nv">SUBSYSTEMS</span><span class="o">==</span><span class="s2">"usb"</span>,<span class="w"> </span>ENV<span class="o">{</span>UDISKS_IGNORE<span class="o">}=</span><span class="s2">"1"</span>
+</pre></div>
+</div>
+<p>and do:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>udisks2.service
+</pre></div>
+</div>
+</section>
+<section id="jlink">
+<h3>jlink<a class="headerlink" href="#jlink" title="Link to this heading">¶</a></h3>
+<p>download:</p>
+<p><a class="reference external" href="https://www.segger.com/downloads/jlink/">https://www.segger.com/downloads/jlink/</a></p>
+<p><a class="reference external" href="https://www.segger.com/downloads/jlink/#ESforARM">https://www.segger.com/downloads/jlink/#ESforARM</a></p>
+<p><a class="reference external" href="https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPackBeta">https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPackBeta</a></p>
+<p>uncompress it and</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>cp<span class="w"> </span><span class="m">99</span>-jlink.rules<span class="w"> </span>/etc/udev/rules.d/
+$<span class="w"> </span>sudo<span class="w"> </span>udevadm<span class="w"> </span>control<span class="w"> </span>--reload-rules
+$<span class="w"> </span>sudo<span class="w"> </span>udevadm<span class="w"> </span>trigger
+</pre></div>
+</div>
+</section>
+<section id="swupdate">
+<h3>swupdate<a class="headerlink" href="#swupdate" title="Link to this heading">¶</a></h3>
+<p>If we want to use <strong>swupdate-client.py</strong> you need to install:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip3<span class="w"> </span>install<span class="w"> </span>websockets<span class="w"> </span>--user
+</pre></div>
+</div>
+</section>
+<section id="nfsserver">
+<h3>nfsserver<a class="headerlink" href="#nfsserver" title="Link to this heading">¶</a></h3>
+<p><a class="reference external" href="https://www.elektronik-kompendium.de/sites/raspberry-pi/2007061.htm">https://www.elektronik-kompendium.de/sites/raspberry-pi/2007061.htm</a></p>
+<p>setup workdir and nfs subdir</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>mkdir<span class="w"> </span>/work
+$<span class="w"> </span>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">777</span><span class="w"> </span>/work
+$<span class="w"> </span>mkdir<span class="w"> </span>/work/pi
+$<span class="w"> </span>mkdir<span class="w"> </span>/work/pi/tbot-workdir
+$<span class="w"> </span>mkdir<span class="w"> </span>/work/pi/tbot-workdir/nfs
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>nfs-kernel-server
+</pre></div>
+</div>
+<p>server config:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pi@pilab-9:~<span class="w">  </span>$<span class="w"> </span>cat<span class="w"> </span>/etc/default/nfs-kernel-server
+<span class="c1"># Number of servers to start up</span>
+<span class="nv">RPCNFSDCOUNT</span><span class="o">=</span><span class="m">8</span>
+
+<span class="c1"># Runtime priority of server (see nice(1))</span>
+<span class="nv">RPCNFSDPRIORITY</span><span class="o">=</span><span class="m">0</span>
+
+<span class="c1"># Options for rpc.mountd.</span>
+<span class="c1"># If you have a port-based firewall, you might want to set up</span>
+<span class="c1"># a fixed port here using the --port option. For more information,</span>
+<span class="c1"># see rpc.mountd(8) or http://wiki.debian.org/SecuringNFS</span>
+<span class="c1"># To disable NFSv4 on the server, specify '--no-nfs-version 4' here</span>
+<span class="nv">RPCMOUNTDOPTS</span><span class="o">=</span><span class="s2">"--manage-gids"</span>
+
+<span class="c1"># Do you want to start the svcgssd daemon? It is only required for Kerberos</span>
+<span class="c1"># exports. Valid alternatives are "yes" and "no"; the default is "no".</span>
+<span class="nv">NEED_SVCGSSD</span><span class="o">=</span><span class="s2">""</span>
+
+<span class="c1"># Options for rpc.svcgssd.</span>
+<span class="nv">RPCSVCGSSDOPTS</span><span class="o">=</span><span class="s2">""</span>
+</pre></div>
+</div>
+<p>folders exported config:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pi@pilab-9:~<span class="w">  </span>$<span class="w"> </span>cat<span class="w"> </span>/etc/exports
+/work/pi/tbot-workdir/nfs<span class="w">  </span><span class="m">192</span>.168.3.0/255.255.255.0<span class="o">(</span>rw,no_root_squash,sync<span class="o">)</span>
+/work/pi/tbot-workdir/nfs<span class="w">  </span><span class="m">192</span>.168.7.0/255.255.255.0<span class="o">(</span>rw,no_root_squash,sync<span class="o">)</span>
+</pre></div>
+</div>
+<p>After changes on this files do not forget:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>exportfs<span class="w"> </span>-ra
+$<span class="w"> </span>sudo<span class="w"> </span>service<span class="w"> </span>nfs-kernel-server<span class="w"> </span>restart
+</pre></div>
+</div>
+</section>
+<section id="dhcp-server-installation-on-pi">
+<h3>dhcp server installation on PI<a class="headerlink" href="#dhcp-server-installation-on-pi" title="Link to this heading">¶</a></h3>
+<p>wlan0 = wi-fi to outer space</p>
+<p>eth0 = dev network</p>
+<p>I use this dhcp server:</p>
+<p><a class="reference external" href="https://help.ubuntu.com/community/isc-dhcp-server">https://help.ubuntu.com/community/isc-dhcp-server</a></p>
+<p>installation on PI with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pi@pilab-9:local<span class="w">  </span>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>isc-dhcp-server
+</pre></div>
+</div>
+<p>and use this config file</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pi@pilab-9:local<span class="w">  </span>$<span class="w"> </span>cat<span class="w"> </span>/etc/dhcp/dhcpd.conf
+option<span class="w"> </span>domain-name<span class="w"> </span><span class="s2">"pilab.local"</span><span class="p">;</span>
+option<span class="w"> </span>domain-name-servers<span class="w"> </span><span class="m">8</span>.8.8.8,<span class="w"> </span><span class="m">8</span>.8.4.4<span class="p">;</span>
+
+default-lease-time<span class="w"> </span><span class="m">6000</span><span class="p">;</span>
+max-lease-time<span class="w"> </span><span class="m">7200</span><span class="p">;</span>
+
+ddns-update-style<span class="w"> </span>none<span class="p">;</span>
+
+authoritative<span class="p">;</span>
+
+subnet<span class="w"> </span><span class="m">192</span>.168.3.0<span class="w"> </span>netmask<span class="w"> </span><span class="m">255</span>.255.255.0<span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>range<span class="w"> </span><span class="m">192</span>.168.3.1<span class="w"> </span><span class="m">192</span>.168.3.100<span class="p">;</span>
+<span class="w">  </span>option<span class="w"> </span>subnet-mask<span class="w"> </span><span class="m">255</span>.255.255.0<span class="p">;</span>
+<span class="w">  </span>option<span class="w"> </span>broadcast-address<span class="w"> </span><span class="m">192</span>.168.3.255<span class="p">;</span>
+<span class="w">  </span>option<span class="w"> </span>routers<span class="w"> </span><span class="m">192</span>.168.3.1<span class="p">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pi@pilab-9:local<span class="w">  </span>$<span class="w"> </span>cat<span class="w"> </span>/etc/default/isc-dhcp-server
+<span class="nv">INTERFACESv4</span><span class="o">=</span><span class="s2">"eth0"</span>
+<span class="nv">INTERFACESv6</span><span class="o">=</span><span class="s2">""</span>
+</pre></div>
+</div>
+</section>
+<section id="install-chrony-on-pi">
+<h3>install chrony on PI<a class="headerlink" href="#install-chrony-on-pi" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>chrony
+</pre></div>
+</div>
+<p>To enable NTP server daemon add in <code class="docutils literal notranslate"><span class="pre">`/etc/chrony/chrony.conf`</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">local</span><span class="w"> </span>stratum<span class="w"> </span><span class="m">10</span>
+allow<span class="w"> </span><span class="m">192</span>.168.3.0/16
+</pre></div>
+</div>
+<p>the last line <code class="docutils literal notranslate"><span class="pre">`allow...`</span></code> limits NTP server for eth0 interface only!</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>install chrony commandline tool on DUT</p>
+</div>
+</section>
+<section id="pass-ntp-server-address-through-dhcp-to-the-dut">
+<h3>pass NTP server address through DHCP to the DUT<a class="headerlink" href="#pass-ntp-server-address-through-dhcp-to-the-dut" title="Link to this heading">¶</a></h3>
+<p>add option:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>option<span class="w"> </span>ntp-servers<span class="w"> </span><span class="m">192</span>.168.3.1<span class="p">;</span>
+</pre></div>
+</div>
+<p>in file <code class="docutils literal notranslate"><span class="pre">`/etc/dhcp/dhcpd.conf`</span></code>. You can than use the NTP server
+address in udhcpc scripts in variable <code class="docutils literal notranslate"><span class="pre">`ntpsrv`</span></code></p>
+</section>
+<section id="configure-chrony-to-get-ntp-server-address-from-dhcp">
+<h3>configure chrony to get NTP server address from DHCP<a class="headerlink" href="#configure-chrony-to-get-ntp-server-address-from-dhcp" title="Link to this heading">¶</a></h3>
+<p>first ensure NTP server address is passed to the DUT via DHCP, see</p>
+<p><a class="reference internal" href="#pass-ntp-server-address-through-dhcp-to-the-dut">pass NTP server address through DHCP to the DUT</a></p>
+<p>create on the target a config file for chrony in your DHCP clients
+configuration scripts.</p>
+<p>For example udhcpc setup</p>
+<p>add <code class="docutils literal notranslate"><span class="pre">`/etc/udhcpc.d/60-set-chrony-ntp-server`</span></code> with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/sh</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Calling /etc/udhcpc.d/60-set-chrony-ntp-server ntpsrv </span><span class="si">${</span><span class="nv">ntpsrv</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="nv">CHRONYCONFIG</span><span class="o">=</span>/var/run/chrony.d
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="nv">$CHRONYCONFIG</span>
+
+<span class="nb">echo</span><span class="w"> </span>server<span class="w"> </span><span class="si">${</span><span class="nv">ntpsrv</span><span class="si">}</span><span class="w"> </span>&gt;<span class="w"> </span><span class="nv">$CHRONYCONFIG</span>/ntpserver.conf
+<span class="nb">echo</span><span class="w"> </span>allow<span class="w"> </span><span class="si">${</span><span class="nv">ntpsrv</span><span class="si">}</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="nv">$CHRONYCONFIG</span>/ntpserver.conf
+</pre></div>
+</div>
+<p>Now when your udhcpc starts and get the NTP server address, it should
+call <code class="docutils literal notranslate"><span class="pre">`/etc/udhcpc.d/60-set-chrony-ntp-server`</span></code> which creates chrony
+configuration file <code class="docutils literal notranslate"><span class="pre">`/var/run/chrony.d/ntpserver.conf`</span></code></p>
+<p>Don;t forget to add <code class="docutils literal notranslate"><span class="pre">`/var/run/chrony.d`</span></code> in <code class="docutils literal notranslate"><span class="pre">`/etc/chrony.conf`</span></code>,
+so that chrony scans config files in <code class="docutils literal notranslate"><span class="pre">`/var/run/chrony.d`</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># add other config directories chrony can use</span>
+confdir<span class="w"> </span>/var/run/chrony.d
+</pre></div>
+</div>
+<p>Now if chrony starts, it passes the config files in <code class="docutils literal notranslate"><span class="pre">`/var/run/chrony.d`</span></code>
+and so, get the NTP server address from udhcpc. Of course, ensure, that
+chrony starts after udhcpc is finished.</p>
+</section>
+<section id="enable-internet-access-from-dut-over-ethernet">
+<h3>enable Internet access from DUT over ethernet<a class="headerlink" href="#enable-internet-access-from-dut-over-ethernet" title="Link to this heading">¶</a></h3>
+<p>uncomment in /etc/sysctl.conf</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>net.ipv4.ip_foward<span class="o">=</span><span class="m">1</span>
+</pre></div>
+</div>
+<p>install iptable support with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>iptables-persistent
+</pre></div>
+</div>
+<p>and create the following rules:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>iptables<span class="w"> </span>-t<span class="w"> </span>nat<span class="w"> </span>-A<span class="w"> </span>POSTROUTING<span class="w"> </span>-o<span class="w"> </span>wlan0<span class="w"> </span>-j<span class="w"> </span>MASQUERADE
+$<span class="w"> </span>sudo<span class="w"> </span>iptables<span class="w"> </span>-A<span class="w"> </span>FORWARD<span class="w"> </span>-i<span class="w"> </span>wlan0<span class="w"> </span>-o<span class="w"> </span>eth0<span class="w"> </span>-m<span class="w"> </span>state<span class="w"> </span>--state<span class="w"> </span>RELATED,ESTABLISHED<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+$<span class="w"> </span>sudo<span class="w"> </span>iptables<span class="w"> </span>-A<span class="w"> </span>FORWARD<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-o<span class="w"> </span>wlan0<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+</pre></div>
+</div>
+<p>and save this rules with the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>netfilter-persistent<span class="w"> </span>save
+$<span class="w"> </span>sudo<span class="w"> </span>netfilter-persistent<span class="w"> </span>reload
+</pre></div>
+</div>
+<p>the rules are stored in this file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>cat<span class="w"> </span>/etc/iptables/rules.v4
+<span class="c1"># Generated by xtables-save v1.8.2 on Wed Aug  9 11:30:33 2023</span>
+*filter
+:INPUT<span class="w"> </span>ACCEPT<span class="w"> </span><span class="o">[</span><span class="m">0</span>:0<span class="o">]</span>
+:FORWARD<span class="w"> </span>ACCEPT<span class="w"> </span><span class="o">[</span><span class="m">0</span>:0<span class="o">]</span>
+:OUTPUT<span class="w"> </span>ACCEPT<span class="w"> </span><span class="o">[</span><span class="m">0</span>:0<span class="o">]</span>
+-A<span class="w"> </span>FORWARD<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-o<span class="w"> </span>wlan0<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+-A<span class="w"> </span>FORWARD<span class="w"> </span>-i<span class="w"> </span>wlan0<span class="w"> </span>-o<span class="w"> </span>eth0<span class="w"> </span>-m<span class="w"> </span>state<span class="w"> </span>--state<span class="w"> </span>RELATED,ESTABLISHED<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+COMMIT
+<span class="c1"># Completed on Wed Aug  9 11:30:33 2023</span>
+<span class="c1"># Generated by xtables-save v1.8.2 on Wed Aug  9 11:30:33 2023</span>
+*nat
+:PREROUTING<span class="w"> </span>ACCEPT<span class="w"> </span><span class="o">[</span><span class="m">0</span>:0<span class="o">]</span>
+:INPUT<span class="w"> </span>ACCEPT<span class="w"> </span><span class="o">[</span><span class="m">0</span>:0<span class="o">]</span>
+:POSTROUTING<span class="w"> </span>ACCEPT<span class="w"> </span><span class="o">[</span><span class="m">0</span>:0<span class="o">]</span>
+:OUTPUT<span class="w"> </span>ACCEPT<span class="w"> </span><span class="o">[</span><span class="m">0</span>:0<span class="o">]</span>
+-A<span class="w"> </span>POSTROUTING<span class="w"> </span>-o<span class="w"> </span>wlan0<span class="w"> </span>-j<span class="w"> </span>MASQUERADE
+COMMIT
+<span class="c1"># Completed on Wed Aug  9 11:30:33 2023</span>
+</pre></div>
+</div>
+<p>now a ping for example to google.com from your DUT should work!</p>
+<p>Found this tips here:</p>
+<p><a class="reference external" href="https://serverfault.com/questions/267580/linux-routing-traffic-between-two-networks-with-iptables">https://serverfault.com/questions/267580/linux-routing-traffic-between-two-networks-with-iptables</a></p>
+<p>May it does not work, so your routing table should look like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># route</span>
+Kernel<span class="w"> </span>IP<span class="w"> </span>routing<span class="w"> </span>table
+Destination<span class="w">     </span>Gateway<span class="w">         </span>Genmask<span class="w">         </span>Flags<span class="w"> </span>Metric<span class="w"> </span>Ref<span class="w">    </span>Use<span class="w"> </span>Iface
+default<span class="w">         </span>_gateway<span class="w">        </span><span class="m">0</span>.0.0.0<span class="w">         </span>UG<span class="w">    </span><span class="m">0</span><span class="w">      </span><span class="m">0</span><span class="w">        </span><span class="m">0</span><span class="w"> </span>eth0
+<span class="m">192</span>.168.3.0<span class="w">     </span>*<span class="w">               </span><span class="m">255</span>.255.255.0<span class="w">   </span>U<span class="w">     </span><span class="m">0</span><span class="w">      </span><span class="m">0</span><span class="w">        </span><span class="m">0</span><span class="w"> </span>eth0
+</pre></div>
+</div>
+<p>may you need to add:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># route add default gw 192.168.3.1</span>
+
+<span class="c1"># dhcp-lease-list</span>
+
+<span class="c1"># udhcpc -i eth0</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="console-output-from-a-json-log">
+<h2>console output from a JSON log<a class="headerlink" href="#console-output-from-a-json-log" title="Link to this heading">¶</a></h2>
+<p>With <code class="docutils literal notranslate"><span class="pre">--json-log-stream</span> <span class="pre">&lt;file&gt;</span></code> tbot writes every event of a run to a
+JSON log (see <code class="docutils literal notranslate"><span class="pre">TBOT_STARTTIME</span></code> in <a class="reference internal" href="generic.html"><span class="doc">tbottest.generic</span></a> for a log file per
+run). <code class="docutils literal notranslate"><span class="pre">generators/console.py</span></code> prints such a log the way tbot showed the
+run on the console: the tree of testcases, the commands with their
+output, the boot logs of U-Boot and Linux, messages and exceptions.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tbottest/generators/console.py<span class="w"> </span>log/20261006-121930.log
+$<span class="w"> </span>tbottest/generators/console.py<span class="w"> </span>-v<span class="w"> </span>log/20261006-121930.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>less<span class="w"> </span>-R
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">-v</span></code> and <code class="docutils literal notranslate"><span class="pre">-q</span></code> change the verbosity as tbot’s own options do, colors are
+on when the output is a terminal (<code class="docutils literal notranslate"><span class="pre">--color</span></code>, <code class="docutils literal notranslate"><span class="pre">--no-color</span></code>). tbot does
+not log the line <code class="docutils literal notranslate"><span class="pre">tbot</span> <span class="pre">starting</span> <span class="pre">...</span></code>, the generator prints it first; an
+event is in the log when tbot is done with it, so output tbot printed while
+an event was still running shows up in one piece.</p>
+</section>
+<section id="documentation">
+<h2>documentation<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h2>
+<p>Build this documentation with sphinx_rtd_theme into <code class="docutils literal notranslate"><span class="pre">Documentation/output</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span>&lt;path<span class="w"> </span>to<span class="w"> </span>tbot&gt;
+$<span class="w"> </span>./Documentation/build-docs.sh
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--all-themes</span></code> builds it once more with piccolo_theme, cloud_sptheme and
+sphinx-nefertiti into <code class="docutils literal notranslate"><span class="pre">Documentation/output/piccolo</span></code>, <code class="docutils literal notranslate"><span class="pre">cloud</span></code> and
+<code class="docutils literal notranslate"><span class="pre">nefertiti</span></code>, and every page gets a menu at the bottom right to open the
+same page in another theme. sphinx-nefertiti needs Sphinx 7 or newer:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>sphinx<span class="w"> </span>sphinx_rtd_theme<span class="w"> </span>piccolo-theme<span class="w"> </span>cloud_sptheme<span class="w"> </span>sphinx-nefertiti
+$<span class="w"> </span>./Documentation/build-docs.sh<span class="w"> </span>--all-themes
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">TBOTTEST_DOC_THEME=&lt;rtd|piccolo|cloud|nefertiti&gt;</span></code> selects the theme of a
+single <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code> run.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<div class="sphinx-toc sphinxglobaltoc">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tips</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#newtbot-starter-py">newtbot_starter.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fast-testcase-development">fast testcase development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linux">linux</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#reboot">reboot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-setup">lab setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setup-ssh">setup ssh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bash-and-git">bash and git</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#picocom">picocom</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sispmctl">sispmctl</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sudo-without-password">sudo without password</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gpio">gpio</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#usb-hub-power-control">usb hub power control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#add-static-ip">add static IP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tftpserver">tftpserver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#libftdi1-1-4">libftdi1 1.4</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sdmux">sdmux</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#jlink">jlink</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#swupdate">swupdate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nfsserver">nfsserver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dhcp-server-installation-on-pi">dhcp server installation on PI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-chrony-on-pi">install chrony on PI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pass-ntp-server-address-through-dhcp-to-the-dut">pass NTP server address through DHCP to the DUT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configure-chrony-to-get-ntp-server-address-from-dhcp">configure chrony to get NTP server address from DHCP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#enable-internet-access-from-dut-over-ethernet">enable Internet access from DUT over ethernet</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#console-output-from-a-json-log">console output from a JSON log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">documentation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing to tbot-test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="tc.html" title="tbottest.tc - Testcases"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="boardlocking.html" title="tbottest.boardlocking"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">tbottest 0.0.1-391-g1d197d3 documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href="">Tips</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2023, Heiko Schocher.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Quick Start &#8212; tbottest 0.0.1-391-g1d197d3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="_static/piccolo.css?v=c7a21aa7" />
+    <script src="_static/documentation_options.js?v=5bf45a52"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-doc-theme="piccolo" src="_static/themeswitch.js?v=8de3ea61"></script>
+    <script src="_static/js/theme.js"></script>
+    <script src="_static/js/petite-vue.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tbottest.generic" href="generic.html" />
+    <link rel="prev" title="tbot-test Documentation" href="index.html" /> 
+  </head><body data-dark_mode_code_blocks="true">
+
+<div id="top_nav">
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="index.html" title="Go to homepage"><img src="_static/tbot-logo-white.png"/></a></h1>
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lab-setup">Lab setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-run">Example run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aliases-for-starting-tbot">Aliases for starting tbot</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing to tbot-test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="quick-start">
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">¶</a></h1>
+<p>Please read also chapters <a class="reference internal" href="generic.html#genericconfiguration"><span class="std std-ref">configuration</span></a> and <a class="reference internal" href="generic.html#requirementslabhost"><span class="std std-ref">requirements for lab host</span></a>
+and to get a rough overview for the lab setup check <a class="reference internal" href="tips.html#labsetup"><span class="std std-ref">lab setup</span></a></p>
+<p>To get fast a working setup you can use the script:</p>
+<p><a class="reference external" href="https://github.com/hsdenx/tbottest/tree/master/scripts/create_setup.sh">https://github.com/hsdenx/tbottest/tree/master/scripts/create_setup.sh</a></p>
+<p>which will create you a complete base setup, as described in <a class="reference internal" href="generic.html#genericconfiguration"><span class="std std-ref">configuration</span></a>.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">--inter</span></code> it asks for the console access and the power control of
+the board and their settings. The generated <code class="docutils literal notranslate"><span class="pre">tbot.ini</span></code> holds only the
+selected console and power control section, so tbot finds exactly one of
+each. A unique prefix of a choice is enough (<code class="docutils literal notranslate"><span class="pre">tm</span></code> for <code class="docutils literal notranslate"><span class="pre">tm021</span></code>), the
+full name always selects (<code class="docutils literal notranslate"><span class="pre">shell</span></code> although <code class="docutils literal notranslate"><span class="pre">shelly</span></code> starts with it).
+Without <code class="docutils literal notranslate"><span class="pre">--inter</span></code> it creates the setup the github CI uses: board
+<code class="docutils literal notranslate"><span class="pre">foo</span></code>, picocom and sispmctrl. <code class="docutils literal notranslate"><span class="pre">--ci</span></code> also copies the testcases the
+github CI of tbottest runs to <code class="docutils literal notranslate"><span class="pre">tbotconfig/ci</span></code>; a normal setup does not
+need them.</p>
+<section id="lab-setup">
+<h2>Lab setup<a class="headerlink" href="#lab-setup" title="Link to this heading">¶</a></h2>
+<p>How the tbot host, the lab host, the board (DUT) and a build machine are
+connected is shown in <a class="reference internal" href="tips.html#labsetup"><span class="std std-ref">lab setup</span></a>. Get more info here: <a class="reference internal" href="generic.html"><span class="doc">tbottest.generic</span></a>.</p>
+</section>
+<section id="example-run">
+<h2>Example run<a class="headerlink" href="#example-run" title="Link to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>wget<span class="w"> </span>-q<span class="w"> </span>https://github.com/hsdenx/tbottest/raw/master/scripts/create_setup.sh
+$<span class="w"> </span>chmod<span class="w"> </span><span class="m">777</span><span class="w"> </span>create_setup.sh
+$<span class="w"> </span>./create_setup.sh<span class="w"> </span>--inter
+Cloning<span class="w"> </span>into<span class="w"> </span><span class="s1">'tbot'</span>...
+<span class="o">[</span>...<span class="o">]</span>
+Cloning<span class="w"> </span>into<span class="w"> </span><span class="s1">'tbottest'</span>...
+<span class="o">[</span>...<span class="o">]</span>
+Check<span class="w"> </span>that<span class="w"> </span>ssh<span class="w"> </span>login<span class="w"> </span>without<span class="w"> </span>password<span class="w"> </span>works!
+Name<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>lab:<span class="w"> </span>foolabname
+Hostname<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>lab:<span class="w"> </span><span class="m">192</span>.168.1.113
+Username<span class="w"> </span><span class="k">for</span><span class="w"> </span>login<span class="w"> </span>into<span class="w"> </span>lab:<span class="w"> </span>pi
+Name<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>board<span class="w"> </span><span class="k">in</span><span class="w"> </span>your<span class="w"> </span>lab:<span class="w"> </span>foobar
+Vendor<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>board<span class="w"> </span><span class="o">(</span>used<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>aliases<span class="w"> </span>of<span class="w"> </span>setup.sh<span class="o">)</span>:<span class="w"> </span>foovendor
+Select<span class="w"> </span>console<span class="w"> </span>access<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>board<span class="w"> </span><span class="o">(</span>picocom<span class="p">|</span>kermit<span class="p">|</span>scriptcom<span class="p">|</span>telnet<span class="o">)</span>:<span class="w"> </span>picocom
+picocom<span class="w"> </span>baudrate:<span class="w"> </span><span class="m">115200</span>
+picocom<span class="w"> </span>device:<span class="w"> </span>/dev/ttyUSB0
+picocom<span class="w"> </span>delay<span class="w"> </span>after<span class="w"> </span>exit:<span class="w"> </span><span class="m">3</span>
+picocom<span class="w"> </span>noreset<span class="w"> </span><span class="o">(</span>True<span class="p">|</span>False<span class="o">)</span>:<span class="w"> </span>True
+Select<span class="w"> </span>power<span class="w"> </span>switch<span class="w"> </span>method<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>board<span class="w"> </span><span class="o">(</span>gpio<span class="p">|</span>sispmctrl<span class="p">|</span>shell<span class="p">|</span>shelly<span class="p">|</span>tinkerforge<span class="p">|</span>tbox<span class="p">|</span>tm021<span class="o">)</span>:<span class="w"> </span>sispmctrl
+Sispmctl<span class="w"> </span>MAC:<span class="w"> </span><span class="m">01</span>:01:4f:09:5b
+Sispmctl<span class="w"> </span>Port:<span class="w"> </span><span class="m">1</span>
+Created<span class="w"> </span>picocom<span class="w"> </span>console<span class="w"> </span>and<span class="w"> </span>sispmctrl<span class="w"> </span>powerctrl<span class="w"> </span>setup
+add<span class="w"> </span>commandline<span class="w"> </span>completions<span class="w"> </span>with:
+<span class="nb">source</span><span class="w"> </span>tbottest/completions.sh
+
+add<span class="w"> </span>the<span class="w"> </span>aliases<span class="w"> </span><span class="k">for</span><span class="w"> </span>starting<span class="w"> </span>tbot<span class="w"> </span>with:
+<span class="nb">source</span><span class="w"> </span>setup.sh
+
+start<span class="w"> </span>tbot<span class="w"> </span>with<span class="w"> </span>the<span class="w"> </span>aliases<span class="w"> </span>from<span class="w"> </span>setup.sh:
+tbfoobar<span class="w"> </span>&lt;testcase&gt;
+
+Now<span class="w"> </span>edit<span class="w"> </span>lab<span class="w"> </span>config<span class="w"> </span><span class="k">in</span><span class="w"> </span>tbotconfig/foobar/tbot.ini
+
+check<span class="w"> </span>that<span class="w"> </span><span class="s1">'ssh pi@192.168.1.113'</span><span class="w"> </span>works<span class="w"> </span>without<span class="w"> </span>typing<span class="w"> </span>password
+than<span class="w"> </span>interactive<span class="w"> </span>lab<span class="w"> </span>should<span class="w"> </span>work:
+tbfoobarnoeth<span class="w"> </span><span class="nv">$conint</span>.lab
+
+edit<span class="w"> </span>and<span class="w"> </span>adapt<span class="w"> </span>U-Boot<span class="w"> </span>settings<span class="w"> </span><span class="k">in</span><span class="w"> </span>tbotconfig/foobar/foobar.ini<span class="w"> </span>and<span class="w"> </span>interactive<span class="w"> </span>U-Boot<span class="w"> </span>should<span class="w"> </span>work
+tbfoobarnoeth<span class="w"> </span><span class="nv">$conint</span>.uboot
+
+edit<span class="w"> </span>linux<span class="w"> </span>settings<span class="w"> </span><span class="k">in</span><span class="w"> </span>tbotconfig/foobar/foobar.ini<span class="w"> </span>and<span class="w"> </span>interactive<span class="w"> </span>Linux<span class="w"> </span>should<span class="w"> </span>work
+tbfoobarnoeth<span class="w"> </span><span class="nv">$conint</span>.linux
+
+start<span class="w"> </span>CI<span class="w"> </span>tests<span class="w"> </span>with
+tbfoobarnoeth<span class="w"> </span><span class="nv">$con</span>.ci.tests.all
+</pre></div>
+</div>
+</section>
+<section id="aliases-for-starting-tbot">
+<h2>Aliases for starting tbot<a class="headerlink" href="#aliases-for-starting-tbot" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">create_setup.sh</span></code> also writes <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> next to <code class="docutils literal notranslate"><span class="pre">tbot</span></code>,
+<code class="docutils literal notranslate"><span class="pre">tbottest</span></code> and <code class="docutils literal notranslate"><span class="pre">tbotconfig</span></code>, from the example
+<code class="docutils literal notranslate"><span class="pre">tbottest/tbotconfig/setup.sh</span></code>, with the board name and the vendor
+filled in. An existing <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> is left alone. Source it in that
+directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>setup.sh
+</pre></div>
+</div>
+<p>For the example run above it defines:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">tb</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">tbottest/newtbot_starter.py</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tbfoobar</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">tb</span></code> with <code class="docutils literal notranslate"><span class="pre">tbotconfig/foobar/args/argsfoobar</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tbfoobarnoeth</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">tb</span></code> with <code class="docutils literal notranslate"><span class="pre">argsfoobar-noeth</span></code>, which adds
+<code class="docutils literal notranslate"><span class="pre">-fnoethinit</span> <span class="pre">-fnoboardethinit</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tbfoobarssh</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">tb</span></code> with <code class="docutils literal notranslate"><span class="pre">argsfoobar-noeth-ssh</span></code>, which adds
+<code class="docutils literal notranslate"><span class="pre">-fnopoweroff</span> <span class="pre">-falways-on</span> <span class="pre">-fssh</span> <span class="pre">-fnouboot</span></code> to that</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tbfoovendorfoobar</span></code>, <code class="docutils literal notranslate"><span class="pre">tbfoovendorfoobar-noeth</span></code>, <code class="docutils literal notranslate"><span class="pre">tbfoovendorfoobar-ssh</span></code></dt><dd><p>the three above with <code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">boardname:foobar</span></code> added</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">$con</span></code>, <code class="docutils literal notranslate"><span class="pre">$conint</span></code>, <code class="docutils literal notranslate"><span class="pre">$tbtc</span></code></dt><dd><p>the module paths <code class="docutils literal notranslate"><span class="pre">tbotconfig</span></code>, <code class="docutils literal notranslate"><span class="pre">tbotconfig.interactive</span></code> and
+<code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">$foobar</span></code></dt><dd><p>the testcase module of the board, <code class="docutils literal notranslate"><span class="pre">tbotconfig.tc_foobar</span></code></p>
+</dd>
+</dl>
+<p>The commands the script prints at the end use these aliases.</p>
+<p>The board name becomes a shell variable, so it must be a valid shell
+variable name (no <code class="docutils literal notranslate"><span class="pre">-</span></code>).</p>
+<p>Test your new config and setup with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>setup.sh
+$<span class="w"> </span>tbfoobarnoeth<span class="w"> </span><span class="nv">$conint</span>.lab
+tbot<span class="w"> </span>starting<span class="w"> </span>...
+├─TBOT.FLAGS<span class="w"> </span><span class="o">{</span><span class="s1">'boardfile:tbotconfig/foobar/foobar.ini'</span>,<span class="w"> </span><span class="s1">'noethinit'</span>,<span class="w"> </span><span class="s1">'picocom'</span>,<span class="w"> </span><span class="s1">'inifile:tbotconfig/foobar/tbot.ini'</span>,<span class="w"> </span><span class="s1">'do_power'</span>,<span class="w"> </span><span class="s1">'useifconfig'</span><span class="o">}</span>
+├─boardname<span class="w"> </span>now<span class="w"> </span>foobar
+├─Using<span class="w"> </span>kas<span class="w"> </span>file<span class="w"> </span>kas-denx-withdldir.yml
+FILENAME<span class="w">  </span>~/temp/tbotconfig/foobar/tbot.ini-modified
+├─Calling<span class="w"> </span>lab<span class="w"> </span>...
+│<span class="w">   </span>├─<span class="o">[</span>local<span class="o">]</span><span class="w"> </span>ssh<span class="w"> </span>-o<span class="w"> </span><span class="nv">BatchMode</span><span class="o">=</span>yes<span class="w"> </span>-i<span class="w"> </span>/home/pi/.ssh/id_rsa<span class="w"> </span>-p<span class="w"> </span><span class="m">22</span><span class="w"> </span>pi@192.168.1.113
+│<span class="w">   </span>├─Entering<span class="w"> </span>interactive<span class="w"> </span>shell<span class="w"> </span>...
+│<span class="w">   </span>├─Press<span class="w"> </span>CTRL+<span class="o">]</span><span class="w"> </span>three<span class="w"> </span><span class="nb">times</span><span class="w"> </span>within<span class="w"> </span><span class="m">1</span><span class="w"> </span>second<span class="w"> </span>to<span class="w"> </span>exit.
+
+foolabname:<span class="w"> </span>~&gt;<span class="w"> </span><span class="nb">exit</span>
+│<span class="w">   </span>├─Exiting<span class="w"> </span>interactive<span class="w"> </span>shell<span class="w"> </span>...
+│<span class="w">   </span>└─Done.<span class="w"> </span><span class="o">(</span><span class="m">3</span>.496s<span class="o">)</span>
+├─────────────────────────────────────────
+└─SUCCESS<span class="w"> </span><span class="o">(</span><span class="m">3</span>.576s<span class="o">)</span>
+$
+</pre></div>
+</div>
+<p>To be independent of the installed tbot on the system, you can use the
+tbot starter script:</p>
+<p><a class="reference external" href="https://github.com/hsdenx/tbottest/blob/master/newtbot_starter.py">https://github.com/hsdenx/tbottest/blob/master/newtbot_starter.py</a></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Quick Start</a><ul>
+<li><a class="reference internal" href="#lab-setup">Lab setup</a></li>
+<li><a class="reference internal" href="#example-run">Example run</a></li>
+<li><a class="reference internal" href="#aliases-for-starting-tbot">Aliases for starting tbot</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+                <a href="index.html">
+                    <span class="icon">&lt;</span><span>tbot-test Documentation</span></a>
+                
+            </div>
+
+            <div class="right">
+                
+                    <a href="generic.html"><span><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></span><span class="icon">&gt;</span></a>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2023, Heiko Schocher.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
+</html>

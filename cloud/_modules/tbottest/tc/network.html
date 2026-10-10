@@ -1,0 +1,1092 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tbottest.tc.network &#8212; tbottest 0.0.1-391-g1d197d3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/cloud.css?v=f9ae72be" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/cloud-wide.css?v=7d17dfa2" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script src="../../../_static/documentation_options.js?v=5bf45a52"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+const defaultStyle = document.createElement('style');
+defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+`;
+document.head.appendChild(defaultStyle);
+
+const fullscreenStyle = document.createElement('style');
+fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+document.head.appendChild(fullscreenStyle);
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+    }
+    return false;
+};
+
+const load = async () => {
+    await mermaid.run();
+
+    const all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(load, 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(load, 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(load, 200);
+        return;
+    }
+
+    const darkTheme = isDarkTheme();
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    const modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    let previousScrollOffset = [window.scrollX, window.scrollY];
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    const allButtons = [];
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        container.appendChild(fullscreenBtn);
+        allButtons.push(fullscreenBtn);
+    });
+
+    // Update theme classes when theme changes
+    const updateTheme = () => {
+        const dark = isDarkTheme();
+        allButtons.forEach(btn => {
+            if (dark) {
+                btn.classList.add('dark-theme');
+            } else {
+                btn.classList.remove('dark-theme');
+            }
+        });
+        if (dark) {
+            modal.classList.add('dark-theme');
+            modalContent.classList.add('dark-theme');
+            closeBtn.classList.add('dark-theme');
+        } else {
+            modal.classList.remove('dark-theme');
+            modalContent.classList.remove('dark-theme');
+            closeBtn.classList.remove('dark-theme');
+        }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+};
+
+window.addEventListener("load", load);
+</script>
+    <script data-doc-theme="cloud" src="../../../_static/themeswitch.js?v=8de3ea61"></script>
+
+    
+    
+     
+        <script src="../../../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../../../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../../../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../../index.html">tbottest 0.0.1-391-g1d197d3 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tbottest.tc.network</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tbottest.tc.network</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ipaddress</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tbot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbot.machine</span><span class="w"> </span><span class="kn">import</span> <span class="n">linux</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="c1"># "ip" or "ifconfig" per (machine, prefer), see lnx_netcmd()</span>
+<span class="n">_NETCMD</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">NETCMDS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"ip"</span><span class="p">,</span> <span class="s2">"ifconfig"</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="lnx_netcmd">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.network.lnx_netcmd">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_netcmd</span><span class="p">(</span><span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">prefer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"auto"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    command to configure the network of lnx with, "ip" or "ifconfig"</span>
+
+<span class="sd">    :param lnx: linux machine</span>
+<span class="sd">    :param prefer: auto (default): ip if lnx has it, else ifconfig, checked</span>
+<span class="sd">        once per machine (by its name) with "command -v ip", not with the</span>
+<span class="sd">        exit code of "ip --help", which iproute2 ends with 255 and busybox</span>
+<span class="sd">        with 0. ip or ifconfig: that one, without a check.</span>
+
+<span class="sd">    The tbot flag useifconfig takes ifconfig on every machine.</span>
+
+<span class="sd">    The answer is worked out on the first call for a machine and prefer,</span>
+<span class="sd">    and returned from _NETCMD on every later one.</span>
+<span class="sd">    """</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">id</span><span class="p">(</span><span class="n">lnx</span><span class="p">),</span> <span class="n">prefer</span><span class="p">)</span>
+    <span class="n">netcmd</span> <span class="o">=</span> <span class="n">_NETCMD</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">netcmd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">netcmd</span>
+
+    <span class="k">if</span> <span class="s2">"useifconfig"</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+        <span class="n">netcmd</span> <span class="o">=</span> <span class="s2">"ifconfig"</span>
+    <span class="k">elif</span> <span class="n">prefer</span> <span class="ow">in</span> <span class="n">NETCMDS</span><span class="p">:</span>
+        <span class="n">netcmd</span> <span class="o">=</span> <span class="n">prefer</span>
+    <span class="k">elif</span> <span class="n">prefer</span> <span class="o">==</span> <span class="s2">"auto"</span><span class="p">:</span>
+        <span class="n">netcmd</span> <span class="o">=</span> <span class="s2">"ip"</span> <span class="k">if</span> <span class="n">lnx</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="s2">"command"</span><span class="p">,</span> <span class="s2">"-v"</span><span class="p">,</span> <span class="s2">"ip"</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"ifconfig"</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"netcmd </span><span class="si">{</span><span class="n">prefer</span><span class="si">}</span><span class="s2">: must be auto, ip or ifconfig"</span><span class="p">)</span>
+    <span class="n">_NETCMD</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">netcmd</span>
+    <span class="k">return</span> <span class="n">netcmd</span></div>
+
+
+
+<div class="viewcode-block" id="netmask_to_prefix">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.network.netmask_to_prefix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">netmask_to_prefix</span><span class="p">(</span><span class="n">netmask</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    prefix length of a dotted IPv4 netmask, e.g. 24 for 255.255.255.0</span>
+<span class="sd">    """</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">netmask</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">bits</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="si">:</span><span class="s2">08b</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">bits</span> <span class="o">=</span> <span class="s2">""</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">32</span> <span class="ow">or</span> <span class="s2">"01"</span> <span class="ow">in</span> <span class="n">bits</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">netmask</span><span class="si">}</span><span class="s2">: not an IPv4 netmask"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bits</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">"1"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="classful_prefix">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.network.classful_prefix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">classful_prefix</span><span class="p">(</span><span class="n">ipaddr</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    prefix length the kernel gives an IPv4 address set without netmask</span>
+<span class="sd">    (ifconfig &lt;dev&gt; &lt;ipaddr&gt;): by its class, 8 for A, 16 for B, 24 for C</span>
+<span class="sd">    """</span>
+    <span class="n">first</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ipaddr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">first</span> <span class="o">&lt;</span> <span class="mi">128</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">8</span>
+    <span class="k">if</span> <span class="n">first</span> <span class="o">&lt;</span> <span class="mi">192</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">16</span>
+    <span class="k">return</span> <span class="mi">24</span></div>
+
+
+
+<div class="viewcode-block" id="ipv4_in_net">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.network.ipv4_in_net">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ipv4_in_net</span><span class="p">(</span><span class="n">addr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">netaddr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    :returns: True if the IPv4 address addr is in the network of</span>
+<span class="sd">        netaddr/prefix</span>
+<span class="sd">    """</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_interface</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">netaddr</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">network</span>
+    <span class="k">return</span> <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_address</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span> <span class="ow">in</span> <span class="n">net</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_sudo</span><span class="p">(</span><span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">sudo</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    prefix for the commands: sudo=True means "with root rights", which</span>
+<span class="sd">    needs no sudo when lnx is logged in as root (lnx_sudo())</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sudo</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.tc.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">lnx_sudo</span>
+
+    <span class="k">return</span> <span class="n">lnx_sudo</span><span class="p">(</span><span class="n">lnx</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="lnx_ifdown">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.network.lnx_ifdown">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_ifdown</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">dev</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sudo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">netcmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"auto"</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    take the network device dev down, with ip or ifconfig (lnx_netcmd())</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">lnx_netcmd</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">netcmd</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"ip"</span><span class="p">:</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="o">*</span><span class="n">_sudo</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">sudo</span><span class="p">),</span> <span class="s2">"ip"</span><span class="p">,</span> <span class="s2">"link"</span><span class="p">,</span> <span class="s2">"set"</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="s2">"down"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="o">*</span><span class="n">_sudo</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">sudo</span><span class="p">),</span> <span class="s2">"ifconfig"</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="s2">"down"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="lnx_ifup">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.network.lnx_ifup">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_ifup</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">dev</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sudo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">netcmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"auto"</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    bring the network device dev up, with ip or ifconfig (lnx_netcmd())</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">lnx_netcmd</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">netcmd</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"ip"</span><span class="p">:</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="o">*</span><span class="n">_sudo</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">sudo</span><span class="p">),</span> <span class="s2">"ip"</span><span class="p">,</span> <span class="s2">"link"</span><span class="p">,</span> <span class="s2">"set"</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="s2">"up"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="o">*</span><span class="n">_sudo</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">sudo</span><span class="p">),</span> <span class="s2">"ifconfig"</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="s2">"up"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="lnx_set_ipaddr">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.network.lnx_set_ipaddr">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_set_ipaddr</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">dev</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">ipaddr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">netmask</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">sudo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">netcmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"auto"</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    set the IPv4 address of dev, taking it down and up again, as</span>
+<span class="sd">    "ifconfig &lt;dev&gt; down &lt;ipaddr&gt; [netmask &lt;netmask&gt;] up" does</span>
+
+<span class="sd">    With ip the old IPv4 addresses of dev are flushed first, as ifconfig</span>
+<span class="sd">    replaces the address, and a second call does not fail on an address</span>
+<span class="sd">    that is already there. Without netmask the prefix follows the address</span>
+<span class="sd">    class, as with ifconfig (classful_prefix()).</span>
+
+<span class="sd">    :param lnx: linux machine</span>
+<span class="sd">    :param dev: network device, e.g. eth0</span>
+<span class="sd">    :param ipaddr: IPv4 address</span>
+<span class="sd">    :param netmask: dotted netmask, or None</span>
+<span class="sd">    :param sudo: run the commands with root rights (sudo, unless lnx is</span>
+<span class="sd">        logged in as root)</span>
+<span class="sd">    :param netcmd: auto, ip or ifconfig, see lnx_netcmd()</span>
+<span class="sd">    """</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">_sudo</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">sudo</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">lnx_netcmd</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">netcmd</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"ip"</span><span class="p">:</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">netmask_to_prefix</span><span class="p">(</span><span class="n">netmask</span><span class="p">)</span> <span class="k">if</span> <span class="n">netmask</span> <span class="k">else</span> <span class="n">classful_prefix</span><span class="p">(</span><span class="n">ipaddr</span><span class="p">)</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="s2">"ip"</span><span class="p">,</span> <span class="s2">"link"</span><span class="p">,</span> <span class="s2">"set"</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="s2">"down"</span><span class="p">)</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="s2">"ip"</span><span class="p">,</span> <span class="s2">"-4"</span><span class="p">,</span> <span class="s2">"addr"</span><span class="p">,</span> <span class="s2">"flush"</span><span class="p">,</span> <span class="s2">"dev"</span><span class="p">,</span> <span class="n">dev</span><span class="p">)</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="s2">"ip"</span><span class="p">,</span> <span class="s2">"addr"</span><span class="p">,</span> <span class="s2">"add"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ipaddr</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"dev"</span><span class="p">,</span> <span class="n">dev</span><span class="p">)</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="s2">"ip"</span><span class="p">,</span> <span class="s2">"link"</span><span class="p">,</span> <span class="s2">"set"</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="s2">"up"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"netmask"</span><span class="p">,</span> <span class="n">netmask</span><span class="p">]</span> <span class="k">if</span> <span class="n">netmask</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="s2">"ifconfig"</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="s2">"down"</span><span class="p">,</span> <span class="n">ipaddr</span><span class="p">,</span> <span class="o">*</span><span class="n">mask</span><span class="p">,</span> <span class="s2">"up"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="lnx_set_ethdevice">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.network.lnx_set_ethdevice">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_set_ethdevice</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">dev</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ethcfg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">netcmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"auto"</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    set ipaddr and netmask from ethcfg on the ethernet device dev of the</span>
+<span class="sd">    board, with ip or with ifconfig</span>
+
+<span class="sd">    The board configuration sets netcmd with the key linux_netcmd in the</span>
+<span class="sd">    [TC] section of the board ini (BOARDNAME.ini): auto (default), ip or</span>
+<span class="sd">    ifconfig, see lnx_netcmd(). The flag useifconfig takes ifconfig,</span>
+<span class="sd">    whatever linux_netcmd says.</span>
+
+<span class="sd">    :param lnx: linux shell on the board</span>
+<span class="sd">    :param dev: name of the ethernet device, e.g. eth0</span>
+<span class="sd">    :param ethcfg: dictionary with the keys ipaddr and netmask</span>
+<span class="sd">    :param netcmd: auto, ip or ifconfig</span>
+<span class="sd">    """</span>
+    <span class="n">lnx_set_ipaddr</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">dev</span><span class="p">,</span> <span class="n">ethcfg</span><span class="p">[</span><span class="s2">"ipaddr"</span><span class="p">],</span> <span class="n">ethcfg</span><span class="p">[</span><span class="s2">"netmask"</span><span class="p">],</span> <span class="n">netcmd</span><span class="o">=</span><span class="n">netcmd</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="lnx_has_netdev">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.network.lnx_has_netdev">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_has_netdev</span><span class="p">(</span><span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">dev</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">netcmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"auto"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    :returns: True if lnx has the network device dev</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">lnx_netcmd</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">netcmd</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"ip"</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"ip"</span><span class="p">,</span> <span class="s2">"link"</span><span class="p">,</span> <span class="s2">"show"</span><span class="p">,</span> <span class="s2">"dev"</span><span class="p">,</span> <span class="n">dev</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"ifconfig"</span><span class="p">,</span> <span class="n">dev</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="lnx_get_hwaddr">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.network.lnx_get_hwaddr">[docs]</a>
+<span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_get_hwaddr</span><span class="p">(</span><span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">netcmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"auto"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    get the MAC address of a network device</span>
+
+<span class="sd">    :param lnx: linux machine from which we want to get the hwaddr</span>
+<span class="sd">    :param name: name of the interface</span>
+<span class="sd">    :param netcmd: auto, ip or ifconfig, see lnx_netcmd()</span>
+<span class="sd">    """</span>
+    <span class="n">mac</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"(?P&lt;hwaddr&gt;[0-9a-fA-F]</span><span class="si">{2}</span><span class="s2">(:[0-9a-fA-F]</span><span class="si">{2}</span><span class="s2">)</span><span class="si">{5}</span><span class="s2">)"</span>
+    <span class="k">if</span> <span class="n">lnx_netcmd</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">netcmd</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"ip"</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"ip"</span><span class="p">,</span> <span class="s2">"link"</span><span class="p">,</span> <span class="s2">"show"</span><span class="p">,</span> <span class="s2">"dev"</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="c1"># "    link/ether 00:11:22:33:44:55 brd ff:ff:ff:ff:ff:ff"</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">"\s*link/ether\s+"</span> <span class="o">+</span> <span class="n">mac</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"ifconfig"</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="c1"># old net-tools and busybox: "... HWaddr 00:11:22:33:44:55"</span>
+        <span class="c1"># newer net-tools: "        ether 00:11:22:33:44:55  txqueuelen ..."</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">".*HWaddr\s+"</span> <span class="o">+</span> <span class="n">mac</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"\s+ether\s+"</span> <span class="o">+</span> <span class="n">mac</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"hwaddr"</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Could not get hwaddr for device </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_ipaddr_from_ip</span><span class="p">(</span><span class="n">out</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip6</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+    <span class="c1"># "    inet 192.168.3.20/24 brd ...", "    inet6 fe80::1/64 scope link"</span>
+    <span class="k">if</span> <span class="n">ip6</span><span class="p">:</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"\s+inet6\s+(?P&lt;ipaddr&gt;[0-9a-fA-F:]+)/"</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"\s+inet\s+(?P&lt;ipaddr&gt;\d+\.\d+\.\d+\.\d+)/"</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">):</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"ipaddr"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_ipaddr_from_ifconfig</span><span class="p">(</span><span class="n">out</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip6</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ip6</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">"inet6"</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="c1"># old-style net-tools: "inet6 addr: fe80::1/64  Scope:Link"</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">"\s+inet6\s+addr:\s*(?P&lt;ipaddr&gt;[0-9a-fA-F:]+)"</span><span class="p">,</span>
+                    <span class="n">line</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># newer net-tools: "inet6 fe80::1  prefixlen 64  scopeid ..."</span>
+                    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                        <span class="sa">r</span><span class="s2">"\s+inet6\s+(?P&lt;ipaddr&gt;[0-9a-fA-F:]+)"</span><span class="p">,</span>
+                        <span class="n">line</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"ipaddr"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">"inet6"</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="s2">"inet"</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">"\s+inet\s+addr:(?P&lt;ipaddr&gt;\d+.\d+.\d+.\d+)\s+"</span><span class="p">,</span>
+                    <span class="n">line</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                        <span class="sa">r</span><span class="s2">"\s+inet\s(?P&lt;ipaddr&gt;\d+.\d+.\d+.\d+)\s+"</span><span class="p">,</span>
+                        <span class="n">line</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"ipaddr"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_lnx_get_ipaddr</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip6</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">netcmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"auto"</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    get the IP address of a network device, from "ip addr show" or</span>
+<span class="sd">    "ifconfig" (lnx_netcmd())</span>
+
+<span class="sd">    :param lnx: linux machine from which we want to get the ipaddr</span>
+<span class="sd">    :param name: name of the interface</span>
+<span class="sd">    :param ip6: set to true if you want the ipv6 addr</span>
+<span class="sd">    :param netcmd: auto, ip or ifconfig</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">lnx_netcmd</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">netcmd</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"ip"</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"ip"</span><span class="p">,</span> <span class="s2">"-6"</span> <span class="k">if</span> <span class="n">ip6</span> <span class="k">else</span> <span class="s2">"-4"</span><span class="p">,</span> <span class="s2">"addr"</span><span class="p">,</span> <span class="s2">"show"</span><span class="p">,</span> <span class="s2">"dev"</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">ipaddr</span> <span class="o">=</span> <span class="n">_ipaddr_from_ip</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">ip6</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"ifconfig"</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">ipaddr</span> <span class="o">=</span> <span class="n">_ipaddr_from_ifconfig</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">ip6</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ipaddr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Could not get ip for device </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ipaddr</span>
+
+
+<div class="viewcode-block" id="lnx_get_ipaddr">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.network.lnx_get_ipaddr">[docs]</a>
+<span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_get_ipaddr</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">ip6</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">poll</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">sleep</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">netcmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"auto"</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    get the IP address of a network device, polling until it is there</span>
+
+<span class="sd">    :param lnx: linux machine from which we want to get the ipaddr</span>
+<span class="sd">    :param name: name of the interface</span>
+<span class="sd">    :param ip6: set to true if you want the ipv6 addr</span>
+<span class="sd">    :param poll: if != 0 poll n times to get the ip</span>
+<span class="sd">    :param sleep: sleep in seconds between polls</span>
+<span class="sd">    :param netcmd: auto, ip or ifconfig, see lnx_netcmd()</span>
+<span class="sd">    """</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">poll</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_lnx_get_ipaddr</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ip6</span><span class="p">,</span> <span class="n">netcmd</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sleep</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">sleep</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Could not get ip for device </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_network_ping</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">retry</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">retry</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"ping"</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">,</span> <span class="s2">"-W"</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Could not bring up device </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="lnx_network_up">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.network.lnx_network_up">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lnx_network_up</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">sip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">retry</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">netmask</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    set ip on device, with ip or ifconfig (lnx_netcmd()), and ping sip</span>
+
+<span class="sd">    :param retry: pings to sip before giving up</span>
+<span class="sd">    :param netmask: dotted netmask, default by the address class, as</span>
+<span class="sd">        ifconfig without netmask</span>
+<span class="sd">    """</span>
+    <span class="n">lnx_set_ipaddr</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">netmask</span><span class="p">)</span>
+    <span class="n">lnx_network_ping</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">sip</span><span class="p">,</span> <span class="n">retry</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_iperf_installed</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">try_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    check if iperf3 is installed on lnx machine</span>
+
+<span class="sd">    If try_install try to install it if not</span>
+<span class="sd">    """</span>
+    <span class="n">ret</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"iperf3"</span><span class="p">,</span> <span class="s2">"-v"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">try_install</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1"># Try to install iperf3 on OS; imported here, as tbottest.tc.common</span>
+    <span class="c1"># imports from this module</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.tc.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">lnx_install_package</span>
+
+    <span class="k">return</span> <span class="n">lnx_install_package</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="s2">"iperf3"</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="network_linux_iperf">
+<a class="viewcode-back" href="../../../tc.html#tbottest.tc.network.network_linux_iperf">[docs]</a>
+<span class="nd">@tbot</span><span class="o">.</span><span class="n">testcase</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">network_linux_iperf</span><span class="p">(</span>
+    <span class="n">lnx</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">lnxh</span><span class="p">:</span> <span class="n">linux</span><span class="o">.</span><span class="n">LinuxShell</span><span class="p">,</span>
+    <span class="n">sip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"unknown"</span><span class="p">,</span>
+    <span class="n">intervall</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"5"</span><span class="p">,</span>
+    <span class="n">cycles</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"5"</span><span class="p">,</span>
+    <span class="n">minval</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"40"</span><span class="p">,</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"iperf.dat"</span><span class="p">,</span>
+    <span class="n">subject</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"unkown"</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: C901</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    start iperf measurement between lnx and lnxh machine</span>
+
+<span class="sd">    toolname : iperf (oldversion) or iperf3</span>
+
+<span class="sd">    lnxh : machine where iperf server runs</span>
+<span class="sd">    lnx  : machine which start iperf client</span>
+
+<span class="sd">    interval : seconds between periodic throughput reports</span>
+<span class="sd">    cycles   : count of intervalls</span>
+<span class="sd">    """</span>
+
+    <span class="n">toolname</span> <span class="o">=</span> <span class="s2">"iperf3"</span>
+    <span class="n">pid</span> <span class="o">=</span> <span class="s2">"notstarted"</span>
+
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">_check_iperf_installed</span><span class="p">(</span><span class="n">lnx</span><span class="p">,</span> <span class="n">try_install</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Please install </span><span class="si">{</span><span class="n">toolname</span><span class="si">}</span><span class="s2"> in your rootfs"</span><span class="p">)</span>
+
+    <span class="n">_check_iperf_installed</span><span class="p">(</span><span class="n">lnxh</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ymax</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">minval</span><span class="p">)</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">intervall</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">xmax</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">cycles</span><span class="p">)</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">intervall</span><span class="p">))</span>
+    <span class="n">good</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1"># check if iperf is on rootfs, if not copy it</span>
+    <span class="c1"># iperf = bbzu.copy_utility(lh, lnx, "iperf")</span>
+    <span class="c1"># lnx.exec0("chmod", "+x", iperf)</span>
+    <span class="c1"># check on labhost, if iperf server runs</span>
+    <span class="c1"># if not start it</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">lnxh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"ls"</span><span class="p">,</span> <span class="s2">"-al"</span><span class="p">,</span> <span class="s2">"/bin/ps"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"busybox"</span> <span class="ow">in</span> <span class="n">ret</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">lnxh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"ps"</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Pipe</span><span class="p">,</span> <span class="s2">"grep"</span><span class="p">,</span> <span class="n">toolname</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">lnxh</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="s2">"ps"</span><span class="p">,</span> <span class="s2">"afx"</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Pipe</span><span class="p">,</span> <span class="s2">"grep"</span><span class="p">,</span> <span class="n">toolname</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">ret</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">"iperf"</span> <span class="ow">in</span> <span class="n">ln</span> <span class="ow">and</span> <span class="s2">"grep"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ln</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">start</span><span class="p">:</span>
+        <span class="c1"># lnxh.exec0(toolname, "-s", linux.Background)</span>
+        <span class="n">lnxh</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">Raw</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">toolname</span><span class="si">}</span><span class="s2"> -s 2&gt;/dev/null 1&gt;/dev/null &amp;"</span><span class="p">))</span>
+        <span class="c1"># lnxh.ch.sendline(f"{toolname} -s 2&gt;&amp;1 1&gt;/dev/null &amp;")</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="c1"># lnxh.ch.read_until_prompt()</span>
+        <span class="c1"># wait as command has some output</span>
+        <span class="n">pid</span> <span class="o">=</span> <span class="n">lnxh</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="s2">"!"</span><span class="p">)</span>
+        <span class="c1"># lnxh.ch.sendline("iperf -s &amp;")</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># log_event.doc_tag("iperf_minval", minval)</span>
+    <span class="c1"># log_event.doc_tag("iperf_cycles", cycles)</span>
+    <span class="c1"># log_event.doc_tag("iperf_intervall", intervall)</span>
+    <span class="c1"># log_event.doc_begin("iperf_test")</span>
+
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">lnx</span><span class="o">.</span><span class="n">exec0</span><span class="p">(</span><span class="n">toolname</span><span class="p">,</span> <span class="s2">"-c"</span><span class="p">,</span> <span class="n">sip</span><span class="p">,</span> <span class="s2">"-i"</span><span class="p">,</span> <span class="n">intervall</span><span class="p">,</span> <span class="s2">"-t"</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>  <span class="c1"># noqa: E501</span>
+
+    <span class="n">lowestval</span> <span class="o">=</span> <span class="s2">"0"</span>
+    <span class="c1"># output is something like</span>
+    <span class="c1"># [  5]   4.00-5.00   sec  5.47 MBytes  45.9 Mbits/sec    0    102 KBytes</span>
+    <span class="c1"># get Bitrate</span>
+    <span class="n">unit</span> <span class="o">=</span> <span class="s2">"unknown"</span>
+    <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">ret</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">"- -"</span> <span class="ow">in</span> <span class="n">ln</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="k">if</span> <span class="s2">"Gbits/sec"</span> <span class="ow">in</span> <span class="n">ln</span><span class="p">:</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="s2">"Gbits/sec"</span>
+            <span class="n">mult</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
+
+        <span class="k">if</span> <span class="s2">"Mbits/sec"</span> <span class="ow">in</span> <span class="n">ln</span> <span class="ow">and</span> <span class="n">unit</span> <span class="o">==</span> <span class="s2">"unknown"</span><span class="p">:</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="s2">"Mbits/sec"</span>
+            <span class="n">mult</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
+
+        <span class="k">if</span> <span class="s2">"Kbits/sec"</span> <span class="ow">in</span> <span class="n">ln</span> <span class="ow">and</span> <span class="n">unit</span> <span class="o">==</span> <span class="s2">"unknown"</span><span class="p">:</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="s2">"Kbits/sec"</span>
+            <span class="n">mult</span> <span class="o">=</span> <span class="mi">1024</span>
+
+        <span class="k">if</span> <span class="s2">"bits/sec"</span> <span class="ow">in</span> <span class="n">ln</span> <span class="ow">and</span> <span class="n">unit</span> <span class="o">==</span> <span class="s2">"unknown"</span><span class="p">:</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="s2">"bits/sec"</span>
+            <span class="n">mult</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s2">"unknown"</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">ln</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"Bytes"</span><span class="p">)</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">*</span> <span class="n">mult</span>
+
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"bandwith"</span><span class="p">:</span> <span class="n">val</span><span class="p">,</span> <span class="s2">"step"</span><span class="p">:</span> <span class="n">step</span><span class="p">})</span>
+        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">ymax</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+            <span class="n">ymax</span> <span class="o">=</span> <span class="n">val</span>
+
+        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">minval</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">good</span><span class="p">:</span>
+                <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Not enough Bandwith </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> &lt; </span><span class="si">{</span><span class="n">minval</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+                <span class="n">good</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">lowestval</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+            <span class="n">lowestval</span> <span class="o">=</span> <span class="n">val</span>
+
+        <span class="n">step</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">intervall</span><span class="p">))</span>
+
+    <span class="c1"># log_event.doc_tag("iperf_unit", unit)</span>
+    <span class="c1"># log_event.doc_end("iperf_test")</span>
+    <span class="k">if</span> <span class="n">pid</span> <span class="o">!=</span> <span class="s2">"notstarted"</span><span class="p">:</span>
+        <span class="n">lnxh</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">"kill"</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">linux</span><span class="o">.</span><span class="n">Then</span><span class="p">,</span> <span class="s2">"wait"</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">good</span><span class="p">:</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span><span class="sa">f</span><span class="s2">"network Bandwith above </span><span class="si">{</span><span class="n">minval</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">green</span><span class="p">)</span>
+
+    <span class="n">step</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># round up ymax</span>
+    <span class="n">ymax</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">ymax</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">))</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="s2">"results/iperf/"</span> <span class="o">+</span> <span class="n">filename</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+            <span class="n">tbot</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">c</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"could not open </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">, May you create results/iperf, if you want to use the iperf results later"</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">yellow</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">good</span>
+
+    <span class="c1"># save the xmax and ymax value behind the headlines</span>
+    <span class="c1"># gnuplot uses them for setting the correct xmax / ymax values</span>
+    <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">"step bandwith minimum </span><span class="si">{</span><span class="n">xmax</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">ymax</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+        <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">el</span><span class="p">[</span><span class="s2">"step"</span><span class="p">]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">el</span><span class="p">[</span><span class="s2">"bandwith"</span><span class="p">]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">minval</span><span class="si">}</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">step</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">intervall</span><span class="p">)</span>
+
+    <span class="n">fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">good</span></div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<div class="sphinx-toc sphinxglobaltoc">
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CONTRIBUTING.html">Contributing to tbot-test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../LICENSE.html">License</a></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../../index.html">tbottest 0.0.1-391-g1d197d3 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tbottest.tc.network</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2023, Heiko Schocher.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>
