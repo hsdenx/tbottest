@@ -236,6 +236,54 @@ def test_failed_init_list_raises():
             raise AssertionError("no RuntimeError on a failed init list")
 
 
+LOAD_CMD = "load 0x00100000 amc/20261001/musl/u-boot-ram.bin bin"
+LOAD_STARTED = "Loading amc/20261001/musl/u-boot-ram.bin , please wait ....\n"
+
+
+def test_failed_load_raises_and_stops_the_command_list():
+    ch = FakeChannel(answers=[LOAD_STARTED + "# Cannot open file on host\n", ""])
+    bdi = FakeBDI(ch)
+    with ch.with_prompt(bdi2000.BDI2000_PROMPT):
+        try:
+            for cmd in (LOAD_CMD, "go 0x00100100"):
+                bdi.exec(cmd)
+        except RuntimeError as e:
+            assert "Cannot open file on host" in str(e)
+            assert LOAD_CMD in str(e)
+        else:
+            raise AssertionError("no RuntimeError on a failed load")
+    # go is never sent
+    assert ch.sent == [LOAD_CMD]
+
+
+def test_successful_load_returns_its_output():
+    out = LOAD_STARTED + "Loading program file passed\n"
+    ch = FakeChannel(answers=[out])
+    bdi = FakeBDI(ch)
+    with ch.with_prompt(bdi2000.BDI2000_PROMPT):
+        assert bdi.exec(LOAD_CMD) == out
+
+
+def test_load_without_passed_raises():
+    # an error message not in BDI_ERRORS: the missing "passed" line counts
+    ch = FakeChannel(answers=[LOAD_STARTED + "# some other error\n"])
+    bdi = FakeBDI(ch)
+    with ch.with_prompt(bdi2000.BDI2000_PROMPT):
+        try:
+            bdi.exec(LOAD_CMD)
+        except RuntimeError as e:
+            assert "some other error" in str(e)
+        else:
+            raise AssertionError("no RuntimeError on a load without passed")
+
+
+def test_other_commands_need_no_passed_line():
+    ch = FakeChannel(answers=["- TARGET: processing reset request\n"])
+    bdi = FakeBDI(ch)
+    with ch.with_prompt(bdi2000.BDI2000_PROMPT):
+        bdi.exec("reset", "run")
+
+
 def test_commands_without_init_list_do_not_wait():
     ch = FakeChannel(answers=["Breakpoint identification is 0"])
     bdi = FakeBDI(ch)

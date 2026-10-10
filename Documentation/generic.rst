@@ -623,6 +623,21 @@ the init list started waits until the BDI reports it ``passed`` (and fails if
 it reports ``failed``), so ``poweron_cmds = ["reset", "go 0x40000100"]``
 starts the target only after the init list ran.
 
+The BDI has no return codes and takes the next command even after one
+failed. ``exec()`` therefore raises an error when the output contains one of
+the messages in ``BDI_ERRORS`` (:py:mod:`tbottest.bdi2000`), for now
+``Cannot open file on host``, and when a ``load`` does not report
+``Loading program file passed``. The remaining ``poweron_cmds`` are not
+sent then, so a ``go`` after a failed ``load`` does not start whatever is
+in the target's memory, and the testcase fails at once. A ``load`` of a
+file that is not on the TFTP server:
+
+.. code-block:: text
+
+    [bdi2000] load 0x00100000 amc/20261001/musl/u-boot-ram.bin bin
+         ## Loading amc/20261001/musl/u-boot-ram.bin , please wait ....
+         ## # Cannot open file on host
+
 ``poweron_cmds`` can also be a dictionary of named command lists, for a
 board that is started in more than one way. The tbot flag
 ``-f poweron_cmds:<name>`` selects the list to run; without the flag the

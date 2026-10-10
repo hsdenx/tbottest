@@ -45,6 +45,19 @@ CONFIG_UPDATED = "Updating configuration passed"
 # split_configname()
 CONFIGNAME = "configname:"
 
+# Messages with which the BDI reports a failed command. It has no return
+# codes and goes on with the next command, so exec() looks for these in the
+# output. load answers "# Cannot open file on host" when the file is missing
+# on the TFTP server; without the check the following "go" starts whatever
+# is in the target's memory.
+BDI_ERRORS = [
+    "Cannot open file on host",
+]
+
+# load reports success with this line; a load without it failed, whatever
+# the BDI printed instead
+LOAD_PASSED = "Loading program file passed"
+
 
 def split_configname(
     cmds: typing.List[str],
@@ -89,9 +102,12 @@ class BDI2000Shell(shell.Shell):
         Run one BDI command, the arguments joined by blanks.
 
         The BDI has no return codes, so check the returned output where it
-        matters.
+        matters. The messages in BDI_ERRORS are checked here, and a load
+        has to report LOAD_PASSED.
 
         :returns: what the BDI printed before its next prompt
+        :raises RuntimeError: if the output contains one of BDI_ERRORS, or
+            a load does not report LOAD_PASSED
         """
         cmd = " ".join(args)
         with tbot.log_event.command(self.name, cmd) as ev:
@@ -100,6 +116,11 @@ class BDI2000Shell(shell.Shell):
                 out = self.ch.read_until_prompt()
                 out += self._wait_init_list(out)
             ev.data["stdout"] = out
+        for err in BDI_ERRORS:
+            if err in out:
+                raise RuntimeError(f"BDI2000 command '{cmd}' failed: {err}")
+        if cmd.split()[:1] == ["load"] and LOAD_PASSED not in out:
+            raise RuntimeError(f"BDI2000 command '{cmd}' failed: {out.strip()}")
         return out
 
     def _wait_init_list(self, out: str) -> str:
