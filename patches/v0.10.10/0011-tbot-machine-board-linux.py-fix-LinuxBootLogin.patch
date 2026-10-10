@@ -1,7 +1,7 @@
-From 5de0598524be1fef18597f5326889495c12322ca Mon Sep 17 00:00:00 2001
+From c0e490f16ce607ece7a3a27c9eff9aab5576ee59 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Tue, 25 Apr 2023 06:27:13 +0200
-Subject: [PATCH 11/23] tbot/machine/board/linux.py fix LinuxBootLogin
+Subject: [PATCH 11/29] tbot/machine/board/linux.py fix LinuxBootLogin
 
 fix LinuxBootLogin nth time...
 

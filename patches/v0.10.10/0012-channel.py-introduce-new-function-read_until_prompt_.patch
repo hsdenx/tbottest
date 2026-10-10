@@ -1,7 +1,7 @@
-From fdc235d3e14306d5fd691cf5b8ddf5d164805eb6 Mon Sep 17 00:00:00 2001
+From 9005cd0ec9301ffd7ec22d53a35362e32c4fc1e5 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Fri, 14 Aug 2026 10:51:05 +0200
-Subject: [PATCH 12/23] channel.py: introduce new function
+Subject: [PATCH 12/29] channel.py: introduce new function
  read_until_prompt_save
 
 especially on linux login it is may hard to get a clean prompt line.

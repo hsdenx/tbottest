@@ -1,7 +1,7 @@
-From 28184259a7d490b3aa981476ad1f61f4838c41de Mon Sep 17 00:00:00 2001
+From deb211152b65286a831e0111a0587778a35664c1 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Tue, 29 Aug 2023 06:10:28 +0200
-Subject: [PATCH 01/23] tbot/machine/board/uboot.py: add death strings
+Subject: [PATCH 01/29] tbot/machine/board/uboot.py: add death strings
 
 add possibility to add death strings in UBootAutobootIntercept
 

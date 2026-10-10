@@ -1,7 +1,7 @@
-From f6dbfba3e63c9f6ee51072c76d1637e5fbf2ee93 Mon Sep 17 00:00:00 2001
+From 3685add55732c8520aabb01cf60bf22c2d175ce4 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Tue, 12 May 2020 15:06:00 +0200
-Subject: [PATCH 03/23] git.py: add quiet option for clean
+Subject: [PATCH 03/29] git.py: add quiet option for clean
 
 add quiet option for git clean and make quiet as default.
 

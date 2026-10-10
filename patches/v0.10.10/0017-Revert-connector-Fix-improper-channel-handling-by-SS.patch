@@ -1,7 +1,7 @@
-From dcc128f8fc6106128018cf5574ee3f45f8a03778 Mon Sep 17 00:00:00 2001
+From d2fd0816f084a5f28dbf34cbdef6786cf0ffa231 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Thu, 21 Sep 2023 16:34:37 +0200
-Subject: [PATCH 17/23] Revert "connector: Fix improper channel handling by
+Subject: [PATCH 17/29] Revert "connector: Fix improper channel handling by
  SSHConnector"
 
 This reverts commit b253a7fc4ebfdffdd1bf88d4248029dedf517420.

@@ -1,7 +1,7 @@
-From c25259ca069064a8604844b793d1fb3523f24e3d Mon Sep 17 00:00:00 2001
+From 8667465a62a15e583e05552c73bd18afdce63402 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Sat, 1 Feb 2025 09:40:10 +0100
-Subject: [PATCH 19/23] shell.py: fix crash when no ParamikoConnector
+Subject: [PATCH 19/29] shell.py: fix crash when no ParamikoConnector
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit

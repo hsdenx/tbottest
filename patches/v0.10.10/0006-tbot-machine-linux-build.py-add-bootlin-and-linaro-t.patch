@@ -1,7 +1,7 @@
-From b6396ce0744a2d8d2aacb85bf00dc6a0d36f1ab6 Mon Sep 17 00:00:00 2001
+From d34713305e2180f7862e9f98d4ce5786106d64e6 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Mon, 4 Nov 2019 09:13:49 +0100
-Subject: [PATCH 06/23] tbot/machine/linux/build.py: add bootlin and linaro
+Subject: [PATCH 06/29] tbot/machine/linux/build.py: add bootlin and linaro
  toolchains
 
 add bootlin and linaro toolchains for machine v2.

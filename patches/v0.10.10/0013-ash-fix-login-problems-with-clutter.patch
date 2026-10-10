@@ -1,7 +1,7 @@
-From 1e775bf2f43e9cb354e33c4acdcacd5c81779330 Mon Sep 17 00:00:00 2001
+From eec78f8926e871f8bbf2615017d429a3aba33c2d Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Fri, 7 Jul 2023 09:34:59 +0200
-Subject: [PATCH 13/23] ash: fix login problems with clutter
+Subject: [PATCH 13/29] ash: fix login problems with clutter
 
 use for login the new function read_until_prompt_save
 for the first commands tbot sets when entering linux shell

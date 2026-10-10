@@ -1,0 +1,139 @@
+From ebf5e646e01620b980c5261985035a59c338b41a Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
+Date: Wed, 7 Oct 2026 16:03:17 +0200
+Subject: [PATCH 28/29] log: log the start of tbot as an event
+
+tbot_start() only prints "tbot starting ...", so a JSON log written with
+--json-log-stream does not show when the run started, as the time of
+every event counts from the start, nor how it was started.
+
+Log the start as an event ["tbot", "begin"], with the wall-clock time and
+the commandline. The commandline starts with the file of the __main__
+module, the program Python runs: a starter script may rewrite sys.argv,
+so sys.argv[0] is taken only when there is no such file. main() passes
+the arguments it parsed. The console output stays the same, as the
+event is printed while NESTING is still -1.
+
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
+---
+ CHANGELOG.md                  |  6 ++++++
+ selftest/tests/test_newbot.py | 25 +++++++++++++++++++++++++
+ tbot/log_event.py             | 30 ++++++++++++++++++++++++++++--
+ tbot/newbot.py                |  2 +-
+ 4 files changed, 60 insertions(+), 3 deletions(-)
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 8ce9ee2..9deda28 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -1,6 +1,12 @@
+ # Changelog
+ 
+ ## [Unreleased]
++### Added
++- tbot logs its start as an event `["tbot", "begin"]`, with the wall-clock
++  time of the start and the commandline, starting with the program Python
++  runs, so that a JSON log
++  (`--json-log-stream`) tells when and how the run was started.  The
++  console output stays `tbot starting ...`.
+ 
+ 
+ ## [0.10.10] - 2025-11-25
+diff --git a/selftest/tests/test_newbot.py b/selftest/tests/test_newbot.py
+index 543f973..632cd08 100644
+--- a/selftest/tests/test_newbot.py
++++ b/selftest/tests/test_newbot.py
+@@ -1,4 +1,29 @@
++import io
++import json
++import sys
++
+ import tbot
++import tbot.log
++import tbot.log_event
+ import tbot.newbot  # noqa: F401
+ 
+ # TODO: Write tests...
++
++
++def test_tbot_start_is_logged(capsys) -> None:
++    logfile, nesting = tbot.log.LOGFILE, tbot.log.NESTING
++    tbot.log.LOGFILE = io.StringIO()
++    tbot.log.NESTING = -1
++    try:
++        tbot.log_event.tbot_start(["-f", "flag", "tc"])
++        ev = json.loads(tbot.log.LOGFILE.getvalue())
++        assert tbot.log.NESTING == 0
++    finally:
++        tbot.log.LOGFILE, tbot.log.NESTING = logfile, nesting
++
++    assert ev["type"] == ["tbot", "begin"]
++    assert ev["data"]["argv"][0] == sys.modules["__main__"].__file__
++    assert ev["data"]["argv"][1:] == ["-f", "flag", "tc"]
++    assert len(ev["data"]["date"]) == len("2026-10-06 12:00:00")
++    # printed as before, without a tree prefix
++    assert capsys.readouterr().out.endswith("starting ...\n")
+diff --git a/tbot/log_event.py b/tbot/log_event.py
+index 8267187..68bebc5 100644
+--- a/tbot/log_event.py
++++ b/tbot/log_event.py
+@@ -14,6 +14,7 @@
+ # You should have received a copy of the GNU General Public License
+ # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ 
++import sys
+ import time
+ import typing
+ 
+@@ -114,8 +115,33 @@ def command(mach: str, cmd: str) -> log.EventIO:
+     return ev
+ 
+ 
+-def tbot_start() -> None:
+-    print(log.c("tbot").yellow.bold + " starting ...")
++def tbot_start(argv: typing.Optional[typing.Sequence[str]] = None) -> None:
++    """
++    Log tbot's start.
++
++    Prints "tbot starting ..." as before; the log file gets an event
++    ``["tbot", "begin"]`` with the wall-clock time of the start and the
++    commandline, as the times of all events count from the start.
++
++    The commandline starts with the program Python runs, the file of the
++    ``__main__`` module, as a starter script may rewrite ``sys.argv``;
++    ``sys.argv[0]`` only when there is no such file.
++
++    :param argv: The commandline arguments tbot was started with, default
++        ``sys.argv[1:]``.
++
++    .. versionchanged:: UNRELEASED
++
++        Logged as an event.
++    """
++    prog = getattr(sys.modules.get("__main__"), "__file__", None) or sys.argv[0]
++    log.EventIO(
++        ["tbot", "begin"],
++        log.c("tbot").yellow.bold + " starting ...",
++        verbosity=log.Verbosity.QUIET,
++        date=time.strftime("%Y-%m-%d %H:%M:%S"),
++        argv=[prog] + list(sys.argv[1:] if argv is None else argv),
++    )
+     log.NESTING += 1
+ 
+ 
+diff --git a/tbot/newbot.py b/tbot/newbot.py
+index 1bfd505..cc2c64c 100644
+--- a/tbot/newbot.py
++++ b/tbot/newbot.py
+@@ -245,7 +245,7 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
+         tbot.log.Verbosity.STDOUT + args.verbosity - args.quiet
+     )
+ 
+-    tbot.log_event.tbot_start()
++    tbot.log_event.tbot_start(sys.argv[1:] if argv is None else argv)
+ 
+     # Initialize tbot context with our settings
+     tbot.ctx = tbot.Context(add_defaults=True, keep_alive=args.keep_alive)
+-- 
+2.31.1
+

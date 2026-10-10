@@ -1,7 +1,7 @@
 From 25315c9c08a177939da52ffe2228fe68196fdd12 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Thu, 1 Oct 2026 16:40:47 +0200
-Subject: [PATCH] channel: make the slow sending of subprocess channels
+Subject: [PATCH 27/29] channel: make the slow sending of subprocess channels
  configurable
 
 "subprocess.py: slow down sending" splits every write into chunks of

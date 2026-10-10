@@ -1,7 +1,7 @@
-From 04cd4a9da88b238ee2db17d8367d0ae6d7a13fd6 Mon Sep 17 00:00:00 2001
+From 1c7a5536ce2b9491e9a5575aadd69f2ff3c60868 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Fri, 14 Aug 2026 11:19:15 +0200
-Subject: [PATCH 24/24] selftest: add tests for read_until_prompt_save and
+Subject: [PATCH 24/29] selftest: add tests for read_until_prompt_save and
  BoundedPattern search
 
 Add coverage for the two channel.py fixes:

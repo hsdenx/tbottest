@@ -1,7 +1,7 @@
-From 6f1b6f001ee6c4337ccaa6c9f7fba6d27e3977f4 Mon Sep 17 00:00:00 2001
+From 1f4ecdf695a1e7956135bbac96605ded27bab606 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Fri, 14 Aug 2026 10:51:29 +0200
-Subject: [PATCH 23/23] channel.py: bound BoundedPattern search in
+Subject: [PATCH 23/29] channel.py: bound BoundedPattern search in
  read_until_prompt
 
 read_until_prompt() re-scanned the whole accumulated buffer from

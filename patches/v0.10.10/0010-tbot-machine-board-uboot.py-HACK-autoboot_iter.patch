@@ -1,7 +1,7 @@
-From effc2df3fb45733987a64f57a96a43500de27f4a Mon Sep 17 00:00:00 2001
+From dcd450bb19738cc733ebecad87b68478f89d24d8 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Sat, 25 Feb 2023 17:02:56 +0100
-Subject: [PATCH 10/23] tbot/machine/board/uboot.py: HACK autoboot_iter
+Subject: [PATCH 10/29] tbot/machine/board/uboot.py: HACK autoboot_iter
 
 search autoboot_iter times for autoboot string.
 

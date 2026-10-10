@@ -1,7 +1,7 @@
-From 4cb2b686fec61eb73d59e06cdd915f978cc61ece Mon Sep 17 00:00:00 2001
+From 697b2516542065053d59ec16b0082190cc49d783 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Sun, 24 May 2020 07:54:09 +0200
-Subject: [PATCH 08/23] UBootShell, _init_shell: set bigger timeout
+Subject: [PATCH 08/29] UBootShell, _init_shell: set bigger timeout
 
 Git a lot of TimeoutError, and increased the timeout
 when calling read_until_prompt from 0.5 to 2.

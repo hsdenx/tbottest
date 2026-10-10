@@ -1,7 +1,7 @@
-From 89a8edde6c00a67281cf652f7bf9ba21350b9f20 Mon Sep 17 00:00:00 2001
+From 2606bdf6d8646a94449c13132d9de353060324f5 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Mon, 3 Oct 2022 07:37:51 +0200
-Subject: [PATCH 18/23] add our own version
+Subject: [PATCH 18/29] add our own version
 
 add file tbot/_version.py to have our own version string
 

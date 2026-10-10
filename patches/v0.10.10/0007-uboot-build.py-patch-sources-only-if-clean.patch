@@ -1,7 +1,7 @@
-From 118bbd1dddee9212bee3db4f818bbfbcbed0bbad Mon Sep 17 00:00:00 2001
+From faece4f2ade388d6dfefe7e7bbf1a354c27c713d Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Mon, 11 May 2020 12:30:03 +0200
-Subject: [PATCH 07/23] uboot/build.py: patch sources only if clean
+Subject: [PATCH 07/29] uboot/build.py: patch sources only if clean
 
 patch the sources in uboot_checkout only if clean is True.
 

@@ -1,0 +1,165 @@
+From 3efaec75ac7b3db750381dfffcab365ec7761ad3 Mon Sep 17 00:00:00 2001
+From: Heiko Schocher <hs@nabladev.com>
+Date: Sat, 10 Oct 2026 15:20:09 +0200
+Subject: [PATCH 29/29] linux: remove prompt hooks before setting the prompt
+
+Bash and Ash send PROMPT_COMMAND='' to keep the shell from running
+anything before its prompt. Since bash 5.1 PROMPT_COMMAND may be an
+array, and this assignment only clears index 0. Bash also prints PS0
+before the output of every command, which tbot leaves untouched.
+
+systemd's osc-context profile (80-systemd-osc-context.sh, enabled by
+default in systemd 259) uses both: it appends a function to the
+PROMPT_COMMAND array, keeping index 0 empty on purpose, and sets PS0.
+Both print OSC 3008 escape sequences around every command, so the
+output of "echo TBOT-SANITY-CHECK" no longer matches and machine init
+stops with UncleanShellError. Ash is affected as well, as /bin/sh is
+bash on such systems.
+
+Send "unset PROMPT_COMMAND; PS0=''" instead. unset removes the whole
+array; in a shell that does not use these variables, unsetting and
+assigning them has no effect.
+
+Add LocalhostBashPromptHooks and LocalhostAshPromptHooks, which install
+such hooks before tbot initializes the shell, to the machines
+any_linux_shell runs every shell test on. Without this change they fail
+with UncleanShellError.
+
+Signed-off-by: Heiko Schocher <hs@nabladev.com>
+---
+ CHANGELOG.md               |  8 ++++++++
+ selftest/conftest.py       |  2 ++
+ selftest/testmachines.py   | 36 ++++++++++++++++++++++++++++++++++++
+ tbot/machine/linux/ash.py  |  8 +++++++-
+ tbot/machine/linux/bash.py |  8 +++++++-
+ 5 files changed, 60 insertions(+), 2 deletions(-)
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 9deda28..8819cce 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -8,6 +8,14 @@
+   (`--json-log-stream`) tells when and how the run was started.  The
+   console output stays `tbot starting ...`.
+ 
++### Fixed
++- `linux.Bash` and `linux.Ash` failed with `UncleanShellError` when the
++  remote shell had prompt hooks that print around every command, such as
++  systemd's `osc-context` profile (OSC 3008 escape sequences via a
++  `PROMPT_COMMAND` array entry and `PS0`).  tbot now unsets
++  `PROMPT_COMMAND` and clears `PS0` instead of only assigning
++  `PROMPT_COMMAND=''`.
++
+ 
+ ## [0.10.10] - 2025-11-25
+ ### Added
+diff --git a/selftest/conftest.py b/selftest/conftest.py
+index 8f25a45..1f8c6a5 100644
+--- a/selftest/conftest.py
++++ b/selftest/conftest.py
+@@ -25,6 +25,8 @@ AnyLinuxShell = Callable[[], ContextManager[tbot.machine.linux.LinuxShell]]
+         testmachines.LocalhostBash,
+         testmachines.LocalhostSlowBash,
+         testmachines.LocalhostAsh,
++        testmachines.LocalhostBashPromptHooks,
++        testmachines.LocalhostAshPromptHooks,
+         testmachines.MocksshClient,
+     ],
+ )
+diff --git a/selftest/testmachines.py b/selftest/testmachines.py
+index 9ec2302..ca2a611 100644
+--- a/selftest/testmachines.py
++++ b/selftest/testmachines.py
+@@ -82,6 +82,40 @@ class LocalhostAsh(connector.ConsoleConnector, linux.Ash, tbot.role.Role):
+         )
+ 
+ 
++# Prompt hooks as a shell profile may install them, for example systemd's
++# 80-systemd-osc-context.sh: a function in the PROMPT_COMMAND array (run
++# before every prompt, bash >= 5.1) and PS0 (printed before the output of
++# every command, bash >= 4.4).  Index 0 is left empty, so that a plain
++# PROMPT_COMMAND='' does not remove the hook.
++PROMPT_HOOKS = "PROMPT_COMMAND=('' 'printf PROMPT-HOOK'); PS0='PS0-HOOK'"
++
++
++class LocalhostBashPromptHooks(LocalhostBash, tbot.role.Role):
++    name = "local-bash-prompt-hooks"
++
++    @property
++    def workdir(self) -> linux.Path:
++        return linux.Workdir.xdg_runtime(self, "selftest-data-bash-prompt-hooks")
++
++    def connect(self, mach: linux.LinuxShell) -> channel.Channel:
++        ch = super().connect(mach)
++        ch.sendline(PROMPT_HOOKS)
++        return ch
++
++
++class LocalhostAshPromptHooks(LocalhostAsh, tbot.role.Role):
++    name = "local-ash-prompt-hooks"
++
++    @property
++    def workdir(self) -> linux.Path:
++        return linux.Workdir.xdg_runtime(self, "selftest-data-ash-prompt-hooks")
++
++    def connect(self, mach: linux.LinuxShell) -> channel.Channel:
++        ch = super().connect(mach)
++        ch.sendline(PROMPT_HOOKS)
++        return ch
++
++
+ # Different distros like to store this binary in different locations.  Thus we
+ # need to adapt to the system where tests are running to find the correct
+ # one...
+@@ -341,6 +375,8 @@ def register_machines(ctx: tbot.Context) -> None:
+     ctx.register(LocalhostBash, [LocalhostBash])
+     ctx.register(LocalhostSlowBash, [LocalhostSlowBash])
+     ctx.register(LocalhostAsh, [LocalhostAsh])
++    ctx.register(LocalhostBashPromptHooks, [LocalhostBashPromptHooks])
++    ctx.register(LocalhostAshPromptHooks, [LocalhostAshPromptHooks])
+     ctx.register(MocksshServer, [MocksshServer])
+     ctx.register(MocksshClient, [MocksshClient])
+     ctx.register(MockhwBoard, [MockhwBoard, tbot.role.Board])
+diff --git a/tbot/machine/linux/ash.py b/tbot/machine/linux/ash.py
+index 328188a..f6313ce 100644
+--- a/tbot/machine/linux/ash.py
++++ b/tbot/machine/linux/ash.py
+@@ -79,8 +79,14 @@ class Ash(linux_shell.LinuxShell):
+             # The prompt is mangled in a way which will be unfolded by the
+             # shell.  This will ensure tbot won't accidentally read the prompt
+             # back early if the connection is slow.
++            #
++            # /bin/sh is often bash, so remove its prompt hooks as well:
++            # PROMPT_COMMAND may be an array (bash >= 5.1), where assigning ''
++            # only clears index 0, and PS0 is printed before the output of
++            # each command.  Shell profiles install both, e.g. systemd's
++            # osc-context.
+             self.ch.sendline(
+-                b"PROMPT_COMMAND=''; PS1='"
++                b"unset PROMPT_COMMAND; PS0=''; PS1='"
+                 + TBOT_PROMPT[:6]
+                 + b"''"
+                 + TBOT_PROMPT[6:]
+diff --git a/tbot/machine/linux/bash.py b/tbot/machine/linux/bash.py
+index 8f8fe34..f7f9ec4 100644
+--- a/tbot/machine/linux/bash.py
++++ b/tbot/machine/linux/bash.py
+@@ -71,8 +71,14 @@ class Bash(linux_shell.LinuxShell):
+             # The prompt is mangled in a way which will be unfolded by the
+             # shell.  This will ensure tbot won't accidentally read the prompt
+             # back early if the connection is slow.
++            #
++            # Remove prompt hooks which print around every command:
++            # PROMPT_COMMAND may be an array (bash >= 5.1), where assigning ''
++            # only clears index 0, and PS0 is printed before the output of
++            # each command.  Shell profiles install both, e.g. systemd's
++            # osc-context.
+             self.ch.sendline(
+-                b"PROMPT_COMMAND=''; PS1='"
++                b"unset PROMPT_COMMAND; PS0=''; PS1='"
+                 + TBOT_PROMPT[:6]
+                 + b"''"
+                 + TBOT_PROMPT[6:]
+-- 
+2.31.1
+

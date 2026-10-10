@@ -1,7 +1,7 @@
-From cd43bb5fd6082260597ff3098bd5e632e360a520 Mon Sep 17 00:00:00 2001
+From 5afef157a3d1c64aee738e75b38763eb235f3da9 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Sun, 20 Aug 2023 06:16:50 +0200
-Subject: [PATCH 15/23] board.uboot: add simple UBootAutobootIntercept
+Subject: [PATCH 15/29] board.uboot: add simple UBootAutobootIntercept
 
 Add UBootAutobootInterceptSimple, which is similiar to
 UBootAutobootIntercept but UBootAutobootIntercept has problems

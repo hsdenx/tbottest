@@ -1,7 +1,7 @@
-From 194d2d8c72f6d17fb8b7abb72b11b6e67f4526da Mon Sep 17 00:00:00 2001
+From 86442498ba322df8b36b63efc4b9750eb22ffe79 Mon Sep 17 00:00:00 2001
 From: Heiko Schocher <hs@nabladev.com>
 Date: Fri, 25 Sep 2026 11:30:13 +0200
-Subject: [PATCH 25/25] linux: add interactive_plain_prompt to ash and bash
+Subject: [PATCH 25/29] linux: add interactive_plain_prompt to ash and bash
 
 interactive() gives the inner shell a colored prompt with the current
 directory, written with bash escapes. The ash of an old busybox (seen
