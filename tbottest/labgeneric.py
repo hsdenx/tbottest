@@ -657,7 +657,7 @@ class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
 
             self.exec0(
                 *lnx_sudo(self),
-                "/usr/local/bin/sd-mux-ctrl",
+                "sd-mux-ctrl",
                 f"--device-serial={sdwireserial}",
                 md,
             )

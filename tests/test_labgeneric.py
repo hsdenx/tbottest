@@ -1,5 +1,5 @@
 """
-Unit tests for GenericLab.nfsboardbasedir() in tbottest/labgeneric.py.
+Unit tests for methods of GenericLab in tbottest/labgeneric.py.
 
 labgeneric.py cannot be imported here (its module body resolves a real
 lab and board environment), so the method's current source is taken out
@@ -112,3 +112,51 @@ class TestLabTestdir:
         CFGT.config_parser.values[("LABHOST", "testdir")] = "/srv/tbottests"
         testdir = load_method("GenericLab", "testdir")
         assert testdir(LabWithWorkdir()) == ("workdir", "/srv/tbottests")
+
+
+class LabExec:
+    """records exec0() calls"""
+
+    def __init__(self):
+        self.calls = []
+
+    def exec0(self, *args):
+        self.calls.append(tuple(str(a) for a in args))
+        return ""
+
+
+@pytest.fixture
+def lnx_sudo(monkeypatch):
+    """tbottest.tc.common with an lnx_sudo() that returns the prefix set in
+    the fixture's value (default: root, no sudo)"""
+    prefix = []
+    mod = types.ModuleType("tbottest.tc.common")
+    mod.lnx_sudo = lambda lnx: list(prefix)
+    monkeypatch.setitem(sys.modules, "tbottest.tc.common", mod)
+    CFGT.config_parser.values[("SDWIRE", "serial")] = "da23"
+    yield prefix
+    CFGT.config_parser.values.pop(("SDWIRE", "serial"), None)
+
+
+class TestSdMuxMode:
+    def test_dut_runs_sd_mux_ctrl_from_path(self, lnx_sudo):
+        lab = LabExec()
+        load_method("GenericLab", "lab_set_sd_mux_mode")(lab, "dut")
+        # sd-mux-ctrl without a fixed path: it is found in PATH, wherever
+        # the lab host installed it (/usr/bin on a Yocto built lab host)
+        assert lab.calls == [("sd-mux-ctrl", "--device-serial=da23", "--dut")]
+
+    def test_lab_mode(self, lnx_sudo):
+        lab = LabExec()
+        load_method("GenericLab", "lab_set_sd_mux_mode")(lab, "lab")
+        assert lab.calls == [("sd-mux-ctrl", "--device-serial=da23", "--ts")]
+
+    def test_with_sudo(self, lnx_sudo):
+        lnx_sudo.append("sudo")
+        lab = LabExec()
+        load_method("GenericLab", "lab_set_sd_mux_mode")(lab, "dut")
+        assert lab.calls == [("sudo", "sd-mux-ctrl", "--device-serial=da23", "--dut")]
+
+    def test_unknown_mode_raises(self, lnx_sudo):
+        with pytest.raises(RuntimeError):
+            load_method("GenericLab", "lab_set_sd_mux_mode")(LabExec(), "off")
