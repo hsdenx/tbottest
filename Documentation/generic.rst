@@ -95,6 +95,22 @@ specific settings and testcases. The layout, file by file, is in
 
    $ ./scripts/create_setup.sh --inter
 
+tbot comes from the branch ``v0.10.10-emb`` of
+https://github.com/EmbLux-Kft/tbot: tbot v0.10.10 with the changes
+tbottest needs on top, so nothing has to be patched after the clone.
+tbottest comes from the branch ``master`` of
+https://github.com/hsdenx/tbottest, another one with ``-b <branch>``, a
+fixed commit with ``-c <commit>``.
+
+If ``tbot`` or ``tbottest`` exist already, create_setup.sh brings them to
+the current state of their branch: nothing happens if they are there
+already, a fast forward if the clone has neither commits of its own nor
+local changes; otherwise it only says why it left the clone alone, so no
+local work is lost. tbottest is not updated when it is set to a commit
+with ``-c``, and neither clone is with ``--no-update``. The environment
+variables ``TBOT_URL``, ``TBOT_BRANCH`` and ``TBOTTEST_URL`` replace the
+sources, e.g. with a mirror.
+
 
 start script
 ............
@@ -121,7 +137,7 @@ What scripts/create_setup.sh sets up, with tbotconfig for one board:
 
         tbotsetup/
         ├── setup.sh                     aliases for starting tbot (source setup.sh)
-        ├── tbot/                        tbot, from github.com/Rahix/tbot, with tbottest/patches applied
+        ├── tbot/                        tbot, branch v0.10.10-emb of github.com/EmbLux-Kft/tbot
         ├── tbottest/                    this repository; newtbot_starter.py starts tbot
         └── tbotconfig/                  your own repository: configuration and testcases
             ├── interactive.py           testcases for interactive sessions

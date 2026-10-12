@@ -2,13 +2,26 @@
 
 set -e
 
-# tbot setup
-tboturl=https://github.com/Rahix/tbot.git
-tbottag="v0.10.10"
+# The script may update the tbottest clone it lives in. Run it from a copy,
+# so bash does not read a file that changes under it.
+if [ -z "${CREATE_SETUP_COPY}" ]; then
+	CREATE_SETUP_COPY=$(mktemp)
+	cp "$0" "${CREATE_SETUP_COPY}"
+	export CREATE_SETUP_COPY
+	exec bash "${CREATE_SETUP_COPY}" "$@"
+fi
+trap 'rm -f "${CREATE_SETUP_COPY}"' EXIT
 
-# tbottestsetup
-tbottesturl=https://github.com/hsdenx/tbottest.git
+# tbot setup: tbot with the patches tbottest needs, as a branch of its own;
+# TBOT_URL and TBOT_BRANCH in the environment override it (mirrors, tests)
+tboturl=${TBOT_URL:-https://github.com/EmbLux-Kft/tbot.git}
+tbotbranch=${TBOT_BRANCH:-v0.10.10-emb}
+
+# tbottestsetup; TBOTTEST_URL in the environment overrides the url
+tbottesturl=${TBOTTEST_URL:-https://github.com/hsdenx/tbottest.git}
 tbottestbranch="master"
+# set with -c: tbottest stays on this commit and is not updated
+tbottestcommit=""
 
 # tbotconfig setup
 # default values, valid only for CI
@@ -67,6 +80,8 @@ IPSETUPSERVERIP=192.168.3.1
 INTER=no
 # --ci: also copy the testcases the github CI of tbottest runs
 CISETUP=no
+# --no-update: leave existing tbot and tbottest clones as they are
+UPDATE=yes
 
 while [[ $# -gt 0 ]]
 do
@@ -84,6 +99,12 @@ case $key in
     CISETUP=yes
     ;;
 
+    # do not bring existing tbot and tbottest clones up to date
+    --no-update)
+    shift # past argument
+    UPDATE=no
+    ;;
+
     # checkout specific tbottest branch
     -b|--branch)
     shift # past argument
@@ -91,10 +112,10 @@ case $key in
     shift # past argument
     ;;
 
-    # checkout specific tbottest commitid
+    # checkout specific tbottest commitid; the clone is not updated then
     -c|--commitid)
     shift # past argument
-    tbottestbranch=$1
+    tbottestcommit=$1
     shift # past argument
     ;;
 
@@ -277,20 +298,61 @@ fill_tbot_ini()
 	echo "Created ${TERMPROG} console and ${SELECTPOWERCTRL} powerctrl setup"
 }
 
+# $1 directory of an existing clone
+# $2 url
+# $3 branch
+# Bring the clone to the state of the branch at the url: nothing to do if it
+# is there already, a fast forward if the clone has neither commits of its
+# own nor local changes. Otherwise only say why not, no local work is lost.
+update_repo()
+{
+	local dir=$1 url=$2 branch=$3 head new
+
+	if ! git -C "${dir}" rev-parse --git-dir > /dev/null 2>&1; then
+		echo "${dir}: not a git repository, not updated"
+		return 0
+	fi
+	if ! git -C "${dir}" fetch -q "${url}" "${branch}"; then
+		echo "${dir}: fetching ${branch} from ${url} failed, not updated" >&2
+		return 0
+	fi
+	head=$(git -C "${dir}" rev-parse HEAD)
+	new=$(git -C "${dir}" rev-parse FETCH_HEAD)
+	if [ "${head}" == "${new}" ]; then
+		echo "${dir}: up to date with ${branch} of ${url}"
+	elif ! git -C "${dir}" merge-base --is-ancestor HEAD FETCH_HEAD; then
+		echo "${dir}: has commits not in ${branch} of ${url}, not updated" >&2
+	elif [ -n "$(git -C "${dir}" status --porcelain --untracked-files=no)" ]; then
+		echo "${dir}: has local changes, not updated" >&2
+	else
+		git -C "${dir}" merge -q --ff-only FETCH_HEAD
+		echo "${dir}: updated to ${branch} of ${url} ($(git -C "${dir}" rev-parse --short HEAD))"
+	fi
+}
+
 ## clone and create repos
 TBOTEXISTS=no
 if [ -d tbot ];then
 	TBOTEXISTS=yes
-	echo "Found existing tbot diretory, do nothing with it!"
-	echo "Please check if it has the patches applied"
+	if [ "${UPDATE}" == "yes" ];then
+		update_repo tbot "${tboturl}" "${tbotbranch}"
+	else
+		echo "Found existing tbot directory, not updated (--no-update)"
+	fi
 else
-	git clone $tboturl tbot
+	git clone -b "${tbotbranch}" "${tboturl}" tbot
 fi
 
 TBOTTESTEXISTS=no
 if [ -d tbottest ];then
 	TBOTTESTEXISTS=yes
-	echo "Found existing tbottest diretory, do nothing with it!"
+	if [ -n "${tbottestcommit}" ];then
+		echo "Found existing tbottest directory, not updated (-c ${tbottestcommit})"
+	elif [ "${UPDATE}" == "yes" ];then
+		update_repo tbottest "${tbottesturl}" "${tbottestbranch}"
+	else
+		echo "Found existing tbottest directory, not updated (--no-update)"
+	fi
 else
 	git clone $tbottesturl tbottest
 fi
@@ -304,16 +366,8 @@ fi
 
 if [ "$TBOTTESTEXISTS" == "no" ];then
 	cd tbottest
-	git checkout $tbottestbranch
+	git checkout ${tbottestcommit:-$tbottestbranch}
 	git checkout -b "devel"
-	cd ..
-fi
-
-if [ "$TBOTEXISTS" == "no" ];then
-	cd tbot
-	git checkout $tbottag
-	git checkout -b "devel"
-	git am ../tbottest/patches/$tbottag/00*
 	cd ..
 fi
 

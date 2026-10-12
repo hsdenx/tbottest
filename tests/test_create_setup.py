@@ -103,22 +103,33 @@ POWERS = {
 }
 
 
-def run_setup(tmp_path, answers, inter=True, ci=False):
-    if not (tmp_path / "tbot").exists():
+def run_setup(tmp_path, answers, inter=True, ci=False, update=False, args=(), env=None, tbot=True):
+    """
+    Run create_setup.sh in tmp_path. Unless tbot is False, an empty tbot
+    directory stands in for the clone; tbottest is a symlink to this
+    checkout. Without update, --no-update keeps the script from fetching
+    anything into them.
+    """
+    if tbot and not (tmp_path / "tbot").exists():
         os.mkdir(tmp_path / "tbot")
+    if not (tmp_path / "tbottest").exists():
         os.symlink(REPO, tmp_path / "tbottest")
-    args = ["bash", SCRIPT]
+    cmd = ["bash", SCRIPT]
     if inter:
-        args.append("--inter")
+        cmd.append("--inter")
     if ci:
-        args.append("--ci")
+        cmd.append("--ci")
+    if not update:
+        cmd.append("--no-update")
+    cmd += list(args)
     return subprocess.run(
-        args,
+        cmd,
         cwd=tmp_path,
         input="".join(a + "\n" for a in answers),
         capture_output=True,
         text=True,
         timeout=60,
+        env=dict(os.environ, **(env or {})),
     )
 
 
@@ -334,3 +345,127 @@ def test_ci_option_copies_the_ci_testcases(tmp_path):
         f for f in os.listdir(template) if os.path.isfile(os.path.join(template, f))
     )
     assert "tbfoonoeth $con.ci.tests.all" in res.stdout
+
+
+# updating existing clones: a local repository stands in for the tbot
+# branch; tbottest is pinned with -c, so nothing is fetched into this
+# checkout
+
+GIT_ENV = {
+    "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t",
+    "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t",
+}
+BRANCH = "v0.10.10-emb"
+
+
+def git(cwd, *args):
+    return subprocess.run(
+        ["git", *args], cwd=cwd, check=True, capture_output=True, text=True,
+        env=dict(os.environ, **GIT_ENV),
+    ).stdout.strip()
+
+
+def make_remote(tmp_path):
+    """repository with two commits on BRANCH; returns (path, first, second)"""
+    remote = tmp_path / "remote"
+    os.mkdir(remote)
+    git(remote, "init", "-q", "-b", BRANCH)
+    (remote / "f").write_text("1\n")
+    git(remote, "add", "f")
+    git(remote, "commit", "-q", "-m", "one")
+    first = git(remote, "rev-parse", "HEAD")
+    (remote / "f").write_text("2\n")
+    git(remote, "commit", "-q", "-am", "two")
+    return remote, first, git(remote, "rev-parse", "HEAD")
+
+
+def clone_at(tmp_path, remote, commit):
+    git(tmp_path, "clone", "-q", "-b", BRANCH, str(remote), "tbot")
+    git(tmp_path / "tbot", "reset", "-q", "--hard", commit)
+    return tmp_path / "tbot"
+
+
+def run_update(tmp_path, remote):
+    return run_setup(
+        tmp_path, [], inter=False, update=True, args=["-c", "HEAD"],
+        env={"TBOT_URL": str(remote), "TBOT_BRANCH": BRANCH},
+    )
+
+
+def test_update_fast_forwards_tbot(tmp_path):
+    remote, first, second = make_remote(tmp_path)
+    tbot = clone_at(tmp_path, remote, first)
+    res = run_update(tmp_path, remote)
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert git(tbot, "rev-parse", "HEAD") == second
+    assert f"tbot: updated to {BRANCH}" in res.stdout
+
+
+def test_update_keeps_an_up_to_date_tbot(tmp_path):
+    remote, first, second = make_remote(tmp_path)
+    tbot = clone_at(tmp_path, remote, second)
+    res = run_update(tmp_path, remote)
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert git(tbot, "rev-parse", "HEAD") == second
+    assert f"tbot: up to date with {BRANCH}" in res.stdout
+
+
+def test_update_keeps_own_commits(tmp_path):
+    remote, first, second = make_remote(tmp_path)
+    tbot = clone_at(tmp_path, remote, first)
+    (tbot / "g").write_text("mine\n")
+    git(tbot, "add", "g")
+    git(tbot, "commit", "-q", "-m", "mine")
+    mine = git(tbot, "rev-parse", "HEAD")
+    res = run_update(tmp_path, remote)
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert git(tbot, "rev-parse", "HEAD") == mine
+    assert "tbot: has commits not in" in res.stderr
+
+
+def test_update_keeps_local_changes(tmp_path):
+    remote, first, second = make_remote(tmp_path)
+    tbot = clone_at(tmp_path, remote, first)
+    (tbot / "f").write_text("changed\n")
+    res = run_update(tmp_path, remote)
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert git(tbot, "rev-parse", "HEAD") == first
+    assert (tbot / "f").read_text() == "changed\n"
+    assert "tbot: has local changes" in res.stderr
+
+
+def test_pinned_tbottest_is_not_updated(tmp_path):
+    remote, first, second = make_remote(tmp_path)
+    clone_at(tmp_path, remote, second)
+    res = run_update(tmp_path, remote)
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert "tbottest directory, not updated (-c HEAD)" in res.stdout
+
+
+def test_no_update_leaves_tbot_alone(tmp_path):
+    remote, first, second = make_remote(tmp_path)
+    tbot = clone_at(tmp_path, remote, first)
+    res = run_setup(
+        tmp_path, [], inter=False,
+        env={"TBOT_URL": str(remote), "TBOT_BRANCH": BRANCH},
+    )
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert git(tbot, "rev-parse", "HEAD") == first
+    assert "tbot directory, not updated (--no-update)" in res.stdout
+
+
+def test_new_tbot_is_cloned_from_the_branch(tmp_path):
+    remote, first, second = make_remote(tmp_path)
+    res = run_setup(
+        tmp_path, [], inter=False, tbot=False,
+        env={"TBOT_URL": str(remote), "TBOT_BRANCH": BRANCH},
+    )
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert git(tmp_path / "tbot", "rev-parse", "HEAD") == second
+    assert git(tmp_path / "tbot", "rev-parse", "--abbrev-ref", "HEAD") == BRANCH
+
+
+def test_tbot_directory_without_git_is_left_alone(tmp_path):
+    res = run_setup(tmp_path, [], inter=False, update=True, args=["-c", "HEAD"])
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert "tbot: not a git repository, not updated" in res.stdout
