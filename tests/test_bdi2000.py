@@ -240,6 +240,34 @@ LOAD_CMD = "load 0x00100000 amc/20261001/musl/u-boot-ram.bin bin"
 LOAD_STARTED = "Loading amc/20261001/musl/u-boot-ram.bin , please wait ....\n"
 
 
+def test_reset_waits_for_an_init_list_starting_after_the_prompt():
+    # the prompt comes before the init list: the load must not read it
+    ch = FakeChannel(answers=[
+        "reset\n- TARGET: processing user reset request\n"
+        "- TARGET: resetting target passed\n",
+        "",
+        LOAD_STARTED + "Loading program file passed\n",
+    ])
+    ch.expect_text = (
+        "\n- TARGET: processing target init list ....\n"
+        "- TARGET: processing target init list passed\n"
+    )
+    bdi = FakeBDI(ch)
+    with ch.with_prompt(bdi2000.BDI2000_PROMPT):
+        out = bdi.exec("reset")
+        assert "init list passed" in out
+        assert "Loading program file passed" in bdi.exec(LOAD_CMD)
+    assert ch.sent == ["reset", "", LOAD_CMD]
+
+
+def test_reset_without_init_list_goes_on():
+    ch = FakeChannel(answers=["reset\n- TARGET: resetting target passed\n"])
+    bdi = FakeBDI(ch)
+    with ch.with_prompt(bdi2000.BDI2000_PROMPT):
+        bdi.exec("reset")
+    assert ch.sent == ["reset"]
+
+
 def test_failed_load_raises_and_stops_the_command_list():
     ch = FakeChannel(answers=[LOAD_STARTED + "# Cannot open file on host\n", ""])
     bdi = FakeBDI(ch)

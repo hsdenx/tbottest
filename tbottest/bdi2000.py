@@ -89,6 +89,8 @@ class BDI2000Shell(shell.Shell):
 
     # seconds to wait for the end of the target init list
     init_list_timeout = 30.0
+    # seconds a reset may take after its prompt to start the init list
+    init_list_start_timeout = 2.0
 
     @contextlib.contextmanager
     def _init_shell(self) -> typing.Iterator:
@@ -114,6 +116,8 @@ class BDI2000Shell(shell.Shell):
             self.ch.sendline(cmd)
             with self.ch.with_stream(ev, show_prompt=False):
                 out = self.ch.read_until_prompt()
+                if cmd.split()[:1] == ["reset"] and INIT_LIST_STARTED not in out:
+                    out += self._wait_late_init_list()
                 out += self._wait_init_list(out)
             ev.data["stdout"] = out
         for err in BDI_ERRORS:
@@ -122,6 +126,38 @@ class BDI2000Shell(shell.Shell):
         if cmd.split()[:1] == ["load"] and LOAD_PASSED not in out:
             raise RuntimeError(f"BDI2000 command '{cmd}' failed: {out.strip()}")
         return out
+
+    def _wait_late_init_list(self) -> str:
+        """
+        After a reset, the BDI may print its prompt before it starts the
+        target init list. Wait a short time for the start, then for the end
+        of the list, and get a fresh prompt: without it, the next command
+        reads the init list instead of its own answer.
+
+        :returns: what the BDI printed for the init list, "" if it did not
+            start within init_list_start_timeout
+        """
+        try:
+            res = self.ch.expect(
+                [INIT_LIST_STARTED], timeout=self.init_list_start_timeout
+            )
+        except TimeoutError:
+            return ""
+        more = res.before + str(res.match) + res.after
+        if INIT_LIST_DONE.search(more) is None:
+            res = self.ch.expect(
+                ["init list passed", "init list failed"],
+                timeout=self.init_list_timeout,
+            )
+            more += res.before + str(res.match) + res.after
+        try:
+            while True:
+                self.ch.read(timeout=0.5)
+        except TimeoutError:
+            pass
+        self.ch.sendline("")
+        self.ch.read_until_prompt(timeout=10)
+        return more
 
     def _wait_init_list(self, out: str) -> str:
         """
