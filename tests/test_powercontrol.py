@@ -1,12 +1,14 @@
 """
 Unit tests for tbottest/powercontrol.py's GpiopmControl,
-PowerShellScriptControl, ShellyControl, SispmControl and TM021Control.
+PowerShellScriptControl, ShellyControl, SispmControl, TboxHwdaemonControl
+and TM021Control.
 
 GpiopmControl is tested against a stub tbot_contrib.gpio.Gpio (the
 real one talks to a live /sys/class/gpio, see conftest's
-install_gpio_stub). PowerShellScriptControl/ShellyControl/SispmControl are
-tested via a FakeExecHost that just records exec0() calls, since they are
-pure one-liners with no cached/lazily-initialized state.
+install_gpio_stub). PowerShellScriptControl/ShellyControl/SispmControl
+and TboxHwdaemonControl are tested via a FakeExecHost that just records
+exec0() calls, since they are pure one-liners with no
+cached/lazily-initialized state.
 TM021Control's copy_script()/poweron()/poweroff() are tested against
 a real temp directory (via a small linux.Path stand-in scoped to
 tmp_path) and a FakeHost that only understands enough of exec0() to
@@ -375,6 +377,42 @@ class TestSispmControl:
     def test_poweroff_respects_nopoweroff_flag(self, monkeypatch):
         monkeypatch.setattr(powercontrol.time, "sleep", lambda s: None)
         ctl = make_sispm_control()
+        sys.modules["tbot"].flags = {"nopoweroff"}
+        ctl.poweroff()
+        assert ctl.host.commands == []
+
+
+def make_hwdaemon_control(name="amc", configfile=None):
+    attrs = {"hwdaemon_boardname": name, "host": FakeExecHost()}
+    if configfile is not None:
+        attrs["hwdaemon_configfile"] = configfile
+    return type("Ctl", (powercontrol.TboxHwdaemonControl,), attrs)()
+
+
+class TestTboxHwdaemonControl:
+    def test_poweron_calls_hwdamon_dut_power_on(self):
+        ctl = make_hwdaemon_control()
+        ctl.poweron()
+        assert ctl.host.commands == [
+            ("hwdamon-dut-power", "-f", "/etc/hwdaemon.json", "on", "amc")
+        ]
+
+    def test_poweroff_calls_hwdamon_dut_power_off(self):
+        ctl = make_hwdaemon_control()
+        ctl.poweroff()
+        assert ctl.host.commands == [
+            ("hwdamon-dut-power", "-f", "/etc/hwdaemon.json", "off", "amc")
+        ]
+
+    def test_configfile_and_slot_number(self):
+        ctl = make_hwdaemon_control(name="2", configfile="/tmp/hwd.json")
+        ctl.poweron()
+        assert ctl.host.commands == [
+            ("hwdamon-dut-power", "-f", "/tmp/hwd.json", "on", "2")
+        ]
+
+    def test_poweroff_respects_nopoweroff_flag(self):
+        ctl = make_hwdaemon_control()
         sys.modules["tbot"].flags = {"nopoweroff"}
         ctl.poweroff()
         assert ctl.host.commands == []

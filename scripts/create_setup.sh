@@ -62,6 +62,8 @@ POWERTFCHANNEL=1
 
 TBOXPOWERPIN=P1_5V_EN
 
+TBOXHWDAEMONBOARDNAME=dut0
+
 SHELLYDEVICE=192.168.1.86
 SHELLYID=0
 
@@ -135,7 +137,7 @@ declare -A consolesection=(
 	[scriptcom]=SCRIPTCOM
 	[telnet]=TELNET
 )
-powerctrls=("gpio" "sispmctrl" "shell" "shelly" "tinkerforge" "tbox" "tm021")
+powerctrls=("gpio" "sispmctrl" "shell" "shelly" "tinkerforge" "tbox" "tbox-hwdaemon" "tm021")
 declare -A powersection=(
 	[gpio]=GPIOPMCTRL
 	[sispmctrl]=SISPMCTRL
@@ -143,6 +145,7 @@ declare -A powersection=(
 	[shelly]=SHELLY
 	[tinkerforge]=TF
 	[tbox]=TBOX
+	[tbox-hwdaemon]=TBOX_HWDAEMON
 	[tm021]=TM021
 )
 
@@ -251,6 +254,8 @@ ask_tbot_ini()
 		ask POWERTFCHANNEL "channel"
 	elif [ "${SELECTPOWERCTRL}" == "tbox" ]; then
 		ask TBOXPOWERPIN "tbox power pin"
+	elif [ "${SELECTPOWERCTRL}" == "tbox-hwdaemon" ]; then
+		ask TBOXHWDAEMONBOARDNAME "hwdamon DUT name or slot number"
 	elif [ "${SELECTPOWERCTRL}" == "tm021" ]; then
 		ask TM021DEVICE "tm021 device"
 		ask TM021BAUDRATE "tm021 baudrate"
@@ -275,7 +280,7 @@ fill_tbot_ini()
 		TELNETHOST TELNETPORT TELNETDELAY \
 		POWERGPIOPIN POWERGPIOSTATE POWERSHELLSCRIPTNAME \
 		SISPMCTRLMAC SISPMCTRLPORT POWERTFUID POWERTFCHANNEL \
-		TBOXPOWERPIN SHELLYDEVICE SHELLYID \
+		TBOXPOWERPIN TBOXHWDAEMONBOARDNAME SHELLYDEVICE SHELLYID \
 		TM021DEVICE TM021BAUDRATE TM021TIMEOUT TM021ADDRESS TM021PORT TM021DEBUG; do
 		sed -i "s|@@${v}@@|${!v}|g" "${filename}"
 	done

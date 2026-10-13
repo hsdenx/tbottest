@@ -331,6 +331,7 @@ class IniTBotConfig(metaclass=_Singleton):
         self.tinkerforce = False
         self.tm021 = False
         self.tbox = False
+        self.tboxhwdaemon = False
         self.shelly = False
         for s in self.config_parser.sections():
             if "IPSETUP" in s:
@@ -490,6 +491,8 @@ class IniTBotConfig(metaclass=_Singleton):
                 self.tm021 = True
             if f"TBOX_{bn}" in s:
                 self.tbox = True
+            if f"TBOX_HWDAEMON_{bn}" in s:
+                self.tboxhwdaemon = True
             if f"SHELLY_{bn}" in s:
                 self.shelly = True
 

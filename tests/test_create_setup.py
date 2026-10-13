@@ -88,6 +88,11 @@ POWERS = {
         ["P2_12V_EN"],
         {"powerpin": "P2_12V_EN"},
     ),
+    "tbox-hwdaemon": (
+        "TBOX_HWDAEMON",
+        ["amc"],
+        {"boardname": "amc"},
+    ),
     "tm021": (
         "TM021",
         ["/dev/relais2", "115200", "7", "2", "3", "True"],

@@ -226,6 +226,23 @@ class boardTboxControl(powercontrol.TboxCtrlControl):
             tbox_pid = int(_pid, 0) if _pid else None
 
 
+class boardTboxHwdaemonControl(powercontrol.TboxHwdaemonControl):
+    def power_check(self) -> bool:
+        if "poweroffonstart" in tbot.flags:
+            self.poweroff()
+
+        return True
+
+    bn = ini.generic_get_boardname()
+    cfg = f"TBOX_HWDAEMON_{bn}"
+    for s in cfgt.config_parser.sections():
+        if cfg == s:
+            hwdaemon_boardname = cfgt.config_parser.get(s, "boardname")
+            _configfile = cfgt.config_parser.get(s, "configfile", fallback=None)
+            if _configfile:
+                hwdaemon_configfile = _configfile
+
+
 class boardTMControl(powercontrol.TM021Control):
     def power_check(self) -> bool:
         if "poweroffonstart" in tbot.flags:
@@ -275,6 +292,8 @@ else:
         BOARDCTL = boardTMControl
     elif cfgt.tbox:
         BOARDCTL = boardTboxControl
+    elif cfgt.tboxhwdaemon:
+        BOARDCTL = boardTboxHwdaemonControl
     elif cfgt.shelly:
         BOARDCTL = boardShellyControl
     else:

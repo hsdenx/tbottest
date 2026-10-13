@@ -14,6 +14,7 @@ __all__ = (
     "ShellyControl",
     "SispmControl",
     "TboxCtrlControl",
+    "TboxHwdaemonControl",
     "TinkerforgeControl",
     "TM021Control",
 )
@@ -405,6 +406,64 @@ class TboxCtrlControl(board.PowerControl):
             return
 
         self._tbox_ctrl("set", self.tbox_powerpin, "off")
+
+
+class TboxHwdaemonControl(board.PowerControl):
+    """
+    control Power On/off through hwdamon-dut-power, the client of the
+    hwdamon REST API on a tbox lab host
+
+    The DUT is given by the name hwdamon knows it under (or its slot
+    number, 1-4); hwdamon-dut-power runs on the lab host with the
+    hwdamon configuration file, from which it issues its own token.
+
+    **Example**: (board config)
+
+    .. code-block:: python
+
+        from tbot.machine import board
+        from tbottest.powercontrol import TboxHwdaemonControl
+
+        class MyControl(TboxHwdaemonControl, board.Board):
+            hwdaemon_boardname = "amc"
+    """
+
+    @property
+    @abc.abstractmethod
+    def hwdaemon_boardname(self) -> str:
+        """
+        name (or slot number) of the DUT in hwdamon, e.g. "amc"
+
+        This property is **required**.
+        """
+        raise Exception("abstract method")
+
+    @property
+    def hwdaemon_configfile(self) -> str:
+        """
+        hwdamon configuration file on the lab host, passed to
+        hwdamon-dut-power with -f. Default: /etc/hwdaemon.json
+        """
+        return "/etc/hwdaemon.json"
+
+    def _hwdaemon(self, state: str) -> str:
+        return self.host.exec0(
+            "hwdamon-dut-power",
+            "-f",
+            self.hwdaemon_configfile,
+            state,
+            self.hwdaemon_boardname,
+        )
+
+    def poweron(self) -> None:
+        self._hwdaemon("on")
+
+    def poweroff(self) -> None:
+        if "nopoweroff" in tbot.flags:
+            tbot.log.message("Do not power off ...")
+            return
+
+        self._hwdaemon("off")
 
 
 class TinkerforgeControl(board.PowerControl):

@@ -10,6 +10,7 @@ are:
 - :py:class:`~tbottest.powercontrol.ShellyControl` - Power using a Shelly device through `shelly-ctrl`_.
 - :py:class:`~tbottest.powercontrol.SispmControl` - Power using `sispmctl`_.
 - :py:class:`~tbottest.powercontrol.TboxCtrlControl` - Power using `tbox-ctrl`_.
+- :py:class:`~tbottest.powercontrol.TboxHwdaemonControl` - Power using ``hwdamon-dut-power`` on a tbox lab host.
 - :py:class:`~tbottest.powercontrol.TinkerforgeControl` - Power using `tinkerforge`_.
 - :py:class:`~tbottest.powercontrol.TM021Control` - Power using DH Electronic TM-021 4-fach Relaismodul `dh`_.
 
@@ -33,6 +34,9 @@ are:
 
 .. autoclass:: tbottest.powercontrol.TboxCtrlControl
    :members: tbox_powerpin, tbox_vid, tbox_pid
+
+.. autoclass:: tbottest.powercontrol.TboxHwdaemonControl
+   :members: hwdaemon_boardname, hwdaemon_configfile
 
 .. autoclass:: tbottest.powercontrol.TinkerforgeControl
    :members: channel, uid

@@ -49,7 +49,7 @@ Example run
     picocom device: /dev/ttyUSB0
     picocom delay after exit: 3
     picocom noreset (True|False): True
-    Select power switch method for the board (gpio|sispmctrl|shell|shelly|tinkerforge|tbox|tm021): sispmctrl
+    Select power switch method for the board (gpio|sispmctrl|shell|shelly|tinkerforge|tbox|tbox-hwdaemon|tm021): sispmctrl
     Sispmctl MAC: 01:01:4f:09:5b
     Sispmctl Port: 1
     Created picocom console and sispmctrl powerctrl setup

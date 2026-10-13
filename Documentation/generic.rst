@@ -59,6 +59,7 @@ Power control with:
 * a shell script, see `[POWERSHELLSCRIPT_BOARDNAME]`_
 * a Shelly device through shelly-ctrl, see `[SHELLY_BOARDNAME]`_
 * a tbox SYSTEM Controller Modul through tbox-ctrl (USB HID), see `[TBOX_BOARDNAME]`_
+* a tbox lab host through hwdamon-dut-power, see `[TBOX_HWDAEMON_BOARDNAME]`_
 * the DH electronics TM-021 relay module, see `[TM021_BOARDNAME]`_
 
 Loading SPL/U-Boot after power on, or a debugger, with:
@@ -464,6 +465,25 @@ Here as example wandboard.
         "powerpin", "tbox-firmware pin to switch for this board", "P1_5V_EN"
         "vid", "optional USB VID override for tbox-ctrl", "0x1209"
         "pid", "optional USB PID override for tbox-ctrl", "0x0001"
+
+[TBOX_HWDAEMON_BOARDNAME]
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you want to control boards power on a tbox lab host whose power
+outputs belong to hwdamon: tbot runs on the lab host
+
+``hwdamon-dut-power -f <configfile> on|off <boardname>``
+
+:py:meth:`tbottest.powercontrol.TboxHwdaemonControl`
+
+replace BOARDNAME with the name of your board!
+Here as example amc.
+
+.. csv-table:: [TBOX_HWDAEMON_amc]
+        :header: "key", "value", "example"
+
+        "boardname", "name of the DUT in hwdamon, or its slot number (1-4)", "amc"
+        "configfile", "optional hwdamon configuration file on the lab host, default /etc/hwdaemon.json", "/etc/hwdaemon.json"
 
 [TM021_BOARDNAME]
 ^^^^^^^^^^^^^^^^^
