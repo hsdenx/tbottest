@@ -13,6 +13,7 @@ from tbottest.bdi2000 import BDI2000
 from tbottest import builders
 from tbottest import powercontrol
 from tbottest import machineinit
+from tbottest.cmdversions import CmdVersionsMixin
 from tbottest.common.boardlocking import lab_get_lock
 from tbottest.common.labinit import lab_init_once
 from tbottest.common.labinit import labinit_from_config
@@ -476,8 +477,10 @@ else:
 BH = typing.TypeVar("BH", bound=linux.Builder)
 
 
-class GenericLab(CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
+class GenericLab(CmdVersionsMixin, CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
     sectionname = LABSECTIONNAME
+    # preset for cmd_get_version(), see tbottest.cmdversions
+    cmd_versions_config = ini.init_lab_get_config(cfgt.config_parser, "cmd_versions", None)
     tmpdir_exists = False
     nfsbasedir = True
     nfsboardbasedir = True

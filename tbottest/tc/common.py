@@ -1206,6 +1206,38 @@ def lnx_create_file(
         act = linux.Raw(">>")
 
 
+@tbot.testcase
+def lnx_cmd_versions(
+    lnx: linux.LinuxShell,
+    cmds: typing.Optional[List[str]] = None,
+    autoinstall: bool = False,
+    keyindent: str = "",
+) -> typing.Dict[str, str]:
+    """
+    find out on lnx which implementation and version the commands have
+    (cmd_get_version() of tbot, asked again even if known), and log them
+    as line for the ini key cmd_versions, see tbottest.cmdversions
+
+    :param lnx: linux machine
+    :param cmds: list of commands, default TBOTTEST_COMMANDS from
+        tbottest.cmdversions (the commands the testcases of tbottest use)
+    :param autoinstall: install missing commands where the system can
+    :param keyindent: indentation of the key in its ini section, see
+        cmd_versions_to_config() in tbottest.cmdversions
+    :returns: dictionary command -> version string
+    """
+    # imported here, so the module loads without the tbottest package
+    # (unit tests)
+    from tbottest.cmdversions import TBOTTEST_COMMANDS, cmd_versions_to_config
+
+    versions = {}
+    for cmd in cmds or TBOTTEST_COMMANDS:
+        version = lnx.cmd_get_version(cmd, autoinstall=autoinstall, refresh=True)
+        versions[cmd] = str(version)
+    tbot.log.message(cmd_versions_to_config(versions, keyindent))
+    return versions
+
+
 def common_install_debian(
     lnx: linux.LinuxShell,
     package,

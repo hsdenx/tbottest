@@ -215,6 +215,7 @@ For login with ssh key set key 'sshkeyfile', for password login set key 'passwor
         "labinit", "array of strings which contains commands, executed when you init the lab. They run once per boot of the lab host, marked by /tmp/tbotlabinitdone; the setup of the board's ethernet devices on the lab host runs once per board, marked by /tmp/tbotlabinitdone-<boardname>. Remove a marker to run its part again", "['sudo systemctl --all --no-pager restart tftpd-hpa']"
         "nfs_base_path", "base path to nfs share on lab host. !! May you have board specific subdir, so use placeholder @@TBOTLABBASENFSPATH@@ in board ini file and replace it in set_board_cfg", "/srv/nfs"
         "uselocking", "use board locking mechanism. You must pass correct locking id for the board with tbot flag lablocking:<lockingid> else tbot will fail.", "yes|no"
+        "cmd_versions", "optional, preset of cmd_get_version() for the lab host, see `command versions`_", "{""top"": ""busybox:1.37.0"", ""ip"": ""iproute2:6.19.0""}"
 
 The above labhost defintion is the default one, You can add more than
 one labhost, simply add them with the following section naming
@@ -959,6 +960,7 @@ settings needed for linux testcases.
         "linux_boot_timeout", "Maximum time for Linux to reach the login prompt.", "None", "30"
         "linux_init_timeout", "If not None, timeout in seconds after ethernetconfig", "None", "2.0"
         "linux_netcmd", "command the ethernet setup after login uses: auto takes ip if the board has it (checked once with cmd_get_version(""ip"") of tbot), else ifconfig; ip or ifconfig always take that one. The flag useifconfig takes ifconfig in any case", "auto", "ifconfig"
+        "cmd_versions", "preset of cmd_get_version() for the board, see `command versions`_", "None", "{""top"": ""procps-ng:4.0.6"", ""devmem2"": ""notfound""}"
         "linux_init","list of commands send after login. mode = exec or exec0","[]","[{""mode"":""exec0"", ""cmd"":""echo Hallo""}]"
         "testdir", "directory on the board for what testcases put there; in the root filesystem if a testcase puts files there through an NFS root", "/run/tbot-testdata/tbottests", "/home/root/tbottests"
         "shelltype", "linux login shell type (bash|ash)", "ash", "bash"
@@ -987,6 +989,53 @@ settings needed for linux testcases.
         "ub_mtd_delete","list of strings with MTD names which are allowed to delete","[]","ub_mtd_delete = [""SPL"", ""uboot""]"
         "ssh_keyfile","ssh setup: authentication using private key file ssh_keyfile","None","/home/{user}/.ssh/id_rsa"
         "ssh_password","ssh setup: set password for password ssh login","None","foobar"
+
+command versions
+^^^^^^^^^^^^^^^^
+
+The output of a command depends on where it comes from. ``top`` of
+busybox prints other columns than ``top`` of procps-ng, busybox has
+``devmem`` where a full system has ``devmem2``. tbot finds this out with
+``cmd_get_version(cmd)`` of a linux machine, once per machine, and returns
+a ``CmdVersion`` whose ``str()`` is ``<implementation>:<version>``, for
+example ``busybox:1.37.0``, ``procps-ng:4.0.6`` or ``notfound``.
+Testcases of tbottest use it instead of checks of their own (process
+measurement with top and ps, ``lx_devmem2_get``, iperf, ``lnx_netcmd``).
+
+Key ``cmd_versions`` presets the answers, so tbot does not have to find
+them out on every run. It goes into section ``[LABHOST]`` (or
+``[LABHOST_<labname>]``) of tbot.ini for the lab host and into ``[TC]``
+(or ``[TC_<boardname>]``) of the board ini for the board. A command that
+is not in it is found out as before. A value a testcase sets with
+``cmd_versions_set()`` wins over the ini file.
+
+.. code-block:: ini
+
+    cmd_versions = {
+        "top": "procps-ng:4.0.6",
+        "devmem": "busybox:1.37.0",
+        "devmem2": "notfound",
+        }
+
+One command per line works, as configparser takes every line indented
+deeper than the key as continuation of the value. In ``[TC]`` of the
+board ini template the keys are indented by four spaces, so the commands
+need eight.
+
+The testcase :py:func:`tbottest.tc.generic_board.generic_cmd_versions`
+finds out the commands tbottest uses on the lab host and on the board and
+logs the line for each, ready to copy into the ini files. Run it again
+when the root filesystem or the lab host changes.
+
+``cmd_get_version(cmd, autoinstall=True)`` installs a missing command on
+Debian and Ubuntu (apt-get) and on Fedora (dnf), with sudo unless logged
+in as root. A system without a known package manager, like a root
+filesystem built with Yocto, keeps ``notfound``. The tbot flag
+``cmd_versions_install`` makes ``generic_cmd_versions`` install missing
+commands.
+
+.. automodule:: tbottest.cmdversions
+   :members:
 
 
 swupdate settings
@@ -1224,6 +1273,7 @@ boardfile                format boardfile:<path>, the board ini file, relative t
 boardname                format boardname:<name>, name of the board, used when boardspecific.py does not define board_set_boardname()
 bootcmd                  format bootcmd:<real bootcmd>, example bootcmd:net_nfs will execute "run net_nfs"
 buildername              format buildername:<name>, select the used build host, section BUILDHOST_<name> in tbot.ini; buildername:local builds on the host tbot runs on
+cmd_versions_install     generic_cmd_versions installs missing commands where the system can (Debian, Ubuntu, Fedora), see `command versions`_
 cmdtimestamp             prefix each command log line with a H:M:S timestamp, e.g. [boardname 07:22:26]
 dfuutilloader            load SPL/U-Boot with dfu-util tool
 do_power                 tbot handles boards power

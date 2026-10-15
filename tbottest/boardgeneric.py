@@ -16,6 +16,7 @@ from tbottest.dynamicimport import get_boardmodule_import
 from tbottest.dynamicimport import get_boardmodulepath_import
 from tbottest.tc.network import lnx_set_ethdevice
 from tbottest.tc.common import lnx_sudo
+from tbottest.cmdversions import CmdVersionsMixin
 
 try:
     set_ub_board_specific = getattr(get_boardmodule_import(), "set_ub_board_specific")
@@ -412,8 +413,21 @@ class _WorkdirTmpdirMixin:
         return linux.Workdir.static(self, board_testdir())
 
 
+class _BoardCmdVersions(CmdVersionsMixin):
+    """
+    preset for cmd_get_version() of the board, key cmd_versions in the
+    board ini, see tbottest.cmdversions
+    """
+
+    cmd_versions_config = cfg.get_config("cmd_versions", "None")
+
+
 class GenericLinuxBoot(
-    _WorkdirTmpdirMixin, board.LinuxUbootConnector, board.LinuxBootLogin, BOARD_LINUX_SHELL
+    _BoardCmdVersions,
+    _WorkdirTmpdirMixin,
+    board.LinuxUbootConnector,
+    board.LinuxBootLogin,
+    BOARD_LINUX_SHELL,
 ):
     name = f"{ini.generic_get_boardname()}-linux"
 
@@ -524,7 +538,7 @@ class GenericLinuxBoot(
 
 
 class GenericLinuxBootwithoutUBootwithoutLogin(
-    _WorkdirTmpdirMixin, board.Connector, BOARD_LINUX_SHELL
+    _BoardCmdVersions, _WorkdirTmpdirMixin, board.Connector, BOARD_LINUX_SHELL
 ):
     """
     removed init function as we have an already running board, so we
@@ -539,7 +553,11 @@ class GenericLinuxBootwithoutUBootwithoutLogin(
 
 
 class GenericLinuxBootwithoutUBoot(
-    _WorkdirTmpdirMixin, board.Connector, board.LinuxBootLogin, BOARD_LINUX_SHELL
+    _BoardCmdVersions,
+    _WorkdirTmpdirMixin,
+    board.Connector,
+    board.LinuxBootLogin,
+    BOARD_LINUX_SHELL,
 ):
     name = f"{ini.generic_get_boardname()}-linux"
 
@@ -560,7 +578,9 @@ class GenericLinuxBootwithoutUBoot(
         lnx_set_ethdevices(self, cfglab.ethdevices[ini.generic_get_boardname()])
 
 
-class GenericLinuxAlwaysOn(_WorkdirTmpdirMixin, board.Connector, BOARD_LINUX_SHELL):
+class GenericLinuxAlwaysOn(
+    _BoardCmdVersions, _WorkdirTmpdirMixin, board.Connector, BOARD_LINUX_SHELL
+):
     name = f"{ini.generic_get_boardname()}-linux-on"
 
     cfgp = cfg
@@ -587,7 +607,7 @@ if "nouboot" in tbot.flags:
         GenericLinux = GenericLinuxBootwithoutUBoot
 
 
-class GenericSSH(_WorkdirTmpdirMixin, connector.SSHConnector, linux.Ash):
+class GenericSSH(_BoardCmdVersions, _WorkdirTmpdirMixin, connector.SSHConnector, linux.Ash):
     hostname: str = None  # type: ignore
     username = "root"
     ignore_hostkey = True

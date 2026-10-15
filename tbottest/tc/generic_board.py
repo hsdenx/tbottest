@@ -7,6 +7,7 @@ from tbottest.tc.common import lnx_check_beeper
 from tbottest.tc.common import lnx_check_cmd
 from tbottest.tc.common import lnx_check_dmesg
 from tbottest.tc.common import lnx_check_revfile
+from tbottest.tc.common import lnx_cmd_versions
 from tbottest.tc.common import lnx_create_revfile
 from tbottest.tc.common import lx_devmem2_get
 from tbottest.tc.cpu import generic_get_socname
@@ -372,6 +373,40 @@ lnxtestcases = [
 
 
 @tbot.testcase
+def generic_cmd_versions(
+    lab: Optional[linux.LinuxShell] = None,
+    lnx: Optional[linux.LinuxShell] = None,
+) -> None:  # noqa: D107
+    """
+    find out which implementation and version the commands tbottest uses
+    have on the lab host and on the board, and log a line for the ini key
+    cmd_versions for each, see :py:mod:`tbottest.cmdversions`
+
+    The line for the lab host goes into section [LABHOST] (or
+    [LABHOST_<labname>]) of tbot.ini, the one for the board into section
+    [TC] (or [TC_<boardname>]) of <boardname>.ini.
+
+    With tbot flag cmd_versions_install missing commands are installed
+    where the system can (Debian, Ubuntu, Fedora).
+
+    :param lab: lab host
+    :param lnx: linux machine of the board
+    """
+    autoinstall = "cmd_versions_install" in tbot.flags
+    with tbot.ctx() as cx:
+        if lab is None:
+            lab = cx.request(tbot.role.LabHost)
+        tbot.log.message(tbot.log.c("lab host, tbot.ini section [LABHOST]").green)
+        lnx_cmd_versions(lab, autoinstall=autoinstall)
+
+        if lnx is None:
+            lnx = cx.request(tbot.role.BoardLinux)
+        tbot.log.message(tbot.log.c("board, <boardname>.ini section [TC]").green)
+        # keys in [TC] of the board ini template are indented
+        lnx_cmd_versions(lnx, autoinstall=autoinstall, keyindent="    ")
+
+
+@tbot.testcase
 def generic_lnx_all(
     lnx: Optional[linux.LinuxShell] = None,
 ) -> None:  # noqa: D107
@@ -607,6 +642,7 @@ def generic_kas_all(
 
 
 FLAGS = {
+    "cmd_versions_install": "generic_cmd_versions: install missing commands where possible",
     "kasskipcheckout": "skip kas checkout step",
     "kaskeepconfig": (
         "kas: keep repo checkouts and build/conf unchanged (kas "
