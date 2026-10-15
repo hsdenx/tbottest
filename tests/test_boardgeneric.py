@@ -157,3 +157,131 @@ class TestBoardTestdir:
     def test_from_board_ini(self):
         mod = load_board_testdir({"testdir": "/home/root/tbottests"})
         assert mod.board_testdir() == "/home/root/tbottests"
+
+
+class FakeConfigParser:
+    """sections -> ordered dict of key -> value, as configparser returns them"""
+
+    def __init__(self, sections):
+        self.sections = sections
+
+    def has_section(self, section):
+        return section in self.sections
+
+    def options(self, section):
+        return list(self.sections[section])
+
+    def get(self, section, key):
+        return self.sections[section][key]
+
+
+def load_ub_env():
+    mod = Funcs()
+    for name in ("ub_env_groups", "ub_env_select"):
+        part = load_definition(
+            f"tbottest_boardgeneric_{name}_only",
+            BOARDGENERIC_PATH,
+            name,
+            extra_src="import ast",
+        )
+        setattr(mod, name, getattr(part, name))
+    return mod
+
+
+def env(*names):
+    return str([{"name": n, "val": n.upper()} for n in names])
+
+
+GROUPS = {
+    "setip": [{"name": "ipaddr", "val": "1"}],
+    "uimageboot": [{"name": "load_uimage", "val": "2"}],
+    "nfsboot": [{"name": "net_nfs", "val": "3"}],
+    "fitboot": [{"name": "net_fit", "val": "4"}],
+}
+DEPENDS = {
+    "uimageboot": ["setip"],
+    "nfsboot": ["setip", "uimageboot"],
+    "fitboot": ["setip"],
+}
+
+
+class TestUbEnvGroups:
+    def test_groups_from_tc_in_ini_order(self):
+        ub = load_ub_env()
+        cp = FakeConfigParser(
+            {
+                "TC": {
+                    "ub_env": env("console"),
+                    "ub_env_setip": env("ipaddr"),
+                    "ub_env_depends": "{}",
+                    "ub_env_fitboot": env("net_fit"),
+                    "uboot_prompt": "=> ",
+                }
+            }
+        )
+        groups = ub.ub_env_groups(cp, "amc")
+        assert list(groups) == ["setip", "fitboot"]
+        assert groups["setip"] == [{"name": "ipaddr", "val": "IPADDR"}]
+
+    def test_board_section_hides_tc(self):
+        ub = load_ub_env()
+        cp = FakeConfigParser(
+            {
+                "TC_amc": {"ub_env_setip": env("serverip")},
+                "TC": {"ub_env_setip": env("ipaddr"), "ub_env_fitboot": env("net_fit")},
+            }
+        )
+        groups = ub.ub_env_groups(cp, "amc")
+        assert groups["setip"] == [{"name": "serverip", "val": "SERVERIP"}]
+        assert "fitboot" in groups
+
+    def test_no_groups(self):
+        ub = load_ub_env()
+        cp = FakeConfigParser({"TC": {"ub_env": env("console")}})
+        assert ub.ub_env_groups(cp, "amc") == {}
+
+
+class TestUbEnvSelect:
+    def test_without_flag_all_groups_dependencies_first(self):
+        ub = load_ub_env()
+        order = ub.ub_env_select(GROUPS, DEPENDS, [])
+        assert sorted(order) == sorted(GROUPS)
+        assert order.index("setip") < order.index("uimageboot") < order.index("nfsboot")
+        assert order.index("setip") < order.index("fitboot")
+
+    def test_selection_adds_dependencies(self):
+        ub = load_ub_env()
+        assert ub.ub_env_select(GROUPS, DEPENDS, ["ub_env:fitboot"]) == ["setip", "fitboot"]
+
+    def test_dependencies_over_two_levels(self):
+        ub = load_ub_env()
+        order = ub.ub_env_select(GROUPS, DEPENDS, ["ub_env:nfsboot"])
+        assert order == ["setip", "uimageboot", "nfsboot"]
+
+    def test_each_group_once_in_flag_order(self):
+        ub = load_ub_env()
+        order = ub.ub_env_select(GROUPS, DEPENDS, ["ub_env:fitboot,nfsboot"])
+        assert order == ["setip", "fitboot", "uimageboot", "nfsboot"]
+
+    def test_none(self):
+        ub = load_ub_env()
+        assert ub.ub_env_select(GROUPS, DEPENDS, ["ub_env:none"]) == []
+
+    def test_unknown_group_in_flag(self):
+        ub = load_ub_env()
+        with pytest.raises(RuntimeError, match="ub_env:fitbot: unknown group"):
+            ub.ub_env_select(GROUPS, DEPENDS, ["ub_env:fitbot"])
+
+    def test_unknown_group_in_depends(self):
+        ub = load_ub_env()
+        with pytest.raises(RuntimeError, match="unknown group 'kernel'"):
+            ub.ub_env_select(GROUPS, {"nfsboot": ["kernel"]}, [])
+
+    def test_cycle(self):
+        ub = load_ub_env()
+        with pytest.raises(RuntimeError, match="cycle setip -> fitboot -> setip"):
+            ub.ub_env_select(GROUPS, {"setip": ["fitboot"], "fitboot": ["setip"]}, ["ub_env:setip"])
+
+    def test_no_groups_no_flag(self):
+        ub = load_ub_env()
+        assert ub.ub_env_select({}, {}, []) == []

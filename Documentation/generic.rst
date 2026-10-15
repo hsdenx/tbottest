@@ -889,7 +889,38 @@ settings needed for U-Boot testcases.
         "fb_res_setup", "u-boot commands for setting up rescue image boot with fastboot and uuu tool", "None", "run ramargs addcon addmtd addopt"
         "fb_res_boot", "u-boot command for booting rescue image with fastboot and uuu tool", "None", "bootm 94000000"
         "fb_cmd", "fastboot init command", "None", "fastboot usb 0"
-        "ub_env","list dict of u-boot environment variables which get set after login into u-boot","[]","[{""name"":""optargs"", ""val"":""earlycon clk_ignore_unused""}]"
+        "ub_env","list dict of u-boot environment variables which get set after login into u-boot, always, before the ub_env_<name> groups","[]","[{""name"":""optargs"", ""val"":""earlycon clk_ignore_unused""}]"
+        "ub_env_<name>","a group of u-boot environment variables, same format as ub_env, set after ub_env when selected with the tbot flag ub_env (all groups without the flag), see `ub_env groups`_","None","ub_env_setip = [{""name"":""ipaddr"", ""val"":""192.168.3.20""}]"
+        "ub_env_depends","dictionary group name to the list of groups it needs; a selected group pulls them in, and they are set before it","{}","{""nfsboot"": [""setip""]}"
+
+ub_env groups
+^^^^^^^^^^^^^
+
+Besides ``ub_env``, which is always set, the board ini can hold groups
+``ub_env_<name>`` of U-Boot environment variables.
+
+The tbot flag ``ub_env:<group>[,<group>...]`` selects the groups to set,
+for example only the network settings, so the default environment of
+U-Boot stays as it is otherwise. Without the flag all groups are set, as
+if they were one ``ub_env``. ``ub_env:none`` sets only ``ub_env``.
+
+``ub_env_depends`` names the groups a group depends on. An unknown group,
+in the flag or in ``ub_env_depends``, and a cycle in the dependencies
+stop tbot with an error that lists the known groups. Group names are
+lower case, as configparser stores keys.
+
+.. code-block:: ini
+
+    ub_env = [{"name":"console", "val":"ttyCPM0,115200"}]
+    ub_env_setip = [{"name":"serverip", "val":"192.168.3.1"}, \
+      {"name":"ipaddr", "val":"192.168.3.20"}]
+    ub_env_fitboot = [{"name":"load_fit", "val":"tftp 1000000 fitImage"}, \
+      {"name":"net_fit", "val":"run load_fit; bootm 1000000"}]
+    ub_env_depends = {"fitboot": ["setip"]}
+
+With these, ``-f ub_env:setip`` sets ``console``, ``serverip`` and
+``ipaddr``; ``-f ub_env:fitboot`` sets ``console``, then ``setip``, then
+``fitboot``.
 
 .. csv-table:: uboot_autoboot_keys example
         :escape: '
@@ -1221,6 +1252,7 @@ telnet                   use telnet for serial console
 tftpfit                  u-boot bootcmd "run tftp_mmc" (deprecated, use flag bootcmd)
 tinkerforge              use tinkerforge for boards power control
 tmpfilepath              format tmpfilepath:<directory>, where tbot writes its copies of tbot.ini and the board ini; default next to them
+ub_env                   format ub_env:<group>[,<group>...], set ub_env and only these ub_env_<group> groups of the board ini, with the groups they depend on (ub_env_depends); ub_env:none sets none of the groups; default all groups, see `ub_env groups`_
 uboot_no_env_set         do not set any U-Boot Environment after U-Boot login
 usbloader                load SPL/U-Boot with imx_usb_loader
 useifconfig              use ifconfig instead of ip on every machine, also over linux_netcmd of the board ini

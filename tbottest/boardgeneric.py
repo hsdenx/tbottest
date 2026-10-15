@@ -220,13 +220,91 @@ class GenericUBoot(
         if "nobootcon" in tbot.flags:
             self.env("console", "silent")
 
-        env = self.cfgp.get_config("ub_env", "[]")
-        envvalues = ast.literal_eval(env)
+        # ub_env always, then the selected ub_env_<name> groups, each
+        # after the groups it depends on
+        envvalues = ast.literal_eval(self.cfgp.get_config("ub_env", "[]"))
+        groups = ub_env_groups(self.cfgp.config_parser, ini.generic_get_boardname())
+        depends = ast.literal_eval(self.cfgp.get_config("ub_env_depends", "{}"))
+        for name in ub_env_select(groups, depends, tbot.flags):
+            envvalues = envvalues + groups[name]
         for ev in envvalues:
             self.env(ev["name"], ev["val"])
 
         if set_ub_board_specific:
             set_ub_board_specific(self)
+
+
+def ub_env_groups(config_parser, boardname: str) -> dict:
+    """
+    the U-Boot environment groups ub_env_<name> of the board ini
+
+    Read from [TC_<boardname>] first, then [TC], like every other key; a
+    group in [TC_<boardname>] hides one of the same name in [TC]. The
+    names are lower case, as configparser stores keys.
+
+    :param config_parser: configparser of the board ini
+    :param boardname: name of the board
+    :returns: dictionary group name -> list of {"name": .., "val": ..},
+        in the order of the ini
+    """
+    groups = {}
+    for section in (f"TC_{boardname}", "TC"):
+        if not config_parser.has_section(section):
+            continue
+        for key in config_parser.options(section):
+            if not key.startswith("ub_env_") or key == "ub_env_depends":
+                continue
+            name = key[len("ub_env_") :]
+            if name not in groups:
+                groups[name] = ast.literal_eval(config_parser.get(section, key))
+    return groups
+
+
+def ub_env_select(groups: dict, depends: dict, flags) -> list:
+    """
+    the ub_env_<name> groups to set, in the order to set them
+
+    The tbot flag ub_env:<name>[,<name>...] selects groups, ub_env:none
+    selects none; without the flag all groups are selected. The groups
+    a selected group depends on (ub_env_depends) are added, and every
+    group comes after the groups it depends on, each group once.
+
+    :param groups: the groups, see ub_env_groups()
+    :param depends: dictionary group name -> list of group names it
+        depends on
+    :param flags: the tbot flags
+    :returns: list of group names
+    """
+    known = sorted(groups)
+    unknown = [n for name, deps in depends.items() for n in [name, *deps] if n not in groups]
+    if unknown:
+        raise RuntimeError(f"ub_env_depends: unknown group {unknown[0]!r}, known are {known}")
+
+    flag = next((f.split(":", 1)[1] for f in flags if f.startswith("ub_env:")), None)
+    if flag is None:
+        wanted = list(groups)
+    else:
+        wanted = [n.strip() for n in flag.split(",") if n.strip()]
+    if wanted == ["none"]:
+        return []
+    unknown = [n for n in wanted if n not in groups]
+    if unknown:
+        raise RuntimeError(f"ub_env:{unknown[0]}: unknown group, known are {known}")
+
+    order = []
+
+    def add(name, path):
+        if name in order:
+            return
+        if name in path:
+            raise RuntimeError(f"ub_env_depends: cycle {' -> '.join(path + [name])}")
+        for dep in depends.get(name, []):
+            add(dep, path + [name])
+        order.append(name)
+
+    for n in wanted:
+        add(n, [])
+    return order
 
 
 def lnx_root_on_nfs(lnx) -> bool:
@@ -538,4 +616,6 @@ FLAGS = {
     "no-bootfit": 'with ssh, read the board IP from "ip route get 1" output with two spaces before src',
     "noboardethinit": "no ethernet setup of the board in linux after login",
     "uboot_no_env_set": "do not set any U-Boot environment after U-Boot login",
+    "ub_env": "ub_env:<group>[,<group>...] sets ub_env and only these ub_env_<group> "
+    "groups of the board ini (with the groups they depend on), ub_env:none none of them",
 }
