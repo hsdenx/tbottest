@@ -16,7 +16,7 @@ def lnx_netcmd(lnx: linux.LinuxShell, prefer: str = "auto") -> str:
 
     :param lnx: linux machine
     :param prefer: auto (default): ip if lnx has it, else ifconfig, checked
-        once per machine (by its name) with "command -v ip", not with the
+        with cmd_get_version("ip") of tbot (once per machine), not with the
         exit code of "ip --help", which iproute2 ends with 255 and busybox
         with 0. ip or ifconfig: that one, without a check.
 
@@ -35,7 +35,7 @@ def lnx_netcmd(lnx: linux.LinuxShell, prefer: str = "auto") -> str:
     elif prefer in NETCMDS:
         netcmd = prefer
     elif prefer == "auto":
-        netcmd = "ip" if lnx.test("command", "-v", "ip") else "ifconfig"
+        netcmd = "ip" if lnx.cmd_get_version("ip").found else "ifconfig"
     else:
         raise RuntimeError(f"netcmd {prefer}: must be auto, ip or ifconfig")
     _NETCMD[key] = netcmd
@@ -358,20 +358,10 @@ def _check_iperf_installed(
     """
     check if iperf3 is installed on lnx machine
 
-    If try_install try to install it if not
+    If try_install try to install it if not, see install_package() in
+    tbottest.cmdversions
     """
-    ret, out = lnx.exec("iperf3", "-v")
-    if not ret:
-        return True
-
-    if not try_install:
-        return False
-
-    # Try to install iperf3 on OS; imported here, as tbottest.tc.common
-    # imports from this module
-    from tbottest.tc.common import lnx_install_package
-
-    return lnx_install_package(lnx, "iperf3")
+    return lnx.cmd_get_version("iperf3", autoinstall=try_install).found
 
 
 @tbot.testcase
@@ -416,8 +406,7 @@ def network_linux_iperf(
     # lnx.exec0("chmod", "+x", iperf)
     # check on labhost, if iperf server runs
     # if not start it
-    ret = lnxh.exec0("ls", "-al", "/bin/ps")
-    if "busybox" in ret:
+    if lnxh.cmd_get_version("ps").is_busybox:
         ret = lnxh.exec0("ps", linux.Pipe, "grep", toolname)
     else:
         ret = lnxh.exec0("ps", "afx", linux.Pipe, "grep", toolname)

@@ -22,7 +22,7 @@ import tempfile
 
 import pytest
 
-from conftest import install_fake_initconfig, load_module
+from conftest import fake_cmd_get_version, install_fake_initconfig, load_module
 
 install_fake_initconfig()
 
@@ -33,9 +33,16 @@ common = load_module(
 
 
 class FakeLinuxShell:
-    def __init__(self):
+    cmd_get_version = fake_cmd_get_version
+
+    def __init__(self, missing=()):
         self.commands = []
         self.responses = {}
+        # commands "command -v" does not find
+        self.missing = set(missing)
+
+    def test(self, *args):
+        return not (args[:2] == ("command", "-v") and args[2] in self.missing)
 
     def _respond(self, key):
         for prefix, out in self.responses.items():
@@ -98,6 +105,29 @@ class TestLxDevmem2Get:
         lnx = FakeLinuxShell()
         lnx.responses[("devmem2",)] = "garbage output"
         with pytest.raises(RuntimeError, match="unexpected output"):
+            common.lx_devmem2_get(lnx, "0x1000", "w")
+
+    @pytest.mark.parametrize("typ,width", [("b", "8"), ("h", "16"), ("w", "32")])
+    def test_devmem_without_devmem2(self, typ, width):
+        lnx = FakeLinuxShell(missing={"devmem2"})
+        lnx.responses[("devmem",)] = "0x01610440\n"
+        assert common.lx_devmem2_get(lnx, "0xfff00000", typ) == "0x01610440"
+        assert lnx.commands == [("devmem", "0xfff00000", width)]
+
+    def test_devmem2_preferred(self):
+        lnx = FakeLinuxShell()
+        lnx.responses[("devmem2",)] = "Value at address 0x1000 (0x1000): 0x12"
+        common.lx_devmem2_get(lnx, "0x1000", "w")
+        assert lnx.commands == [("devmem2", "0x1000", "w")]
+
+    def test_devmem_type_not_supported(self):
+        lnx = FakeLinuxShell(missing={"devmem2"})
+        with pytest.raises(RuntimeError, match="type l not supported"):
+            common.lx_devmem2_get(lnx, "0x1000", "l")
+
+    def test_neither_devmem2_nor_devmem(self):
+        lnx = FakeLinuxShell(missing={"devmem2", "devmem"})
+        with pytest.raises(RuntimeError, match="neither devmem2 nor devmem"):
             common.lx_devmem2_get(lnx, "0x1000", "w")
 
 

@@ -12,7 +12,7 @@ import sys
 
 import pytest
 
-from conftest import install_fake_initconfig, install_real_submodule, load_module
+from conftest import fake_cmd_get_version, install_fake_initconfig, install_real_submodule, load_module
 
 install_fake_initconfig()
 # one module object for the tests, network.py and can.py (which import
@@ -49,6 +49,8 @@ class FakeShell:
 
     def exec(self, *args):
         return 0, self.exec0(*args)
+
+    cmd_get_version = fake_cmd_get_version
 
     def test(self, *args):
         # lnx_netcmd(): "command -v ip" finds ip

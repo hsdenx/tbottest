@@ -267,6 +267,10 @@ def lnx_measure_process(
 
     If there is no such process ```values``` entry is empty
     """
+    ps = lnx.cmd_get_version("ps")
+    if ps.is_busybox:
+        raise RuntimeError(f"lnx_measure_process does not work with ps of {ps}")
+
     i = 0
     result = []
     while i < int(loops):
@@ -297,12 +301,10 @@ def is_busybox(
 ) -> bool:  # noqa: D107
     """
     detect if we have a busybox version of command ```cmd```
-    """
-    ret, log = lnx.exec(linux.Raw(f"ls -al {lnx.escape(cmd)} | grep busybox"))
-    if ret == 0:
-        return True
 
-    return False
+    uses cmd_get_version() of tbot, so it is found out once per machine
+    """
+    return lnx.cmd_get_version(cmd).is_busybox
 
 
 def lnx_measure_top(
@@ -324,7 +326,7 @@ def lnx_measure_top(
     # CPU:   2% usr   2% sys   0% nic  95% idle   0% io   0% irq   0% sirq
     #   PID  PPID USER     STAT   VSZ %VSZ %CPU COMMAND
     loop = loops + 1
-    busybox = is_busybox(lnx, "/usr/bin/top")
+    busybox = is_busybox(lnx, "top")
     if busybox:
         log = lnx.exec0(
             linux.Raw(

@@ -150,6 +150,10 @@ def lx_cmd_exists(
     return False
 
 
+# devmem2 type -> width argument of devmem
+DEVMEM_WIDTH = {"b": "8", "h": "16", "w": "32"}
+
+
 @tbot.testcase
 def lx_devmem2_get(
     lnx: linux.LinuxShell,
@@ -157,14 +161,25 @@ def lx_devmem2_get(
     typ: str,
 ) -> str:
     """
-    use devmem2 to read value from addr
+    use devmem2 to read value from addr, or devmem (busybox) if the
+    machine has no devmem2
 
     :param lnx: Linux machine we run on
     :param addr: address we act on
     :param type: | devmem2 type
         | access operation type : [b]yte, [h]alfword, [w]ord, [l]ong
+        | devmem knows b, h and w only (width 8, 16, 32)
     :return: value
     """
+    if not lnx.cmd_get_version("devmem2").found:
+        if not lnx.cmd_get_version("devmem").found:
+            raise RuntimeError("neither devmem2 nor devmem found")
+        width = DEVMEM_WIDTH.get(typ)
+        if width is None:
+            raise RuntimeError(f"devmem: type {typ} not supported, use one of b/h/w")
+        # devmem prints the value only, e.g. "0x01610440"
+        return lnx.exec0("devmem", addr, width).strip().splitlines()[-1].strip()
+
     strings = ["Value at address", "Read at address"]
     ret = lnx.exec0("devmem2", addr, typ).splitlines()
     for line in ret:

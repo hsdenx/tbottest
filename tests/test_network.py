@@ -8,7 +8,7 @@ import os
 
 import pytest
 
-from conftest import load_module
+from conftest import FakeCmdVersion, fake_cmd_get_version, load_module
 
 network = load_module(
     "tbottest_tc_network",
@@ -29,6 +29,8 @@ class FakeShell:
         self.name = name
         self.missing = set(missing)
         self.calls = []
+
+    cmd_get_version = fake_cmd_get_version
 
     def test(self, *args):
         self.calls.append(("test",) + args)
@@ -346,3 +348,24 @@ class TestNetworkUp:
         with pytest.raises(RuntimeError, match="Could not bring up"):
             network.lnx_network_up(lnx, "eth0", "192.168.3.20", "192.168.3.1", 2)
         assert len([c for c in lnx.commands_run() if c[0] == "ping"]) == 2
+
+
+class TestCheckIperfInstalled:
+    class Shell:
+        def __init__(self, impl):
+            self.impl = impl
+            self.asked = []
+
+        def cmd_get_version(self, cmd, autoinstall=False):
+            self.asked.append((cmd, autoinstall))
+            return FakeCmdVersion(self.impl)
+
+    def test_installed(self):
+        lnx = self.Shell("iperf3:3.21")
+        assert network._check_iperf_installed(lnx) is True
+        assert lnx.asked == [("iperf3", True)]
+
+    def test_missing_without_install(self):
+        lnx = self.Shell("notfound")
+        assert network._check_iperf_installed(lnx, try_install=False) is False
+        assert lnx.asked == [("iperf3", False)]

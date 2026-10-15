@@ -282,6 +282,38 @@ def install_fake_initbotconfig(sections: dict):
     return cp
 
 
+class FakeCmdVersion:
+    """stands in for tbot.machine.linux.CmdVersion in the fake shells"""
+
+    def __init__(self, impl: str) -> None:
+        self.impl = impl
+
+    @property
+    def found(self) -> bool:
+        return self.impl != "notfound"
+
+    @property
+    def is_busybox(self) -> bool:
+        return self.impl == "busybox"
+
+    def __str__(self) -> str:
+        return self.impl
+
+
+def fake_cmd_get_version(shell, cmd: str, autoinstall: bool = False):
+    """
+    cmd_get_version() of tbot for a fake shell, as method of the fake
+    class (cmd_get_version = fake_cmd_get_version). The command is
+    there if shell.test("command", "-v", cmd) says so, and busybox if it
+    is in shell.busybox.
+    """
+    if not shell.test("command", "-v", cmd):
+        return FakeCmdVersion("notfound")
+    if cmd in getattr(shell, "busybox", ()):
+        return FakeCmdVersion("busybox")
+    return FakeCmdVersion("full")
+
+
 def load_module(name: str, path: str):
     """
     Import a single module directly from its file path, bypassing

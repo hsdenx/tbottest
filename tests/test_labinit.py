@@ -14,7 +14,7 @@ import sys
 
 import pytest
 
-from conftest import load_module
+from conftest import fake_cmd_get_version, load_module
 
 labinit = load_module(
     "tbottest_common_labinit",
@@ -59,6 +59,8 @@ class FakeLab:
         # IPv4 address per device, as "ip -4 addr show" / ifconfig report it
         self.addrs = addrs or {}
         self.log = []
+
+    cmd_get_version = fake_cmd_get_version
 
     def test(self, *args):
         return args[:2] == ("command", "-v") and args[2] == self.netcmd

@@ -13,7 +13,7 @@ import os
 
 import pytest
 
-from conftest import load_definition, load_module
+from conftest import fake_cmd_get_version, load_definition, load_module
 
 BOARDGENERIC_PATH = os.path.join(
     os.path.dirname(__file__), "..", "tbottest", "boardgeneric.py"
@@ -50,6 +50,8 @@ class FakeShell:
     def __init__(self, commands):
         self.commands = commands
         self.calls = []
+
+    cmd_get_version = fake_cmd_get_version
 
     def test(self, *args):
         self.calls.append(("test",) + args)

@@ -6,7 +6,9 @@ needed.
 
 import os
 
-from conftest import install_fake_initconfig, install_real_submodule, load_module
+import pytest
+
+from conftest import FakeCmdVersion, install_fake_initconfig, install_real_submodule, load_module
 
 install_fake_initconfig()
 install_real_submodule(
@@ -111,3 +113,38 @@ class TestPsParseTop:
         assert len(result) == 1
         assert result[0]["cpu_system"]["USER"] == "2"
         assert result[0]["values"][0]["CMD"] == "init"
+
+
+class VersionShell:
+    """shell whose commands have the implementation in impls"""
+
+    def __init__(self, impls):
+        self.impls = impls
+        self.asked = []
+        self.calls = []
+
+    def cmd_get_version(self, cmd, autoinstall=False):
+        self.asked.append(cmd)
+        return FakeCmdVersion(self.impls.get(cmd, "notfound"))
+
+    def exec0(self, *args):
+        self.calls.append(args)
+        return ""
+
+
+class TestCmdVersion:
+    def test_is_busybox(self):
+        lnx = VersionShell({"top": "busybox"})
+        assert process.is_busybox(lnx, "top") is True
+        assert process.is_busybox(lnx, "ps") is False
+
+    def test_measure_process_refuses_busybox_ps(self):
+        lnx = VersionShell({"ps": "busybox"})
+        with pytest.raises(RuntimeError, match="does not work with ps of busybox"):
+            process.lnx_measure_process(lnx, "sshd", 0, 1)
+        assert lnx.calls == []
+
+    def test_measure_process_with_procps(self):
+        lnx = VersionShell({"ps": "procps-ng:4.0.6"})
+        assert process.lnx_measure_process(lnx, "sshd", 0, 1) == [{"loop": 0, "values": []}]
+        assert lnx.calls == [("ps", "-o", "pid,tid,pcpu,nice,priority,comm", "H", "-C", "sshd")]
