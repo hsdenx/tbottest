@@ -177,7 +177,7 @@ class FakeConfigParser:
 
 def load_ub_env():
     mod = Funcs()
-    for name in ("ub_env_groups", "ub_env_select"):
+    for name in ("ub_env_groups", "ub_env_check_groups", "ub_env_select"):
         part = load_definition(
             f"tbottest_boardgeneric_{name}_only",
             BOARDGENERIC_PATH,
@@ -185,6 +185,8 @@ def load_ub_env():
             extra_src="import ast",
         )
         setattr(mod, name, getattr(part, name))
+    # ub_env_select() calls ub_env_check_groups() by its global name
+    mod.ub_env_select.__globals__["ub_env_check_groups"] = mod.ub_env_check_groups
     return mod
 
 
@@ -214,6 +216,7 @@ class TestUbEnvGroups:
                     "ub_env": env("console"),
                     "ub_env_setip": env("ipaddr"),
                     "ub_env_depends": "{}",
+                    "ub_env_bootcmd": "{}",
                     "ub_env_fitboot": env("net_fit"),
                     "uboot_prompt": "=> ",
                 }
@@ -285,3 +288,47 @@ class TestUbEnvSelect:
     def test_no_groups_no_flag(self):
         ub = load_ub_env()
         assert ub.ub_env_select({}, {}, []) == []
+
+
+BOOTCMDS = {"net_fit": ["fitboot"], "net_nfs": ["nfsboot"]}
+
+
+class TestUbEnvBootcmd:
+    def test_bootcmd_selects_its_groups(self):
+        ub = load_ub_env()
+        order = ub.ub_env_select(GROUPS, DEPENDS, ["bootcmd:net_fit"], BOOTCMDS)
+        assert order == ["setip", "fitboot"]
+
+    def test_bootcmd_with_dependencies(self):
+        ub = load_ub_env()
+        order = ub.ub_env_select(GROUPS, DEPENDS, ["bootcmd:net_nfs"], BOOTCMDS)
+        assert order == ["setip", "uimageboot", "nfsboot"]
+
+    def test_bootcmd_without_mapping_selects_all(self):
+        ub = load_ub_env()
+        order = ub.ub_env_select(GROUPS, DEPENDS, ["bootcmd:net_initramfs"], BOOTCMDS)
+        assert sorted(order) == sorted(GROUPS)
+
+    def test_union_with_ub_env_flag(self):
+        ub = load_ub_env()
+        flags = ["ub_env:uimageboot", "bootcmd:net_fit"]
+        assert ub.ub_env_select(GROUPS, DEPENDS, flags, BOOTCMDS) == [
+            "setip",
+            "uimageboot",
+            "fitboot",
+        ]
+
+    def test_none_wins_over_bootcmd(self):
+        ub = load_ub_env()
+        flags = ["ub_env:none", "bootcmd:net_fit"]
+        assert ub.ub_env_select(GROUPS, DEPENDS, flags, BOOTCMDS) == []
+
+    def test_unknown_group_in_bootcmd(self):
+        ub = load_ub_env()
+        with pytest.raises(RuntimeError, match="ub_env_bootcmd: unknown group 'fit'"):
+            ub.ub_env_select(GROUPS, DEPENDS, [], {"net_fit": ["fit"]})
+
+    def test_bootcmd_key_is_no_group(self):
+        ub = load_ub_env()
+        cp = FakeConfigParser({"TC": {"ub_env_bootcmd": str(BOOTCMDS)}})
+        assert ub.ub_env_groups(cp, "amc") == {}

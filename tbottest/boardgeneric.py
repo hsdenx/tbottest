@@ -225,7 +225,8 @@ class GenericUBoot(
         envvalues = ast.literal_eval(self.cfgp.get_config("ub_env", "[]"))
         groups = ub_env_groups(self.cfgp.config_parser, ini.generic_get_boardname())
         depends = ast.literal_eval(self.cfgp.get_config("ub_env_depends", "{}"))
-        for name in ub_env_select(groups, depends, tbot.flags):
+        bootcmds = ast.literal_eval(self.cfgp.get_config("ub_env_bootcmd", "{}"))
+        for name in ub_env_select(groups, depends, tbot.flags, bootcmds):
             envvalues = envvalues + groups[name]
         for ev in envvalues:
             self.env(ev["name"], ev["val"])
@@ -252,7 +253,7 @@ def ub_env_groups(config_parser, boardname: str) -> dict:
         if not config_parser.has_section(section):
             continue
         for key in config_parser.options(section):
-            if not key.startswith("ub_env_") or key == "ub_env_depends":
+            if not key.startswith("ub_env_") or key in ("ub_env_depends", "ub_env_bootcmd"):
                 continue
             name = key[len("ub_env_") :]
             if name not in groups:
@@ -260,36 +261,58 @@ def ub_env_groups(config_parser, boardname: str) -> dict:
     return groups
 
 
-def ub_env_select(groups: dict, depends: dict, flags) -> list:
+def ub_env_check_groups(groups: dict, mapping: dict, key: str) -> None:
+    """
+    stop with an error if mapping names a group that does not exist
+
+    :param groups: the groups, see ub_env_groups()
+    :param mapping: dictionary name -> list of group names; for
+        ub_env_depends the keys are group names as well
+    :param key: name of the ini key, for the error message
+    """
+    names = [n for deps in mapping.values() for n in deps]
+    if key == "ub_env_depends":
+        names = list(mapping) + names
+    unknown = [n for n in names if n not in groups]
+    if unknown:
+        raise RuntimeError(f"{key}: unknown group {unknown[0]!r}, known are {sorted(groups)}")
+
+
+def ub_env_select(groups: dict, depends: dict, flags, bootcmds: dict = None) -> list:
     """
     the ub_env_<name> groups to set, in the order to set them
 
     The tbot flag ub_env:<name>[,<name>...] selects groups, ub_env:none
-    selects none; without the flag all groups are selected. The groups
-    a selected group depends on (ub_env_depends) are added, and every
-    group comes after the groups it depends on, each group once.
+    selects none. The flag bootcmd:<cmd> adds the groups bootcmds names
+    for <cmd> (ub_env_bootcmd). Without ub_env and without groups for the
+    boot command all groups are selected. The groups a selected group
+    depends on (ub_env_depends) are added, and every group comes after
+    the groups it depends on, each group once.
 
     :param groups: the groups, see ub_env_groups()
     :param depends: dictionary group name -> list of group names it
         depends on
     :param flags: the tbot flags
+    :param bootcmds: dictionary boot command -> list of group names
     :returns: list of group names
     """
-    known = sorted(groups)
-    unknown = [n for name, deps in depends.items() for n in [name, *deps] if n not in groups]
-    if unknown:
-        raise RuntimeError(f"ub_env_depends: unknown group {unknown[0]!r}, known are {known}")
+    bootcmds = bootcmds or {}
+    ub_env_check_groups(groups, depends, "ub_env_depends")
+    ub_env_check_groups(groups, bootcmds, "ub_env_bootcmd")
 
     flag = next((f.split(":", 1)[1] for f in flags if f.startswith("ub_env:")), None)
+    bootcmd = next((f.split(":", 1)[1] for f in flags if f.startswith("bootcmd:")), None)
+    bootgroups = list(bootcmds.get(bootcmd, []))
     if flag is None:
-        wanted = list(groups)
+        wanted = bootgroups or list(groups)
     else:
         wanted = [n.strip() for n in flag.split(",") if n.strip()]
-    if wanted == ["none"]:
-        return []
+        if wanted == ["none"]:
+            return []
+        wanted += bootgroups
     unknown = [n for n in wanted if n not in groups]
     if unknown:
-        raise RuntimeError(f"ub_env:{unknown[0]}: unknown group, known are {known}")
+        raise RuntimeError(f"ub_env:{unknown[0]}: unknown group, known are {sorted(groups)}")
 
     order = []
 
@@ -617,5 +640,6 @@ FLAGS = {
     "noboardethinit": "no ethernet setup of the board in linux after login",
     "uboot_no_env_set": "do not set any U-Boot environment after U-Boot login",
     "ub_env": "ub_env:<group>[,<group>...] sets ub_env and only these ub_env_<group> "
-    "groups of the board ini (with the groups they depend on), ub_env:none none of them",
+    "groups of the board ini (with the groups they depend on and those ub_env_bootcmd "
+    "names for the flag bootcmd), ub_env:none none of them",
 }
