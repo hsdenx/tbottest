@@ -463,18 +463,6 @@ class IniTBotConfig(metaclass=_Singleton):
         self.shelltype = init_lab_get_config(self.config_parser, "shelltype", "ash")
         self.shelltype = self.shelltype.lower()
         self.ethdevices = {}
-        self.picocom = False
-        self.kermit = False
-        self.scriptcom = False
-        self.telnet = False
-        self.sispmctrl = False
-        self.powershellscript = False
-        self.gpiopowerctrl = False
-        self.tinkerforce = False
-        self.tm021 = False
-        self.tbox = False
-        self.tboxhwdaemon = False
-        self.shelly = False
         for s in self.config_parser.sections():
             if "IPSETUP" in s:
                 nm = s.split("_")[1]
