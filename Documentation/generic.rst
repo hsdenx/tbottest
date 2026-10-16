@@ -735,6 +735,75 @@ bring the configuration file it needs:
         "poweron_wait_state", "optional target state, as info reports it, to wait for before poweron_cmds", "debug mode"
         "poweron_timeout", "seconds to wait for poweron_wait_state, and for the BDI to boot for configname:<file>, default 30", "30"
 
+.. _jsonconfiguration:
+
+JSON configuration and expressions
+..................................
+
+Instead of the two ini files, tbot reads the same configuration from two
+JSON files, if the flags ``inifile:`` and ``boardfile:`` name files that
+end in ``.json`` (both, mixing ini and JSON stops tbot):
+
+.. code-block:: bash
+
+    -f inifile:tbotconfig/BOARDNAME/tbot.json -f boardfile:tbotconfig/BOARDNAME/BOARDNAME.json
+
+A JSON file is an object of sections, each an object of keys, with the
+same names as in the ini file. A value may be a string, a number, true,
+false, null, a list or an object; tbot keeps it as the string the ini
+file would have (lists and objects as Python literal), so every testcase
+reads it as before.
+
+With JSON, tbot reads the files as they are: no copies, no ``@@...@@``
+placeholders, and no **boardspecific.py**, which is not even imported.
+What depended on flags or the environment is written as an expression
+in the file. The expressions also work in ini files, after the
+placeholders are replaced:
+
+.. csv-table:: expressions in the configuration files
+        :header: "expression", "value"
+
+        "``${env:NAME}``, ``${env:NAME:-default}``", "environment variable NAME"
+        "``${flag:NAME}``, ``${flag:NAME:-default}``", "value of the tbot flag NAME:<value>, True for a flag NAME without value"
+        "``${lab:key}``", "key of the lab section of tbot.ini or tbot.json (LABHOST or LABHOST_<labname>), in the board file"
+        "``${tbot:SECTION:key}``", "key of SECTION of tbot.ini or tbot.json, in the board file"
+
+A value that is not set and has no default stops tbot with the
+expression and the file. The default is used only when the value is not
+set. Expressions may be nested, and are replaced before configparser
+interpolates ``${key}`` and ``${section:key}`` of the same file, so a
+section can be selected by a flag:
+
+.. code-block:: json
+
+    {
+        "default": {
+            "kasvariant": "${flag:kasvariant:-musl}",
+            "kasymlname": "${KASVARIANT_${flag:kasvariant:-musl}:kasfile}",
+            "nfs_path": "${lab:nfs_base_path}/${vendor}/${machine}/${kasvariant}",
+            "serverip": "${tbot:IPSETUP_BOARDNAME_eth0:serverip}"
+        },
+        "KASVARIANT_musl": {"kasfile": "BOARDNAME-musl.yml"},
+        "KASVARIANT_glibc": {"kasfile": "BOARDNAME-glibc.yml"}
+    }
+
+Without the flag ``boardname:`` the board name comes from the key
+``board`` of the lab section of tbot.json, e.g.
+``"board": "${flag:boardname:-BOARDNAME}"``. A U-Boot variable that depends on
+a flag, what ``set_ub_board_specific()`` of **boardspecific.py** did,
+is an entry of ``ub_env`` with ``"flag"``, set only with that flag:
+
+.. code-block:: json
+
+    {"name": "console", "val": "silent", "flag": "silent"}
+
+The testcase :py:func:`tbottest.tc.generic_board.generic_config_to_json`
+writes the configuration of a run with ini files as tbot.json and
+<boardname>.json, as the start of a JSON configuration (flag
+``config_json_dir:<dir>``, default ``config-json``); with the flag
+``config_json_resolved`` it writes the values resolved, to compare two
+configurations.
+
 .. _boardspecificruntimeadaption:
 
 boardspecfic runtime adaptions
@@ -1278,6 +1347,8 @@ bootcmd                  format bootcmd:<real bootcmd>, example bootcmd:net_nfs 
 buildername              format buildername:<name>, select the used build host, section BUILDHOST_<name> in tbot.ini; buildername:local builds on the host tbot runs on
 cmd_versions_install     generic_cmd_versions installs missing commands where the system can (Debian, Ubuntu, Fedora), see `command versions`_
 cmdtimestamp             prefix each command log line with a H:M:S timestamp, e.g. [boardname 07:22:26]
+config_json_dir          format config_json_dir:<dir>, where generic_config_to_json writes tbot.json and <boardname>.json, default config-json
+config_json_resolved     generic_config_to_json writes the values resolved, as tbot reads them
 dfuutilloader            load SPL/U-Boot with dfu-util tool
 do_power                 tbot handles boards power
 docker                   if you need to login to a docker container with proxyjump

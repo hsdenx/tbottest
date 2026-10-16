@@ -1,6 +1,7 @@
 import ast
 import atexit
 import configparser
+import json
 from configparser import ExtendedInterpolation
 import tbot
 import os
@@ -249,6 +250,245 @@ def init_read_inifile(filename: str) -> configparser.RawConfigParser:
     return cfgp
 
 
+def _closing_brace(text: str, start: int) -> int:
+    """index of the "}" that closes the "${" before start, -1 if none"""
+    depth = 1
+    i = start
+    while i < len(text):
+        if text.startswith("${", i):
+            depth += 1
+            i += 2
+            continue
+        if text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                return i
+        i += 1
+    return -1
+
+
+def _flag_value(flags, name: str):
+    """value of the tbot flag name:<value>, "True" for a flag name, None"""
+    for f in flags:
+        if f == name:
+            return "True"
+        if f.startswith(name + ":"):
+            return f.split(":", 1)[1]
+    return None
+
+
+def init_config_substitute(text: str, flags, tbotcfgp=None, where: str = "") -> str:
+    """
+    returns text with the expressions of a JSON configuration replaced
+
+    - ${env:NAME} and ${env:NAME:-default}, the environment variable NAME
+    - ${flag:NAME} and ${flag:NAME:-default}, the value of the tbot flag
+      NAME:<value>, True for a flag NAME without value
+    - ${lab:key}, key of the lab section of tbot.json (LABHOST or
+      LABHOST_<labname>), only with tbotcfgp
+    - ${tbot:SECTION:key}, key of SECTION of tbot.json, only with tbotcfgp
+
+    The default is only used, and only replaced, when the value is not
+    set; without default a missing value raises RuntimeError. Expressions
+    may be nested; any other ${...} stays for the interpolation of
+    configparser (${key}, ${section:key}), with the expressions in it
+    replaced, and $$ stays as it is.
+
+    :param text: value or name from the JSON file
+    :param flags: the tbot flags
+    :param tbotcfgp: configparser of tbot.json, for ${lab:} and ${tbot:}
+    :param where: file name for the error messages
+    """
+    out = []
+    i = 0
+    while True:
+        j = text.find("$", i)
+        if j < 0:
+            out.append(text[i:])
+            return "".join(out)
+        out.append(text[i:j])
+        if text.startswith("$$", j):
+            out.append("$$")
+            i = j + 2
+            continue
+        if not text.startswith("${", j):
+            out.append("$")
+            i = j + 1
+            continue
+        k = _closing_brace(text, j + 2)
+        if k < 0:
+            raise RuntimeError(f"{where}: unbalanced ${{ in {text!r}")
+        out.append(_resolve_expression(text[j + 2 : k], flags, tbotcfgp, where))
+        i = k + 1
+
+
+def _resolve_expression(inner: str, flags, tbotcfgp, where: str) -> str:
+    """value of the expression ${<inner>}, see init_config_substitute()"""
+    kind, sep, rest = inner.partition(":")
+    if sep and kind in ("env", "flag"):
+        name, dsep, default = rest.partition(":-")
+        value = os.environ.get(name) if kind == "env" else _flag_value(flags, name)
+        if value is not None:
+            return value
+        if not dsep:
+            raise RuntimeError(f"{where}: ${{{inner}}}: {kind} {name} is not set and has no default")
+        return init_config_substitute(default, flags, tbotcfgp, where)
+    if sep and kind in ("lab", "tbot"):
+        if tbotcfgp is None:
+            raise RuntimeError(f"{where}: ${{{inner}}} works in the board file only")
+        if kind == "lab":
+            return init_lab_get_config(tbotcfgp, rest)
+        section, _, key = rest.partition(":")
+        return init_section_get_config(tbotcfgp, section, key)
+    # not ours: for the interpolation of configparser
+    return "${" + init_config_substitute(inner, flags, tbotcfgp, where) + "}"
+
+
+def _json_native(value, subst):
+    """value with the expressions in its strings replaced"""
+    if isinstance(value, str):
+        return subst(value)
+    if isinstance(value, list):
+        return [_json_native(v, subst) for v in value]
+    if isinstance(value, dict):
+        return {subst(k): _json_native(v, subst) for k, v in value.items()}
+    return value
+
+
+def init_json_value_to_str(value, subst=None) -> str:
+    """
+    returns a value of a JSON configuration as the string configparser
+    holds, as the ini file would have it
+
+    Strings stay strings, true/false become True/False, null None,
+    numbers their digits, lists and dictionaries their Python literal,
+    which the code reads with ast.literal_eval as from an ini file.
+
+    :param value: value from the JSON file
+    :param subst: function that replaces the expressions in a string,
+        see init_config_substitute()
+    """
+    subst = subst or (lambda s: s)
+    value = _json_native(value, subst)
+    if isinstance(value, str):
+        return value
+    if isinstance(value, (list, dict)):
+        return repr(value)
+    return str(value)
+
+
+def init_read_jsonfile(
+    filename: str, flags=None, tbotcfgp=None
+) -> configparser.RawConfigParser:
+    """
+    returns a configparser with the JSON configuration filename
+
+    The file holds an object of sections, each an object of keys, as the
+    ini file has them. Names and values get their expressions replaced,
+    see init_config_substitute(), values become strings, see
+    init_json_value_to_str(). configparser then interpolates ${key} and
+    ${section:key} as for an ini file.
+
+    :param filename: path of the JSON file
+    :param flags: the tbot flags, default those of the command line
+    :param tbotcfgp: configparser of tbot.json, for the board file
+    """
+    if flags is None:
+        flags = inithelper.get_tbot_flags()
+    with open(filename) as f:
+        data = json.load(f)
+    if not isinstance(data, dict) or not all(isinstance(v, dict) for v in data.values()):
+        raise RuntimeError(f"{filename}: needs an object of sections, each an object of keys")
+
+    def subst(text):
+        return init_config_substitute(text, flags, tbotcfgp, filename)
+
+    sections = {}
+    for section, keys in data.items():
+        sections[subst(section)] = {
+            subst(k): init_json_value_to_str(v, subst) for k, v in keys.items()
+        }
+    cfgp = configparser.RawConfigParser(interpolation=ExtendedInterpolation())
+    cfgp.read_dict(sections)
+    return cfgp
+
+
+def init_substitute_configparser(
+    cfgp: configparser.RawConfigParser, flags=None, tbotcfgp=None, where: str = ""
+) -> configparser.RawConfigParser:
+    """
+    returns a configparser with the expressions of init_config_substitute()
+    replaced in the section names, keys and values of cfgp, so an ini
+    file can use them as a JSON file does
+
+    :param cfgp: configparser of an ini file
+    :param flags: the tbot flags, default those of the command line
+    :param tbotcfgp: configparser of tbot.ini, for the board file
+    :param where: file name for the error messages
+    """
+    if flags is None:
+        flags = inithelper.get_tbot_flags()
+
+    def subst(text):
+        return init_config_substitute(text, flags, tbotcfgp, where)
+
+    sections = {}
+    for section in cfgp.sections():
+        sections[subst(section)] = {
+            subst(key): subst(cfgp.get(section, key, raw=True)) for key in cfgp.options(section)
+        }
+    new = configparser.RawConfigParser(interpolation=ExtendedInterpolation())
+    new.read_dict(sections)
+    return new
+
+
+def init_read_configfile(filename: str, tbotcfgp=None) -> configparser.RawConfigParser:
+    """
+    returns a configparser with the configuration file filename, JSON if
+    its name ends in .json (init_read_jsonfile()), else ini
+    (init_read_inifile()); in both the expressions of
+    init_config_substitute() are replaced
+
+    :param filename: path of the file
+    :param tbotcfgp: configparser of tbot.ini or tbot.json, for the board
+        file
+    """
+    if str(filename).endswith(".json"):
+        return init_read_jsonfile(filename, tbotcfgp=tbotcfgp)
+    return init_substitute_configparser(init_read_inifile(filename), None, tbotcfgp, filename)
+
+
+def init_config_to_json_dict(cfgp: configparser.RawConfigParser, resolved: bool = False) -> dict:
+    """
+    returns the configuration of cfgp as the object of a JSON
+    configuration, see init_read_jsonfile()
+
+    Values that are a Python list or dictionary become JSON lists and
+    objects, every other value stays a string.
+
+    :param cfgp: configparser of an ini or JSON configuration
+    :param resolved: True gives the values interpolated, as tbot reads
+        them (a reference that does not resolve stays as written); False
+        as they are written, with ${...}
+    """
+    data = {}
+    for section in cfgp.sections():
+        keys = {}
+        for key in cfgp.options(section):
+            try:
+                value = cfgp.get(section, key, raw=not resolved)
+            except configparser.InterpolationError:
+                # a reference that does not resolve stays as written
+                value = cfgp.get(section, key, raw=True)
+            try:
+                native = ast.literal_eval(value)
+            except Exception:
+                native = None
+            keys[key] = native if isinstance(native, (list, dict)) else value
+        data[section] = keys
+    return data
+
+
 def init_has_section(cfgp: configparser.RawConfigParser, section: str) -> bool:
     """
     returns True if the configparser has section
@@ -306,6 +546,16 @@ def generic_get_boardname():
         for f in tbot.flags:
             if f.startswith("boardname:"):
                 BOARDNAME = f.split(":", 1)[1]
+                return BOARDNAME
+        if inithelper.config_is_json():
+            # key board of the lab section of tbot.json, e.g.
+            # "${flag:boardname:-BOARDNAME}"
+            tbotfile = inithelper.inifile_get_tbotfilename()
+            board = init_section_get_config(
+                init_read_jsonfile(tbotfile), inithelper.get_lab_sectionname(), "board", None
+            )
+            if board:
+                BOARDNAME = board
                 return BOARDNAME
     else:
         BOARDNAME = board_set_boardname()
@@ -423,19 +673,21 @@ def find_in_file_and_delete(filename, substring):
     copy_file("output.txt", filename)
 
 
-try:
-    set_board_cfg = getattr(get_boardmodule_import(), "set_board_cfg")
-except Exception:
-    raise RuntimeError(
-        f"Please define at least a dummy set_board_config in {get_boardmodulepath_import()}"
-    )
-    set_board_cfg = None
+# a JSON configuration has its values in the files, without boardspecific.py
+set_board_cfg = None
+board_set_boardname = None
+if not inithelper.config_is_json():
+    try:
+        set_board_cfg = getattr(get_boardmodule_import(), "set_board_cfg")
+    except Exception:
+        raise RuntimeError(
+            f"Please define at least a dummy set_board_config in {get_boardmodulepath_import()}"
+        )
 
-
-try:
-    board_set_boardname = getattr(get_boardmodule_import(), "board_set_boardname")
-except Exception:
-    board_set_boardname = None
+    try:
+        board_set_boardname = getattr(get_boardmodule_import(), "board_set_boardname")
+    except Exception:
+        board_set_boardname = None
 
 
 class IniTBotConfig(metaclass=_Singleton):
@@ -445,20 +697,18 @@ class IniTBotConfig(metaclass=_Singleton):
     see: :ref:`boardspecificruntimeadaption`
     """
 
-    # must be done before init
+    # must be done before init; a JSON file is read as it is
     tbotinifile = inithelper.inifile_get_tbotfilename()
-    if set_board_cfg:
-        set_board_cfg("IniTBotConfig", tbotinifile)
-    replace_in_file(tbotinifile, "@@TBOTBOARD@@", generic_get_boardname())
+    if not tbotinifile.endswith(".json"):
+        if set_board_cfg:
+            set_board_cfg("IniTBotConfig", tbotinifile)
+        replace_in_file(tbotinifile, "@@TBOTBOARD@@", generic_get_boardname())
 
     def __init__(self):
         self.tbotinifile = inithelper.inifile_get_tbotfilename()
         self.labsectionname = inithelper.get_lab_sectionname()
         self.workdir = os.getcwd()
-        self.config_parser = configparser.RawConfigParser(
-            interpolation=ExtendedInterpolation()
-        )
-        self.config_parser.read(self.tbotinifile)
+        self.config_parser = init_read_configfile(self.tbotinifile)
         self.date = self.config_parser.get(self.labsectionname, "date")
         self.shelltype = init_lab_get_config(self.config_parser, "shelltype", "ash")
         self.shelltype = self.shelltype.lower()
@@ -618,7 +868,8 @@ class IniTBotConfig(metaclass=_Singleton):
         atexit.register(self.cleanup)
 
     def cleanup(self):
-        if os.path.exists(self.tbotinifile):
+        # only the copy of an ini file, never the JSON file itself
+        if not self.tbotinifile.endswith(".json") and os.path.exists(self.tbotinifile):
             os.remove(self.tbotinifile)
 
     def get_section_config(self, section: str, name: str, default=REQUIRED):
@@ -686,15 +937,15 @@ class IniConfig(metaclass=_Singleton):
 
     def __init__(self):
         self.workdir = os.getcwd()
-        self.config_parser = configparser.RawConfigParser(
-            interpolation=ExtendedInterpolation()
-        )
         self.filename = inithelper.inifile_get_tbotboardfilename()
-        self.config_parser.read(self.filename)
+        # ${lab:} and ${tbot:} in the board file
+        tbotcfgp = IniTBotConfig().config_parser
+        self.config_parser = init_read_configfile(self.filename, tbotcfgp)
         atexit.register(self.cleanup)
 
     def cleanup(self):
-        if os.path.exists(self.filename):
+        # only the copy of an ini file, never the JSON file itself
+        if not self.filename.endswith(".json") and os.path.exists(self.filename):
             os.remove(self.filename)
 
     def get_config(self, name: str, default: str):

@@ -11,6 +11,7 @@ import os
 # import generic lab approach
 from tbottest import labgeneric as lab
 import tbottest.initconfig as ini
+import tbottest.initconfighelper as inithelper
 from tbottest.labgeneric import cfgt as cfglab
 from tbottest.dynamicimport import get_boardmodule_import
 from tbottest.dynamicimport import get_boardmodulepath_import
@@ -18,13 +19,17 @@ from tbottest.tc.network import lnx_set_ethdevice
 from tbottest.tc.common import lnx_sudo
 from tbottest.cmdversions import CmdVersionsMixin
 
-try:
-    set_ub_board_specific = getattr(get_boardmodule_import(), "set_ub_board_specific")
-except Exception:
-    raise RuntimeError(
-        "Please define at least a dummy set_ub_board_specific in {get_boardmodulepath_import()}"
-    )
-    set_ub_board_specific = None
+# a JSON configuration does without boardspecific.py; flag dependent
+# U-Boot variables go into ub_env with "flag", see ub_env_flag_set()
+set_ub_board_specific = None
+if not inithelper.config_is_json():
+    try:
+        set_ub_board_specific = getattr(get_boardmodule_import(), "set_ub_board_specific")
+    except Exception:
+        raise RuntimeError(
+            "Please define at least a dummy set_ub_board_specific in "
+            f"{get_boardmodulepath_import()}"
+        )
 
 cfg = ini.IniConfig()
 

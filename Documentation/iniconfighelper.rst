@@ -21,3 +21,5 @@ libhelper functions
 .. autofunction:: tbottest.initconfighelper.get_tbot_flags
 
 .. autofunction:: tbottest.initconfighelper.get_tbot_arguments
+
+.. autofunction:: tbottest.initconfighelper.config_is_json

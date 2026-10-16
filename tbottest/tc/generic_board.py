@@ -4,6 +4,7 @@ from tbot.context import Optional
 
 from tbottest.boardgeneric import cfggeneric
 from tbottest.labgeneric import cfgt as cfglab
+import tbottest.initconfig as ini
 from tbottest.tc.common import lnx_check_beeper
 from tbottest.tc.common import lnx_check_cmd
 from tbottest.tc.common import lnx_check_dmesg
@@ -415,6 +416,43 @@ def generic_cmd_versions(
 
 
 @tbot.testcase
+def generic_config_to_json(outdir: Optional[str] = None) -> None:  # noqa: D107
+    """
+    write the configuration of this run as tbot.json and <boardname>.json,
+    see the JSON configuration in generic.rst
+
+    From an ini configuration, after set_board_cfg() of boardspecific.py
+    replaced the placeholders, so the files hold the values of this run
+    (e.g. of its flags); replace those with ${flag:...} or ${env:...}
+    where a value depends on them. Values keep their ${...} references,
+    with the tbot flag config_json_resolved they are written resolved, as
+    tbot reads them, to compare two configurations.
+
+    :param outdir: directory for the two files, default the tbot flag
+        config_json_dir:<dir>, else config-json in the current directory
+    """
+    import json
+    import os
+
+    if outdir is None:
+        outdir = "config-json"
+        for f in tbot.flags:
+            if f.startswith("config_json_dir:"):
+                outdir = f.split(":", 1)[1]
+    resolved = "config_json_resolved" in tbot.flags
+    os.makedirs(outdir, exist_ok=True)
+    for name, cfgp in (
+        ("tbot.json", cfglab.config_parser),
+        (f"{ini.generic_get_boardname()}.json", cfg.cfgp.config_parser),
+    ):
+        path = os.path.join(outdir, name)
+        with open(path, "w") as f:
+            json.dump(ini.init_config_to_json_dict(cfgp, resolved), f, indent=4)
+            f.write("\n")
+        tbot.log.message(tbot.log.c(f"configuration written to {path}").green)
+
+
+@tbot.testcase
 def generic_lnx_all(
     lnx: Optional[linux.LinuxShell] = None,
 ) -> None:  # noqa: D107
@@ -651,6 +689,8 @@ def generic_kas_all(
 
 FLAGS = {
     "cmd_versions_install": "generic_cmd_versions: install missing commands where possible",
+    "config_json_dir": "config_json_dir:<dir> generic_config_to_json: directory for the files",
+    "config_json_resolved": "generic_config_to_json: write the values resolved",
     "kasskipcheckout": "skip kas checkout step",
     "kaskeepconfig": (
         "kas: keep repo checkouts and build/conf unchanged (kas "

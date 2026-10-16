@@ -50,6 +50,11 @@ def get_boardmodule_import():
     if BOARDMODULE:
         return BOARDMODULE
 
+    # a JSON configuration (flag inifile:<path>.json) does without
+    # boardspecific.py
+    if any(f.startswith("inifile:") and f.endswith(".json") for f in tbot.flags):
+        raise RuntimeError("no boardspecific.py with a JSON configuration")
+
     try:
         mp = get_boardmodulepath_import()
         BOARDMODULE = importlib.import_module(mp)

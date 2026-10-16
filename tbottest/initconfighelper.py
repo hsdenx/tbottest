@@ -135,33 +135,64 @@ def get_tbotconfig_path():
 _INIFILE_CACHE: dict = {}
 
 
-def _get_cached_inifile(cachekey: str, flagkey: str, default_filename: str, errmsg: str) -> str:
-    if cachekey in _INIFILE_CACHE:
-        return _INIFILE_CACHE[cachekey]
-
+def _inifile_path(flagkey: str, default_filename: str, errmsg: str) -> str:
+    """
+    path of the configuration file of the tbot flag <flagkey>:<path>,
+    relative to get_tbotconfig_path() or absolute, else the template
+    default_filename in tbottest/tbotconfig/BOARDNAME
+    """
     # may we pass an ini file path through tbot flags
     # with for example: -f inifile:/tmp/tbot.ini
-    flags = get_tbot_flags()
     pathinifile = None
-    tmppath = None
-    for f in flags:
+    for f in get_tbot_flags():
         if flagkey in f:
             try:
                 pathinifile = f.split(":")[1]
             except Exception:
                 raise RuntimeError(errmsg)
-        if "tmpfilepath" in f:
-            tmppath = f.split(":")[1]
 
     cfgpath = get_tbotconfig_path()
+    if not pathinifile:
+        return cfgpath + "/../tbottest/tbotconfig/BOARDNAME/" + default_filename
+    if pathinifile[0] != "/":
+        return cfgpath + "/" + pathinifile
+    return pathinifile
 
-    if pathinifile:
-        if pathinifile[0] != "/":
-            filename = cfgpath + "/" + pathinifile
-        else:
-            filename = pathinifile
-    else:
-        filename = cfgpath + "/../tbottest/tbotconfig/BOARDNAME/" + default_filename
+
+def config_is_json() -> bool:
+    """
+    returns True if the configuration of this run is JSON
+
+    That is, if the file of the tbot flag inifile:<path> ends in .json.
+    Then tbot reads it and the file of boardfile:<path>, which has to be
+    JSON as well, directly: no copies, no placeholders, and no
+    boardspecific.py.
+    """
+    tbotfile = _inifile_path("inifile", "tbot.ini", "please use : as seperator inifile flag")
+    boardfile = _inifile_path(
+        "boardfile", "BOARDNAME.ini", "please use : as seperator boardfile flag"
+    )
+    if tbotfile.endswith(".json") != boardfile.endswith(".json"):
+        raise RuntimeError(
+            f"inifile {tbotfile} and boardfile {boardfile}: use both as ini or both as json"
+        )
+    return tbotfile.endswith(".json")
+
+
+def _get_cached_inifile(cachekey: str, flagkey: str, default_filename: str, errmsg: str) -> str:
+    if cachekey in _INIFILE_CACHE:
+        return _INIFILE_CACHE[cachekey]
+
+    filename = _inifile_path(flagkey, default_filename, errmsg)
+    if filename.endswith(".json"):
+        # read as it is, nothing is replaced in it
+        _INIFILE_CACHE[cachekey] = filename
+        return filename
+
+    tmppath = None
+    for f in get_tbot_flags():
+        if "tmpfilepath" in f:
+            tmppath = f.split(":")[1]
 
     uidfile = get_unique_filename_extension()
     newfilename = f"{filename}-{uidfile}"
@@ -184,6 +215,7 @@ def inifile_get_tbotfilename():
     call, to <file>-<id> or, with the flag tmpfilepath:<dir>, into <dir>
     (id from get_unique_filename_extension()), and works on the copy;
     set_board_cfg() of boardspecific.py replaces the placeholders there.
+    A .json file is not copied, its path is returned, see config_is_json().
     """
     return _get_cached_inifile(
         "tbotinifile", "inifile", "tbot.ini", "please use : as seperator inifile flag"

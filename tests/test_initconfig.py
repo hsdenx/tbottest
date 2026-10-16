@@ -81,7 +81,13 @@ class TestSingleton:
         assert after - before == 1
 
 
-def load_get_boardname(board_set_boardname=None):
+def load_get_boardname(board_set_boardname=None, tbotjson=None):
+    """generic_get_boardname(); with tbotjson (path) as for a JSON
+    configuration, with the real reader of initconfig.py"""
+    import types
+
+    from conftest import load_initconfig_functions
+
     mod = load_definition(
         "tbottest_initconfig_generic_get_boardname_only",
         INITCONFIG_PATH,
@@ -89,6 +95,14 @@ def load_get_boardname(board_set_boardname=None):
         extra_src="import tbot\nBOARDNAME = None\nboard_set_boardname = None",
     )
     mod.board_set_boardname = board_set_boardname
+    funcs = load_initconfig_functions()
+    mod.init_read_jsonfile = funcs.init_read_jsonfile
+    mod.init_section_get_config = funcs.init_section_get_config
+    mod.inithelper = types.SimpleNamespace(
+        config_is_json=lambda: tbotjson is not None,
+        inifile_get_tbotfilename=lambda: tbotjson,
+        get_lab_sectionname=lambda: "LABHOST",
+    )
     return mod
 
 
@@ -109,6 +123,22 @@ class TestGenericGetBoardname:
     def test_no_flag(self):
         with pytest.raises(RuntimeError, match="-f boardname:<NAME>"):
             load_get_boardname().generic_get_boardname()
+
+    def test_json_board_of_the_lab_section(self, tmp_path):
+        import tbot
+
+        tbot.flags = set()
+        path = tmp_path / "tbot.json"
+        path.write_text('{"LABHOST": {"board": "${flag:boardname:-BOARDNAME}"}}')
+        assert load_get_boardname(tbotjson=str(path)).generic_get_boardname() == "BOARDNAME"
+
+    def test_json_flag_wins(self, tmp_path):
+        import tbot
+
+        tbot.flags = {"boardname:other"}
+        path = tmp_path / "tbot.json"
+        path.write_text('{"LABHOST": {"board": "BOARDNAME"}}')
+        assert load_get_boardname(tbotjson=str(path)).generic_get_boardname() == "other"
 
     def test_board_set_boardname_wins(self):
         import tbot

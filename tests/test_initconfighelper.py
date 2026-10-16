@@ -224,3 +224,31 @@ class TestInifileGetTbotboardfilename:
         sys.modules["tbot"].flags = ["boardfile"]
         with pytest.raises(RuntimeError, match="seperator boardfile flag"):
             initconfighelper.inifile_get_tbotboardfilename()
+
+
+class TestJsonConfig:
+    def _files(self, monkeypatch, tmp_path, tbotname, boardname):
+        for name in (tbotname, boardname):
+            (tmp_path / name).write_text("{}\n")
+        monkeypatch.setenv("TBOTCONFIGPATH", str(tmp_path))
+        sys.argv = ["tbot", "--usetbotflags"]
+        sys.modules["tbot"].flags = [f"inifile:{tbotname}", f"boardfile:{boardname}"]
+
+    def test_json_files(self, monkeypatch, tmp_path):
+        self._files(monkeypatch, tmp_path, "tbot.json", "board.json")
+        assert initconfighelper.config_is_json() is True
+
+    def test_ini_files(self, monkeypatch, tmp_path):
+        self._files(monkeypatch, tmp_path, "tbot.ini", "board.ini")
+        assert initconfighelper.config_is_json() is False
+
+    def test_mixed_files_refused(self, monkeypatch, tmp_path):
+        self._files(monkeypatch, tmp_path, "tbot.json", "board.ini")
+        with pytest.raises(RuntimeError, match="both as ini or both as json"):
+            initconfighelper.config_is_json()
+
+    def test_json_file_is_not_copied(self, monkeypatch, tmp_path):
+        self._files(monkeypatch, tmp_path, "tbot.json", "board.json")
+        assert initconfighelper.inifile_get_tbotfilename() == f"{tmp_path}/tbot.json"
+        assert initconfighelper.inifile_get_tbotboardfilename() == f"{tmp_path}/board.json"
+        assert sorted(p.name for p in tmp_path.iterdir()) == ["board.json", "tbot.json"]

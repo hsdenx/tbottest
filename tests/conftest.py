@@ -276,6 +276,16 @@ INITCONFIG_FUNCTIONS = (
     "init_find_sections",
     "init_lab_get_config",
     "init_read_inifile",
+    "_closing_brace",
+    "_flag_value",
+    "init_config_substitute",
+    "_resolve_expression",
+    "_json_native",
+    "init_json_value_to_str",
+    "init_read_jsonfile",
+    "init_read_configfile",
+    "init_substitute_configparser",
+    "init_config_to_json_dict",
 )
 INITBOTCONFIG_METHODS = (
     "get_section_config",
@@ -297,11 +307,15 @@ def load_initconfig_functions(boardname: str = "testboard", labsection: str = "L
 
     src = open(INITCONFIG_PATH).read()
     parts = [
+        "import ast",
         "import configparser",
         "from configparser import ExtendedInterpolation",
+        "import json",
+        "import os",
         "import types",
         f"def generic_get_boardname():\n    return {boardname!r}",
-        f"inithelper = types.SimpleNamespace(get_lab_sectionname=lambda: {labsection!r})",
+        f"inithelper = types.SimpleNamespace(get_lab_sectionname=lambda: {labsection!r}, "
+        "get_tbot_flags=lambda: [])",
     ]
     methods = []
     for node in ast.parse(src).body:

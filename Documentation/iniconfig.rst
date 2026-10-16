@@ -34,6 +34,18 @@ before ``TC``, ``LABHOST_<labname>`` for the lab host) is known in one place.
 
 .. autofunction:: tbottest.initconfig.init_read_inifile
 
+.. autofunction:: tbottest.initconfig.init_read_jsonfile
+
+.. autofunction:: tbottest.initconfig.init_read_configfile
+
+.. autofunction:: tbottest.initconfig.init_config_substitute
+
+.. autofunction:: tbottest.initconfig.init_substitute_configparser
+
+.. autofunction:: tbottest.initconfig.init_json_value_to_str
+
+.. autofunction:: tbottest.initconfig.init_config_to_json_dict
+
 .. autofunction:: tbottest.initconfig.generic_get_boardname
 
 .. autofunction:: tbottest.initconfig.copy_file
