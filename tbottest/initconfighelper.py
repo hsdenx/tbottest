@@ -8,6 +8,11 @@ import uuid
 
 
 def get_lab_sectionname() -> str:
+    """
+    returns the name of the section of the lab host in tbot.ini
+
+    LABHOST_<name> with the tbot flag labname:<name>, else LABHOST.
+    """
     for f in tbot.flags:
         if "labname" in f:
             sn = f.split(":")[1]
@@ -19,6 +24,14 @@ def get_lab_sectionname() -> str:
 def get_tbot_arguments():
     """
     get the arguments with which tbot is called
+
+    Parses sys.argv with the argument parser of tbot
+    (tbot.newbot.build_parser()), plus the options --complete-module and
+    --complete-testcase of the shell completion, which also suppress the
+    output of tbot. Under sphinx-build no arguments are parsed, under
+    pytest only the argument files (@<file>).
+
+    :returns: the parsed arguments (argparse.Namespace)
     """
     if "sphinx-build" in sys.argv[0]:
         sys.argv = sys.argv[:1]
@@ -54,6 +67,13 @@ def get_tbot_arguments():
 
 
 def get_tbot_flags():
+    """
+    returns the tbot flags the ini files are set up with
+
+    The flags of the command line (get_tbot_arguments()), or tbot.flags if
+    sys.argv contains --usetbotflags, as Documentation/conf.py sets it for
+    the documentation build.
+    """
     if "--usetbotflags" in sys.argv:
         return tbot.flags
 
@@ -65,6 +85,12 @@ UUID_FILENAME = None
 
 
 def get_unique_filename_extension():
+    """
+    returns the extension of the copies of the ini files of this run
+
+    A random uuid4 string, made on the first call; tbot.ini and the board
+    ini of one run get the same one.
+    """
     global UUID_FILENAME
     if UUID_FILENAME is not None:
         return UUID_FILENAME
@@ -77,6 +103,13 @@ TBOTCONFIGPATH = None
 
 
 def get_tbotconfig_path():
+    """
+    returns the directory relative paths of the ini files start from
+
+    The environment variable TBOTCONFIGPATH, else the first entry of
+    PYTHONPATH that contains "tbotconfig", with "tbotconfig" removed, else
+    the current directory. Decided on the first call.
+    """
     global TBOTCONFIGPATH
     if TBOTCONFIGPATH is not None:
         return TBOTCONFIGPATH
@@ -143,7 +176,14 @@ def _get_cached_inifile(cachekey: str, flagkey: str, default_filename: str, errm
 
 def inifile_get_tbotfilename():
     """
-    helper function for setting up tbot.ini filename
+    returns the path of the copy of tbot.ini this run uses
+
+    The file is the one of the tbot flag inifile:<path>, relative to
+    get_tbotconfig_path() or absolute, else the template
+    tbottest/tbotconfig/BOARDNAME/tbot.ini. tbot copies it on the first
+    call, to <file>-<id> or, with the flag tmpfilepath:<dir>, into <dir>
+    (id from get_unique_filename_extension()), and works on the copy;
+    set_board_cfg() of boardspecific.py replaces the placeholders there.
     """
     return _get_cached_inifile(
         "tbotinifile", "inifile", "tbot.ini", "please use : as seperator inifile flag"
@@ -152,7 +192,10 @@ def inifile_get_tbotfilename():
 
 def inifile_get_tbotboardfilename():
     """
-    helper function for setting up boardname.ini filename
+    returns the path of the copy of the board ini this run uses
+
+    As inifile_get_tbotfilename(), with the tbot flag boardfile:<path> and
+    the template tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini.
     """
     return _get_cached_inifile(
         "tbotboardname",
