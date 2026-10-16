@@ -256,6 +256,7 @@ here you configure common build host setting. Only used, if you use a buildhost.
         "authenticator", "path to ssh id key file", "/home/hs/.ssh/id_rsa"
         "password", "password for ssh login. Unsure!", "CrazyPassword"
         "initcmd", "list of commands executed after login", "['"uname -a'", '"cat /etc/os-release'"]"
+        "cmd_versions", "optional, preset of cmd_get_version() for the build host, see `command versions`_", "{"'"tar"'": "'"tar:1.35"'"}"
 
 
 If you do not add **authenticator** or **password**, tbot uses
@@ -1004,8 +1005,9 @@ measurement with top and ps, ``lx_devmem2_get``, iperf, ``lnx_netcmd``).
 
 Key ``cmd_versions`` presets the answers, so tbot does not have to find
 them out on every run. It goes into section ``[LABHOST]`` (or
-``[LABHOST_<labname>]``) of tbot.ini for the lab host and into ``[TC]``
-(or ``[TC_<boardname>]``) of the board ini for the board. A command that
+``[LABHOST_<labname>]``) of tbot.ini for the lab host, into ``[BUILDHOST]``
+(or ``[BUILDHOST_<name>]``) of tbot.ini for the build host and into
+``[TC]`` (or ``[TC_<boardname>]``) of the board ini for the board. A command that
 is not in it is found out as before. A value a testcase sets with
 ``cmd_versions_set()`` wins over the ini file.
 
@@ -1023,9 +1025,10 @@ board ini template the keys are indented by four spaces, so the commands
 need eight.
 
 The testcase :py:func:`tbottest.tc.generic_board.generic_cmd_versions`
-finds out the commands tbottest uses on the lab host and on the board and
-logs the line for each, ready to copy into the ini files. Run it again
-when the root filesystem or the lab host changes.
+finds out the commands tbottest uses on the lab host, the build host (if
+tbot.ini has a ``[BUILDHOST]`` section) and the board and logs the line
+for each, ready to copy into the ini files. Run it again when the root
+filesystem, the lab host or the build host changes.
 
 ``cmd_get_version(cmd, autoinstall=True)`` installs a missing command on
 Debian and Ubuntu (apt-get) and on Fedora (dnf), with sudo unless logged

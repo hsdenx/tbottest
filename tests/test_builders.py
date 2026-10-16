@@ -12,11 +12,20 @@ tbottest.initconfig.IniTBotConfig via install_fake_initbotconfig().
 import os
 import sys
 
-from conftest import install_fake_initbotconfig, load_module
+from conftest import install_fake_initbotconfig, install_real_submodule, load_module
+
+CMDVERSIONS_PATH = os.path.join(os.path.dirname(__file__), "..", "tbottest", "cmdversions.py")
+
+
+def install_initbotconfig(sections):
+    # builders.py imports CmdVersionsMixin from tbottest.cmdversions
+    cp = install_fake_initbotconfig(sections)
+    install_real_submodule("tbottest.cmdversions", CMDVERSIONS_PATH)
+    return cp
 
 
 def load_builders(sections):
-    install_fake_initbotconfig(sections)
+    install_initbotconfig(sections)
     return load_module(
         "tbottest_builders",
         os.path.join(os.path.dirname(__file__), "..", "tbottest", "builders.py"),
@@ -52,6 +61,26 @@ class FakeExecHost:
     def exec0(self, *args):
         self.commands.append(tuple(str(a) for a in args))
         return ""
+
+
+class TestCmdVersions:
+    def test_preset_from_buildhost_section(self):
+        sections = {
+            "BUILDHOST": dict(BASE_SECTIONS["BUILDHOST"], cmd_versions='{"tar": "tar:1.35"}')
+        }
+        builders = load_builders(sections)
+        assert builders.genericbuilder.cmd_versions_config == '{"tar": "tar:1.35"}'
+
+    def test_without_preset(self):
+        builders = load_builders(BASE_SECTIONS)
+        assert builders.genericbuilder.cmd_versions_config is None
+        assert builders.genericbuilderlocal.cmd_versions_config is None
+
+    def test_install_package_of_tbottest(self):
+        builders = load_builders(BASE_SECTIONS)
+        cmdversions = sys.modules["tbottest.cmdversions"]
+        for cls in (builders.genericbuilder, builders.genericbuilderlocal):
+            assert cls.install_package is cmdversions.CmdVersionsMixin.install_package
 
 
 class TestGenericbuilderConfig:
@@ -183,7 +212,7 @@ class TestBuildernameFlag:
         sections["BUILDHOST_th2"] = dict(
             BASE_SECTIONS["BUILDHOST"], name="th2builder"
         )
-        install_fake_initbotconfig(sections)
+        install_initbotconfig(sections)
 
         tbot_mod = sys.modules["tbot"]
         monkeypatch.setattr(tbot_mod, "flags", {"buildername:th2"})

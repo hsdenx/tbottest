@@ -5,6 +5,7 @@ import typing
 import pathlib
 import tbot
 from tbot.machine import linux, connector
+from tbottest.cmdversions import CmdVersionsMixin
 
 cfgt = ini.IniTBotConfig()
 
@@ -68,7 +69,9 @@ class _BuilderPathsMixin:
                 self.exec0(*c)
 
 
-class genericbuilder(_BuilderPathsMixin, connector.SSHConnector, linux.Bash, linux.Builder):
+class genericbuilder(
+    CmdVersionsMixin, _BuilderPathsMixin, connector.SSHConnector, linux.Bash, linux.Builder
+):
     def builder_get_sectionname() -> str:
         for f in tbot.flags:
             if "buildername" in f:
@@ -78,6 +81,8 @@ class genericbuilder(_BuilderPathsMixin, connector.SSHConnector, linux.Bash, lin
         return "BUILDHOST"
 
     sn = builder_get_sectionname()
+    # preset for cmd_get_version(), see tbottest.cmdversions
+    cmd_versions_config = cfgt.get_section_config(sn, "cmd_versions", None)
     name = cfgt.get_section_config(sn, "name")
     username = cfgt.get_section_config(sn, "username")
     hostname = cfgt.get_section_config(sn, "hostname")
@@ -129,9 +134,15 @@ class genericbuilder(_BuilderPathsMixin, connector.SSHConnector, linux.Bash, lin
 
 
 class genericbuilderlocal(
-    _BuilderPathsMixin, connector.SubprocessConnector, linux.Bash, linux.Builder
+    CmdVersionsMixin,
+    _BuilderPathsMixin,
+    connector.SubprocessConnector,
+    linux.Bash,
+    linux.Builder,
 ):
     sn = "BUILDHOST_local"
+    # preset for cmd_get_version(), see tbottest.cmdversions
+    cmd_versions_config = cfgt.get_section_config(sn, "cmd_versions", None)
     name = _get_or_placeholder(sn, "name")
     dl_dir = _get_or_placeholder(sn, "dl_dir")
     sstate_dir = _get_or_placeholder(sn, "sstate_dir")

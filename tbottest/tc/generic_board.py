@@ -3,6 +3,7 @@ from tbot.machine import linux
 from tbot.context import Optional
 
 from tbottest.boardgeneric import cfggeneric
+from tbottest.labgeneric import cfgt as cfglab
 from tbottest.tc.common import lnx_check_beeper
 from tbottest.tc.common import lnx_check_cmd
 from tbottest.tc.common import lnx_check_dmesg
@@ -379,12 +380,14 @@ def generic_cmd_versions(
 ) -> None:  # noqa: D107
     """
     find out which implementation and version the commands tbottest uses
-    have on the lab host and on the board, and log a line for the ini key
-    cmd_versions for each, see :py:mod:`tbottest.cmdversions`
+    have on the lab host, the build host (if tbot.ini has one) and the
+    board, and log a line for the ini key cmd_versions for each, see
+    :py:mod:`tbottest.cmdversions`
 
     The line for the lab host goes into section [LABHOST] (or
-    [LABHOST_<labname>]) of tbot.ini, the one for the board into section
-    [TC] (or [TC_<boardname>]) of <boardname>.ini.
+    [LABHOST_<labname>]) of tbot.ini, the one for the build host into its
+    section [BUILDHOST] (or [BUILDHOST_<name>]), the one for the board into
+    section [TC] (or [TC_<boardname>]) of <boardname>.ini.
 
     With tbot flag cmd_versions_install missing commands are installed
     where the system can (Debian, Ubuntu, Fedora).
@@ -398,6 +401,11 @@ def generic_cmd_versions(
             lab = cx.request(tbot.role.LabHost)
         tbot.log.message(tbot.log.c("lab host, tbot.ini section [LABHOST]").green)
         lnx_cmd_versions(lab, autoinstall=autoinstall)
+
+        if cfglab.find_sections("BUILDHOST"):
+            bh = cx.request(tbot.role.BuildHost)
+            tbot.log.message(tbot.log.c(f"build host, tbot.ini section [{bh.sn}]").green)
+            lnx_cmd_versions(bh, autoinstall=autoinstall)
 
         if lnx is None:
             lnx = cx.request(tbot.role.BoardLinux)
