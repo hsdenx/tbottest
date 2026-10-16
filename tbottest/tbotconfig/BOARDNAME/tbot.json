@@ -1,0 +1,162 @@
+{
+    "LABHOST": {
+        "labname": "@@LABNAME@@",
+        "hostname": "@@LABHOSTNAME@@",
+        "username": "@@LABUSER@@",
+        "sshkeyfile": "/home/${username}/.ssh/id_rsa",
+        "date": "20230406",
+        "board": "${flag:boardname:-BOARDNAME}",
+        "toolsdir": "/home/${username}/source",
+        "tftproot": "/srv/tftpboot",
+        "tftpsubdir": "${board}/${date}",
+        "workdir": "/work/${username}/tbot-workdir/${board}",
+        "tmpdir": "/tmp/tbot/${username}/${board}",
+        "proxyjump": "pi@xeidos.ddns.net",
+        "usernamessh": "<Username on ssh machine>",
+        "serverip": "192.168.3.1",
+        "labinit": [
+            "sudo ifconfig eth0 down ${serverip} up",
+            "sudo systemctl --all --no-pager restart tftpd-hpa",
+            "sudo systemctl start isc-dhcp-server",
+            "sudo systemctl stop NetworkManager"
+        ],
+        "seggercmd": "\"sudo /home/pi/source/JLink_Linux_V686e_arm/JLinkExe\"",
+        "nfs_base_path": "/work/pi/tbot-workdir/nfs",
+        "shelltype": "bash",
+        "uselocking": "no"
+    },
+    "BUILDHOST": {
+        "name": "threadripper-big-build",
+        "username": "hs",
+        "hostname": "192.168.1.120",
+        "dl_dir": "/work/downloads",
+        "sstate_dir": "/work2/${username}/tbot2go/yocto-sstate",
+        "kas_ref_dir": "/work/${username}/src",
+        "workdir": "/work/big/${username}/tbot2go",
+        "authenticator": "/home/${username}/.ssh/id_rsa",
+        "shelltype": "bash"
+    },
+    "BUILDHOST_local": {
+        "name": "local-build",
+        "username": "hs",
+        "hostname": "192.168.1.120",
+        "dl_dir": "work/tbottest/dl_dir",
+        "sstate_dir": "work/tbottest/yocto-sstate",
+        "kas_ref_dir": "work/tbottest/kas-ref-dir",
+        "workdir": "work/tbottest/work",
+        "shelltype": "bash"
+    },
+    "BUILDHOST_sisyphus": {
+        "name": "denx-sisyphus",
+        "username": "hs",
+        "hostname": "sisyphus",
+        "port": "22",
+        "dl_dir": "/opt/downloads",
+        "sstate_dir": "/work/${username}/yocto/yocto-sstate",
+        "workdir": "/work/${username}/yocto",
+        "authenticator": "/home/${username}/.ssh/id_rsa",
+        "initcmd": [
+            "cat /etc/os-release"
+        ],
+        "shelltype": "bash"
+    },
+    "SCRIPTCOM_BOARDNAME": {
+        "scriptname": "@@SCRIPTCOMSCRIPTNAME@@",
+        "exitstring": "@@SCRIPTCOMEXITSTRING@@"
+    },
+    "PICOCOM_BOARDNAME": {
+        "baudrate": "@@PICOCOMBAUDRATE@@",
+        "device": "@@PICOCOMDEV@@",
+        "delay": "@@PICOCOMDELAY@@",
+        "noreset": "@@PICOCOMNORESET@@"
+    },
+    "KERMIT_BOARDNAME": {
+        "cfgfile": "@@KERMITCFGFILE@@",
+        "delay": "@@KERMITDELAY@@"
+    },
+    "TELNET_BOARDNAME": {
+        "host": "@@TELNETHOST@@",
+        "port": "@@TELNETPORT@@",
+        "delay": "@@TELNETDELAY@@"
+    },
+    "SDWIRE": {
+        "serial": "da23"
+    },
+    "POWERSHELLSCRIPT_BOARDNAME": {
+        "script": "\"@@POWERSHELLSCRIPTNAME@@\""
+    },
+    "SISPMCTRL_BOARDNAME": {
+        "device": "@@SISPMCTRLMAC@@",
+        "port": "@@SISPMCTRLPORT@@"
+    },
+    "GPIOPMCTRL_BOARDNAME": {
+        "gpiopmctl_pin": "@@POWERGPIOPIN@@",
+        "gpiopmctl_state": "@@POWERGPIOSTATE@@"
+    },
+    "TF_BOARDNAME": {
+        "uid": "@@POWERTFUID@@",
+        "channel": "@@POWERTFCHANNEL@@"
+    },
+    "TBOX_BOARDNAME": {
+        "powerpin": "@@TBOXPOWERPIN@@"
+    },
+    "TBOX_HWDAEMON_BOARDNAME": {
+        "boardname": "@@TBOXHWDAEMONBOARDNAME@@"
+    },
+    "SHELLY_BOARDNAME": {
+        "device": "@@SHELLYDEVICE@@",
+        "id": "@@SHELLYID@@"
+    },
+    "TM021_BOARDNAME": {
+        "device": "@@TM021DEVICE@@",
+        "baudrate": "@@TM021BAUDRATE@@",
+        "timeout": "@@TM021TIMEOUT@@",
+        "address": "@@TM021ADDRESS@@",
+        "port": "@@TM021PORT@@",
+        "debug": "@@TM021DEBUG@@"
+    },
+    "UBCFG_BOARDNAME": {
+        "ethintf": "eth0"
+    },
+    "IPSETUP_BOARDNAME_eth0": {
+        "labdevice": "eth0",
+        "netmask": "@@IPSETUPMASK@@",
+        "ethaddr": "@@IPSETUPETH@@",
+        "ipaddr": "@@IPSETUPIP@@",
+        "serverip": "@@IPSETUPSERVERIP@@"
+    },
+    "UUU_CONFIG_BOARDNAME": {
+        "cmd": "LBD/SPL,SDPV: delay 100,SDPV: write -f LBD/u-boot.img -addr 0x877fffc0,SDPV: jump -addr 0x877fffc0"
+    },
+    "XMODEM_CONFIG_BOARDNAME": {
+        "device": "\"${PICOCOM_BOARDNAME:device}\"",
+        "cmd": [
+            "sb --xmodem TFTPDIR/tiboot3.bin > SERDEV < SERDEV",
+            "sb --ymodem TFTPDIR/tispl.bin > SERDEV < SERDEV",
+            "sb --ymodem TFTPDIR/u-boot.img > SERDEV < SERDEV"
+        ]
+    },
+    "BOOTMODE_BOARDNAME": {
+        "modes": [
+            {
+                "name": "bootmode:uart0",
+                "gpios": "14:0"
+            },
+            {
+                "name": "bootmode:emmc",
+                "gpios": "14:1"
+            }
+        ]
+    },
+    "SSHMACHINE": {
+        "name": "laptop-machine",
+        "username": "${usernamessh}",
+        "port": "722",
+        "hostname": "192.168.1.107",
+        "workdir": "/tmp",
+        "toolsdir": "/home/${usernamessh}/source"
+    },
+    "SEGGER_CONFIG_AM335XBOARD": {
+        "cmds": "[{\"cmd\":${LABHOST:seggercmd}, \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"Device AM3354\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"connect\", \"prompt\":\"TIF>\"}, \\\n{\"cmd\":\"J\", \"prompt\":\"JTAGConf>\"}, \\\n{\"cmd\":\"-1\", \"prompt\":\"Speed>\"}, \\\n{\"cmd\":\"4000\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"halt\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"SetPC 0x402F0400\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"w2  0x402f0400 0xa000\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"w2  0x402f0402 0x4700\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"s\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"s\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"s\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"SetPC 0x402F0400\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"halt\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"loadbin ${LABHOST:tftproot}/${LABHOST:tftpsubdir}/ram_u-boot-spl.bin 0x402F0400\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"setbp 0x80800000 T H\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"go\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"halt\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"loadbin ${LABHOST:tftproot}/${LABHOST:tftpsubdir}/ram_u-boot.bin 0x80800000\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"SetPC 0x80800000\", \"prompt\":\"J-Link>\"}, \\\n{\"cmd\":\"go\", \"prompt\":\"J-Link>\"}]"
+    }
+}

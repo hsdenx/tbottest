@@ -1,0 +1,163 @@
+{
+    "default": {
+        "user": "${env:USER}",
+        "date": "${lab:date}",
+        "board": "${lab:board}",
+        "postbuild": "local",
+        "serverip": "${tbot:IPSETUP_BOARDNAME_eth0:serverip}",
+        "ipaddr": "${tbot:IPSETUP_BOARDNAME_eth0:ipaddr}",
+        "machine": "CUSTOMER-board",
+        "build_dl": "please set in BOARDNAME.json",
+        "build_sstate": "please set in BOARDNAME.json",
+        "build_user": "${env:USER}",
+        "kasurl": "yoururltokasconfigrepo",
+        "kaslayer": "yourkaslayername",
+        "kaslayerbranch": "main",
+        "kasymlname": "yourconfig.yml",
+        "vendor": "nabladev",
+        "deploydir": "tmp/deploy/images/${machine}",
+        "nfs_path": "${lab:nfs_base_path}/${machine}/${postbuild}",
+        "subdir": "${vendor}/${machine}",
+        "rootfsname": "${flag:rootfsname:-core-image-base}",
+        "sdk_bin": "name_of_sdk_shell_script"
+    },
+    "TC": {
+        "uboot_death_strings": [
+            "Kernel panic"
+        ],
+        "tmpdir": "/tmp",
+        "ignore_hostkey": "True",
+        "rescueimage": "rescueimage-fit.itb",
+        "qspiheader": "\"qspiheader.bin\"",
+        "splimage": "\"SPL\"",
+        "uboot_boot_timeout": "None",
+        "uboot_autoboot_timeout": "0.05",
+        "uboot_autoboot_keys": "SPACE",
+        "ub_env": [
+            {
+                "name": "serverip",
+                "val": "${default:serverip}"
+            },
+            {
+                "name": "ipaddr",
+                "val": "${default:ipaddr}"
+            },
+            {
+                "name": "netmask",
+                "val": "255.255.255.0"
+            },
+            {
+                "name": "date",
+                "val": "${default:date}"
+            },
+            {
+                "name": "tmpaddr",
+                "val": "83000000"
+            },
+            {
+                "name": "tftpp",
+                "val": "${lab:tftpsubdir}"
+            },
+            {
+                "name": "hostname",
+                "val": "${default:board}"
+            },
+            {
+                "name": "netdev",
+                "val": "eth0"
+            },
+            {
+                "name": "addip",
+                "val": "setenv bootargs $${bootargs} ip=$${ipaddr}:$${serverip}:$${gatewayip}:$${netmask}:$${hostname}:$${netdev}:off"
+            },
+            {
+                "name": "nfsopt",
+                "val": ",nfsvers=3"
+            },
+            {
+                "name": "args_nfs",
+                "val": "setenv bootargs console=$${console} $${optargs} root=/dev/nfs nfsroot=${default:serverip}:${default:nfs_path}/nfs$${nfsopt};run addip"
+            },
+            {
+                "name": "optargs",
+                "val": "consoleblank=0 vt.global_cursor_default=0 lpj=2988032 quiet "
+            },
+            {
+                "name": "end",
+                "val": "end"
+            }
+        ],
+        "linux_user": "root",
+        "linux_password": "root",
+        "linux_boot_timeout": "200",
+        "linux_login_delay": "3",
+        "linux_init_timeout": "\"2\"",
+        "linux_init": [
+            {
+                "cmd": "cat /proc/cmdline"
+            },
+            {
+                "cmd": "uname -a"
+            }
+        ],
+        "lnx_commands": [
+            {
+                "cmd": "uname -a",
+                "val": "armv7l GNU/Linux"
+            },
+            {
+                "cmd": "echo Hello",
+                "val": "undef"
+            }
+        ],
+        "kas": {
+            "kasurl": "https://github.com/siemens/kas.git",
+            "kasversion": "4.0",
+            "build_machine": "${default:machine}",
+            "subdir": "${default:subdir}",
+            "kascontainer": false,
+            "git_credential_store": "/home/${default:build_user}/.git-credentials",
+            "ssh_dir": "/home/${default:build_user}/.ssh",
+            "netrc_file": "/home/${default:build_user}/.netrc",
+            "kaslayer": "${default:kasurl}/${default:kaslayer}.git",
+            "kaslayername": "${default:kaslayer}",
+            "kaslayerbranch": "${default:kaslayerbranch}",
+            "kasconfigfile": "${default:kaslayer}/${default:kasymlname}",
+            "kas_runtime_args": "\"--privileged -v ${default:build_dl}:/downloads -v ${default:build_sstate}:/sstate-cache\"",
+            "bitbakeenvinit": "source/poky/oe-init-build-env",
+            "envinit": [],
+            "buildtargets": [
+                "core-image-minimal",
+                "bitbake -c populate_sdk core-image-dev"
+            ],
+            "bitbakeoptions": [
+                "-q",
+                "-q"
+            ]
+        },
+        "kas_check_files": [
+            "${default:deploydir}/SPL",
+            "${default:deploydir}/u-boot.img",
+            "${default:deploydir}/fitImage",
+            "tmp/deploy/sdk/${default:sdk_bin}"
+        ],
+        "kas_results": [
+            "SPL",
+            "u-boot.img",
+            "fitImage"
+        ]
+    },
+    "TC_BOARDNAME": {
+        "lnx_dump_files": [
+            {
+                "revfile": "control_module.reg",
+                "startaddr": "0x44e10800",
+                "endaddr": "0x44e10808",
+                "mask": "0xffffffff",
+                "readtype": "w",
+                "difffile": "diff_control",
+                "timeout": "None"
+            }
+        ]
+    }
+}
