@@ -49,7 +49,8 @@ def load_method(classname, methodname):
     linux = types.SimpleNamespace(
         Workdir=types.SimpleNamespace(static=lambda host, path: ("workdir", path))
     )
-    ns = {"linux": linux, "LABSECTIONNAME": "LABHOST", "cfgt": CFGT}
+    ini = types.SimpleNamespace(generic_get_boardname=lambda: "BOARDNAME")
+    ns = {"linux": linux, "LABSECTIONNAME": "LABHOST", "cfgt": CFGT, "ini": ini}
     exec(compile(def_src, LABGENERIC_PATH, "exec"), ns)
     return ns[methodname]
 
@@ -161,3 +162,22 @@ class TestSdMuxMode:
     def test_unknown_mode_raises(self, lnx_sudo):
         with pytest.raises(RuntimeError):
             load_method("GenericLab", "lab_set_sd_mux_mode")(LabExec(), "off")
+
+
+class SSHBoard:
+    IP_BOARD_SSH_INTERFACE = "eth1"
+
+
+class TestBoardSSHHostname:
+    def test_ipaddr_of_the_interface(self):
+        tbot_ini(
+            {"IPSETUP_BOARDNAME_eth0": {"ipaddr": "1.1.1.1"}, "IPSETUP_BOARDNAME_eth1": {"ipaddr": "2.2.2.2"}}
+        )
+        hostname = load_method("boardSSHConnector", "hostname")
+        assert hostname(SSHBoard()) == "2.2.2.2"
+
+    def test_missing_ipaddr_raises(self):
+        tbot_ini({"IPSETUP_BOARDNAME_eth0": {"ipaddr": "1.1.1.1"}})
+        hostname = load_method("boardSSHConnector", "hostname")
+        with pytest.raises(RuntimeError, match="Expect section IPSETUP_BOARDNAME_eth1 with key ipaddr"):
+            hostname(SSHBoard())

@@ -111,14 +111,19 @@ class boardSSHConnector(connector.SSHConnector):
     except Exception:
         IP_BOARD_SSH_INTERFACE = "eth0"
 
-    try:
-        ssh_ip_section = f"IPSETUP_{ini.generic_get_boardname()}_{IP_BOARD_SSH_INTERFACE}"
-        IP_BOARD = cfgt.get_section_config(ssh_ip_section, "ipaddr")
-        hostname = IP_BOARD
-    except Exception:
-        RuntimeError(
-            f"Please set ipaddr for ssh machine. Expect section {ssh_ip_section} with key ipaddr"
-        )
+    @property
+    def hostname(self) -> str:
+        """
+        IP address of the board for ssh, key ipaddr in section
+        IPSETUP_<boardname>_<interface> of tbot.ini
+        """
+        section = f"IPSETUP_{ini.generic_get_boardname()}_{self.IP_BOARD_SSH_INTERFACE}"
+        ipaddr = cfgt.get_section_config(section, "ipaddr", None)
+        if ipaddr is None:
+            raise RuntimeError(
+                f"Please set ipaddr for ssh machine. Expect section {section} with key ipaddr"
+            )
+        return ipaddr
 
     @property
     def authenticator(self) -> linux.auth.Authenticator:
