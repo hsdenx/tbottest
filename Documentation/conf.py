@@ -21,6 +21,29 @@ sys.path.insert(0, os.path.abspath("../"))
 sys.path.insert(0, os.path.abspath("../tbottest"))
 sys.path.insert(0, os.path.abspath("../tbottest/tbotconfig"))
 
+# autodoc imports tbottest.initconfig and the modules that use it, which read
+# tbot.ini, the board ini and boardspecific.py at import. Give them the
+# templates of tbottest/tbotconfig/BOARDNAME as board environment. With
+# --usetbotflags initconfighelper takes the flags from tbot.flags instead of
+# the command line; the ini files are copied into a temporary directory
+# (tmpfilepath), not next to the templates.
+import atexit  # noqa: E402
+import shutil  # noqa: E402
+import tempfile  # noqa: E402
+
+import tbot  # noqa: E402
+
+_doc_tmpdir = tempfile.mkdtemp(prefix="tbottest-doc-")
+atexit.register(shutil.rmtree, _doc_tmpdir, ignore_errors=True)
+os.environ["TBOTCONFIGPATH"] = os.path.abspath("../tbottest")
+sys.argv.append("--usetbotflags")
+tbot.flags = {
+    "boardname:BOARDNAME",
+    "inifile:tbotconfig/BOARDNAME/tbot.ini",
+    "boardfile:tbotconfig/BOARDNAME/BOARDNAME.ini",
+    f"tmpfilepath:{_doc_tmpdir}",
+}
+
 logger = sphinx.util.logging.getLogger("tbottest/conf.py")
 
 # -- Project information -----------------------------------------------------

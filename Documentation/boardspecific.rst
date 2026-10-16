@@ -7,5 +7,5 @@ for this! See :ref:`genericconfiguration`
 boardspecific setup
 -------------------
 
-.. automodule:: tbottest.tbotconfig.boardspecific
+.. automodule:: tbottest.tbotconfig.BOARDNAME.boardspecific
    :members:
