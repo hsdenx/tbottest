@@ -8,7 +8,29 @@
 helper functions
 ----------------
 
+Values of ``tbot.ini`` and of the board ini are read through these
+functions, or the methods of :py:class:`~tbottest.initconfig.IniTBotConfig`
+and :py:class:`~tbottest.initconfig.IniConfig` built on them, never through
+``config_parser`` directly. Then the order of the sections (``TC_BOARDNAME``
+before ``TC``, ``LABHOST_<labname>`` for the lab host) is known in one place.
+
 .. autofunction:: tbottest.initconfig.init_get_config
+
+.. autofunction:: tbottest.initconfig.init_get_config_bool
+
+.. autofunction:: tbottest.initconfig.init_get_config_keys
+
+.. autofunction:: tbottest.initconfig.init_lab_get_config
+
+.. autofunction:: tbottest.initconfig.init_section_get_config
+
+.. autofunction:: tbottest.initconfig.init_section_get_config_bool
+
+.. autofunction:: tbottest.initconfig.init_config_to_bool
+
+.. autofunction:: tbottest.initconfig.init_has_section
+
+.. autofunction:: tbottest.initconfig.init_find_sections
 
 .. autofunction:: tbottest.initconfig.generic_get_boardname
 

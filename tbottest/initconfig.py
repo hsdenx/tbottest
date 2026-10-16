@@ -149,28 +149,127 @@ def init_get_config_keys(
     return keys
 
 
+# default of the init_*_config functions for a key that must be there
+REQUIRED = object()
+
+
+def init_section_get_config(
+    cfgp: configparser.RawConfigParser,
+    section: str,
+    name: str,
+    default=REQUIRED,
+):
+    """
+    returns value of key name in section of the configparser, as it is
+    written there (no conversion of "None").
+
+    For the sections of tbot.ini outside the [TC] sections of the board
+    ini, e.g. [BUILDHOST], [SSHMACHINE] or [PICOCOM_BOARDNAME].
+
+    :param cfgp: current config parser
+    :param section: name of the section
+    :param name: name of key
+    :param default: value if section or key is missing; without it a
+        missing section or key raises RuntimeError
+    """
+    try:
+        return cfgp.get(section, name)
+    except (configparser.NoSectionError, configparser.NoOptionError):
+        if default is REQUIRED:
+            raise RuntimeError(f"key {name} missing in section [{section}]")
+        return default
+
+
+def init_config_to_bool(value: str) -> bool:
+    """
+    returns the boolean of an ini value, as configparser reads it
+    (1, yes, true, on and 0, no, false, off, any case)
+
+    :param value: value from the ini file
+    """
+    states = configparser.RawConfigParser.BOOLEAN_STATES
+    if value.lower() not in states:
+        raise ValueError(f"not a boolean: {value}")
+    return states[value.lower()]
+
+
+def init_section_get_config_bool(
+    cfgp: configparser.RawConfigParser,
+    section: str,
+    name: str,
+    default: bool,
+) -> bool:
+    """
+    returns the boolean value of key name in section, see
+    init_section_get_config() and init_config_to_bool()
+
+    :param cfgp: current config parser
+    :param section: name of the section
+    :param name: name of key
+    :param default: value if section or key is missing
+    """
+    value = init_section_get_config(cfgp, section, name, None)
+    if value is None:
+        return default
+    return init_config_to_bool(value)
+
+
+def init_get_config_bool(
+    cfgp: configparser.RawConfigParser,
+    name: str,
+    default: bool,
+) -> bool:
+    """
+    returns the boolean value of key name from the sections
+    init_get_config() searches, see init_config_to_bool()
+
+    :param cfgp: current config parser
+    :param name: name of key
+    :param default: value if the key is missing or "None"
+    """
+    value = init_get_config(cfgp, name, None)
+    if value is None:
+        return default
+    return init_config_to_bool(value)
+
+
+def init_has_section(cfgp: configparser.RawConfigParser, section: str) -> bool:
+    """
+    returns True if the configparser has section
+
+    :param cfgp: current config parser
+    :param section: name of the section
+    """
+    return cfgp.has_section(section)
+
+
+def init_find_sections(cfgp: configparser.RawConfigParser, part: str) -> list:
+    """
+    returns the names of the sections that contain part, in the order of
+    the ini file
+
+    :param cfgp: current config parser
+    :param part: part of the section name, e.g. "BUILDHOST"
+    """
+    return [s for s in cfgp.sections() if part in s]
+
+
 def init_lab_get_config(
     cfgp: configparser.RawConfigParser,
     name: str,
-    default: str,
-) -> str:
+    default=REQUIRED,
+):
     """
     returns value of key name from configparser
     from section LABHOST or LABHOST_labname
 
     :param cfgp: current config parser
     :param name: name of key
-    :param default: default value if key is not found
+    :param default: default value if key is not found; without it a
+        missing key raises RuntimeError
     """
     sectionname = inithelper.get_lab_sectionname()
-    # first try boardname specific config
-    try:
-        value = cfgp.get(sectionname, name)
-        return value
-    except Exception:
-        pass
-
-    return default
+    return init_section_get_config(cfgp, sectionname, name, default)
 
 
 def generic_get_boardname():
@@ -529,6 +628,54 @@ class IniTBotConfig(metaclass=_Singleton):
         if os.path.exists(self.tbotinifile):
             os.remove(self.tbotinifile)
 
+    def get_section_config(self, section: str, name: str, default=REQUIRED):
+        """
+        returns value of key name in section of tbot.ini, see
+        init_section_get_config()
+
+        :param section: name of the section
+        :param name: name of key
+        :param default: value if missing; without it a missing key raises
+        """
+        return init_section_get_config(self.config_parser, section, name, default)
+
+    def get_section_config_bool(self, section: str, name: str, default: bool) -> bool:
+        """
+        returns the boolean value of key name in section of tbot.ini, see
+        init_section_get_config_bool()
+
+        :param section: name of the section
+        :param name: name of key
+        :param default: value if missing
+        """
+        return init_section_get_config_bool(self.config_parser, section, name, default)
+
+    def get_lab_config(self, name: str, default=REQUIRED):
+        """
+        returns value of key name in the section of the lab host, see
+        init_lab_get_config()
+
+        :param name: name of key
+        :param default: value if missing; without it a missing key raises
+        """
+        return init_lab_get_config(self.config_parser, name, default)
+
+    def has_section(self, section: str) -> bool:
+        """
+        returns True if tbot.ini has section
+
+        :param section: name of the section
+        """
+        return init_has_section(self.config_parser, section)
+
+    def find_sections(self, part: str) -> list:
+        """
+        returns the names of the sections of tbot.ini that contain part
+
+        :param part: part of the section name
+        """
+        return init_find_sections(self.config_parser, part)
+
 
 class IniConfig(metaclass=_Singleton):
     """
@@ -580,6 +727,18 @@ class IniConfig(metaclass=_Singleton):
         """
 
         return init_get_config_int(self.config_parser, name, default)
+
+    def get_config_bool(self, name: str, default: bool) -> bool:
+        """
+        returns the boolean value of key name.
+
+        use internal function init_get_config_bool
+
+        :param name: name of key
+        :param default: value if the key is missing or "None"
+        """
+
+        return init_get_config_bool(self.config_parser, name, default)
 
     def get_config_keys(self, prefix: str):
         """

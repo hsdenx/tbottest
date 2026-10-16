@@ -24,7 +24,9 @@ against real hardware, not by this unit test suite.
 
 import argparse
 import importlib.util
+import os
 import sys
+import textwrap
 import types
 
 import pytest
@@ -260,14 +262,84 @@ def install_gpio_stub() -> None:
     sys.modules["tbot_contrib.gpio"] = gpio_mod
 
 
+INITCONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "tbottest", "initconfig.py")
+
+# the functions of tbottest/initconfig.py the methods of IniTBotConfig use
+INITCONFIG_FUNCTIONS = (
+    "init_get_config",
+    "init_get_config_keys",
+    "init_section_get_config",
+    "init_config_to_bool",
+    "init_section_get_config_bool",
+    "init_get_config_bool",
+    "init_has_section",
+    "init_find_sections",
+    "init_lab_get_config",
+)
+INITBOTCONFIG_METHODS = (
+    "get_section_config",
+    "get_section_config_bool",
+    "get_lab_config",
+    "has_section",
+    "find_sections",
+)
+
+
+def load_initconfig_functions(boardname: str = "testboard", labsection: str = "LABHOST"):
+    """
+    The functions INITCONFIG_FUNCTIONS, the constant REQUIRED and the
+    methods INITBOTCONFIG_METHODS of class IniTBotConfig, as they are in
+    tbottest/initconfig.py, in one module. generic_get_boardname()
+    returns boardname, the lab section is labsection.
+    """
+    import ast
+
+    src = open(INITCONFIG_PATH).read()
+    parts = [
+        "import configparser",
+        "import types",
+        f"def generic_get_boardname():\n    return {boardname!r}",
+        f"inithelper = types.SimpleNamespace(get_lab_sectionname=lambda: {labsection!r})",
+    ]
+    methods = []
+    for node in ast.parse(src).body:
+        name = getattr(node, "name", None)
+        if name in INITCONFIG_FUNCTIONS:
+            parts.append(ast.get_source_segment(src, node))
+        elif isinstance(node, ast.Assign) and any(
+            getattr(t, "id", None) == "REQUIRED" for t in node.targets
+        ):
+            parts.append(ast.get_source_segment(src, node))
+        elif name == "IniTBotConfig":
+            for item in node.body:
+                if getattr(item, "name", None) in INITBOTCONFIG_METHODS:
+                    methods.append(textwrap.dedent(ast.get_source_segment(src, item, padded=True)))
+    mod = types.ModuleType("tbottest_initconfig_functions")
+    exec(compile("\n\n".join(parts + methods), INITCONFIG_PATH, "exec"), mod.__dict__)
+    return mod
+
+
+class FakeIniTBotConfig:
+    """
+    IniTBotConfig over a configparser, with the methods of the real class
+    (see load_initconfig_functions())
+    """
+
+    def __init__(self, config_parser, labsection: str = "LABHOST"):
+        self.config_parser = config_parser
+        funcs = load_initconfig_functions(labsection=labsection)
+        for name in INITBOTCONFIG_METHODS:
+            setattr(self, name, types.MethodType(getattr(funcs, name), self))
+
+
 def install_fake_initbotconfig(sections: dict):
     """
     Install a fake tbottest.initconfig.IniTBotConfig backed by a real
     configparser.ConfigParser preloaded with `sections`
     ({section_name: {key: value}}), for modules (e.g. builders.py)
     that do `cfgt = ini.IniTBotConfig()` at import time and read
-    cfgt.config_parser.get(...). Returns the ConfigParser so tests can
-    extend it further if needed.
+    it with its get_section_config() and friends. Returns the
+    ConfigParser so tests can extend it further if needed.
     """
     import configparser
 
@@ -276,7 +348,7 @@ def install_fake_initbotconfig(sections: dict):
         cp[section] = values
 
     ini_mod = types.ModuleType("tbottest.initconfig")
-    ini_mod.IniTBotConfig = lambda: types.SimpleNamespace(config_parser=cp)
+    ini_mod.IniTBotConfig = lambda: FakeIniTBotConfig(cp)
     sys.modules.setdefault("tbottest", types.ModuleType("tbottest"))
     sys.modules["tbottest.initconfig"] = ini_mod
     return cp

@@ -231,3 +231,89 @@ class TestInitGetConfigKeys:
 
     def test_no_sections(self):
         assert init_keys.init_get_config_keys(self._cp({"default": {"a": "1"}}), "ub_env_") == []
+
+
+class TestSectionConfig:
+    """init_section_get_config() and the helpers built on it, as
+    tests/conftest.py loads them from tbottest/initconfig.py"""
+
+    @pytest.fixture
+    def ini(self):
+        from conftest import load_initconfig_functions
+
+        return load_initconfig_functions(boardname="amc", labsection="LABHOST_lab2")
+
+    @pytest.fixture
+    def cp(self):
+        import configparser
+
+        cp = configparser.RawConfigParser()
+        cp.read_dict(
+            {
+                "LABHOST": {"hostname": "cm4-lab-2"},
+                "LABHOST_lab2": {"hostname": "cm4-lab", "uselocking": "no"},
+                "BUILDHOST": {"name": "b", "docker": "None", "install": "Yes"},
+                "BUILDHOST_local": {"name": "l"},
+                "TC": {"ignore_hostkey": "false", "tmpdir": "None"},
+                "TC_amc": {"ignore_hostkey": "on"},
+            }
+        )
+        return cp
+
+    def test_value_as_written(self, ini, cp):
+        assert ini.init_section_get_config(cp, "BUILDHOST", "docker") == "None"
+
+    def test_default_for_missing_key_and_section(self, ini, cp):
+        assert ini.init_section_get_config(cp, "BUILDHOST", "port", 22) == 22
+        assert ini.init_section_get_config(cp, "SSHMACHINE", "name", None) is None
+
+    def test_required_key_missing(self, ini, cp):
+        with pytest.raises(RuntimeError, match=r"key port missing in section \[BUILDHOST\]"):
+            ini.init_section_get_config(cp, "BUILDHOST", "port")
+        with pytest.raises(RuntimeError, match=r"section \[SSHMACHINE\]"):
+            ini.init_section_get_config(cp, "SSHMACHINE", "name")
+
+    def test_lab_section_from_inithelper(self, ini, cp):
+        assert ini.init_lab_get_config(cp, "hostname") == "cm4-lab"
+        assert ini.init_lab_get_config(cp, "testdir", None) is None
+        with pytest.raises(RuntimeError, match=r"LABHOST_lab2"):
+            ini.init_lab_get_config(cp, "tftproot")
+
+    @pytest.mark.parametrize(
+        "value,result", [("1", True), ("Yes", True), ("ON", True), ("0", False), ("off", False)]
+    )
+    def test_config_to_bool(self, ini, value, result):
+        assert ini.init_config_to_bool(value) is result
+
+    def test_config_to_bool_invalid(self, ini):
+        with pytest.raises(ValueError, match="not a boolean: maybe"):
+            ini.init_config_to_bool("maybe")
+
+    def test_section_bool(self, ini, cp):
+        assert ini.init_section_get_config_bool(cp, "BUILDHOST", "install", False) is True
+        assert ini.init_section_get_config_bool(cp, "BUILDHOST", "missing", True) is True
+
+    def test_tc_bool_board_section_first(self, ini, cp):
+        assert ini.init_get_config_bool(cp, "ignore_hostkey", False) is True
+        cp.remove_option("TC_amc", "ignore_hostkey")
+        assert ini.init_get_config_bool(cp, "ignore_hostkey", True) is False
+
+    def test_tc_bool_none_is_default(self, ini, cp):
+        assert ini.init_get_config_bool(cp, "tmpdir", True) is True
+        assert ini.init_get_config_bool(cp, "missing", False) is False
+
+    def test_sections(self, ini, cp):
+        assert ini.init_has_section(cp, "BUILDHOST_local")
+        assert not ini.init_has_section(cp, "SSHMACHINE")
+        assert ini.init_find_sections(cp, "BUILDHOST") == ["BUILDHOST", "BUILDHOST_local"]
+        assert ini.init_find_sections(cp, "SSHMACHINE") == []
+
+    def test_methods_of_initbotconfig(self, cp):
+        from conftest import FakeIniTBotConfig
+
+        cfgt = FakeIniTBotConfig(cp, labsection="LABHOST_lab2")
+        assert cfgt.get_lab_config("uselocking") == "no"
+        assert cfgt.get_section_config("BUILDHOST_local", "name") == "l"
+        assert cfgt.get_section_config_bool("BUILDHOST", "install", False) is True
+        assert cfgt.has_section("TC_amc")
+        assert cfgt.find_sections("LABHOST") == ["LABHOST", "LABHOST_lab2"]
