@@ -230,10 +230,27 @@ class GenericUBoot(
         for name in ub_env_select(groups, depends, tbot.flags, bootcmds):
             envvalues = envvalues + groups[name]
         for ev in envvalues:
-            self.env(ev["name"], ev["val"])
+            if ub_env_flag_set(ev, tbot.flags):
+                self.env(ev["name"], ev["val"])
 
         if set_ub_board_specific:
             set_ub_board_specific(self)
+
+
+def ub_env_flag_set(ev: dict, flags) -> bool:
+    """
+    True if the U-Boot variable ev of ub_env is to be set
+
+    An entry with "flag" is set only if that tbot flag is given, as flag
+    or as flag:<value>; one without "flag" always.
+
+    :param ev: entry of ub_env, {"name": .., "val": .., "flag": ..}
+    :param flags: the tbot flags
+    """
+    flag = ev.get("flag")
+    if flag is None:
+        return True
+    return any(f == flag or f.startswith(flag + ":") for f in flags)
 
 
 def ub_env_groups(cfgp) -> dict:

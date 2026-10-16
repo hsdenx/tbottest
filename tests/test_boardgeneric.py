@@ -348,3 +348,24 @@ class TestUbEnvBootcmd:
         ub = load_ub_env()
         cp = BoardIni({"TC": {"ub_env_bootcmd": str(BOOTCMDS)}})
         assert ub.ub_env_groups(cp) == {}
+
+
+class TestUbEnvFlagSet:
+    @pytest.fixture
+    def flag_set(self):
+        return load_definition(
+            "tbottest_boardgeneric_ub_env_flag_set_only", BOARDGENERIC_PATH, "ub_env_flag_set"
+        ).ub_env_flag_set
+
+    def test_without_flag_always(self, flag_set):
+        assert flag_set({"name": "console", "val": "ttyCPM0"}, set())
+
+    def test_with_flag(self, flag_set):
+        ev = {"name": "console", "val": "silent", "flag": "silent"}
+        assert flag_set(ev, {"silent"})
+        assert not flag_set(ev, {"silentx", "nosilent"})
+        assert not flag_set(ev, set())
+
+    def test_value_flag(self, flag_set):
+        ev = {"name": "x", "val": "1", "flag": "kasvariant"}
+        assert flag_set(ev, {"kasvariant:glibc"})

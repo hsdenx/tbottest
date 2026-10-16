@@ -891,7 +891,7 @@ settings needed for U-Boot testcases.
         "fb_res_setup", "u-boot commands for setting up rescue image boot with fastboot and uuu tool", "None", "run ramargs addcon addmtd addopt"
         "fb_res_boot", "u-boot command for booting rescue image with fastboot and uuu tool", "None", "bootm 94000000"
         "fb_cmd", "fastboot init command", "None", "fastboot usb 0"
-        "ub_env","list dict of u-boot environment variables which get set after login into u-boot, always, before the ub_env_<name> groups","[]","[{""name"":""optargs"", ""val"":""earlycon clk_ignore_unused""}]"
+        "ub_env","list dict of u-boot environment variables which get set after login into u-boot, always, before the ub_env_<name> groups. An entry with ""flag"" is set only with that tbot flag, see `JSON configuration and expressions`_","[]","[{""name"":""optargs"", ""val"":""earlycon clk_ignore_unused""}]"
         "ub_env_<name>","a group of u-boot environment variables, same format as ub_env, set after ub_env when selected with the tbot flag ub_env (all groups without the flag), see `ub_env groups`_","None","ub_env_setip = [{""name"":""ipaddr"", ""val"":""192.168.3.20""}]"
         "ub_env_depends","dictionary group name to the list of groups it needs; a selected group pulls them in, and they are set before it","{}","{""nfsboot"": [""setip""]}"
         "ub_env_bootcmd","dictionary boot command to the list of groups it needs; the tbot flag bootcmd:<cmd> selects them, see `ub_env groups`_","{}","{""net_fit"": [""fitboot""]}"
