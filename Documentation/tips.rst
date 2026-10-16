@@ -10,6 +10,26 @@ enable commandline completions with:
 
         $ source tbottest/completions.sh
 
+testcase parameters
+-------------------
+
+tbot passes parameters from the command line to a testcase, either to one
+testcase with ``module.function:NAME=VALUE`` or to every testcase that has
+the parameter with ``-p NAME=VALUE``, for example
+
+.. code-block:: bash
+
+   $ ./tbottest/newtbot_starter.py @tbotconfig/BOARDNAME/args/argsBOARDNAME tbotconfig.tc.ping:host=192.168.3.1:count=3
+   $ ./tbottest/newtbot_starter.py @tbotconfig/BOARDNAME/args/argsBOARDNAME -p count=3 tbotconfig.tc.ping tbotconfig.tc.iperf
+
+A parameter annotated as ``str`` gets the value unchanged, all others get
+it as Python literal (``3``, ``True``, ``[1, 2]``) or else as string. The
+value is never run as Python code. tbot checks the parameters of all
+testcases before the first one runs. The rules are in the tbot
+documentation, ``Documentation/cli.rst``, section "Testcase Parameters".
+
+This needs a tbot with ``newbot: pass parameters to testcases``.
+
 
 fast testcase development
 -------------------------
