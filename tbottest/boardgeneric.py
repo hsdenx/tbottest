@@ -187,7 +187,7 @@ class GenericUBoot(
 
         cmd = self.escape(*args)
         with tbot.log_event.command(self.name, cmd) as ev:
-            self.ch.sendline(cmd, read_back=True)
+            self._sendline_read_echo(self.ch, cmd)
             with self.ch.with_stream(ev, show_prompt=False):
                 out = self.ch.read_until_prompt()
             ev.data["stdout"] = out
