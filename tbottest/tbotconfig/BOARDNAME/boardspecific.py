@@ -1,9 +1,9 @@
-import configparser
-from configparser import ExtendedInterpolation
-
 import tbot
 
 from tbottest.initconfig import generic_get_boardname
+from tbottest.initconfig import init_lab_get_config
+from tbottest.initconfig import init_read_inifile
+from tbottest.initconfig import init_section_get_config
 from tbottest.initconfig import replace_in_file
 from tbottest.initconfig import find_in_file_and_delete
 
@@ -23,19 +23,12 @@ def BOARDNAME_get_lab_serverip(filename: str = None):
     if filename is None:
         raise RuntimeError("serverip not setup")
 
-    # read from ini file
-    config_parser = configparser.RawConfigParser(interpolation=ExtendedInterpolation())
-    config_parser.read(filename)
-    for s in config_parser.sections():
-        if "IPSETUP" in s:
-            nm = s.split("_")[1]
-            dev = s.split("_")[2]
-
-            if nm == generic_get_boardname() and dev == "eth0":
-                SERVERIP = config_parser.get(s, "serverip")
-                return SERVERIP
-
-    raise RuntimeError("serverip setup not found")
+    # read from ini file, section IPSETUP_<boardname>_eth0
+    section = f"IPSETUP_{generic_get_boardname()}_eth0"
+    SERVERIP = init_section_get_config(init_read_inifile(filename), section, "serverip", None)
+    if SERVERIP is None:
+        raise RuntimeError("serverip setup not found")
+    return SERVERIP
 
 
 IPADDR = None
@@ -53,19 +46,12 @@ def BOARDNAME_get_board_ipaddr(filename: str = None):
     if filename is None:
         raise RuntimeError("ipaddr not setup")
 
-    # read from ini file
-    config_parser = configparser.RawConfigParser(interpolation=ExtendedInterpolation())
-    config_parser.read(filename)
-    for s in config_parser.sections():
-        if "IPSETUP" in s:
-            nm = s.split("_")[1]
-            dev = s.split("_")[2]
-
-            if nm == generic_get_boardname() and dev == "eth0":
-                IPADDR = config_parser.get(s, "ipaddr")
-                return IPADDR
-
-    raise RuntimeError("ipaddr not found")
+    # read from ini file, section IPSETUP_<boardname>_eth0
+    section = f"IPSETUP_{generic_get_boardname()}_eth0"
+    IPADDR = init_section_get_config(init_read_inifile(filename), section, "ipaddr", None)
+    if IPADDR is None:
+        raise RuntimeError("ipaddr not found")
+    return IPADDR
 
 
 def board_set_boardname() -> str:
@@ -192,16 +178,5 @@ def set_board_cfg(temp: str = None, filename: str = None):  # noqa: C901
 
     # replace in board file setttings from tbot.ini
     if "tbot.ini" not in str(filename):
-        config_parser = configparser.RawConfigParser(
-            interpolation=ExtendedInterpolation()
-        )
-        config_parser.read(TBOTFILE)
-        for s in config_parser.sections():
-            if "LABHOST" in s:
-                try:
-                    basepath = config_parser.get(s, "nfs_base_path")
-                except Exception:
-                    raise RuntimeError(
-                        f"Could not find 'nfs_base_path' key in section 'default' in {filename}"
-                    )
+        basepath = init_lab_get_config(init_read_inifile(TBOTFILE), "nfs_base_path")
         replace_in_file(filename, "@@TBOTLABBASENFSPATH@@", basepath)

@@ -233,6 +233,22 @@ def init_get_config_bool(
     return init_config_to_bool(value)
 
 
+def init_read_inifile(filename: str) -> configparser.RawConfigParser:
+    """
+    returns a configparser with the ini file filename read, the way
+    IniTBotConfig and IniConfig read theirs
+
+    For code that has to read an ini file before IniTBotConfig and
+    IniConfig exist, e.g. set_board_cfg() in boardspecific.py. Read its
+    values with the init_*_config functions.
+
+    :param filename: path of the ini file
+    """
+    cfgp = configparser.RawConfigParser(interpolation=ExtendedInterpolation())
+    cfgp.read(filename)
+    return cfgp
+
+
 def init_has_section(cfgp: configparser.RawConfigParser, section: str) -> bool:
     """
     returns True if the configparser has section

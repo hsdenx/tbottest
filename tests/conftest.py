@@ -275,6 +275,7 @@ INITCONFIG_FUNCTIONS = (
     "init_has_section",
     "init_find_sections",
     "init_lab_get_config",
+    "init_read_inifile",
 )
 INITBOTCONFIG_METHODS = (
     "get_section_config",
@@ -297,6 +298,7 @@ def load_initconfig_functions(boardname: str = "testboard", labsection: str = "L
     src = open(INITCONFIG_PATH).read()
     parts = [
         "import configparser",
+        "from configparser import ExtendedInterpolation",
         "import types",
         f"def generic_get_boardname():\n    return {boardname!r}",
         f"inithelper = types.SimpleNamespace(get_lab_sectionname=lambda: {labsection!r})",
