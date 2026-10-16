@@ -595,32 +595,21 @@ class IniTBotConfig(metaclass=_Singleton):
 
                 self.bdi2000cfg[nm] = cfg
 
+        # the sections of the board's console and power control, by their
+        # exact name <type>_<boardname>, as labgeneric.py reads them
         bn = generic_get_boardname()
-        for s in self.config_parser.sections():
-            if f"PICOCOM_{bn}" in s:
-                self.picocom = True
-            if f"KERMIT_{bn}" in s:
-                self.kermit = True
-            if f"SCRIPTCOM_{bn}" in s:
-                self.scriptcom = True
-            if f"TELNET_{bn}" in s:
-                self.telnet = True
-            if f"SISPMCTRL_{bn}" in s:
-                self.sispmctrl = True
-            if f"POWERSHELLSCRIPT_{bn}" in s:
-                self.powershellscript = True
-            if f"GPIOPMCTRL_{bn}" in s:
-                self.gpiopowerctrl = True
-            if f"TF_{bn}" in s:
-                self.tinkerforce = True
-            if f"TM021_{bn}" in s:
-                self.tm021 = True
-            if f"TBOX_{bn}" in s:
-                self.tbox = True
-            if f"TBOX_HWDAEMON_{bn}" in s:
-                self.tboxhwdaemon = True
-            if f"SHELLY_{bn}" in s:
-                self.shelly = True
+        self.picocom = init_has_section(self.config_parser, f"PICOCOM_{bn}")
+        self.kermit = init_has_section(self.config_parser, f"KERMIT_{bn}")
+        self.scriptcom = init_has_section(self.config_parser, f"SCRIPTCOM_{bn}")
+        self.telnet = init_has_section(self.config_parser, f"TELNET_{bn}")
+        self.sispmctrl = init_has_section(self.config_parser, f"SISPMCTRL_{bn}")
+        self.powershellscript = init_has_section(self.config_parser, f"POWERSHELLSCRIPT_{bn}")
+        self.gpiopowerctrl = init_has_section(self.config_parser, f"GPIOPMCTRL_{bn}")
+        self.tinkerforce = init_has_section(self.config_parser, f"TF_{bn}")
+        self.tm021 = init_has_section(self.config_parser, f"TM021_{bn}")
+        self.tbox = init_has_section(self.config_parser, f"TBOX_{bn}")
+        self.tboxhwdaemon = init_has_section(self.config_parser, f"TBOX_HWDAEMON_{bn}")
+        self.shelly = init_has_section(self.config_parser, f"SHELLY_{bn}")
 
         atexit.register(self.cleanup)
 
