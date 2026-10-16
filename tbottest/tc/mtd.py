@@ -182,8 +182,8 @@ def lnx_mtd_dump(
         ip = lab.ethdevices[ini.generic_get_boardname()][ethdevice]["ipaddr"]
         # The linux classes that log in on the console carry the password,
         # the ssh one (-fssh) does not; then take it from the board ini.
-        password = getattr(lnx, "password", None) or ini.init_get_config(
-            ini.IniConfig().config_parser, "linux_password", "None"
+        password = getattr(lnx, "password", None) or ini.IniConfig().get_config(
+            "linux_password", "None"
         )
         if not password:
             raise RuntimeError("no linux_password in the board ini")

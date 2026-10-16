@@ -20,13 +20,16 @@ from tbot.machine import linux
 LABINIT_MARKER = "/tmp/tbotlabinitdone"
 
 
-def labinit_from_config(config_parser, section: str) -> list:
+def labinit_from_config(value) -> list:
     """
-    returns the list of labinit commands from section, or an empty list
-    if the entry is missing or not a valid python list
+    returns the list of labinit commands of the key labinit in the lab
+    section of tbot.ini, or an empty list if the value is None (key
+    missing) or not a valid python list
+
+    :param value: value of the key labinit, IniTBotConfig.get_lab_config()
     """
     try:
-        return list(ast.literal_eval(config_parser.get(section, "labinit")))
+        return list(ast.literal_eval(value))
     except Exception:
         return []
 

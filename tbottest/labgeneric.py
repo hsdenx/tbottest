@@ -37,78 +37,68 @@ else:
 class boardPicocomConnector(PicocomConnector):
     bn = ini.generic_get_boardname()
     cfg = f"PICOCOM_{bn}"
-    for s in cfgt.config_parser.sections():
-        if cfg == s:
-            baudrate = cfgt.config_parser.get(s, "baudrate")
-            device = cfgt.config_parser.get(s, "device")
-            delay = int(cfgt.config_parser.get(s, "delay"))
-            try:
-                tmp = cfgt.config_parser.get(s, "noreset")
-                if "True" in tmp:
-                    noreset = True
-            except Exception:
-                pass
-            if cfgt.config_parser.has_option(s, "slow_send_delay"):
-                slow_send_delay = cfgt.config_parser.getfloat(s, "slow_send_delay")
-            if cfgt.config_parser.has_option(s, "slow_send_chunksize"):
-                slow_send_chunksize = cfgt.config_parser.getint(
-                    s, "slow_send_chunksize"
-                )
+    if cfgt.has_section(cfg):
+        baudrate = cfgt.get_section_config(cfg, "baudrate")
+        device = cfgt.get_section_config(cfg, "device")
+        delay = int(cfgt.get_section_config(cfg, "delay"))
+        if "True" in cfgt.get_section_config(cfg, "noreset", ""):
+            noreset = True
+        _tmp = cfgt.get_section_config(cfg, "slow_send_delay", None)
+        if _tmp is not None:
+            slow_send_delay = float(_tmp)
+        _tmp = cfgt.get_section_config(cfg, "slow_send_chunksize", None)
+        if _tmp is not None:
+            slow_send_chunksize = int(_tmp)
 
 
 class boardScriptConnector(ScriptConnector):
     bn = ini.generic_get_boardname()
     cfg = f"SCRIPTCOM_{bn}"
-    for s in cfgt.config_parser.sections():
-        if cfg == s:
-            scriptname = cfgt.config_parser.get(s, "scriptname")
-            exitstring = cfgt.config_parser.get(s, "exitstring")
-            boardname = bn
+    if cfgt.has_section(cfg):
+        scriptname = cfgt.get_section_config(cfg, "scriptname")
+        exitstring = cfgt.get_section_config(cfg, "exitstring")
+        boardname = bn
 
 
 class boardKermitConnector(KermitConnector):
     bn = ini.generic_get_boardname()
     cfg = f"KERMIT_{bn}"
-    for s in cfgt.config_parser.sections():
-        if cfg == s:
-            kermit_cfg_file = cfgt.config_parser.get(s, "cfgfile")
-            kermit_delay = int(cfgt.config_parser.get(s, "delay"))
-            name = ini.generic_get_boardname()
-            try:
-                kermit_options = ast.literal_eval(
-                    cfgt.config_parser.get(s, "kermit_options")
-                )
-            except Exception:
-                pass
+    if cfgt.has_section(cfg):
+        kermit_cfg_file = cfgt.get_section_config(cfg, "cfgfile")
+        kermit_delay = int(cfgt.get_section_config(cfg, "delay"))
+        name = ini.generic_get_boardname()
+        try:
+            kermit_options = ast.literal_eval(
+                cfgt.get_section_config(cfg, "kermit_options")
+            )
+        except Exception:
+            pass
 
 
 class boardTelnetConnector(TelnetConnector):
     bn = ini.generic_get_boardname()
     cfg = f"TELNET_{bn}"
-    for s in cfgt.config_parser.sections():
-        if cfg == s:
-            telnet_port = int(cfgt.config_parser.get(s, "port"))
-            try:
-                telnet_host = cfgt.config_parser.get(s, "host")
-            except Exception:
-                pass
-            try:
-                telnet_delay = int(cfgt.config_parser.get(s, "delay"))
-            except Exception:
-                pass
+    if cfgt.has_section(cfg):
+        telnet_port = int(cfgt.get_section_config(cfg, "port"))
+        _tmp = cfgt.get_section_config(cfg, "host", None)
+        if _tmp is not None:
+            telnet_host = _tmp
+        try:
+            telnet_delay = int(cfgt.get_section_config(cfg, "delay"))
+        except Exception:
+            pass
 
 
 class boardSSHConnector(connector.SSHConnector):
 
     cfgl = ini.IniConfig()
-    cfgp = cfgl.config_parser
-    tmpdir = cfgp.get("TC", "tmpdir", fallback="/tmp")
+    tmpdir = cfgl.get_config("tmpdir", "/tmp")
 
-    ign_hostkey = cfgp.getboolean("TC", "ignore_hostkey", fallback=True)
+    ign_hostkey = cfgl.get_config_bool("ignore_hostkey", True)
     if ign_hostkey:
         ignore_hostkey = True
 
-    username = ini.init_get_config(cfgp, "linux_user", "root")
+    username = cfgl.get_config("linux_user", "root")
     # hostname for ssh machine to board
     try:
         board_detect_lx_ethernet_interface = getattr(
@@ -123,7 +113,7 @@ class boardSSHConnector(connector.SSHConnector):
 
     try:
         ssh_ip_section = f"IPSETUP_{ini.generic_get_boardname()}_{IP_BOARD_SSH_INTERFACE}"
-        IP_BOARD = cfgt.config_parser.get(ssh_ip_section, "ipaddr")
+        IP_BOARD = cfgt.get_section_config(ssh_ip_section, "ipaddr")
         hostname = IP_BOARD
     except Exception:
         RuntimeError(
@@ -133,12 +123,11 @@ class boardSSHConnector(connector.SSHConnector):
     @property
     def authenticator(self) -> linux.auth.Authenticator:
         cfgb = ini.IniConfig()
-        cfgp = cfgb.config_parser
-        ssh_keyfile = ini.init_get_config(cfgp, "ssh_keyfile", "None")
+        ssh_keyfile = cfgb.get_config("ssh_keyfile", "None")
         if ssh_keyfile:
             return linux.auth.PrivateKeyAuthenticator(ssh_keyfile)
 
-        ssh_password = ini.init_get_config(cfgp, "ssh_password", "None")
+        ssh_password = cfgb.get_config("ssh_password", "None")
         if ssh_password:
             return linux.auth.PasswordAuthenticator(ssh_password)
 
@@ -155,10 +144,9 @@ class boardGpioControl(powercontrol.GpiopmControl):
 
     bn = ini.generic_get_boardname()
     cfg = f"GPIOPMCTRL_{bn}"
-    for s in cfgt.config_parser.sections():
-        if cfg == s:
-            gpiopmctl_pin = cfgt.config_parser.get(s, "gpiopmctl_pin")
-            gpiopmctl_state = cfgt.config_parser.get(s, "gpiopmctl_state")
+    if cfgt.has_section(cfg):
+        gpiopmctl_pin = cfgt.get_section_config(cfg, "gpiopmctl_pin")
+        gpiopmctl_state = cfgt.get_section_config(cfg, "gpiopmctl_state")
 
 
 class boardPowerShellControl(powercontrol.PowerShellScriptControl):
@@ -170,9 +158,8 @@ class boardPowerShellControl(powercontrol.PowerShellScriptControl):
 
     bn = ini.generic_get_boardname()
     cfg = f"POWERSHELLSCRIPT_{bn}"
-    for s in cfgt.config_parser.sections():
-        if cfg == s:
-            shell_script = ast.literal_eval(cfgt.config_parser.get(s, "script"))
+    if cfgt.has_section(cfg):
+        shell_script = ast.literal_eval(cfgt.get_section_config(cfg, "script"))
 
 
 class boardShellyControl(powercontrol.ShellyControl):
@@ -184,13 +171,12 @@ class boardShellyControl(powercontrol.ShellyControl):
 
     bn = ini.generic_get_boardname()
     cfg = f"SHELLY_{bn}"
-    for s in cfgt.config_parser.sections():
-        if cfg == s:
-            shelly_device = cfgt.config_parser.get(s, "device")
-            shelly_id = cfgt.config_parser.get(s, "id", fallback="0")
-            shelly_command = cfgt.config_parser.get(s, "command", fallback=None)
-            shelly_timeout = cfgt.config_parser.get(s, "timeout", fallback=None)
-            shelly_install = cfgt.config_parser.getboolean(s, "install", fallback=True)
+    if cfgt.has_section(cfg):
+        shelly_device = cfgt.get_section_config(cfg, "device")
+        shelly_id = cfgt.get_section_config(cfg, "id", "0")
+        shelly_command = cfgt.get_section_config(cfg, "command", None)
+        shelly_timeout = cfgt.get_section_config(cfg, "timeout", None)
+        shelly_install = cfgt.get_section_config_bool(cfg, "install", True)
 
 
 class boardSisControl(powercontrol.SispmControl):
@@ -202,10 +188,9 @@ class boardSisControl(powercontrol.SispmControl):
 
     bn = ini.generic_get_boardname()
     cfg = f"SISPMCTRL_{bn}"
-    for s in cfgt.config_parser.sections():
-        if cfg == s:
-            sispmctl_device = cfgt.config_parser.get(s, "device")
-            sispmctl_port = cfgt.config_parser.get(s, "port")
+    if cfgt.has_section(cfg):
+        sispmctl_device = cfgt.get_section_config(cfg, "device")
+        sispmctl_port = cfgt.get_section_config(cfg, "port")
 
 
 class boardTboxControl(powercontrol.TboxCtrlControl):
@@ -217,14 +202,13 @@ class boardTboxControl(powercontrol.TboxCtrlControl):
 
     bn = ini.generic_get_boardname()
     cfg = f"TBOX_{bn}"
-    for s in cfgt.config_parser.sections():
-        if cfg == s:
-            tbox_powerpin = cfgt.config_parser.get(s, "powerpin")
+    if cfgt.has_section(cfg):
+        tbox_powerpin = cfgt.get_section_config(cfg, "powerpin")
 
-            _vid = cfgt.config_parser.get(s, "vid", fallback=None)
-            _pid = cfgt.config_parser.get(s, "pid", fallback=None)
-            tbox_vid = int(_vid, 0) if _vid else None
-            tbox_pid = int(_pid, 0) if _pid else None
+        _vid = cfgt.get_section_config(cfg, "vid", None)
+        _pid = cfgt.get_section_config(cfg, "pid", None)
+        tbox_vid = int(_vid, 0) if _vid else None
+        tbox_pid = int(_pid, 0) if _pid else None
 
 
 class boardTboxHwdaemonControl(powercontrol.TboxHwdaemonControl):
@@ -236,12 +220,11 @@ class boardTboxHwdaemonControl(powercontrol.TboxHwdaemonControl):
 
     bn = ini.generic_get_boardname()
     cfg = f"TBOX_HWDAEMON_{bn}"
-    for s in cfgt.config_parser.sections():
-        if cfg == s:
-            hwdaemon_boardname = cfgt.config_parser.get(s, "boardname")
-            _configfile = cfgt.config_parser.get(s, "configfile", fallback=None)
-            if _configfile:
-                hwdaemon_configfile = _configfile
+    if cfgt.has_section(cfg):
+        hwdaemon_boardname = cfgt.get_section_config(cfg, "boardname")
+        _configfile = cfgt.get_section_config(cfg, "configfile", None)
+        if _configfile:
+            hwdaemon_configfile = _configfile
 
 
 class boardTMControl(powercontrol.TM021Control):
@@ -253,24 +236,22 @@ class boardTMControl(powercontrol.TM021Control):
 
     bn = ini.generic_get_boardname()
     cfg = f"TM021_{bn}"
-    for s in cfgt.config_parser.sections():
-        if cfg == s:
-            tm021_device = cfgt.config_parser.get(s, "device")
-            tm021_baudrate = cfgt.config_parser.get(s, "baudrate")
-            tm021_timeout = cfgt.config_parser.get(s, "timeout")
-            tm021_address = cfgt.config_parser.get(s, "address")
-            tm021_port = cfgt.config_parser.get(s, "port")
-            tm021_debug = cfgt.config_parser.get(s, "debug")
+    if cfgt.has_section(cfg):
+        tm021_device = cfgt.get_section_config(cfg, "device")
+        tm021_baudrate = cfgt.get_section_config(cfg, "baudrate")
+        tm021_timeout = cfgt.get_section_config(cfg, "timeout")
+        tm021_address = cfgt.get_section_config(cfg, "address")
+        tm021_port = cfgt.get_section_config(cfg, "port")
+        tm021_debug = cfgt.get_section_config(cfg, "debug")
 
 
 class boardTFControl(powercontrol.TinkerforgeControl):
     bn = ini.generic_get_boardname()
     cfg = f"TF_{bn}"
-    for s in cfgt.config_parser.sections():
-        if cfg == s:
-            name = s.split("_")[1]
-            uid = cfgt.config_parser.get(s, "uid")
-            channel = cfgt.config_parser.get(s, "channel")
+    if cfgt.has_section(cfg):
+        name = cfg.split("_")[1]
+        uid = cfgt.get_section_config(cfg, "uid")
+        channel = cfgt.get_section_config(cfg, "channel")
 
 
 if "tinkerforge" in tbot.flags:
@@ -480,21 +461,17 @@ BH = typing.TypeVar("BH", bound=linux.Builder)
 class GenericLab(CmdVersionsMixin, CON, LAB_LINUX_SHELL, linux.Lab, linux.Builder):
     sectionname = LABSECTIONNAME
     # preset for cmd_get_version(), see tbottest.cmdversions
-    cmd_versions_config = ini.init_lab_get_config(cfgt.config_parser, "cmd_versions", None)
+    cmd_versions_config = cfgt.get_lab_config("cmd_versions", None)
     tmpdir_exists = False
     nfsbasedir = True
     nfsboardbasedir = True
-    name = cfgt.config_parser.get(LABSECTIONNAME, "labname")
-    hostname = cfgt.config_parser.get(LABSECTIONNAME, "hostname")
-    username = cfgt.config_parser.get(LABSECTIONNAME, "username")
-    tftproot = cfgt.config_parser.get(LABSECTIONNAME, "tftproot")
-    port = cfgt.config_parser.get(LABSECTIONNAME, "port", fallback=22)
-    nfs_base_path = cfgt.config_parser.get(LABSECTIONNAME, "nfs_base_path")
-    try:
-        enablelocking = cfgt.config_parser.get(LABSECTIONNAME, "uselocking")
-        enablelocking = enablelocking.lower()
-    except Exception:
-        enablelocking = "no"
+    name = cfgt.get_lab_config("labname")
+    hostname = cfgt.get_lab_config("hostname")
+    username = cfgt.get_lab_config("username")
+    tftproot = cfgt.get_lab_config("tftproot")
+    port = cfgt.get_lab_config("port", 22)
+    nfs_base_path = cfgt.get_lab_config("nfs_base_path")
+    enablelocking = cfgt.get_lab_config("uselocking", "no").lower()
 
     bootmodecfg = cfgt.bootmodecfg
     ubcfg = cfgt.ubcfg
@@ -513,26 +490,22 @@ class GenericLab(CmdVersionsMixin, CON, LAB_LINUX_SHELL, linux.Lab, linux.Builde
         """
         args = []
         if "outside" in tbot.flags:
-            try:
-                tmp = cfgt.config_parser.get(LABSECTIONNAME, "proxyjump")
+            tmp = cfgt.get_lab_config("proxyjump", None)
+            if tmp is not None:
                 args.append(f"ProxyJump={tmp}")
-            except Exception:
-                pass
 
         return args
 
     @property
     def authenticator(self) -> linux.auth.Authenticator:
-        try:
-            tmp = cfgt.config_parser.get(LABSECTIONNAME, "sshkeyfile")
+        tmp = cfgt.get_lab_config("sshkeyfile", None)
+        if tmp is not None:
             return linux.auth.PrivateKeyAuthenticator(tmp)
-        except Exception:
-            pass
 
-        try:
-            password = cfgt.config_parser.get(LABSECTIONNAME, "password")
+        password = cfgt.get_lab_config("password", None)
+        if password is not None:
             return linux.auth.PasswordAuthenticator(password)
-        except Exception:
+        else:
             raise RuntimeError(
                 f"you need to setup Authenticator for {self.name}. Set 'sshkeyfile' or 'password' in section [{LABSECTIONNAME}] in tbot.ini"
             )
@@ -553,7 +526,7 @@ class GenericLab(CmdVersionsMixin, CON, LAB_LINUX_SHELL, linux.Lab, linux.Builde
         """
         returns tftp path for u-boot tftp command
         """
-        tmp = cfgt.config_parser.get(LABSECTIONNAME, "tftpsubdir")
+        tmp = cfgt.get_lab_config("tftpsubdir")
 
         return linux.Path(self, tmp)
 
@@ -561,7 +534,7 @@ class GenericLab(CmdVersionsMixin, CON, LAB_LINUX_SHELL, linux.Lab, linux.Builde
         """
         returns tbot workdir for this lab
         """
-        tmp = cfgt.config_parser.get(LABSECTIONNAME, "workdir")
+        tmp = cfgt.get_lab_config("workdir")
         return linux.Workdir.static(self, tmp)
 
     def testdir(self) -> "linux.path.Path[GenericLab]":
@@ -570,7 +543,7 @@ class GenericLab(CmdVersionsMixin, CON, LAB_LINUX_SHELL, linux.Lab, linux.Builde
         lab, key testdir in the lab section of tbot.ini, default
         <workdir>/tbottests
         """
-        tmp = cfgt.config_parser.get(LABSECTIONNAME, "testdir", fallback=None)
+        tmp = cfgt.get_lab_config("testdir", None)
         if not tmp:
             tmp = self.workdir()._local_str() + "/tbottests"
         return linux.Workdir.static(self, tmp)
@@ -579,7 +552,7 @@ class GenericLab(CmdVersionsMixin, CON, LAB_LINUX_SHELL, linux.Lab, linux.Builde
         """
         returns tbot tmpdir for this lab
         """
-        tmp = cfgt.config_parser.get(LABSECTIONNAME, "tmpdir")
+        tmp = cfgt.get_lab_config("tmpdir")
         if self.tmpdir_exists is False:
             ret, log = self.exec("ls", tmp)
             if ret != 0:
@@ -635,7 +608,7 @@ class GenericLab(CmdVersionsMixin, CON, LAB_LINUX_SHELL, linux.Lab, linux.Builde
         """
         returns directory where tbot finds tools
         """
-        tmp = cfgt.config_parser.get(LABSECTIONNAME, "toolsdir")
+        tmp = cfgt.get_lab_config("toolsdir")
         return linux.Path(self, tmp)
 
     def yocto_result_dir(self) -> "linux.Path[GenericLab]":
@@ -674,7 +647,7 @@ class GenericLab(CmdVersionsMixin, CON, LAB_LINUX_SHELL, linux.Lab, linux.Builde
             raise RuntimeError("only mode 'dut' or 'lab' allowed for mode not {mode}")
 
         try:
-            sdwireserial = cfgt.config_parser.get("SDWIRE", "serial")
+            sdwireserial = cfgt.get_section_config("SDWIRE", "serial")
             from tbottest.tc.common import lnx_sudo
 
             self.exec0(
@@ -847,18 +820,14 @@ class GenericLab(CmdVersionsMixin, CON, LAB_LINUX_SHELL, linux.Lab, linux.Builde
             ethinit = "noethinit" not in tbot.flags
             lab_init_once(
                 self,
-                labinit_from_config(cfgt.config_parser, LABSECTIONNAME),
+                labinit_from_config(cfgt.get_lab_config("labinit", None)),
                 bn,
                 self.ethdevices[bn] if ethinit else {},
                 ethinit=ethinit,
             )
 
     def has_sshmachine(self) -> bool:
-        for s in cfgt.config_parser.sections():
-            if "SSHMACHINE" in s:
-                return True
-
-        return False
+        return bool(cfgt.find_sections("SSHMACHINE"))
 
     def sshmachine(self) -> linux.Bash:
         if self.has_sshmachine:
@@ -869,11 +838,11 @@ class GenericLab(CmdVersionsMixin, CON, LAB_LINUX_SHELL, linux.Lab, linux.Builde
 
 class SSHMachine(connector.SSHConnector, linux.Bash):
     try:
-        name = cfgt.config_parser.get("SSHMACHINE", "name")
-        username = cfgt.config_parser.get("SSHMACHINE", "username")
-        port = cfgt.config_parser.get("SSHMACHINE", "port")
-        hostname = cfgt.config_parser.get("SSHMACHINE", "hostname")
-        wdir = cfgt.config_parser.get("SSHMACHINE", "workdir")
+        name = cfgt.get_section_config("SSHMACHINE", "name")
+        username = cfgt.get_section_config("SSHMACHINE", "username")
+        port = cfgt.get_section_config("SSHMACHINE", "port")
+        hostname = cfgt.get_section_config("SSHMACHINE", "hostname")
+        wdir = cfgt.get_section_config("SSHMACHINE", "workdir")
     except Exception:
         pass
 
@@ -881,7 +850,7 @@ class SSHMachine(connector.SSHConnector, linux.Bash):
         return self.workdir
 
     def toolsdir(self) -> "linux.path.Path[SSHMachine]":
-        toolsdir = cfgt.config_parser.get("SSHMACHINE", "toolsdir")
+        toolsdir = cfgt.get_section_config("SSHMACHINE", "toolsdir")
         return linux.Path(self, toolsdir)
 
     @property
@@ -894,7 +863,7 @@ class SSHMachine(connector.SSHConnector, linux.Bash):
         directory for what testcases install or build on this machine,
         key testdir in [SSHMACHINE], default <workdir>/tbottests
         """
-        tmp = cfgt.config_parser.get("SSHMACHINE", "testdir", fallback=None)
+        tmp = cfgt.get_section_config("SSHMACHINE", "testdir", None)
         if not tmp:
             tmp = self.wdir + "/tbottests"
         return linux.Workdir.static(self, tmp)
@@ -954,19 +923,12 @@ def register_machines(ctx):
     if _BDI2000CFG:
         ctx.register(GenericBDI2000, BDI2000)
     ctx.register(LocalHostTest, tbot.role.LocalHost)
-    for s in cfgt.config_parser.sections():
-        localfound = False
-        if "BUILDHOST" in s:
-            for f in tbot.flags:
-                if "buildername:local" in f:
-                    # build on machine, on which tbot is startet!
-                    ctx.register(builders.genericbuilderlocal, tbot.role.BuildHost)
-                    localfound = True
-
-            if not localfound:
-                ctx.register(builders.genericbuilder, tbot.role.BuildHost)
-
-            return
+    if cfgt.find_sections("BUILDHOST"):
+        if any("buildername:local" in f for f in tbot.flags):
+            # build on machine, on which tbot is startet!
+            ctx.register(builders.genericbuilderlocal, tbot.role.BuildHost)
+        else:
+            ctx.register(builders.genericbuilder, tbot.role.BuildHost)
 
 
 FLAGS = {

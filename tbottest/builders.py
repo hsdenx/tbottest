@@ -12,10 +12,7 @@ _INIT_CACHE: typing.Dict[str, bool] = {}
 
 
 def _get_or_placeholder(sn: str, key: str) -> str:
-    try:
-        return cfgt.config_parser.get(sn, key)
-    except Exception:
-        return "NOTDEFINED please add BUILDHOST_local in tbot.ini"
+    return cfgt.get_section_config(sn, key, "NOTDEFINED please add BUILDHOST_local in tbot.ini")
 
 
 class _BuilderPathsMixin:
@@ -27,12 +24,12 @@ class _BuilderPathsMixin:
 
     @property
     def kas_ref_dir(self) -> "linux.Path[genericbuilder]":
-        kas_ref_dir = cfgt.config_parser.get(self.sn, "kas_ref_dir")
+        kas_ref_dir = cfgt.get_section_config(self.sn, "kas_ref_dir")
         return linux.Workdir.static(self, kas_ref_dir)
 
     @property
     def workdir(self) -> "linux.Path[genericbuilder]":
-        workdir = cfgt.config_parser.get(self.sn, "workdir")
+        workdir = cfgt.get_section_config(self.sn, "workdir")
         if workdir[0] != "/":
             workdir = os.getcwd() + "/" + workdir
         return linux.Workdir.static(self, workdir)
@@ -44,7 +41,7 @@ class _BuilderPathsMixin:
         key testdir, default <workdir>/tbottests; a relative path is taken
         from the current directory, as for workdir
         """
-        testdir = cfgt.config_parser.get(self.sn, "testdir", fallback=None)
+        testdir = cfgt.get_section_config(self.sn, "testdir", None)
         if not testdir:
             testdir = self.workdir._local_str() + "/tbottests"
         elif testdir[0] != "/":
@@ -59,7 +56,7 @@ class _BuilderPathsMixin:
         if cachekey not in _INIT_CACHE:
             _INIT_CACHE[cachekey] = True
             try:
-                initcmd = ast.literal_eval(cfgt.config_parser.get(self.sn, "initcmd"))
+                initcmd = ast.literal_eval(cfgt.get_section_config(self.sn, "initcmd"))
             except Exception:
                 initcmd = []
 
@@ -81,11 +78,11 @@ class genericbuilder(_BuilderPathsMixin, connector.SSHConnector, linux.Bash, lin
         return "BUILDHOST"
 
     sn = builder_get_sectionname()
-    name = cfgt.config_parser.get(sn, "name")
-    username = cfgt.config_parser.get(sn, "username")
-    hostname = cfgt.config_parser.get(sn, "hostname")
-    dl_dir = cfgt.config_parser.get(sn, "dl_dir")
-    sstate_dir = cfgt.config_parser.get(sn, "sstate_dir")
+    name = cfgt.get_section_config(sn, "name")
+    username = cfgt.get_section_config(sn, "username")
+    hostname = cfgt.get_section_config(sn, "hostname")
+    dl_dir = cfgt.get_section_config(sn, "dl_dir")
+    sstate_dir = cfgt.get_section_config(sn, "sstate_dir")
 
     @property
     def ssh_config(self) -> typing.List[str]:
@@ -97,11 +94,9 @@ class genericbuilder(_BuilderPathsMixin, connector.SSHConnector, linux.Bash, lin
         """
         args = []
         if "docker" in tbot.flags:
-            try:
-                tmp = cfgt.config_parser.get(self.sn, "docker")
+            tmp = cfgt.get_section_config(self.sn, "docker", None)
+            if tmp is not None:
                 args.append(f"ProxyJump={tmp}")
-            except Exception:
-                pass
 
         return args
 
@@ -113,18 +108,17 @@ class genericbuilder(_BuilderPathsMixin, connector.SSHConnector, linux.Bash, lin
         :rtype: int
         """
         try:
-            port = cfgt.config_parser.get(self.sn, "port")
-            return int(port)
-        except Exception:
+            return int(cfgt.get_section_config(self.sn, "port", 22))
+        except ValueError:
             return 22
 
     @property
     def authenticator(self) -> linux.auth.Authenticator:
-        auth = cfgt.config_parser.get(self.sn, "authenticator", fallback=None)
+        auth = cfgt.get_section_config(self.sn, "authenticator", None)
         if auth:
             return linux.auth.PrivateKeyAuthenticator(pathlib.PurePosixPath(auth))
 
-        password = cfgt.config_parser.get(self.sn, "password", fallback=None)
+        password = cfgt.get_section_config(self.sn, "password", None)
         if password:
             return linux.auth.PasswordAuthenticator(password)
 

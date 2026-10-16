@@ -8,6 +8,7 @@ tbottest.boardgeneric and tbot's linux module.
 """
 
 import ast
+import configparser
 import os
 import sys
 import textwrap
@@ -15,20 +16,20 @@ import types
 
 import pytest
 
+from conftest import FakeIniTBotConfig
+
 LABGENERIC_PATH = os.path.join(
     os.path.dirname(__file__), "..", "tbottest", "labgeneric.py"
 )
 
 
-class _ConfigParser:
-    def __init__(self):
-        self.values = {}
-
-    def get(self, section, key, fallback=None):
-        return self.values.get((section, key), fallback)
+CFGT = FakeIniTBotConfig(configparser.RawConfigParser())
 
 
-CFGT = types.SimpleNamespace(config_parser=_ConfigParser())
+def tbot_ini(sections):
+    """tbot.ini for CFGT, {section: {key: value}}"""
+    CFGT.config_parser = configparser.RawConfigParser()
+    CFGT.config_parser.read_dict(sections)
 
 
 def load_method(classname, methodname):
@@ -99,7 +100,7 @@ class LabWithWorkdir:
 
 class TestLabTestdir:
     def setup_method(self):
-        CFGT.config_parser.values = {}
+        tbot_ini({"LABHOST": {}})
 
     def test_default_below_workdir(self):
         testdir = load_method("GenericLab", "testdir")
@@ -109,7 +110,7 @@ class TestLabTestdir:
         )
 
     def test_from_lab_section(self):
-        CFGT.config_parser.values[("LABHOST", "testdir")] = "/srv/tbottests"
+        tbot_ini({"LABHOST": {"testdir": "/srv/tbottests"}})
         testdir = load_method("GenericLab", "testdir")
         assert testdir(LabWithWorkdir()) == ("workdir", "/srv/tbottests")
 
@@ -133,9 +134,9 @@ def lnx_sudo(monkeypatch):
     mod = types.ModuleType("tbottest.tc.common")
     mod.lnx_sudo = lambda lnx: list(prefix)
     monkeypatch.setitem(sys.modules, "tbottest.tc.common", mod)
-    CFGT.config_parser.values[("SDWIRE", "serial")] = "da23"
+    tbot_ini({"SDWIRE": {"serial": "da23"}})
     yield prefix
-    CFGT.config_parser.values.pop(("SDWIRE", "serial"), None)
+    tbot_ini({})
 
 
 class TestSdMuxMode:

@@ -14,7 +14,7 @@ import sys
 
 import pytest
 
-from conftest import fake_cmd_get_version, load_module
+from conftest import FakeIniTBotConfig, fake_cmd_get_version, load_module
 
 labinit = load_module(
     "tbottest_common_labinit",
@@ -198,15 +198,16 @@ def test_device_in_another_network_is_refused_with_ifconfig():
     assert f"{MARKER}-board" not in lab.files
 
 
-def _parser(text):
+def _labinit(text):
+    # the value GenericLab passes, get_lab_config("labinit", None)
     cp = configparser.RawConfigParser()
     cp.read_string(text)
-    return cp
+    return FakeIniTBotConfig(cp).get_lab_config("labinit", None)
 
 
 def test_labinit_from_config_reads_the_list():
-    cp = _parser('[LABHOST]\nlabinit = ["sudo true", "echo hi"]\n')
-    assert labinit.labinit_from_config(cp, "LABHOST") == ["sudo true", "echo hi"]
+    value = _labinit('[LABHOST]\nlabinit = ["sudo true", "echo hi"]\n')
+    assert labinit.labinit_from_config(value) == ["sudo true", "echo hi"]
 
 
 @pytest.mark.parametrize(
@@ -214,4 +215,4 @@ def test_labinit_from_config_reads_the_list():
     ["[LABHOST]\nname = x\n", "[LABHOST]\nlabinit = [not python\n", "[OTHER]\nx = 1\n"],
 )
 def test_labinit_from_config_missing_or_malformed_is_empty(text):
-    assert labinit.labinit_from_config(_parser(text), "LABHOST") == []
+    assert labinit.labinit_from_config(_labinit(text)) == []
