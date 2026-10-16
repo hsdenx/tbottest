@@ -150,12 +150,12 @@ What scripts/create_setup.sh sets up, with tbotconfig for one board:
                 │   ├── argsBOARDNAME
                 │   ├── argsBOARDNAME-noeth
                 │   └── argsBOARDNAME-noeth-ssh
-                ├── boardspecific.py     runtime adaptions of the configuration
-                ├── BOARDNAME.ini        settings of the board for the testcases
+                ├── boardspecific.py     runtime adaptions of the configuration (ini only)
+                ├── BOARDNAME.ini        settings of the board for the testcases (or BOARDNAME.json)
                 ├── files/
                 │   └── dumpfiles/       files of the register dump testcases
                 ├── README.BOARDNAME     notes on the tbot setup of the board
-                └── tbot.ini             lab host, build hosts, console, power, ...
+                └── tbot.ini             lab host, build hosts, console, power, ... (or tbot.json)
 
 .. csv-table:: files and directories
         :header: "Name", "content", "fastlink to documentation"
@@ -171,6 +171,7 @@ What scripts/create_setup.sh sets up, with tbotconfig for one board:
         "BOARDNAME/README.BOARDNAME", "notes on the tbot setup of the board, not mandatory", ""
         "BOARDNAME/tbot.ini", "ini file for lab host, build hosts and how tbot reaches and controls the board", "`tbot ini file (tbot.ini)`_"
         "BOARDNAME/tbot.ini-<id>, BOARDNAME/BOARDNAME.ini-<id>", "copies tbot writes at every start, with the placeholders replaced; flag tmpfilepath:<dir> writes them elsewhere", "`tbot flags`_"
+        "BOARDNAME/tbot.json, BOARDNAME/BOARDNAME.json", "the configuration as JSON instead of tbot.ini, BOARDNAME.ini and boardspecific.py, from create_setup.sh ``--json``; read as they are, no copies", ":ref:`jsonconfiguration`"
 
 tbot ini file (tbot.ini)
 ........................

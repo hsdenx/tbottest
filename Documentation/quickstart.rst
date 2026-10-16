@@ -18,7 +18,10 @@ full name always selects (``shell`` although ``shelly`` starts with it).
 Without ``--inter`` it creates the setup the github CI uses: board
 ``foo``, picocom and sispmctrl. ``--ci`` also copies the testcases the
 github CI of tbottest runs to ``tbotconfig/ci``; a normal setup does not
-need them.
+need them. ``--json`` sets the configuration up as ``tbot.json`` and
+``<board>.json`` instead of ``tbot.ini``, ``<board>.ini`` and
+``boardspecific.py``, see :ref:`jsonconfiguration`; only one of the two
+is copied, and the argument file ``argsbase`` names the JSON files.
 
 Lab setup
 ^^^^^^^^^

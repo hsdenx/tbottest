@@ -474,3 +474,79 @@ def test_tbot_directory_without_git_is_left_alone(tmp_path):
     res = run_setup(tmp_path, [], inter=False, update=True, args=["-c", "HEAD"])
     assert res.returncode == 0, res.stdout + res.stderr
     assert "tbot: not a git repository, not updated" in res.stdout
+
+
+# --json: the same configuration as tbot.json and <board>.json, read as
+# tbottest reads them (the init_* functions of initconfig.py)
+def read_json(tmp_path, board=BOARD):
+    from conftest import load_initconfig_functions
+
+    ini = load_initconfig_functions(boardname=board)
+    path = tmp_path / "tbotconfig" / board / "tbot.json"
+    tbotcfgp = ini.init_read_jsonfile(str(path), [])
+    boardcfgp = ini.init_read_jsonfile(
+        str(tmp_path / "tbotconfig" / board / f"{board}.json"), [], tbotcfgp
+    )
+    return tbotcfgp, boardcfgp, path.read_text()
+
+
+def assert_json_files(tmp_path, board):
+    bdir = tmp_path / "tbotconfig" / board
+    assert (bdir / "tbot.json").exists() and (bdir / f"{board}.json").exists()
+    for name in ("tbot.ini", f"{board}.ini", "boardspecific.py"):
+        assert not (bdir / name).exists(), name
+    argsbase = (bdir / "args" / "argsbase").read_text().splitlines()
+    assert f"inifile:tbotconfig/{board}/tbot.json" in argsbase
+    assert f"boardfile:tbotconfig/{board}/{board}.json" in argsbase
+
+
+@pytest.mark.parametrize(
+    "console,power", list(itertools.product(CONSOLES, POWERS))
+)
+def test_json_inter_selection(tmp_path, console, power):
+    cprefix, canswers, cexpected, cflag = CONSOLES[console]
+    pprefix, panswers, pexpected = POWERS[power]
+
+    res = run_setup(
+        tmp_path,
+        LAB_ANSWERS + [console] + canswers + [power] + panswers,
+        args=("--json",),
+    )
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert_json_files(tmp_path, BOARD)
+
+    cfg, board, text = read_json(tmp_path)
+    assert present(cfg, CONSOLE_PREFIXES) == {cprefix}
+    assert present(cfg, POWER_PREFIXES) == {pprefix}
+    assert section(cfg, f"{cprefix}_{BOARD}") == cexpected
+    assert section(cfg, f"{pprefix}_{BOARD}") == pexpected
+    assert cfg.has_section(f"XMODEM_CONFIG_{BOARD}") == (console == "picocom")
+    resolve_all(cfg)
+    assert section(cfg, "LABHOST")["labname"] == "testlab"
+    assert section(cfg, "LABHOST")["board"] == BOARD
+    assert "BOARDNAME" not in text
+    assert "@@" not in text
+    assert board.get("default", "board") == BOARD
+
+    flags = [line for line in read_args(tmp_path) if line.startswith("-f")]
+    assert flags == ([cflag] if cflag else [])
+
+
+def test_json_ci_defaults(tmp_path):
+    res = run_setup(tmp_path, [], inter=False, args=("--json",))
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert_json_files(tmp_path, "foo")
+
+    cfg, board, _ = read_json(tmp_path, "foo")
+    assert present(cfg, CONSOLE_PREFIXES, "foo") == {"PICOCOM"}
+    assert present(cfg, POWER_PREFIXES, "foo") == {"SISPMCTRL"}
+    assert section(cfg, "SISPMCTRL_foo") == {"device": "01:01:4f:09:5b", "port": "1"}
+    assert board.get("default", "serverip") == cfg.get("IPSETUP_foo_eth0", "serverip")
+
+
+def test_json_quotes_in_answers(tmp_path):
+    answers = LAB_ANSWERS + ["scriptcom", "./my connect.sh", 'a"b\\c'] + ["shelly", "s1", "0"]
+    res = run_setup(tmp_path, answers, args=("--json",))
+    assert res.returncode == 0, res.stdout + res.stderr
+    cfg, _, _ = read_json(tmp_path)
+    assert section(cfg, f"SCRIPTCOM_{BOARD}")["exitstring"] == 'a"b\\c'

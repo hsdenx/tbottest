@@ -84,6 +84,9 @@ INTER=no
 CISETUP=no
 # --no-update: leave existing tbot and tbottest clones as they are
 UPDATE=yes
+# --json: the configuration as tbot.json and <board>.json, without
+# boardspecific.py, instead of tbot.ini, <board>.ini and boardspecific.py
+CFGEXT=ini
 
 while [[ $# -gt 0 ]]
 do
@@ -105,6 +108,12 @@ case $key in
     --no-update)
     shift # past argument
     UPDATE=no
+    ;;
+
+    # configuration in JSON files instead of ini files
+    --json)
+    shift # past argument
+    CFGEXT=json
     ;;
 
     # checkout specific tbottest branch
@@ -201,8 +210,35 @@ select_one()
 # $2 section name
 # Delete the section from its header up to and including the next empty
 # line.
+# the value $1 as sed replacement for a placeholder; in a JSON file it
+# lands in a string, so " and \ get a backslash
+cfgval()
+{
+	local v="$1"
+	if [ "${CFGEXT}" == "json" ]; then
+		v="${v//\\/\\\\\\\\}"
+		v="${v//\"/\\\\\"}"
+	fi
+	printf '%s' "${v}"
+}
+
 delete_section()
 {
+	if [ "${1##*.}" == "json" ]; then
+		python3 - "$1" "$2" <<'EOF'
+import json
+import sys
+
+path, section = sys.argv[1:]
+with open(path) as f:
+    data = json.load(f)
+data.pop(section, None)
+with open(path, "w") as f:
+    json.dump(data, f, indent=4)
+    f.write("\n")
+EOF
+		return
+	fi
 	awk -v hdr="[$2]" '
 		$0 == hdr { skip = 1; next }
 		skip && /^$/ { skip = 0; next }
@@ -282,7 +318,7 @@ fill_tbot_ini()
 		SISPMCTRLMAC SISPMCTRLPORT POWERTFUID POWERTFCHANNEL \
 		TBOXPOWERPIN TBOXHWDAEMONBOARDNAME SHELLYDEVICE SHELLYID \
 		TM021DEVICE TM021BAUDRATE TM021TIMEOUT TM021ADDRESS TM021PORT TM021DEBUG; do
-		sed -i "s|@@${v}@@|${!v}|g" "${filename}"
+		sed -i "s|@@${v}@@|$(cfgval "${!v}")|g" "${filename}"
 	done
 
 	for c in "${consoles[@]}"; do
@@ -407,9 +443,12 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/args/args* args/
 
 	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/README.BOARDNAME README.$BOARDNAME
-	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/tbot.ini tbot.ini
-	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/boardspecific.py boardspecific.py
-	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini $BOARDNAME.ini
+	# ini or json, never both; boardspecific.py only with ini
+	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/tbot.${CFGEXT} tbot.${CFGEXT}
+	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/BOARDNAME.${CFGEXT} $BOARDNAME.${CFGEXT}
+	if [ "${CFGEXT}" == "ini" ]; then
+		cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/boardspecific.py boardspecific.py
+	fi
 	cp ../../tbottest/tbottest/tbotconfig/BOARDNAME/BOARDNAME.py ../tc_$BOARDNAME.py
 	sed -i "s|BOARDNAME|$BOARDNAME|g" ../tc_$BOARDNAME.py
 	cd ../..
@@ -417,10 +456,14 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	if [ "${INTER}" == "yes" ];then
 		ask_tbot_ini
 	fi
-	fill_tbot_ini tbotconfig/$BOARDNAME/tbot.ini
+	fill_tbot_ini tbotconfig/$BOARDNAME/tbot.${CFGEXT}
 
 	# prepare some argumentfiles
 	sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/args/argsbase
+	if [ "${CFGEXT}" == "json" ]; then
+		sed -i "s|/tbot.ini$|/tbot.json|; s|/${BOARDNAME}.ini$|/${BOARDNAME}.json|" \
+			./tbotconfig/$BOARDNAME/args/argsbase
+	fi
 
 	echo "@tbotconfig/${BOARDNAME}/args/argsbase" > ./tbotconfig/$BOARDNAME/args/args$BOARDNAME
 	# kermit has no flag, tbot picks it from the KERMIT section
@@ -439,28 +482,28 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	echo "-fnouboot" >> ./tbotconfig/$BOARDNAME/args/args$BOARDNAME-noeth-ssh
 
 	# replace BOARDNAME
-	sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
-	sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/$BOARDNAME.ini
+	sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/tbot.${CFGEXT}
+	sed -i "s|BOARDNAME|$BOARDNAME|g" ./tbotconfig/$BOARDNAME/$BOARDNAME.${CFGEXT}
 
-	sed -i "/SET BOARDNAME to BOARDNAME/d" ./tbotconfig/$BOARDNAME/boardspecific.py
-	sed -i "/!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!/d" ./tbotconfig/$BOARDNAME/boardspecific.py
-	sed -i "/You use example implementation of boardspecific.py/d" ./tbotconfig/$BOARDNAME/boardspecific.py
-	sed -i "/You really should use your own implementation/d" ./tbotconfig/$BOARDNAME/boardspecific.py
-	sed -i "s|BOARDNAME_|$BOARDNAME\_|g" ./tbotconfig/$BOARDNAME/boardspecific.py
-	sed -i "s|\"BOARDNAME\"|\"$BOARDNAME\"|g" ./tbotconfig/$BOARDNAME/boardspecific.py
-	sed -i "s|\"BOARDNAME8g\"|\""$BOARDNAME"8g\"|g" ./tbotconfig/$BOARDNAME/boardspecific.py
+	if [ "${CFGEXT}" == "ini" ]; then
+		sed -i "/SET BOARDNAME to BOARDNAME/d" ./tbotconfig/$BOARDNAME/boardspecific.py
+		sed -i "/!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!/d" ./tbotconfig/$BOARDNAME/boardspecific.py
+		sed -i "/You use example implementation of boardspecific.py/d" ./tbotconfig/$BOARDNAME/boardspecific.py
+		sed -i "/You really should use your own implementation/d" ./tbotconfig/$BOARDNAME/boardspecific.py
+		sed -i "s|BOARDNAME_|$BOARDNAME\_|g" ./tbotconfig/$BOARDNAME/boardspecific.py
+		sed -i "s|\"BOARDNAME\"|\"$BOARDNAME\"|g" ./tbotconfig/$BOARDNAME/boardspecific.py
+		sed -i "s|\"BOARDNAME8g\"|\""$BOARDNAME"8g\"|g" ./tbotconfig/$BOARDNAME/boardspecific.py
+	fi
 
-	# insert LAB config in ./tbotconfig/$BOARDNAME/tbot.ini
-	sed -i "s|@@LABNAME@@|$LABNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
-	sed -i "s|@@LABHOSTNAME@@|$LABHOSTNAME|g" ./tbotconfig/$BOARDNAME/tbot.ini
-	sed -i "s|@@LABUSER@@|$LABUSER|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	# insert LAB config in ./tbotconfig/$BOARDNAME/tbot.ini or tbot.json
+	sed -i "s|@@LABNAME@@|$(cfgval "$LABNAME")|g" ./tbotconfig/$BOARDNAME/tbot.${CFGEXT}
+	sed -i "s|@@LABHOSTNAME@@|$(cfgval "$LABHOSTNAME")|g" ./tbotconfig/$BOARDNAME/tbot.${CFGEXT}
+	sed -i "s|@@LABUSER@@|$(cfgval "$LABUSER")|g" ./tbotconfig/$BOARDNAME/tbot.${CFGEXT}
 
-	sed -i "s|@@IPSETUPMASK@@|$IPSETUPMASK|g" ./tbotconfig/$BOARDNAME/tbot.ini
-	sed -i "s|@@IPSETUPETH@@|$IPSETUPETH|g" ./tbotconfig/$BOARDNAME/tbot.ini
-	sed -i "s|@@IPSETUPIP@@|$IPSETUPIP|g" ./tbotconfig/$BOARDNAME/tbot.ini
-	sed -i "s|@@IPSETUPSERVERIP@@|$IPSETUPSERVERIP|g" ./tbotconfig/$BOARDNAME/tbot.ini
-
-	#sed -i "s|@@@@|$|g" ./tbotconfig/$BOARDNAME/tbot.ini
+	sed -i "s|@@IPSETUPMASK@@|$(cfgval "$IPSETUPMASK")|g" ./tbotconfig/$BOARDNAME/tbot.${CFGEXT}
+	sed -i "s|@@IPSETUPETH@@|$(cfgval "$IPSETUPETH")|g" ./tbotconfig/$BOARDNAME/tbot.${CFGEXT}
+	sed -i "s|@@IPSETUPIP@@|$(cfgval "$IPSETUPIP")|g" ./tbotconfig/$BOARDNAME/tbot.${CFGEXT}
+	sed -i "s|@@IPSETUPSERVERIP@@|$(cfgval "$IPSETUPSERVERIP")|g" ./tbotconfig/$BOARDNAME/tbot.${CFGEXT}
 
 	# aliases for starting tbot, see the quick start documentation
 	if [ -e setup.sh ];then
@@ -482,16 +525,16 @@ echo
 echo "start tbot with the aliases from setup.sh:"
 echo "tb${BOARDNAME} <testcase>"
 echo
-echo "Now edit lab config in tbotconfig/$BOARDNAME/tbot.ini"
+echo "Now edit lab config in tbotconfig/$BOARDNAME/tbot.${CFGEXT}"
 echo
 echo "check that 'ssh ${LABUSER}@${LABHOSTNAME}' works without typing password"
 echo "than interactive lab should work:"
 echo "tb${BOARDNAME}noeth \$conint.lab"
 echo
-echo "edit and adapt U-Boot settings in tbotconfig/$BOARDNAME/${BOARDNAME}.ini and interactive U-Boot should work"
+echo "edit and adapt U-Boot settings in tbotconfig/$BOARDNAME/${BOARDNAME}.${CFGEXT} and interactive U-Boot should work"
 echo "tb${BOARDNAME}noeth \$conint.uboot"
 echo
-echo "edit linux settings in tbotconfig/$BOARDNAME/${BOARDNAME}.ini and interactive Linux should work"
+echo "edit linux settings in tbotconfig/$BOARDNAME/${BOARDNAME}.${CFGEXT} and interactive Linux should work"
 echo "tb${BOARDNAME}noeth \$conint.linux"
 echo
 if [ "${CISETUP}" == "yes" ];then
