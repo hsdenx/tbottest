@@ -224,7 +224,7 @@ class GenericUBoot(
         # ub_env always, then the selected ub_env_<name> groups, each
         # after the groups it depends on
         envvalues = ast.literal_eval(self.cfgp.get_config("ub_env", "[]"))
-        groups = ub_env_groups(self.cfgp.config_parser, ini.generic_get_boardname())
+        groups = ub_env_groups(self.cfgp)
         depends = ast.literal_eval(self.cfgp.get_config("ub_env_depends", "{}"))
         bootcmds = ast.literal_eval(self.cfgp.get_config("ub_env_bootcmd", "{}"))
         for name in ub_env_select(groups, depends, tbot.flags, bootcmds):
@@ -236,29 +236,24 @@ class GenericUBoot(
             set_ub_board_specific(self)
 
 
-def ub_env_groups(config_parser, boardname: str) -> dict:
+def ub_env_groups(cfgp) -> dict:
     """
     the U-Boot environment groups ub_env_<name> of the board ini
 
-    Read from [TC_<boardname>] first, then [TC], like every other key; a
-    group in [TC_<boardname>] hides one of the same name in [TC]. The
-    names are lower case, as configparser stores keys.
+    The keys come from get_config_keys(), the values from get_config(),
+    like every other key, so a group in [TC_<boardname>] hides one of the
+    same name in [TC]. The names are lower case, as configparser stores
+    keys.
 
-    :param config_parser: configparser of the board ini
-    :param boardname: name of the board
+    :param cfgp: configuration of the board ini (IniConfig)
     :returns: dictionary group name -> list of {"name": .., "val": ..},
         in the order of the ini
     """
     groups = {}
-    for section in (f"TC_{boardname}", "TC"):
-        if not config_parser.has_section(section):
+    for key in cfgp.get_config_keys("ub_env_"):
+        if key in ("ub_env_depends", "ub_env_bootcmd"):
             continue
-        for key in config_parser.options(section):
-            if not key.startswith("ub_env_") or key in ("ub_env_depends", "ub_env_bootcmd"):
-                continue
-            name = key[len("ub_env_") :]
-            if name not in groups:
-                groups[name] = ast.literal_eval(config_parser.get(section, key))
+        groups[key[len("ub_env_") :]] = ast.literal_eval(cfgp.get_config(key, "[]") or "[]")
     return groups
 
 

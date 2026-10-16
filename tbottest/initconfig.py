@@ -122,6 +122,33 @@ def init_get_config_int(
     return int(value)
 
 
+def init_get_config_keys(
+    cfgp: configparser.RawConfigParser,
+    prefix: str,
+) -> list:
+    """
+    returns the keys starting with prefix, from the sections
+    init_get_config() searches.
+
+    Keys of section "TC_BOARDNAME" come first, then those of section
+    "TC", each key once, in the order of the ini file. Read their values
+    with init_get_config(), so a key in "TC_BOARDNAME" hides the same key
+    in "TC".
+
+    :param cfgp: current config parser
+    :param prefix: start of the key names
+    """
+    boardname = generic_get_boardname()
+    keys = []
+    for section in (f"TC_{boardname}", "TC"):
+        if not cfgp.has_section(section):
+            continue
+        for key in cfgp.options(section):
+            if key.startswith(prefix) and key not in keys:
+                keys.append(key)
+    return keys
+
+
 def init_lab_get_config(
     cfgp: configparser.RawConfigParser,
     name: str,
@@ -553,6 +580,17 @@ class IniConfig(metaclass=_Singleton):
         """
 
         return init_get_config_int(self.config_parser, name, default)
+
+    def get_config_keys(self, prefix: str):
+        """
+        returns the keys starting with prefix.
+
+        use internal function init_get_config_keys
+
+        :param prefix: start of the key names
+        """
+
+        return init_get_config_keys(self.config_parser, prefix)
 
     def get_default_config(self, name: str, default: str):
         """

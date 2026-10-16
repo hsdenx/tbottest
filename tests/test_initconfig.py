@@ -201,3 +201,33 @@ class TestBdi2000PoweronCmds:
         cmds = load_poweron_cmds().bdi2000_poweron_cmds(CMDS)
         cmds.append("go")
         assert CMDS["default"] == ["reset run"]
+
+
+init_keys = load_definition(
+    "tbottest_initconfig_init_get_config_keys_only",
+    INITCONFIG_PATH,
+    "init_get_config_keys",
+    extra_src="import configparser\ndef generic_get_boardname():\n    return \"amc\"",
+)
+
+
+class TestInitGetConfigKeys:
+    def _cp(self, sections):
+        import configparser
+
+        cp = configparser.RawConfigParser()
+        cp.read_dict(sections)
+        return cp
+
+    def test_board_section_first_each_key_once(self):
+        cp = self._cp(
+            {
+                "TC_amc": {"ub_env_b": "1", "linux_user": "x"},
+                "TC": {"ub_env_a": "2", "ub_env_b": "3", "uboot_prompt": "=> "},
+                "TC_other": {"ub_env_c": "4"},
+            }
+        )
+        assert init_keys.init_get_config_keys(cp, "ub_env_") == ["ub_env_b", "ub_env_a"]
+
+    def test_no_sections(self):
+        assert init_keys.init_get_config_keys(self._cp({"default": {"a": "1"}}), "ub_env_") == []

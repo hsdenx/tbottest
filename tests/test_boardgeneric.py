@@ -9,6 +9,7 @@ fake board ini. lnx_set_ethdevice() comes from tbottest/tc/network.py,
 see test_network.py.
 """
 
+import configparser
 import os
 
 import pytest
@@ -161,20 +162,33 @@ class TestBoardTestdir:
         assert mod.board_testdir() == "/home/root/tbottests"
 
 
-class FakeConfigParser:
-    """sections -> ordered dict of key -> value, as configparser returns them"""
+INITCONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "tbottest", "initconfig.py")
+
+
+class BoardIni:
+    """
+    the board ini as IniConfig reads it, with the real init_get_config()
+    and init_get_config_keys() of tbottest/initconfig.py, for board "amc"
+    """
 
     def __init__(self, sections):
-        self.sections = sections
+        self.config_parser = configparser.RawConfigParser()
+        self.config_parser.read_dict(sections)
+        self.ini = Funcs()
+        for name in ("init_get_config", "init_get_config_keys"):
+            part = load_definition(
+                f"tbottest_initconfig_{name}_only",
+                INITCONFIG_PATH,
+                name,
+                extra_src="import configparser\ndef generic_get_boardname():\n    return 'amc'",
+            )
+            setattr(self.ini, name, getattr(part, name))
 
-    def has_section(self, section):
-        return section in self.sections
+    def get_config(self, name, default):
+        return self.ini.init_get_config(self.config_parser, name, default)
 
-    def options(self, section):
-        return list(self.sections[section])
-
-    def get(self, section, key):
-        return self.sections[section][key]
+    def get_config_keys(self, prefix):
+        return self.ini.init_get_config_keys(self.config_parser, prefix)
 
 
 def load_ub_env():
@@ -212,7 +226,7 @@ DEPENDS = {
 class TestUbEnvGroups:
     def test_groups_from_tc_in_ini_order(self):
         ub = load_ub_env()
-        cp = FakeConfigParser(
+        cp = BoardIni(
             {
                 "TC": {
                     "ub_env": env("console"),
@@ -224,26 +238,26 @@ class TestUbEnvGroups:
                 }
             }
         )
-        groups = ub.ub_env_groups(cp, "amc")
+        groups = ub.ub_env_groups(cp)
         assert list(groups) == ["setip", "fitboot"]
         assert groups["setip"] == [{"name": "ipaddr", "val": "IPADDR"}]
 
     def test_board_section_hides_tc(self):
         ub = load_ub_env()
-        cp = FakeConfigParser(
+        cp = BoardIni(
             {
                 "TC_amc": {"ub_env_setip": env("serverip")},
                 "TC": {"ub_env_setip": env("ipaddr"), "ub_env_fitboot": env("net_fit")},
             }
         )
-        groups = ub.ub_env_groups(cp, "amc")
+        groups = ub.ub_env_groups(cp)
         assert groups["setip"] == [{"name": "serverip", "val": "SERVERIP"}]
         assert "fitboot" in groups
 
     def test_no_groups(self):
         ub = load_ub_env()
-        cp = FakeConfigParser({"TC": {"ub_env": env("console")}})
-        assert ub.ub_env_groups(cp, "amc") == {}
+        cp = BoardIni({"TC": {"ub_env": env("console")}})
+        assert ub.ub_env_groups(cp) == {}
 
 
 class TestUbEnvSelect:
@@ -332,5 +346,5 @@ class TestUbEnvBootcmd:
 
     def test_bootcmd_key_is_no_group(self):
         ub = load_ub_env()
-        cp = FakeConfigParser({"TC": {"ub_env_bootcmd": str(BOOTCMDS)}})
-        assert ub.ub_env_groups(cp, "amc") == {}
+        cp = BoardIni({"TC": {"ub_env_bootcmd": str(BOOTCMDS)}})
+        assert ub.ub_env_groups(cp) == {}
