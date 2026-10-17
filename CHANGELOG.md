@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 ### Added
+- `linux_safe_init_prompt` in the board configuration, True by default,
+  sets tbot's `safe_init_prompt`, so the prompt is read with
+  `read_until_prompt_safe()` while tbot sets up the linux shell.
 - Section `TC_BOARDNAME.TESTCASENAME` of the board configuration. While a
   testcase decorated with `tc_config()` or `require_cfg()` runs, a key is
   searched there first, then in `TC_BOARDNAME` and `TC`. There is

@@ -390,6 +390,11 @@ class _WorkdirTmpdirMixin:
     # interactive prompt literally, like the ash of an old busybox.
     interactive_plain_prompt = cfg.get_config("linux_plain_prompt", "False") == "True"
 
+    # tbot's safe_init_prompt, reads the prompt while tbot sets up the
+    # shell with read_until_prompt_safe(), for consoles where kernel
+    # messages tear the prompt apart
+    safe_init_prompt = cfg.get_config("linux_safe_init_prompt", "True") == "True"
+
     @property
     def workdir(self: _Self) -> "linux.Path[_Self]":
         return linux.Workdir.static(self, "/run/tbot-testdata")

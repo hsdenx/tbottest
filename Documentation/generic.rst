@@ -1172,6 +1172,7 @@ settings needed for linux testcases.
         "testdir", "directory on the board for what testcases put there; in the root filesystem if a testcase puts files there through an NFS root", "/run/tbot-testdata/tbottests", "/home/root/tbottests"
         "shelltype", "linux login shell type (bash|ash)", "ash", "bash"
         "linux_plain_prompt", "True gives the interactive linux shell a plain <name>> prompt, without the color escapes and the directory that an old busybox ash prints literally (tbot's interactive_plain_prompt)", "False", "True"
+        "linux_safe_init_prompt", "True reads the prompt while tbot sets up the linux shell with read_until_prompt_safe(), which sends an empty line when kernel messages tear the prompt apart (tbot's safe_init_prompt)", "True", "False"
         "beep","list of dictionary of commands for beep command","[]","[{""freq"": ""440"", ""length"":""1000""}]"
         "cyclictestmaxvalue", "maximum allowed value from stress-ng 'Max' colum", "100", "cyclictestmaxvalue = 100"
         "dmesg","list of strings, which should be in dmesg output","[]","dmesg = [""OF: fdt: Machine model:"", ""gpio-193 (eeprom-wc): hogged as output/low"",]"

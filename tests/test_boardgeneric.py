@@ -438,3 +438,42 @@ class TestGenericBoardConfig:
                 "timeout": "0.1",
             }
         ]
+
+
+class TestShellSettings:
+    """linux_plain_prompt and linux_safe_init_prompt of the board configuration"""
+
+    def _mixin(self, monkeypatch, sections):
+        import sys
+        import types
+
+        board = BoardIni(sections)
+        fake = types.ModuleType("_mixin_fake")
+        fake.cfg = types.SimpleNamespace(
+            get_config=lambda name, default: board.ini.init_get_config(
+                board.config_parser, name, default
+            )
+        )
+        monkeypatch.setitem(sys.modules, "_mixin_fake", fake)
+        mod = load_definition(
+            "tbottest_boardgeneric_mixin_only",
+            BOARDGENERIC_PATH,
+            "_WorkdirTmpdirMixin",
+            extra_src="import typing\nfrom typing import TypeVar\n"
+            "from tbot.machine import linux\n"
+            "_Self = TypeVar('_Self')\nfrom _mixin_fake import cfg",
+        )
+        return mod._WorkdirTmpdirMixin
+
+    def test_defaults(self, monkeypatch):
+        mixin = self._mixin(monkeypatch, {"TC": {}})
+        assert mixin.interactive_plain_prompt is False
+        assert mixin.safe_init_prompt is True
+
+    def test_from_board_configuration(self, monkeypatch):
+        mixin = self._mixin(
+            monkeypatch,
+            {"TC": {"linux_plain_prompt": "True", "linux_safe_init_prompt": "False"}},
+        )
+        assert mixin.interactive_plain_prompt is True
+        assert mixin.safe_init_prompt is False
