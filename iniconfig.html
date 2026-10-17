@@ -1,0 +1,802 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tbottest.initconfig &mdash; tbottest 0.0.1-424-g654c493 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=0fc419ee" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=17382960" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=7a0c7f43"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script data-doc-theme="rtd" src="_static/themeswitch.js?v=8de3ea61"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tbottest.initconfighelper" href="iniconfighelper.html" />
+    <link rel="prev" title="tbottest.tc - Testcases" href="tc.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/tbot-logo-white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#helper-functions">helper functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_get_config"><code class="docutils literal notranslate"><span class="pre">init_get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_config_sections"><code class="docutils literal notranslate"><span class="pre">init_config_sections()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_testcase"><code class="docutils literal notranslate"><span class="pre">init_testcase()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_current_testcase"><code class="docutils literal notranslate"><span class="pre">init_current_testcase()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_get_config_int"><code class="docutils literal notranslate"><span class="pre">init_get_config_int()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_get_config_literal"><code class="docutils literal notranslate"><span class="pre">init_get_config_literal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_get_config_bool"><code class="docutils literal notranslate"><span class="pre">init_get_config_bool()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_get_config_keys"><code class="docutils literal notranslate"><span class="pre">init_get_config_keys()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_lab_get_config"><code class="docutils literal notranslate"><span class="pre">init_lab_get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_section_get_config"><code class="docutils literal notranslate"><span class="pre">init_section_get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_section_get_config_bool"><code class="docutils literal notranslate"><span class="pre">init_section_get_config_bool()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_config_to_bool"><code class="docutils literal notranslate"><span class="pre">init_config_to_bool()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_has_section"><code class="docutils literal notranslate"><span class="pre">init_has_section()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_find_sections"><code class="docutils literal notranslate"><span class="pre">init_find_sections()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_read_inifile"><code class="docutils literal notranslate"><span class="pre">init_read_inifile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_read_jsonfile"><code class="docutils literal notranslate"><span class="pre">init_read_jsonfile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_read_configfile"><code class="docutils literal notranslate"><span class="pre">init_read_configfile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_config_substitute"><code class="docutils literal notranslate"><span class="pre">init_config_substitute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_substitute_configparser"><code class="docutils literal notranslate"><span class="pre">init_substitute_configparser()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_json_value_to_str"><code class="docutils literal notranslate"><span class="pre">init_json_value_to_str()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.init_config_to_json_dict"><code class="docutils literal notranslate"><span class="pre">init_config_to_json_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.generic_get_boardname"><code class="docutils literal notranslate"><span class="pre">generic_get_boardname()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.copy_file"><code class="docutils literal notranslate"><span class="pre">copy_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.replace_in_file"><code class="docutils literal notranslate"><span class="pre">replace_in_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.find_in_file_and_append"><code class="docutils literal notranslate"><span class="pre">find_in_file_and_append()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.find_in_file_and_delete"><code class="docutils literal notranslate"><span class="pre">find_in_file_and_delete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#classes">classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.IniTBotConfig"><code class="docutils literal notranslate"><span class="pre">IniTBotConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.initconfig.IniTBotConfig.get_section_config"><code class="docutils literal notranslate"><span class="pre">IniTBotConfig.get_section_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.initconfig.IniTBotConfig.get_section_config_bool"><code class="docutils literal notranslate"><span class="pre">IniTBotConfig.get_section_config_bool()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.initconfig.IniTBotConfig.get_lab_config"><code class="docutils literal notranslate"><span class="pre">IniTBotConfig.get_lab_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.initconfig.IniTBotConfig.has_section"><code class="docutils literal notranslate"><span class="pre">IniTBotConfig.has_section()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.initconfig.IniTBotConfig.find_sections"><code class="docutils literal notranslate"><span class="pre">IniTBotConfig.find_sections()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#tbottest.initconfig.IniConfig"><code class="docutils literal notranslate"><span class="pre">IniConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.initconfig.IniConfig.get_config"><code class="docutils literal notranslate"><span class="pre">IniConfig.get_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.initconfig.IniConfig.get_config_int"><code class="docutils literal notranslate"><span class="pre">IniConfig.get_config_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.initconfig.IniConfig.get_config_literal"><code class="docutils literal notranslate"><span class="pre">IniConfig.get_config_literal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.initconfig.IniConfig.get_config_bool"><code class="docutils literal notranslate"><span class="pre">IniConfig.get_config_bool()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.initconfig.IniConfig.get_config_keys"><code class="docutils literal notranslate"><span class="pre">IniConfig.get_config_keys()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tbottest.initconfig.IniConfig.get_default_config"><code class="docutils literal notranslate"><span class="pre">IniConfig.get_default_config()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing to tbot-test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tbottest</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/iniconfig.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tbottest-initconfig">
+<span id="module-tbottest.initconfig.py"></span><h1><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code><a class="headerlink" href="#tbottest-initconfig" title="Link to this heading"></a></h1>
+<section id="helper-functions">
+<span id="iniconfighelperfunctions"></span><h2>helper functions<a class="headerlink" href="#helper-functions" title="Link to this heading"></a></h2>
+<p>Values of the lab and the board configuration (ini or JSON) are read through these
+functions, or the methods of <a class="reference internal" href="#tbottest.initconfig.IniTBotConfig" title="tbottest.initconfig.IniTBotConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">IniTBotConfig</span></code></a>
+and <a class="reference internal" href="#tbottest.initconfig.IniConfig" title="tbottest.initconfig.IniConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">IniConfig</span></code></a> built on them, never through
+<code class="docutils literal notranslate"><span class="pre">config_parser</span></code> directly. Then the order of the sections (<code class="docutils literal notranslate"><span class="pre">TC_BOARDNAME</span></code>
+before <code class="docutils literal notranslate"><span class="pre">TC</span></code>, <code class="docutils literal notranslate"><span class="pre">LABHOST_&lt;labname&gt;</span></code> for the lab host) is known in one place.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_get_config">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfgp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.RawConfigParser" title="(in Python v3.15)"><span class="pre">RawConfigParser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_get_config" title="Link to this definition"></a></dt>
+<dd><p>returns value of key name from configparser.</p>
+<p>Searches the sections init_config_sections() returns, while a
+testcase runs first “TC_BOARDNAME.TESTCASENAME”, then “TC_BOARDNAME”,
+then “TC”. If not found, return default value. If the value is “None”
+return None</p>
+<p>So what happens without the key is up to the testcase. The generic
+testcases pass a default that means “not set” and are decorated with
+<a class="reference internal" href="tc.html#tbottest.tc.generictestdef.require_cfg" title="tbottest.tc.generictestdef.require_cfg"><code class="xref py py-func docutils literal notranslate"><span class="pre">tbottest.tc.generictestdef.require_cfg()</span></code></a>, so they are skipped
+and <a class="reference internal" href="tc.html#tbottest.tc.generic_board.generic_lnx_all" title="tbottest.tc.generic_board.generic_lnx_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">tbottest.tc.generic_board.generic_lnx_all()</span></code></a> counts them as
+skipped. A testcase that cannot do without the key should raise an
+exception, so it fails.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfgp</strong> – current config parser</p></li>
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – default value if key is not found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_config_sections">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_config_sections</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_config_sections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_config_sections" title="Link to this definition"></a></dt>
+<dd><p>returns the sections of the board configuration in the order
+init_get_config() searches them</p>
+<p>While a testcase runs (see init_testcase()) first
+“TC_BOARDNAME.TESTCASENAME”, then “TC_BOARDNAME” and “TC”, else only
+the last two. There is deliberately no section “TC_TESTCASENAME” for
+all boards, a value for all boards goes into “TC”.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_testcase">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_testcase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_testcase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_testcase" title="Link to this definition"></a></dt>
+<dd><p>make name the testcase that runs now, for the duration of the with
+block, see init_config_sections(). At its end the name of an outer
+block is valid again.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – name of the testcase</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_current_testcase">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_current_testcase</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_current_testcase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_current_testcase" title="Link to this definition"></a></dt>
+<dd><p>returns the name of the testcase that runs now, see init_testcase(),
+or None outside of a testcase</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_get_config_int">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_get_config_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfgp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.RawConfigParser" title="(in Python v3.15)"><span class="pre">RawConfigParser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_get_config_int"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_get_config_int" title="Link to this definition"></a></dt>
+<dd><p>returns value of key name as int, searched as init_get_config()
+does. If the value is “None” return None</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfgp</strong> – current config parser</p></li>
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – default value if key is not found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_get_config_literal">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_get_config_literal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfgp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.RawConfigParser" title="(in Python v3.15)"><span class="pre">RawConfigParser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_get_config_literal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_get_config_literal" title="Link to this definition"></a></dt>
+<dd><p>returns value of key name read as Python literal with
+ast.literal_eval(), e.g. a list or a dictionary, searched as
+init_get_config() does. If the value is “None” return None</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfgp</strong> – current config parser</p></li>
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – default value if key is not found, as string</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_get_config_bool">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_get_config_bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfgp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.RawConfigParser" title="(in Python v3.15)"><span class="pre">RawConfigParser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_get_config_bool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_get_config_bool" title="Link to this definition"></a></dt>
+<dd><p>returns the boolean value of key name from the sections
+init_get_config() searches, see init_config_to_bool()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfgp</strong> – current config parser</p></li>
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – value if the key is missing or “None”</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_get_config_keys">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_get_config_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfgp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.RawConfigParser" title="(in Python v3.15)"><span class="pre">RawConfigParser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_get_config_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_get_config_keys" title="Link to this definition"></a></dt>
+<dd><p>returns the keys starting with prefix, from the sections
+init_get_config() searches.</p>
+<p>Keys of the sections init_config_sections() returns, in this order,
+each key once, in the order of the file. Read their values with
+init_get_config(), so a key in an earlier section hides the same key
+in a later one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfgp</strong> – current config parser</p></li>
+<li><p><strong>prefix</strong> – start of the key names</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_lab_get_config">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_lab_get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfgp:</span> <span class="pre">~configparser.RawConfigParser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default=&lt;object</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_lab_get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_lab_get_config" title="Link to this definition"></a></dt>
+<dd><p>returns value of key name from configparser
+from section LABHOST or LABHOST_labname</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfgp</strong> – current config parser</p></li>
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – default value if key is not found; without it a
+missing key raises RuntimeError</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_section_get_config">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_section_get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfgp:</span> <span class="pre">~configparser.RawConfigParser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default=&lt;object</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_section_get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_section_get_config" title="Link to this definition"></a></dt>
+<dd><p>returns value of key name in section of the configparser, as it is
+written there (no conversion of “None”).</p>
+<p>For the sections of tbot.ini outside the [TC] sections of the board
+ini, e.g. [BUILDHOST], [SSHMACHINE] or [PICOCOM_BOARDNAME].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfgp</strong> – current config parser</p></li>
+<li><p><strong>section</strong> – name of the section</p></li>
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – value if section or key is missing; without it a
+missing section or key raises RuntimeError</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_section_get_config_bool">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_section_get_config_bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfgp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.RawConfigParser" title="(in Python v3.15)"><span class="pre">RawConfigParser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_section_get_config_bool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_section_get_config_bool" title="Link to this definition"></a></dt>
+<dd><p>returns the boolean value of key name in section, see
+init_section_get_config() and init_config_to_bool()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfgp</strong> – current config parser</p></li>
+<li><p><strong>section</strong> – name of the section</p></li>
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – value if section or key is missing</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_config_to_bool">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_config_to_bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_config_to_bool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_config_to_bool" title="Link to this definition"></a></dt>
+<dd><p>returns the boolean of an ini value, as configparser reads it
+(1, yes, true, on and 0, no, false, off, any case)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> – value from the ini file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_has_section">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_has_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfgp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.RawConfigParser" title="(in Python v3.15)"><span class="pre">RawConfigParser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_has_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_has_section" title="Link to this definition"></a></dt>
+<dd><p>returns True if the configparser has section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfgp</strong> – current config parser</p></li>
+<li><p><strong>section</strong> – name of the section</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_find_sections">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_find_sections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfgp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.RawConfigParser" title="(in Python v3.15)"><span class="pre">RawConfigParser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">part</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_find_sections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_find_sections" title="Link to this definition"></a></dt>
+<dd><p>returns the names of the sections that contain part, in the order of
+the ini file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfgp</strong> – current config parser</p></li>
+<li><p><strong>part</strong> – part of the section name, e.g. “BUILDHOST”</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_read_inifile">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_read_inifile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.RawConfigParser" title="(in Python v3.15)"><span class="pre">RawConfigParser</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_read_inifile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_read_inifile" title="Link to this definition"></a></dt>
+<dd><p>returns a configparser with the ini file filename read, the way
+IniTBotConfig and IniConfig read theirs</p>
+<p>For code that has to read an ini file before IniTBotConfig and
+IniConfig exist, e.g. set_board_cfg() in boardspecific.py. Read its
+values with the init_*_config functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> – path of the ini file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_read_jsonfile">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_read_jsonfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tbotcfgp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.RawConfigParser" title="(in Python v3.15)"><span class="pre">RawConfigParser</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_read_jsonfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_read_jsonfile" title="Link to this definition"></a></dt>
+<dd><p>returns a configparser with the JSON configuration filename</p>
+<p>The file holds an object of sections, each an object of keys, as the
+ini file has them. Names and values get their expressions replaced,
+see init_config_substitute(), values become strings, see
+init_json_value_to_str(). configparser then interpolates ${key} and
+${section:key} as for an ini file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – path of the JSON file</p></li>
+<li><p><strong>flags</strong> – the tbot flags, default those of the command line</p></li>
+<li><p><strong>tbotcfgp</strong> – configparser of tbot.json, for the board file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_read_configfile">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_read_configfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tbotcfgp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.RawConfigParser" title="(in Python v3.15)"><span class="pre">RawConfigParser</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_read_configfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_read_configfile" title="Link to this definition"></a></dt>
+<dd><p>returns a configparser with the configuration file filename, JSON if
+its name ends in .json (init_read_jsonfile()), else ini
+(init_read_inifile()); in both the expressions of
+init_config_substitute() are replaced</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – path of the file</p></li>
+<li><p><strong>tbotcfgp</strong> – configparser of tbot.ini or tbot.json, for the board
+file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_config_substitute">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_config_substitute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tbotcfgp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">where</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_config_substitute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_config_substitute" title="Link to this definition"></a></dt>
+<dd><p>returns text with the expressions of a JSON configuration replaced</p>
+<ul class="simple">
+<li><p>${env:NAME} and ${env:NAME:-default}, the environment variable NAME</p></li>
+<li><p>${flag:NAME} and ${flag:NAME:-default}, the value of the tbot flag
+NAME:&lt;value&gt;, True for a flag NAME without value</p></li>
+<li><p>${lab:key}, key of the lab section of tbot.json (LABHOST or
+LABHOST_&lt;labname&gt;), only with tbotcfgp</p></li>
+<li><p>${tbot:SECTION:key}, key of SECTION of tbot.json, only with tbotcfgp</p></li>
+</ul>
+<p>The default is only used, and only replaced, when the value is not
+set; without default a missing value raises RuntimeError. Expressions
+may be nested; any other ${…} stays for the interpolation of
+configparser (${key}, ${section:key}), with the expressions in it
+replaced, and $$ stays as it is.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – value or name from the JSON file</p></li>
+<li><p><strong>flags</strong> – the tbot flags</p></li>
+<li><p><strong>tbotcfgp</strong> – configparser of tbot.json, for ${lab:} and ${tbot:}</p></li>
+<li><p><strong>where</strong> – file name for the error messages</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_substitute_configparser">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_substitute_configparser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfgp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.RawConfigParser" title="(in Python v3.15)"><span class="pre">RawConfigParser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tbotcfgp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">where</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.RawConfigParser" title="(in Python v3.15)"><span class="pre">RawConfigParser</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_substitute_configparser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_substitute_configparser" title="Link to this definition"></a></dt>
+<dd><p>returns a configparser with the expressions of init_config_substitute()
+replaced in the section names, keys and values of cfgp, so an ini
+file can use them as a JSON file does</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfgp</strong> – configparser of an ini file</p></li>
+<li><p><strong>flags</strong> – the tbot flags, default those of the command line</p></li>
+<li><p><strong>tbotcfgp</strong> – configparser of tbot.ini, for the board file</p></li>
+<li><p><strong>where</strong> – file name for the error messages</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_json_value_to_str">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_json_value_to_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_json_value_to_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_json_value_to_str" title="Link to this definition"></a></dt>
+<dd><p>returns a value of a JSON configuration as the string configparser
+holds, as the ini file would have it</p>
+<p>Strings stay strings, true/false become True/False, null None,
+numbers their digits, lists and dictionaries their Python literal,
+which the code reads with ast.literal_eval as from an ini file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – value from the JSON file</p></li>
+<li><p><strong>subst</strong> – function that replaces the expressions in a string,
+see init_config_substitute()</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.init_config_to_json_dict">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">init_config_to_json_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfgp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/configparser.html#configparser.RawConfigParser" title="(in Python v3.15)"><span class="pre">RawConfigParser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolved</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#init_config_to_json_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.init_config_to_json_dict" title="Link to this definition"></a></dt>
+<dd><p>returns the configuration of cfgp as the object of a JSON
+configuration, see init_read_jsonfile()</p>
+<p>Values that are a Python list or dictionary become JSON lists and
+objects, every other value stays a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfgp</strong> – configparser of an ini or JSON configuration</p></li>
+<li><p><strong>resolved</strong> – True gives the values interpolated, as tbot reads
+them (a reference that does not resolve stays as written); False
+as they are written, with ${…}</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.generic_get_boardname">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">generic_get_boardname</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#generic_get_boardname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.generic_get_boardname" title="Link to this definition"></a></dt>
+<dd><p>return the boards name in your lab setup</p>
+<p>setup the boardname through tbot.flag boardname, -f boardname:&lt;NAME&gt;</p>
+<p>You can overwrite this by defining your own board_set_boardname()
+in boardspecific.py if you need another approach.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.copy_file">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">copy_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newfile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#copy_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.copy_file" title="Link to this definition"></a></dt>
+<dd><p>copy file filename to newfile</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – full path and name of source file</p></li>
+<li><p><strong>newfile</strong> – full path and name of target file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.replace_in_file">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">replace_in_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newv</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#replace_in_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.replace_in_file" title="Link to this definition"></a></dt>
+<dd><p>replace string in filename with string newv</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – full path and name of source file</p></li>
+<li><p><strong>string</strong> – searchstring</p></li>
+<li><p><strong>newv</strong> – new value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.find_in_file_and_append">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">find_in_file_and_append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substring</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#find_in_file_and_append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.find_in_file_and_append" title="Link to this definition"></a></dt>
+<dd><p>append in file filename to the string substring the string append</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – full path and name of source file</p></li>
+<li><p><strong>substring</strong> – string to which string append gets appended</p></li>
+<li><p><strong>append</strong> – appended string</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tbottest.initconfig.find_in_file_and_delete">
+<span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">find_in_file_and_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substring</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#find_in_file_and_delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.find_in_file_and_delete" title="Link to this definition"></a></dt>
+<dd><p>delete line in file filename when substring is found</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – full path and name of source file</p></li>
+<li><p><strong>substring</strong> – substring which get searched</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="classes">
+<h2>classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#tbottest.initconfig.IniTBotConfig" title="tbottest.initconfig.IniTBotConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">IniTBotConfig</span></code></a> - Init generic setup from tbot.ini.</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniTBotConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">IniTBotConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniTBotConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniTBotConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>reads common tbot config</p>
+<p>see: <a class="reference internal" href="generic.html#boardspecificruntimeadaption"><span class="std std-ref">boardspecific runtime adaptions (ini files)</span></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniTBotConfig.get_section_config">
+<span class="sig-name descname"><span class="pre">get_section_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default=&lt;object</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniTBotConfig.get_section_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniTBotConfig.get_section_config" title="Link to this definition"></a></dt>
+<dd><p>returns value of key name in section of tbot.ini, see
+init_section_get_config()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>section</strong> – name of the section</p></li>
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – value if missing; without it a missing key raises</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniTBotConfig.get_section_config_bool">
+<span class="sig-name descname"><span class="pre">get_section_config_bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniTBotConfig.get_section_config_bool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniTBotConfig.get_section_config_bool" title="Link to this definition"></a></dt>
+<dd><p>returns the boolean value of key name in section of tbot.ini, see
+init_section_get_config_bool()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>section</strong> – name of the section</p></li>
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – value if missing</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniTBotConfig.get_lab_config">
+<span class="sig-name descname"><span class="pre">get_lab_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default=&lt;object</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniTBotConfig.get_lab_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniTBotConfig.get_lab_config" title="Link to this definition"></a></dt>
+<dd><p>returns value of key name in the section of the lab host, see
+init_lab_get_config()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – value if missing; without it a missing key raises</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniTBotConfig.has_section">
+<span class="sig-name descname"><span class="pre">has_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniTBotConfig.has_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniTBotConfig.has_section" title="Link to this definition"></a></dt>
+<dd><p>returns True if tbot.ini has section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>section</strong> – name of the section</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniTBotConfig.find_sections">
+<span class="sig-name descname"><span class="pre">find_sections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniTBotConfig.find_sections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniTBotConfig.find_sections" title="Link to this definition"></a></dt>
+<dd><p>returns the names of the sections of tbot.ini that contain part</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>part</strong> – part of the section name</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<ul class="simple">
+<li><p><a class="reference internal" href="#tbottest.initconfig.IniConfig" title="tbottest.initconfig.IniConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">IniConfig</span></code></a> - Init generic setup from BOARDNAME.ini.</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tbottest.initconfig.</span></span><span class="sig-name descname"><span class="pre">IniConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>reads board config</p>
+<p>see: <a class="reference internal" href="generic.html#boardspecificruntimeadaption"><span class="std std-ref">boardspecific runtime adaptions (ini files)</span></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniConfig.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniConfig.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniConfig.get_config" title="Link to this definition"></a></dt>
+<dd><p>returns value of key name from configparser.</p>
+<p>use internal function init_get_config</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – default value if key is not found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniConfig.get_config_int">
+<span class="sig-name descname"><span class="pre">get_config_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniConfig.get_config_int"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniConfig.get_config_int" title="Link to this definition"></a></dt>
+<dd><p>returns int value of key name from configparser.</p>
+<p>use internal function init_get_config_int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – default value if key is not found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniConfig.get_config_literal">
+<span class="sig-name descname"><span class="pre">get_config_literal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniConfig.get_config_literal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniConfig.get_config_literal" title="Link to this definition"></a></dt>
+<dd><p>returns the value of key name read as Python literal.</p>
+<p>use internal function init_get_config_literal</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – default value if key is not found, as string</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniConfig.get_config_bool">
+<span class="sig-name descname"><span class="pre">get_config_bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniConfig.get_config_bool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniConfig.get_config_bool" title="Link to this definition"></a></dt>
+<dd><p>returns the boolean value of key name.</p>
+<p>use internal function init_get_config_bool</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – value if the key is missing or “None”</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniConfig.get_config_keys">
+<span class="sig-name descname"><span class="pre">get_config_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniConfig.get_config_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniConfig.get_config_keys" title="Link to this definition"></a></dt>
+<dd><p>returns the keys starting with prefix.</p>
+<p>use internal function init_get_config_keys</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prefix</strong> – start of the key names</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tbottest.initconfig.IniConfig.get_default_config">
+<span class="sig-name descname"><span class="pre">get_default_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tbottest/initconfig.html#IniConfig.get_default_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tbottest.initconfig.IniConfig.get_default_config" title="Link to this definition"></a></dt>
+<dd><p>return value of key from “default” section with name “name”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – name of key</p></li>
+<li><p><strong>default</strong> – default value if key is not found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tc.html" class="btn btn-neutral float-left" title="tbottest.tc - Testcases" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="iniconfighelper.html" class="btn btn-neutral float-right" title="tbottest.initconfighelper" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Heiko Schocher.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

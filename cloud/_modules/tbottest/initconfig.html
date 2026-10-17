@@ -1,0 +1,1738 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tbottest.initconfig &#8212; tbottest 0.0.1-424-g654c493 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/cloud.css?v=f9ae72be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/cloud-wide.css?v=7d17dfa2" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script src="../../_static/documentation_options.js?v=7a0c7f43"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+const defaultStyle = document.createElement('style');
+defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+`;
+document.head.appendChild(defaultStyle);
+
+const fullscreenStyle = document.createElement('style');
+fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+document.head.appendChild(fullscreenStyle);
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+    }
+    return false;
+};
+
+const load = async () => {
+    await mermaid.run();
+
+    const all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(load, 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(load, 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(load, 200);
+        return;
+    }
+
+    const darkTheme = isDarkTheme();
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    const modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    let previousScrollOffset = [window.scrollX, window.scrollY];
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    const allButtons = [];
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        container.appendChild(fullscreenBtn);
+        allButtons.push(fullscreenBtn);
+    });
+
+    // Update theme classes when theme changes
+    const updateTheme = () => {
+        const dark = isDarkTheme();
+        allButtons.forEach(btn => {
+            if (dark) {
+                btn.classList.add('dark-theme');
+            } else {
+                btn.classList.remove('dark-theme');
+            }
+        });
+        if (dark) {
+            modal.classList.add('dark-theme');
+            modalContent.classList.add('dark-theme');
+            closeBtn.classList.add('dark-theme');
+        } else {
+            modal.classList.remove('dark-theme');
+            modalContent.classList.remove('dark-theme');
+            closeBtn.classList.remove('dark-theme');
+        }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+};
+
+window.addEventListener("load", load);
+</script>
+    <script data-doc-theme="cloud" src="../../_static/themeswitch.js?v=8de3ea61"></script>
+
+    
+    
+     
+        <script src="../../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../index.html">tbottest 0.0.1-424-g654c493 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tbottest.initconfig</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tbottest.initconfig</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">atexit</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">contextvars</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">configparser</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExtendedInterpolation</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tbot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.dynamicimport</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_boardmodule_import</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tbottest.dynamicimport</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_boardmodulepath_import</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tbottest.initconfighelper</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">inithelper</span>
+
+<span class="n">BOARDNAME</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_Singleton</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Metaclass making a class a per-process singleton: the first call to</span>
+<span class="sd">    ClassName() constructs and caches the instance, every later call</span>
+<span class="sd">    returns that same instance (and __init__ does not run again).</span>
+
+<span class="sd">    Without this, every ClassName() call (e.g. one created inline</span>
+<span class="sd">    inside a property that runs on every SSH connection attempt)</span>
+<span class="sd">    re-parsed the same shared, UUID-suffixed ini file from scratch and</span>
+<span class="sd">    registered its own weakref.finalize(self, self.cleanup) cleanup.</span>
+<span class="sd">    Since that callback is a bound method of the instance itself, it</span>
+<span class="sd">    keeps a strong reference back to it -- a documented</span>
+<span class="sd">    weakref.finalize pitfall -- so none of these instances were ever</span>
+<span class="sd">    actually garbage collected during the run; they just accumulated</span>
+<span class="sd">    for as long as the process lived, each holding its own parsed</span>
+<span class="sd">    configparser. A cached singleton with atexit-based cleanup avoids</span>
+<span class="sd">    both the unbounded per-call leak and the repeated re-parsing.</span>
+<span class="sd">    """</span>
+
+    <span class="n">_instances</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">cls</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="bp">cls</span><span class="p">]</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span><span class="p">[</span><span class="bp">cls</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">init_get_default_config</span><span class="p">(</span>
+    <span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns value of key name from configparser.</span>
+
+<span class="sd">    Searches key name in "default" sectio</span>
+
+<span class="sd">    :param cfgp: current config parser</span>
+<span class="sd">    :param name: name of key</span>
+<span class="sd">    :param default: default value if key is not found</span>
+<span class="sd">    """</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"default"</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="n">default</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">"None"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">value</span>
+
+
+<span class="c1"># Name of the testcase that runs now, set with init_testcase(); the</span>
+<span class="c1"># decorators tc_config() and require_cfg() of tbottest.tc.generictestdef do</span>
+<span class="c1"># this. The board configuration is then searched in its section first, see</span>
+<span class="c1"># init_config_sections().</span>
+<span class="n">_CURRENT_TESTCASE</span> <span class="o">=</span> <span class="n">contextvars</span><span class="o">.</span><span class="n">ContextVar</span><span class="p">(</span><span class="s2">"tbottest_current_testcase"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="init_testcase">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_testcase">[docs]</a>
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_testcase</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    make name the testcase that runs now, for the duration of the with</span>
+<span class="sd">    block, see init_config_sections(). At its end the name of an outer</span>
+<span class="sd">    block is valid again.</span>
+
+<span class="sd">    :param name: name of the testcase</span>
+<span class="sd">    """</span>
+    <span class="n">token</span> <span class="o">=</span> <span class="n">_CURRENT_TESTCASE</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">_CURRENT_TESTCASE</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">token</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="init_current_testcase">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_current_testcase">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_current_testcase</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns the name of the testcase that runs now, see init_testcase(),</span>
+<span class="sd">    or None outside of a testcase</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_CURRENT_TESTCASE</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="init_config_sections">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_config_sections">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_config_sections</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns the sections of the board configuration in the order</span>
+<span class="sd">    init_get_config() searches them</span>
+
+<span class="sd">    While a testcase runs (see init_testcase()) first</span>
+<span class="sd">    "TC_BOARDNAME.TESTCASENAME", then "TC_BOARDNAME" and "TC", else only</span>
+<span class="sd">    the last two. There is deliberately no section "TC_TESTCASENAME" for</span>
+<span class="sd">    all boards, a value for all boards goes into "TC".</span>
+<span class="sd">    """</span>
+    <span class="n">boardname</span> <span class="o">=</span> <span class="n">generic_get_boardname</span><span class="p">()</span>
+    <span class="n">sections</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"TC_</span><span class="si">{</span><span class="n">boardname</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"TC"</span><span class="p">]</span>
+    <span class="n">testcase</span> <span class="o">=</span> <span class="n">_CURRENT_TESTCASE</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">testcase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sections</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"TC_</span><span class="si">{</span><span class="n">boardname</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">testcase</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sections</span></div>
+
+
+
+<div class="viewcode-block" id="init_get_config">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_get_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_get_config</span><span class="p">(</span>
+    <span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns value of key name from configparser.</span>
+
+<span class="sd">    Searches the sections init_config_sections() returns, while a</span>
+<span class="sd">    testcase runs first "TC_BOARDNAME.TESTCASENAME", then "TC_BOARDNAME",</span>
+<span class="sd">    then "TC". If not found, return default value. If the value is "None"</span>
+<span class="sd">    return None</span>
+
+<span class="sd">    So what happens without the key is up to the testcase. The generic</span>
+<span class="sd">    testcases pass a default that means "not set" and are decorated with</span>
+<span class="sd">    :py:func:`tbottest.tc.generictestdef.require_cfg`, so they are skipped</span>
+<span class="sd">    and :py:func:`tbottest.tc.generic_board.generic_lnx_all` counts them as</span>
+<span class="sd">    skipped. A testcase that cannot do without the key should raise an</span>
+<span class="sd">    exception, so it fails.</span>
+
+<span class="sd">    :param cfgp: current config parser</span>
+<span class="sd">    :param name: name of key</span>
+<span class="sd">    :param default: default value if key is not found</span>
+<span class="sd">    """</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">default</span>
+    <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">init_config_sections</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">break</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">"None"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">value</span></div>
+
+
+
+<div class="viewcode-block" id="init_get_config_int">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_get_config_int">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_get_config_int</span><span class="p">(</span>
+    <span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns value of key name as int, searched as init_get_config()</span>
+<span class="sd">    does. If the value is "None" return None</span>
+
+<span class="sd">    :param cfgp: current config parser</span>
+<span class="sd">    :param name: name of key</span>
+<span class="sd">    :param default: default value if key is not found</span>
+<span class="sd">    """</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">init_get_config</span><span class="p">(</span><span class="n">cfgp</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="init_get_config_literal">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_get_config_literal">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_get_config_literal</span><span class="p">(</span>
+    <span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns value of key name read as Python literal with</span>
+<span class="sd">    ast.literal_eval(), e.g. a list or a dictionary, searched as</span>
+<span class="sd">    init_get_config() does. If the value is "None" return None</span>
+
+<span class="sd">    :param cfgp: current config parser</span>
+<span class="sd">    :param name: name of key</span>
+<span class="sd">    :param default: default value if key is not found, as string</span>
+<span class="sd">    """</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">init_get_config</span><span class="p">(</span><span class="n">cfgp</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="init_get_config_keys">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_get_config_keys">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_get_config_keys</span><span class="p">(</span>
+    <span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span>
+    <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns the keys starting with prefix, from the sections</span>
+<span class="sd">    init_get_config() searches.</span>
+
+<span class="sd">    Keys of the sections init_config_sections() returns, in this order,</span>
+<span class="sd">    each key once, in the order of the file. Read their values with</span>
+<span class="sd">    init_get_config(), so a key in an earlier section hides the same key</span>
+<span class="sd">    in a later one.</span>
+
+<span class="sd">    :param cfgp: current config parser</span>
+<span class="sd">    :param prefix: start of the key names</span>
+<span class="sd">    """</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">init_config_sections</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">has_section</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                <span class="n">keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">keys</span></div>
+
+
+
+<span class="c1"># default of the init_*_config functions for a key that must be there</span>
+<span class="n">REQUIRED</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="init_section_get_config">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_section_get_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_section_get_config</span><span class="p">(</span>
+    <span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span>
+    <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="n">REQUIRED</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns value of key name in section of the configparser, as it is</span>
+<span class="sd">    written there (no conversion of "None").</span>
+
+<span class="sd">    For the sections of tbot.ini outside the [TC] sections of the board</span>
+<span class="sd">    ini, e.g. [BUILDHOST], [SSHMACHINE] or [PICOCOM_BOARDNAME].</span>
+
+<span class="sd">    :param cfgp: current config parser</span>
+<span class="sd">    :param section: name of the section</span>
+<span class="sd">    :param name: name of key</span>
+<span class="sd">    :param default: value if section or key is missing; without it a</span>
+<span class="sd">        missing section or key raises RuntimeError</span>
+<span class="sd">    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">configparser</span><span class="o">.</span><span class="n">NoSectionError</span><span class="p">,</span> <span class="n">configparser</span><span class="o">.</span><span class="n">NoOptionError</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">default</span> <span class="ow">is</span> <span class="n">REQUIRED</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"key </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> missing in section [</span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2">]"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">default</span></div>
+
+
+
+<div class="viewcode-block" id="init_config_to_bool">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_config_to_bool">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_config_to_bool</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns the boolean of an ini value, as configparser reads it</span>
+<span class="sd">    (1, yes, true, on and 0, no, false, off, any case)</span>
+
+<span class="sd">    :param value: value from the ini file</span>
+<span class="sd">    """</span>
+    <span class="n">states</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="o">.</span><span class="n">BOOLEAN_STATES</span>
+    <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"not a boolean: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">states</span><span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span></div>
+
+
+
+<div class="viewcode-block" id="init_section_get_config_bool">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_section_get_config_bool">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_section_get_config_bool</span><span class="p">(</span>
+    <span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span>
+    <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">default</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns the boolean value of key name in section, see</span>
+<span class="sd">    init_section_get_config() and init_config_to_bool()</span>
+
+<span class="sd">    :param cfgp: current config parser</span>
+<span class="sd">    :param section: name of the section</span>
+<span class="sd">    :param name: name of key</span>
+<span class="sd">    :param default: value if section or key is missing</span>
+<span class="sd">    """</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">init_section_get_config</span><span class="p">(</span><span class="n">cfgp</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">default</span>
+    <span class="k">return</span> <span class="n">init_config_to_bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="init_get_config_bool">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_get_config_bool">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_get_config_bool</span><span class="p">(</span>
+    <span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">default</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns the boolean value of key name from the sections</span>
+<span class="sd">    init_get_config() searches, see init_config_to_bool()</span>
+
+<span class="sd">    :param cfgp: current config parser</span>
+<span class="sd">    :param name: name of key</span>
+<span class="sd">    :param default: value if the key is missing or "None"</span>
+<span class="sd">    """</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">init_get_config</span><span class="p">(</span><span class="n">cfgp</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">default</span>
+    <span class="k">return</span> <span class="n">init_config_to_bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="init_read_inifile">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_read_inifile">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_read_inifile</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns a configparser with the ini file filename read, the way</span>
+<span class="sd">    IniTBotConfig and IniConfig read theirs</span>
+
+<span class="sd">    For code that has to read an ini file before IniTBotConfig and</span>
+<span class="sd">    IniConfig exist, e.g. set_board_cfg() in boardspecific.py. Read its</span>
+<span class="sd">    values with the init_*_config functions.</span>
+
+<span class="sd">    :param filename: path of the ini file</span>
+<span class="sd">    """</span>
+    <span class="n">cfgp</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">(</span><span class="n">interpolation</span><span class="o">=</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
+    <span class="n">cfgp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cfgp</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_closing_brace</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""index of the "}" that closes the "${" before start, -1 if none"""</span>
+    <span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">start</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"${"</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+            <span class="n">depth</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"}"</span><span class="p">:</span>
+            <span class="n">depth</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">i</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_flag_value</span><span class="p">(</span><span class="n">flags</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""value of the tbot flag name:&lt;value&gt;, "True" for a flag name, None"""</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">flags</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">f</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">"True"</span>
+        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">":"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="init_config_substitute">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_config_substitute">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_config_substitute</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">tbotcfgp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">where</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns text with the expressions of a JSON configuration replaced</span>
+
+<span class="sd">    - ${env:NAME} and ${env:NAME:-default}, the environment variable NAME</span>
+<span class="sd">    - ${flag:NAME} and ${flag:NAME:-default}, the value of the tbot flag</span>
+<span class="sd">      NAME:&lt;value&gt;, True for a flag NAME without value</span>
+<span class="sd">    - ${lab:key}, key of the lab section of tbot.json (LABHOST or</span>
+<span class="sd">      LABHOST_&lt;labname&gt;), only with tbotcfgp</span>
+<span class="sd">    - ${tbot:SECTION:key}, key of SECTION of tbot.json, only with tbotcfgp</span>
+
+<span class="sd">    The default is only used, and only replaced, when the value is not</span>
+<span class="sd">    set; without default a missing value raises RuntimeError. Expressions</span>
+<span class="sd">    may be nested; any other ${...} stays for the interpolation of</span>
+<span class="sd">    configparser (${key}, ${section:key}), with the expressions in it</span>
+<span class="sd">    replaced, and $$ stays as it is.</span>
+
+<span class="sd">    :param text: value or name from the JSON file</span>
+<span class="sd">    :param flags: the tbot flags</span>
+<span class="sd">    :param tbotcfgp: configparser of tbot.json, for ${lab:} and ${tbot:}</span>
+<span class="sd">    :param where: file name for the error messages</span>
+<span class="sd">    """</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"$"</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">:])</span>
+            <span class="k">return</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">j</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"$$"</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"$$"</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">2</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"${"</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"$"</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">continue</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">_closing_brace</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s2">: unbalanced $</span><span class="se">{{</span><span class="s2"> in </span><span class="si">{</span><span class="n">text</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_resolve_expression</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">2</span> <span class="p">:</span> <span class="n">k</span><span class="p">],</span> <span class="n">flags</span><span class="p">,</span> <span class="n">tbotcfgp</span><span class="p">,</span> <span class="n">where</span><span class="p">))</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_resolve_expression</span><span class="p">(</span><span class="n">inner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">tbotcfgp</span><span class="p">,</span> <span class="n">where</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""value of the expression ${&lt;inner&gt;}, see init_config_substitute()"""</span>
+    <span class="n">kind</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">inner</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">":"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sep</span> <span class="ow">and</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"env"</span><span class="p">,</span> <span class="s2">"flag"</span><span class="p">):</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">dsep</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="n">rest</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">":-"</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"env"</span> <span class="k">else</span> <span class="n">_flag_value</span><span class="p">(</span><span class="n">flags</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dsep</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s2">: $</span><span class="se">{{</span><span class="si">{</span><span class="n">inner</span><span class="si">}</span><span class="se">}}</span><span class="s2">: </span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> is not set and has no default"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">init_config_substitute</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">tbotcfgp</span><span class="p">,</span> <span class="n">where</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sep</span> <span class="ow">and</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"lab"</span><span class="p">,</span> <span class="s2">"tbot"</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">tbotcfgp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s2">: $</span><span class="se">{{</span><span class="si">{</span><span class="n">inner</span><span class="si">}</span><span class="se">}}</span><span class="s2"> works in the board file only"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"lab"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">init_lab_get_config</span><span class="p">(</span><span class="n">tbotcfgp</span><span class="p">,</span> <span class="n">rest</span><span class="p">)</span>
+        <span class="n">section</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="n">rest</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">":"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">init_section_get_config</span><span class="p">(</span><span class="n">tbotcfgp</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    <span class="c1"># not ours: for the interpolation of configparser</span>
+    <span class="k">return</span> <span class="s2">"${"</span> <span class="o">+</span> <span class="n">init_config_substitute</span><span class="p">(</span><span class="n">inner</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">tbotcfgp</span><span class="p">,</span> <span class="n">where</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"}"</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_json_native</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">subst</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""value with the expressions in its strings replaced"""</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">subst</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">_json_native</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">subst</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">subst</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">_json_native</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">subst</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="k">return</span> <span class="n">value</span>
+
+
+<div class="viewcode-block" id="init_json_value_to_str">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_json_value_to_str">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_json_value_to_str</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">subst</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns a value of a JSON configuration as the string configparser</span>
+<span class="sd">    holds, as the ini file would have it</span>
+
+<span class="sd">    Strings stay strings, true/false become True/False, null None,</span>
+<span class="sd">    numbers their digits, lists and dictionaries their Python literal,</span>
+<span class="sd">    which the code reads with ast.literal_eval as from an ini file.</span>
+
+<span class="sd">    :param value: value from the JSON file</span>
+<span class="sd">    :param subst: function that replaces the expressions in a string,</span>
+<span class="sd">        see init_config_substitute()</span>
+<span class="sd">    """</span>
+    <span class="n">subst</span> <span class="o">=</span> <span class="n">subst</span> <span class="ow">or</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">_json_native</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">subst</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="init_read_jsonfile">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_read_jsonfile">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_read_jsonfile</span><span class="p">(</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tbotcfgp</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns a configparser with the JSON configuration filename</span>
+
+<span class="sd">    The file holds an object of sections, each an object of keys, as the</span>
+<span class="sd">    ini file has them. Names and values get their expressions replaced,</span>
+<span class="sd">    see init_config_substitute(), values become strings, see</span>
+<span class="sd">    init_json_value_to_str(). configparser then interpolates ${key} and</span>
+<span class="sd">    ${section:key} as for an ini file.</span>
+
+<span class="sd">    :param filename: path of the JSON file</span>
+<span class="sd">    :param flags: the tbot flags, default those of the command line</span>
+<span class="sd">    :param tbotcfgp: configparser of tbot.json, for the board file</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">flags</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">flags</span> <span class="o">=</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">get_tbot_flags</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">: needs an object of sections, each an object of keys"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">subst</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">init_config_substitute</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">tbotcfgp</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">sections</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">section</span><span class="p">,</span> <span class="n">keys</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">sections</span><span class="p">[</span><span class="n">subst</span><span class="p">(</span><span class="n">section</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">subst</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">init_json_value_to_str</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">subst</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">keys</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="n">cfgp</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">(</span><span class="n">interpolation</span><span class="o">=</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
+    <span class="n">cfgp</span><span class="o">.</span><span class="n">read_dict</span><span class="p">(</span><span class="n">sections</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cfgp</span></div>
+
+
+
+<div class="viewcode-block" id="init_substitute_configparser">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_substitute_configparser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_substitute_configparser</span><span class="p">(</span>
+    <span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tbotcfgp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">where</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns a configparser with the expressions of init_config_substitute()</span>
+<span class="sd">    replaced in the section names, keys and values of cfgp, so an ini</span>
+<span class="sd">    file can use them as a JSON file does</span>
+
+<span class="sd">    :param cfgp: configparser of an ini file</span>
+<span class="sd">    :param flags: the tbot flags, default those of the command line</span>
+<span class="sd">    :param tbotcfgp: configparser of tbot.ini, for the board file</span>
+<span class="sd">    :param where: file name for the error messages</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">flags</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">flags</span> <span class="o">=</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">get_tbot_flags</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">subst</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">init_config_substitute</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">tbotcfgp</span><span class="p">,</span> <span class="n">where</span><span class="p">)</span>
+
+    <span class="n">sections</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="n">sections</span><span class="p">[</span><span class="n">subst</span><span class="p">(</span><span class="n">section</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">subst</span><span class="p">(</span><span class="n">key</span><span class="p">):</span> <span class="n">subst</span><span class="p">(</span><span class="n">cfgp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="n">new</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">(</span><span class="n">interpolation</span><span class="o">=</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
+    <span class="n">new</span><span class="o">.</span><span class="n">read_dict</span><span class="p">(</span><span class="n">sections</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">new</span></div>
+
+
+
+<div class="viewcode-block" id="init_read_configfile">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_read_configfile">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_read_configfile</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tbotcfgp</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns a configparser with the configuration file filename, JSON if</span>
+<span class="sd">    its name ends in .json (init_read_jsonfile()), else ini</span>
+<span class="sd">    (init_read_inifile()); in both the expressions of</span>
+<span class="sd">    init_config_substitute() are replaced</span>
+
+<span class="sd">    :param filename: path of the file</span>
+<span class="sd">    :param tbotcfgp: configparser of tbot.ini or tbot.json, for the board</span>
+<span class="sd">        file</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".json"</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">init_read_jsonfile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">tbotcfgp</span><span class="o">=</span><span class="n">tbotcfgp</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">init_substitute_configparser</span><span class="p">(</span><span class="n">init_read_inifile</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="n">tbotcfgp</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="init_config_to_json_dict">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_config_to_json_dict">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_config_to_json_dict</span><span class="p">(</span><span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span> <span class="n">resolved</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns the configuration of cfgp as the object of a JSON</span>
+<span class="sd">    configuration, see init_read_jsonfile()</span>
+
+<span class="sd">    Values that are a Python list or dictionary become JSON lists and</span>
+<span class="sd">    objects, every other value stays a string.</span>
+
+<span class="sd">    :param cfgp: configparser of an ini or JSON configuration</span>
+<span class="sd">    :param resolved: True gives the values interpolated, as tbot reads</span>
+<span class="sd">        them (a reference that does not resolve stays as written); False</span>
+<span class="sd">        as they are written, with ${...}</span>
+<span class="sd">    """</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="ow">not</span> <span class="n">resolved</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">configparser</span><span class="o">.</span><span class="n">InterpolationError</span><span class="p">:</span>
+                <span class="c1"># a reference that does not resolve stays as written</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">native</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">native</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">keys</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">native</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">native</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">))</span> <span class="k">else</span> <span class="n">value</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">section</span><span class="p">]</span> <span class="o">=</span> <span class="n">keys</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+
+<div class="viewcode-block" id="init_has_section">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_has_section">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_has_section</span><span class="p">(</span><span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns True if the configparser has section</span>
+
+<span class="sd">    :param cfgp: current config parser</span>
+<span class="sd">    :param section: name of the section</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">has_section</span><span class="p">(</span><span class="n">section</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="init_find_sections">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_find_sections">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_find_sections</span><span class="p">(</span><span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span> <span class="n">part</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns the names of the sections that contain part, in the order of</span>
+<span class="sd">    the ini file</span>
+
+<span class="sd">    :param cfgp: current config parser</span>
+<span class="sd">    :param part: part of the section name, e.g. "BUILDHOST"</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">cfgp</span><span class="o">.</span><span class="n">sections</span><span class="p">()</span> <span class="k">if</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">s</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="init_lab_get_config">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.init_lab_get_config">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_lab_get_config</span><span class="p">(</span>
+    <span class="n">cfgp</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="n">REQUIRED</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    returns value of key name from configparser</span>
+<span class="sd">    from section LABHOST or LABHOST_labname</span>
+
+<span class="sd">    :param cfgp: current config parser</span>
+<span class="sd">    :param name: name of key</span>
+<span class="sd">    :param default: default value if key is not found; without it a</span>
+<span class="sd">        missing key raises RuntimeError</span>
+<span class="sd">    """</span>
+    <span class="n">sectionname</span> <span class="o">=</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">get_lab_sectionname</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">init_section_get_config</span><span class="p">(</span><span class="n">cfgp</span><span class="p">,</span> <span class="n">sectionname</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="generic_get_boardname">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.generic_get_boardname">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">generic_get_boardname</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    return the boards name in your lab setup</span>
+
+<span class="sd">    setup the boardname through tbot.flag boardname, -f boardname:&lt;NAME&gt;</span>
+
+<span class="sd">    You can overwrite this by defining your own board_set_boardname()</span>
+<span class="sd">    in boardspecific.py if you need another approach.</span>
+<span class="sd">    """</span>
+    <span class="k">global</span> <span class="n">BOARDNAME</span>
+
+    <span class="k">if</span> <span class="n">BOARDNAME</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">BOARDNAME</span>
+
+    <span class="k">if</span> <span class="n">board_set_boardname</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"boardname:"</span><span class="p">):</span>
+                <span class="n">BOARDNAME</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">BOARDNAME</span>
+        <span class="k">if</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">config_is_json</span><span class="p">():</span>
+            <span class="c1"># key board of the lab section of tbot.json, e.g.</span>
+            <span class="c1"># "${flag:boardname:-BOARDNAME}"</span>
+            <span class="n">tbotfile</span> <span class="o">=</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">inifile_get_tbotfilename</span><span class="p">()</span>
+            <span class="n">board</span> <span class="o">=</span> <span class="n">init_section_get_config</span><span class="p">(</span>
+                <span class="n">init_read_jsonfile</span><span class="p">(</span><span class="n">tbotfile</span><span class="p">),</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">get_lab_sectionname</span><span class="p">(),</span> <span class="s2">"board"</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">board</span><span class="p">:</span>
+                <span class="n">BOARDNAME</span> <span class="o">=</span> <span class="n">board</span>
+                <span class="k">return</span> <span class="n">BOARDNAME</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">BOARDNAME</span> <span class="o">=</span> <span class="n">board_set_boardname</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">BOARDNAME</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+        <span class="s2">"please set your boardname with tbot.flag -f boardname:&lt;NAME&gt;"</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">bdi2000_poweron_cmds</span><span class="p">(</span><span class="n">cmds</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    select the BDI2000 commands run after power on</span>
+
+<span class="sd">    poweron_cmds in the BDI2000_&lt;boardname&gt; section of tbot.ini is either</span>
+<span class="sd">    a list of commands, or a dictionary of named command lists. The tbot</span>
+<span class="sd">    flag poweron_cmds:&lt;name&gt; selects an entry of the dictionary; without</span>
+<span class="sd">    the flag the entry "default" is taken, if there is one.</span>
+<span class="sd">    poweron_cmds:None runs no commands at all, the board control then does</span>
+<span class="sd">    not talk to the BDI2000 after power on.</span>
+
+<span class="sd">    :param cmds: poweron_cmds as read from tbot.ini, list or dictionary</span>
+<span class="sd">    :returns: list of commands, empty if none are to be run</span>
+<span class="sd">    """</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">tbot</span><span class="o">.</span><span class="n">flags</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"poweron_cmds:"</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"more than one flag poweron_cmds: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">names</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"None"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmds</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">cmds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"default"</span><span class="p">,</span> <span class="p">[]))</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cmds</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"flag poweron_cmds:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: no such entry in poweron_cmds, "</span>
+                <span class="sa">f</span><span class="s2">"known are </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span><span class="si">}</span><span class="s2"> and None"</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">cmds</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"flag poweron_cmds:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: poweron_cmds is a list, not a "</span>
+            <span class="s2">"dictionary of named lists; only poweron_cmds:None is possible"</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="copy_file">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.copy_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">copy_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">newfile</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    copy file filename to newfile</span>
+
+<span class="sd">    :param filename: full path and name of source file</span>
+<span class="sd">    :param newfile: full path and name of target file</span>
+<span class="sd">    """</span>
+    <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"rt"</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">newfile</span><span class="p">,</span> <span class="s2">"wt"</span><span class="p">)</span>
+    <span class="n">fin</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="replace_in_file">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.replace_in_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">replace_in_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">newv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    replace string in filename with string newv</span>
+
+<span class="sd">    :param filename: full path and name of source file</span>
+<span class="sd">    :param string: searchstring</span>
+<span class="sd">    :param newv: new value</span>
+<span class="sd">    """</span>
+    <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"rt"</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">newv</span><span class="p">)</span>
+    <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"wt"</span><span class="p">)</span>
+    <span class="n">fin</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="find_in_file_and_append">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.find_in_file_and_append">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_in_file_and_append</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">substring</span><span class="p">,</span> <span class="n">append</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    append in file filename to the string substring the string append</span>
+
+<span class="sd">    :param filename: full path and name of source file</span>
+<span class="sd">    :param substring: string to which string append gets appended</span>
+<span class="sd">    :param append: appended string</span>
+<span class="sd">    """</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">IN</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"output.txt"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">OUT</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">IN</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">substring</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="n">append</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+                <span class="n">OUT</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span> <span class="o">+</span> <span class="n">append</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">OUT</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="n">copy_file</span><span class="p">(</span><span class="s2">"output.txt"</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="find_in_file_and_delete">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.find_in_file_and_delete">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_in_file_and_delete</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">substring</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    delete line in file filename when substring is found</span>
+
+<span class="sd">    :param filename: full path and name of source file</span>
+<span class="sd">    :param substring: substring which get searched</span>
+<span class="sd">    """</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">IN</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"output.txt"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">OUT</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">IN</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">substring</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">):</span>
+                <span class="n">OUT</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+    <span class="n">copy_file</span><span class="p">(</span><span class="s2">"output.txt"</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># a JSON configuration has its values in the files, without boardspecific.py</span>
+<span class="n">set_board_cfg</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">board_set_boardname</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">config_is_json</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">set_board_cfg</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">get_boardmodule_import</span><span class="p">(),</span> <span class="s2">"set_board_cfg"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Please define at least a dummy set_board_config in </span><span class="si">{</span><span class="n">get_boardmodulepath_import</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">board_set_boardname</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">get_boardmodule_import</span><span class="p">(),</span> <span class="s2">"board_set_boardname"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">board_set_boardname</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="IniTBotConfig">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniTBotConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">IniTBotConfig</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">_Singleton</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    reads common tbot config</span>
+
+<span class="sd">    see: :ref:`boardspecificruntimeadaption`</span>
+<span class="sd">    """</span>
+
+    <span class="c1"># must be done before init; a JSON file is read as it is</span>
+    <span class="n">tbotinifile</span> <span class="o">=</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">inifile_get_tbotfilename</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">tbotinifile</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".json"</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">set_board_cfg</span><span class="p">:</span>
+            <span class="n">set_board_cfg</span><span class="p">(</span><span class="s2">"IniTBotConfig"</span><span class="p">,</span> <span class="n">tbotinifile</span><span class="p">)</span>
+        <span class="n">replace_in_file</span><span class="p">(</span><span class="n">tbotinifile</span><span class="p">,</span> <span class="s2">"@@TBOTBOARD@@"</span><span class="p">,</span> <span class="n">generic_get_boardname</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tbotinifile</span> <span class="o">=</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">inifile_get_tbotfilename</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labsectionname</span> <span class="o">=</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">get_lab_sectionname</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span> <span class="o">=</span> <span class="n">init_read_configfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tbotinifile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labsectionname</span><span class="p">,</span> <span class="s2">"date"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shelltype</span> <span class="o">=</span> <span class="n">init_lab_get_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="s2">"shelltype"</span><span class="p">,</span> <span class="s2">"ash"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shelltype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shelltype</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ethdevices</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"IPSETUP"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">dev</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+
+                <span class="n">ethaddr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"ethaddr"</span><span class="p">)</span>
+                <span class="n">labdevice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"labdevice"</span><span class="p">)</span>
+                <span class="n">ipaddr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"ipaddr"</span><span class="p">)</span>
+                <span class="n">serverip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"serverip"</span><span class="p">)</span>
+                <span class="n">netmask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"netmask"</span><span class="p">)</span>
+
+                <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">"labdevice"</span><span class="p">:</span> <span class="n">labdevice</span><span class="p">,</span>
+                    <span class="s2">"ethaddr"</span><span class="p">:</span> <span class="n">ethaddr</span><span class="p">,</span>
+                    <span class="s2">"serverip"</span><span class="p">:</span> <span class="n">serverip</span><span class="p">,</span>
+                    <span class="s2">"ipaddr"</span><span class="p">:</span> <span class="n">ipaddr</span><span class="p">,</span>
+                    <span class="s2">"netmask"</span><span class="p">:</span> <span class="n">netmask</span><span class="p">,</span>
+                <span class="p">}</span>
+
+                <span class="n">devtmp</span> <span class="o">=</span> <span class="p">{</span><span class="n">dev</span><span class="p">:</span> <span class="n">cfg</span><span class="p">}</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">tmpdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ethdevices</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span>
+                    <span class="n">tmpdict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">dev</span><span class="p">:</span> <span class="n">cfg</span><span class="p">})</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ethdevices</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">devtmp</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bootmodecfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"BOOTMODE"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">modes</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"modes"</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bootmodecfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">modes</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ubcfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"UBCFG"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">"ethintf"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"ethintf"</span><span class="p">),</span>
+                <span class="p">}</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">ubcfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dfuutilcfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"DFUUTIL_CONFIG"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">cmds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"cmds"</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dfuutilcfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">uuucfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"UUU_CONFIG"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"cmd"</span><span class="p">)</span>
+
+                <span class="n">uuucmd</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">):</span>
+                    <span class="n">uuucmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">uuucfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">uuucmd</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">xmodemcfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xmodemdevice</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"XMODEM_CONFIG"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"cmd"</span><span class="p">)</span>
+                <span class="n">xmodemcmd</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">xmodemcfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">xmodemcmd</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">xmodemdevice</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"device"</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lauterbachcfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"LAUTERBACH_CONFIG"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">verbose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"verbose"</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="n">verbose</span> <span class="o">=</span> <span class="mi">1</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">ipath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"install_path"</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="n">ipath</span> <span class="o">=</span> <span class="s2">"/opt/t32"</span>
+
+                <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"cmd"</span><span class="p">)</span>
+                <span class="n">conf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"config"</span><span class="p">)</span>
+                <span class="n">script</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"script"</span><span class="p">)</span>
+                <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">"verbose"</span><span class="p">:</span> <span class="n">verbose</span><span class="p">,</span>
+                    <span class="s2">"install_path"</span><span class="p">:</span> <span class="n">ipath</span><span class="p">,</span>
+                    <span class="s2">"cmd"</span><span class="p">:</span> <span class="n">cmd</span><span class="p">,</span>
+                    <span class="s2">"config"</span><span class="p">:</span> <span class="n">conf</span><span class="p">,</span>
+                    <span class="s2">"script"</span><span class="p">:</span> <span class="n">script</span><span class="p">,</span>
+                <span class="p">}</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">lauterbachcfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">seggercfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"SEGGER_CONFIG"</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+
+                <span class="n">cmds</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"cmds"</span><span class="p">))</span>
+                <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">"cmds"</span><span class="p">:</span> <span class="n">cmds</span><span class="p">,</span>
+                <span class="p">}</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">seggercfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bdi2000cfg</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"BDI2000_"</span><span class="p">):</span>
+                <span class="n">nm</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># list, or dictionary of named lists, see</span>
+                    <span class="c1"># bdi2000_poweron_cmds()</span>
+                    <span class="n">cmds</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"poweron_cmds"</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="n">cmds</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">"ip"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"ip"</span><span class="p">),</span>
+                    <span class="s2">"poweron_cmds"</span><span class="p">:</span> <span class="n">cmds</span><span class="p">,</span>
+                    <span class="s2">"poweron_wait_state"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                        <span class="n">s</span><span class="p">,</span> <span class="s2">"poweron_wait_state"</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span>
+                    <span class="p">),</span>
+                    <span class="s2">"poweron_timeout"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">"poweron_timeout"</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="s2">"30"</span><span class="p">)</span>
+                    <span class="p">),</span>
+                <span class="p">}</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">bdi2000cfg</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg</span>
+
+        <span class="c1"># the sections of the board's console and power control, by their</span>
+        <span class="c1"># exact name &lt;type&gt;_&lt;boardname&gt;, as labgeneric.py reads them</span>
+        <span class="n">bn</span> <span class="o">=</span> <span class="n">generic_get_boardname</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">picocom</span> <span class="o">=</span> <span class="n">init_has_section</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"PICOCOM_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kermit</span> <span class="o">=</span> <span class="n">init_has_section</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"KERMIT_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scriptcom</span> <span class="o">=</span> <span class="n">init_has_section</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"SCRIPTCOM_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">telnet</span> <span class="o">=</span> <span class="n">init_has_section</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"TELNET_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sispmctrl</span> <span class="o">=</span> <span class="n">init_has_section</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"SISPMCTRL_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">powershellscript</span> <span class="o">=</span> <span class="n">init_has_section</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"POWERSHELLSCRIPT_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gpiopowerctrl</span> <span class="o">=</span> <span class="n">init_has_section</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"GPIOPMCTRL_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tinkerforce</span> <span class="o">=</span> <span class="n">init_has_section</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"TF_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tm021</span> <span class="o">=</span> <span class="n">init_has_section</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"TM021_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tbox</span> <span class="o">=</span> <span class="n">init_has_section</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"TBOX_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tboxhwdaemon</span> <span class="o">=</span> <span class="n">init_has_section</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"TBOX_HWDAEMON_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shelly</span> <span class="o">=</span> <span class="n">init_has_section</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"SHELLY_</span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="n">atexit</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cleanup</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># only the copy of an ini file, never the JSON file itself</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">tbotinifile</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".json"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tbotinifile</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tbotinifile</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IniTBotConfig.get_section_config">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniTBotConfig.get_section_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_section_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">REQUIRED</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns value of key name in section of tbot.ini, see</span>
+<span class="sd">        init_section_get_config()</span>
+
+<span class="sd">        :param section: name of the section</span>
+<span class="sd">        :param name: name of key</span>
+<span class="sd">        :param default: value if missing; without it a missing key raises</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">init_section_get_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IniTBotConfig.get_section_config_bool">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniTBotConfig.get_section_config_bool">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_section_config_bool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns the boolean value of key name in section of tbot.ini, see</span>
+<span class="sd">        init_section_get_config_bool()</span>
+
+<span class="sd">        :param section: name of the section</span>
+<span class="sd">        :param name: name of key</span>
+<span class="sd">        :param default: value if missing</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">init_section_get_config_bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IniTBotConfig.get_lab_config">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniTBotConfig.get_lab_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_lab_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">REQUIRED</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns value of key name in the section of the lab host, see</span>
+<span class="sd">        init_lab_get_config()</span>
+
+<span class="sd">        :param name: name of key</span>
+<span class="sd">        :param default: value if missing; without it a missing key raises</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">init_lab_get_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IniTBotConfig.has_section">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniTBotConfig.has_section">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns True if tbot.ini has section</span>
+
+<span class="sd">        :param section: name of the section</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">init_has_section</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IniTBotConfig.find_sections">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniTBotConfig.find_sections">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_sections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns the names of the sections of tbot.ini that contain part</span>
+
+<span class="sd">        :param part: part of the section name</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">init_find_sections</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="n">part</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="IniConfig">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">IniConfig</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">_Singleton</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    reads board config</span>
+
+<span class="sd">    see: :ref:`boardspecificruntimeadaption`</span>
+<span class="sd">    """</span>
+
+    <span class="c1"># read common tbot config and generate later [default] section</span>
+    <span class="c1"># cfg = IniTBotConfig()</span>
+    <span class="c1"># cfgp = cfg.config_parser</span>
+
+    <span class="k">if</span> <span class="n">set_board_cfg</span><span class="p">:</span>
+        <span class="n">set_board_cfg</span><span class="p">(</span><span class="s2">"IniConfig"</span><span class="p">,</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">inifile_get_tbotboardfilename</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">inithelper</span><span class="o">.</span><span class="n">inifile_get_tbotboardfilename</span><span class="p">()</span>
+        <span class="c1"># ${lab:} and ${tbot:} in the board file</span>
+        <span class="n">tbotcfgp</span> <span class="o">=</span> <span class="n">IniTBotConfig</span><span class="p">()</span><span class="o">.</span><span class="n">config_parser</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span> <span class="o">=</span> <span class="n">init_read_configfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">tbotcfgp</span><span class="p">)</span>
+        <span class="n">atexit</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cleanup</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># only the copy of an ini file, never the JSON file itself</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".json"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IniConfig.get_config">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniConfig.get_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns value of key name from configparser.</span>
+
+<span class="sd">        use internal function init_get_config</span>
+
+<span class="sd">        :param name: name of key</span>
+<span class="sd">        :param default: default value if key is not found</span>
+<span class="sd">        """</span>
+
+        <span class="k">return</span> <span class="n">init_get_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IniConfig.get_config_int">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniConfig.get_config_int">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_config_int</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns int value of key name from configparser.</span>
+
+<span class="sd">        use internal function init_get_config_int</span>
+
+<span class="sd">        :param name: name of key</span>
+<span class="sd">        :param default: default value if key is not found</span>
+<span class="sd">        """</span>
+
+        <span class="k">return</span> <span class="n">init_get_config_int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IniConfig.get_config_literal">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniConfig.get_config_literal">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_config_literal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns the value of key name read as Python literal.</span>
+
+<span class="sd">        use internal function init_get_config_literal</span>
+
+<span class="sd">        :param name: name of key</span>
+<span class="sd">        :param default: default value if key is not found, as string</span>
+<span class="sd">        """</span>
+
+        <span class="k">return</span> <span class="n">init_get_config_literal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IniConfig.get_config_bool">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniConfig.get_config_bool">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_config_bool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns the boolean value of key name.</span>
+
+<span class="sd">        use internal function init_get_config_bool</span>
+
+<span class="sd">        :param name: name of key</span>
+<span class="sd">        :param default: value if the key is missing or "None"</span>
+<span class="sd">        """</span>
+
+        <span class="k">return</span> <span class="n">init_get_config_bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IniConfig.get_config_keys">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniConfig.get_config_keys">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_config_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        returns the keys starting with prefix.</span>
+
+<span class="sd">        use internal function init_get_config_keys</span>
+
+<span class="sd">        :param prefix: start of the key names</span>
+<span class="sd">        """</span>
+
+        <span class="k">return</span> <span class="n">init_get_config_keys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IniConfig.get_default_config">
+<a class="viewcode-back" href="../../iniconfig.html#tbottest.initconfig.IniConfig.get_default_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_default_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        return value of key from "default" section with name "name"</span>
+
+<span class="sd">        :param name: name of key</span>
+<span class="sd">        :param default: default value if key is not found</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">init_get_default_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="n">FLAGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"boardname"</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">"boardname:&lt;name&gt; sets the name of the board, used when boardspecific.py "</span>
+        <span class="s2">"does not define board_set_boardname()"</span>
+    <span class="p">),</span>
+    <span class="s2">"poweron_cmds"</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">"poweron_cmds:&lt;name&gt; selects the entry &lt;name&gt; of the dictionary "</span>
+        <span class="s2">"poweron_cmds in the BDI2000_&lt;boardname&gt; section of tbot.ini; "</span>
+        <span class="s2">"poweron_cmds:None runs no BDI2000 commands after power on"</span>
+    <span class="p">),</span>
+    <span class="s2">"boardfile"</span><span class="p">:</span> <span class="s2">"boardfile:&lt;path&gt; board ini file, relative to the tbotconfig directory or absolute"</span><span class="p">,</span>
+    <span class="s2">"inifile"</span><span class="p">:</span> <span class="s2">"inifile:&lt;path&gt; tbot.ini file, relative to the tbotconfig directory or absolute"</span><span class="p">,</span>
+    <span class="s2">"tmpfilepath"</span><span class="p">:</span> <span class="s2">"tmpfilepath:&lt;directory&gt; where tbot writes its copies of tbot.ini and the board ini"</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<div class="sphinx-toc sphinxglobaltoc">
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CONTRIBUTING.html">Contributing to tbot-test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">License</a></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../index.html">tbottest 0.0.1-424-g654c493 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tbottest.initconfig</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2023, Heiko Schocher.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>
