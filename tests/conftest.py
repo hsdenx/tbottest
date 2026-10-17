@@ -266,7 +266,12 @@ INITCONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "tbottest", "ini
 
 # the functions of tbottest/initconfig.py the methods of IniTBotConfig use
 INITCONFIG_FUNCTIONS = (
+    "init_testcase",
+    "init_current_testcase",
+    "init_config_sections",
     "init_get_config",
+    "init_get_config_int",
+    "init_get_config_literal",
     "init_get_config_keys",
     "init_section_get_config",
     "init_config_to_bool",
@@ -296,6 +301,17 @@ INITBOTCONFIG_METHODS = (
 )
 
 
+def _source_with_decorators(src: str, node) -> str:
+    """source of a top-level definition, with its decorators"""
+    import ast
+
+    decorators = getattr(node, "decorator_list", None)
+    if not decorators:
+        return ast.get_source_segment(src, node)
+    lines = src.splitlines(keepends=True)
+    return "".join(lines[decorators[0].lineno - 1 : node.end_lineno])
+
+
 def load_initconfig_functions(boardname: str = "testboard", labsection: str = "LABHOST"):
     """
     The functions INITCONFIG_FUNCTIONS, the constant REQUIRED and the
@@ -309,6 +325,8 @@ def load_initconfig_functions(boardname: str = "testboard", labsection: str = "L
     parts = [
         "import ast",
         "import configparser",
+        "import contextlib",
+        "import contextvars",
         "from configparser import ExtendedInterpolation",
         "import json",
         "import os",
@@ -321,9 +339,9 @@ def load_initconfig_functions(boardname: str = "testboard", labsection: str = "L
     for node in ast.parse(src).body:
         name = getattr(node, "name", None)
         if name in INITCONFIG_FUNCTIONS:
-            parts.append(ast.get_source_segment(src, node))
+            parts.append(_source_with_decorators(src, node))
         elif isinstance(node, ast.Assign) and any(
-            getattr(t, "id", None) == "REQUIRED" for t in node.targets
+            getattr(t, "id", None) in ("REQUIRED", "_CURRENT_TESTCASE") for t in node.targets
         ):
             parts.append(ast.get_source_segment(src, node))
         elif name == "IniTBotConfig":
@@ -432,7 +450,7 @@ def load_definition(name: str, path: str, defname: str, extra_src: str = ""):
     tree = ast.parse(src)
     for node in tree.body:
         if getattr(node, "name", None) == defname:
-            def_src = ast.get_source_segment(src, node)
+            def_src = _source_with_decorators(src, node)
             break
     else:
         raise AssertionError(f"{defname!r} not found as a top-level definition in {path}")

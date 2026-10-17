@@ -960,16 +960,56 @@ testcases, in tbotconfig/BOARDNAME/BOARDNAME.ini or BOARDNAME.json (flag
 and `tbottest/tbotconfig/BOARDNAME/BOARDNAME.json
 <https://github.com/hsdenx/tbottest/blob/master/tbottest/tbotconfig/BOARDNAME/BOARDNAME.json>`_.
 
-It contains two sections, ``TC_BOARDNAME`` and ``TC``. A key is looked
-up first in ``TC_BOARDNAME`` and, if it is not there, in ``TC``. What
-happens if neither section has it is described at
+It contains the sections ``TC`` and ``TC_BOARDNAME``, and optionally a
+section ``TC_BOARDNAME.TESTCASENAME`` for a testcase. While a testcase
+decorated with :py:func:`tbottest.tc.generictestdef.tc_config` or
+:py:func:`tbottest.tc.generictestdef.require_cfg` runs, a key is looked up
+first in ``TC_BOARDNAME.TESTCASENAME``, then in ``TC_BOARDNAME`` and then
+in ``TC``. Outside of such a testcase only the last two count. What
+happens if no section has the key is described at
 :py:func:`tbottest.initconfig.init_get_config`.
 
-`tbottest/boardgeneric.py
+There is deliberately no section ``TC_TESTCASENAME`` for a testcase on
+all boards. A value for all boards goes into ``TC``, so a key is never
+searched in more than three places.
+
+For example, the strings of the dmesg testcase for the board BOARDNAME only,
+as ini file
+
+.. code-block:: ini
+
+    [TC_BOARDNAME.generic_lnx_test_dmesg]
+    dmesg = ["Linux version 6.18", "Found initrd at"]
+
+and as JSON file
+
+.. code-block:: json
+
+    {
+        "TC_BOARDNAME.generic_lnx_test_dmesg": {
+            "dmesg": ["Linux version 6.18", "Found initrd at"]
+        }
+    }
+
+The class ``GenericBoardConfig`` in `tbottest/boardgeneric.py
 <https://github.com/hsdenx/tbottest/blob/master/tbottest/boardgeneric.py>`__
-reads the keys into the class ``GenericBoardConfig``. Its instance
-``cfggeneric`` is the ``cfg`` the generic testcases in
-:py:mod:`tbottest.tc.generic_board` use.
+holds what belongs to the board itself (``tmpdir``, ``shelltype``). Its
+instance ``cfggeneric`` is the ``cfg`` the generic testcases in
+:py:mod:`tbottest.tc.generic_board` use. They read their keys when they
+run, with ``cfg.get_config()``, ``cfg.get_config_int()``,
+``cfg.get_config_bool()`` and ``cfg.get_config_literal()``, so they find
+their own section. Testcases of your own do the same:
+
+.. code-block:: python
+
+    from tbottest.boardgeneric import cfggeneric
+    from tbottest.tc.generictestdef import tc_config
+
+
+    @tbot.testcase
+    @tc_config
+    def my_testcase() -> None:
+        count = cfggeneric.get_config_int("count", "1")
 
 common settings
 ^^^^^^^^^^^^^^^

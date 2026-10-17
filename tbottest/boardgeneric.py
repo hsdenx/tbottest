@@ -35,6 +35,17 @@ cfg = ini.IniConfig()
 
 
 class GenericBoardConfig:
+    """
+    configuration of the board for the generic testcases
+
+    Holds what belongs to the board itself. The settings of a testcase are
+    read with the get_config*() methods when the testcase runs, so a
+    testcase decorated with :py:func:`tbottest.tc.generictestdef.tc_config`
+    or :py:func:`tbottest.tc.generictestdef.require_cfg` finds its own
+    section ``TC_BOARDNAME.TESTCASENAME`` first, see
+    :py:func:`tbottest.initconfig.init_get_config`.
+    """
+
     currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     workdir = os.path.dirname(currentdir)
     boardname = ini.generic_get_boardname()
@@ -44,82 +55,51 @@ class GenericBoardConfig:
     shelltype = cfg.get_config("shelltype", "ash")
     shelltype = shelltype.lower()
 
-    ##############################################
-    # Imagenames
-    ##############################################
-    rescueimage = cfg.get_config("rescueimage", "None")
-    qspiheader = cfg.get_config("qspiheader", "None")
-    splimage = cfg.get_config("splimage", "None")
-
-    mtd_parts = ast.literal_eval(cfg.get_config("mtd_parts", "[]"))
-    ub_mtd_delete = ast.literal_eval(cfg.get_config("ub_mtd_delete", "[]"))
-
-    ##############################################
-    # U-Boot testcases
-    ##############################################
-    fb_res_setup = cfg.get_config("fb_res_setup", "None")
-    fb_res_boot = cfg.get_config("fb_res_boot", "None")
-    fb_cmd = cfg.get_config("fb_cmd", "None")
-
-    ##############################################
-    # Linux testcases
-    ##############################################
-    beep = ast.literal_eval(cfg.get_config("beep", "[]"))
-    cyclictestmaxvalue = ast.literal_eval(cfg.get_config("cyclictestmaxvalue", "100"))
-    dmesg = ast.literal_eval(cfg.get_config("dmesg", "[]"))
-    dmesg_false = ast.literal_eval(cfg.get_config("dmesg_false", "[]"))
-    leds = ast.literal_eval(cfg.get_config("leds", "[]"))
-    lnx_commands = ast.literal_eval(cfg.get_config("lnx_commands", "[]"))
-    network_iperf_intervall = ast.literal_eval(cfg.get_config("network_iperf_intervall", "1"))
-    network_iperf_minval = ast.literal_eval(cfg.get_config("network_iperf_minval", "90000000"))
-    network_iperf_cycles = ast.literal_eval(cfg.get_config("network_iperf_cycles", "30"))
-
-    nvramdev = cfg.get_config("nvramdev", "None")
-    nvramcomp = cfg.get_config("nvramcomp", "None")
-    nvramsz = cfg.get_config("nvramsz", "None")
-
-    rs485labdev = cfg.get_config("rs485labdev", "None")
-    rs485baud = cfg.get_config("rs485baud", "None")
-    rs485boarddev = ast.literal_eval(cfg.get_config("rs485boarddev", '["/dev/ttymxc2"]'))
-    rs485lengths = ast.literal_eval(cfg.get_config("rs485lengths", '["20", "100", "1024"]'))
-
-    iperf = ast.literal_eval(cfg.get_config("iperf", "[]"))
-    ping = ast.literal_eval(cfg.get_config("ping", "[]"))
-    regdump = ast.literal_eval(cfg.get_config("regdump", "[]"))
-
-    sensors = ast.literal_eval(cfg.get_config("sensors", "[]"))
-
-    lnx_dump_files = ast.literal_eval(cfg.get_config("lnx_dump_files", "[]"))
-    for entry in lnx_dump_files:
-        entry[
-            "revfile"
-        ] = f"{cfg.workdir}/tbotconfig/{boardname}/files/dumpfiles/{entry['revfile']}"
-        if entry["difffile"] == "None":
-            entry["difffile"] = None
-        if entry["timeout"] == "None":
-            entry["timeout"] = None
-
-    ##############################################
-    # swupdate testcases
-    ##############################################
-    swuethdevice = cfg.get_config("swuethdevice", "eth0")
-    swuimage = cfg.get_config("swuimage", "None")
-
-    ##############################################
-    # kas testcases
-    ##############################################
-    kas = ast.literal_eval(cfg.get_config("kas", "[]"))
-    kas_check_files = ast.literal_eval(cfg.get_config("kas_check_files", "[]"))
-    kas_results = ast.literal_eval(cfg.get_config("kas_results", "[]"))
-
     def get_config(self, name: str, default: str):
         return cfg.get_config(name, default)
 
     def get_config_int(self, name: str, default: str):
         return cfg.get_config_int(name, default)
 
+    def get_config_bool(self, name: str, default: bool) -> bool:
+        return cfg.get_config_bool(name, default)
+
+    def get_config_literal(self, name: str, default: str):
+        return cfg.get_config_literal(name, default)
+
     def get_default_config(self, name: str, default: str):
         return cfg.get_default_config(name, default)
+
+    def kas_config(self, lab, bh) -> dict:
+        """
+        returns the dictionary of key kas for :py:class:`tbottest.tc.kas.KAS`,
+        a new one on every call, with lab host and build host filled in
+
+        :param lab: lab host
+        :param bh: build host
+        """
+        kas = self.get_config_literal("kas", "None")
+        if not kas:
+            raise RuntimeError("key kas is missing in the board configuration")
+        kas["labhost"] = lab
+        kas["buildhost"] = bh
+        return kas
+
+    def get_lnx_dump_files(self) -> list:
+        """
+        returns the list of key lnx_dump_files, revfile with the path of
+        the dump files of the board, difffile and timeout "None" as None
+        """
+        dump_files = self.get_config_literal("lnx_dump_files", "[]")
+        for entry in dump_files:
+            entry[
+                "revfile"
+            ] = f"{cfg.workdir}/tbotconfig/{self.boardname}/files/dumpfiles/{entry['revfile']}"
+            if entry["difffile"] == "None":
+                entry["difffile"] = None
+            if entry["timeout"] == "None":
+                entry["timeout"] = None
+        return dump_files
 
 
 cfggeneric = GenericBoardConfig()
@@ -484,17 +464,17 @@ class GenericLinuxBoot(
                 up = " ".join(lnx_sudo(lab) + [up])
                 bd = lab.tftp_dir()._local_str()
                 # get U-Boot into fastboot mode
-                cmd = cfggeneric.fb_cmd
+                cmd = cfggeneric.get_config("fb_cmd", "None")
                 cmd = cmd.strip('"')
                 ub.ch.sendline(cmd)
                 # load images and boot
-                cmd = f"{bd}/{cfggeneric.rescueimage}"
+                cmd = f"{bd}/{cfggeneric.get_config('rescueimage', 'None')}"
                 cmd = cmd.strip('"')
                 lab.exec0(linux.Raw(f"{up} FB: download -f {cmd}"))
-                cmd = f"{cfggeneric.fb_res_setup}"
+                cmd = f"{cfggeneric.get_config('fb_res_setup', 'None')}"
                 cmd = cmd.strip('"')
                 lab.exec0(linux.Raw(f"{up} FB: ucmd {cmd}"))
-                cmd = f"{cfggeneric.fb_res_boot}"
+                cmd = f"{cfggeneric.get_config('fb_res_boot', 'None')}"
                 cmd = cmd.strip('"')
                 lab.exec0(linux.Raw(f"{up} FB: acmd {cmd}"))
             ch = ub.boot("")

@@ -17,13 +17,14 @@ from tbottest.tc.network import lnx_network_ping
 from tbottest.tc.network import network_linux_iperf
 from tbottest.tc.kas import KAS
 from tbottest.tc.leds import lnx_test_led_simple
-from tbottest.tc.generictestdef import TC_SKIP, TC_FAIL, TC_OKAY, require_cfg
+from tbottest.tc.generictestdef import TC_SKIP, TC_FAIL, TC_OKAY, require_cfg, tc_config
 from tbottest.tc.registermap import REGISTERMAP
 
 cfg = cfggeneric
 
 
 @tbot.testcase
+@tc_config
 def generic_lnx_check_dump_files(
     lnx: Optional[linux.LinuxShell] = None,
 ) -> None:  # noqa: D107
@@ -37,7 +38,7 @@ def generic_lnx_check_dump_files(
 
     :param lnx: linux machine where we run
 
-    Uses config variable lnx_dump_files from section TC_DUMPFILES_BOARDNAME in BOARDNAME.ini
+    Uses key lnx_dump_files of the board configuration
 
     lnx_dump_files -- array of dictionary with configuration for lnx_check_revfile, see
 
@@ -47,16 +48,18 @@ def generic_lnx_check_dump_files(
         if lnx is None:
             lnx = cx.request(tbot.role.BoardLinux)
 
-        if len(cfg.lnx_dump_files) == 0:
+        dump_files = cfg.get_lnx_dump_files()
+        if len(dump_files) == 0:
             return
 
-        for config in cfg.lnx_dump_files:
+        for config in dump_files:
             lnx_check_revfile(
                 lnx, config["revfile"], config["difffile"], config["timeout"]
             )
 
 
 @tbot.testcase
+@tc_config
 def generic_lnx_create_dump_files(
     lnx: Optional[linux.LinuxShell] = None,
 ) -> None:  # noqa: D107
@@ -79,7 +82,7 @@ def generic_lnx_create_dump_files(
 
     :param lnx: linux machine where we run
 
-    Uses config variable lnx_dump_files from section TC_DUMPFILES_BOARDNAME in BOARDNAME.ini
+    Uses key lnx_dump_files of the board configuration
 
     lnx_dump_files -- array of dictionary with configuration for lnx_check_revfile
 
@@ -120,10 +123,11 @@ def generic_lnx_create_dump_files(
         if lnx is None:
             lnx = cx.request(tbot.role.BoardLinux)
 
-        if len(cfg.lnx_dump_files) == 0:
+        dump_files = cfg.get_lnx_dump_files()
+        if len(dump_files) == 0:
             return
 
-        for config in cfg.lnx_dump_files:
+        for config in dump_files:
             lnx_create_revfile(
                 lnx,
                 config["revfile"],
@@ -134,7 +138,7 @@ def generic_lnx_create_dump_files(
             )
 
 @tbot.testcase
-@require_cfg(cfg.regdump)
+@require_cfg("regdump")
 def generic_lx_dump_register(
     lnx: Optional[linux.LinuxShell] = None,
 ) -> bool:  # noqa: D107
@@ -169,7 +173,7 @@ def generic_lx_dump_register(
         regmap = REGISTERMAP(registerfilepath)
         outputpath = f"{workpath}/generic_registerdump.txt"
         local.exec0("rm", "-rf", outputpath)
-        for dump in cfg.regdump:
+        for dump in cfg.get_config_literal("regdump", "[]"):
             address = dump["address"]
             #val = ub_read_register(ub, address)
             val = lx_devmem2_get(lnx, address, "w")
@@ -179,7 +183,7 @@ def generic_lx_dump_register(
 
 
 @tbot.testcase
-@require_cfg(cfg.iperf)
+@require_cfg("iperf")
 def generic_lnx_network_iperf(
     lab: linux.LinuxShell = None,
     lnx: Optional[linux.LinuxShell] = None,
@@ -206,7 +210,7 @@ def generic_lnx_network_iperf(
 
         si = cfg.get_default_config("serverip", "None")
         ipaddr = cfg.get_default_config("ipaddr", "None")
-        for run in cfg.iperf:
+        for run in cfg.get_config_literal("iperf", "[]"):
             tbot.log.message(tbot.log.c(f"---- start iperf test with server on lab host ----").green)
             network_linux_iperf(lnx, lab, si,run["intervall"], run["cycles"], run["minval"])
             tbot.log.message(tbot.log.c(f"---- start iperf test with server on board ----").green)
@@ -214,7 +218,7 @@ def generic_lnx_network_iperf(
 
 
 @tbot.testcase
-@require_cfg(cfg.ping)
+@require_cfg("ping")
 def generic_lnx_network_ping(
     lnx: Optional[linux.LinuxShell] = None,
 ) -> None:  # noqa: D107
@@ -236,11 +240,11 @@ def generic_lnx_network_ping(
         if lnx is None:
             lnx = cx.request(tbot.role.BoardLinux)
 
-        for pings in cfg.ping:
+        for pings in cfg.get_config_literal("ping", "[]"):
             lnx_network_ping(lnx, pings["ip"], int(pings["retry"]))
 
 @tbot.testcase
-@require_cfg(cfg.beep)
+@require_cfg("beep")
 def generic_lnx_test_beep(
     lnx: Optional[linux.LinuxShell] = None,
 ) -> None:  # noqa: D107
@@ -263,11 +267,11 @@ def generic_lnx_test_beep(
         if lnx is None:
             lnx = cx.request(tbot.role.BoardLinux)
 
-        lnx_check_beeper(lnx, cfg.beep)
+        lnx_check_beeper(lnx, cfg.get_config_literal("beep", "[]"))
 
 
 @tbot.testcase
-@require_cfg(cfg.lnx_commands)
+@require_cfg("lnx_commands")
 def generic_lnx_commands(
     lnx: Optional[linux.LinuxShell] = None,
 ) -> None:  # noqa: D107
@@ -290,13 +294,13 @@ def generic_lnx_commands(
         if lnx is None:
             lnx = cx.request(tbot.role.BoardLinux)
 
-        ret = lnx_check_cmd(lnx, cfg.lnx_commands)
+        ret = lnx_check_cmd(lnx, cfg.get_config_literal("lnx_commands", "[]"))
         if not ret:
             raise RuntimeError("Error in dmesg output")
 
 
 @tbot.testcase
-@require_cfg(cfg.dmesg)
+@require_cfg("dmesg")
 def generic_lnx_test_dmesg(
     lnx: Optional[linux.LinuxShell] = None,
 ) -> str:  # noqa: D107
@@ -326,21 +330,25 @@ def generic_lnx_test_dmesg(
         if lnx is None:
             lnx = cx.request(tbot.role.BoardLinux)
 
-        ret = lnx_check_dmesg(lnx, cfg.dmesg, cfg.dmesg_false)
+        ret = lnx_check_dmesg(
+            lnx,
+            cfg.get_config_literal("dmesg", "[]"),
+            cfg.get_config_literal("dmesg_false", "[]"),
+        )
         if not ret:
             raise RuntimeError("Error in dmesg output")
 
     return TC_OKAY
 
 @tbot.testcase
-@require_cfg(cfg.leds)
+@require_cfg("leds")
 def generic_lnx_test_led(
     lnx: Optional[linux.LinuxShell] = None,
 ) -> str:  # noqa: D107
     """
     prerequisite: Board boots into linux
 
-    switch on and off all leds in list cfg.leds
+    switch on and off all leds in list leds
 
     uses lnx_test_led_simple(), see more info there
 
@@ -359,7 +367,7 @@ def generic_lnx_test_led(
         if lnx is None:
             lnx = cx.request(tbot.role.BoardLinux)
 
-        lnx_test_led_simple(lnx, cfg.leds)
+        lnx_test_led_simple(lnx, cfg.get_config_literal("leds", "[]"))
 
     return TC_OKAY
 
@@ -504,6 +512,7 @@ def generic_lnx_all(
 # kas
 ##############################################################
 @tbot.testcase
+@tc_config
 def generic_kas_get_config(
     lab: Optional[linux.LinuxShell] = None,
     bh: Optional[linux.LinuxShell] = None,
@@ -522,14 +531,12 @@ def generic_kas_get_config(
         if bh is None:
             bh = cx.request(tbot.role.BuildHost)
 
-        cfg.kas["labhost"] = lab
-        cfg.kas["buildhost"] = bh
-
-        kas = KAS(cfg.kas)
+        kas = KAS(cfg.kas_config(lab, bh))
         return kas
 
 
 @tbot.testcase
+@tc_config
 def generic_kas_checkout(
     lab: Optional[linux.LinuxShell] = None,
     bh: Optional[linux.LinuxShell] = None,
@@ -554,14 +561,12 @@ def generic_kas_checkout(
         if bh is None:
             bh = cx.request(tbot.role.BuildHost)
 
-        cfg.kas["labhost"] = lab
-        cfg.kas["buildhost"] = bh
-
-        kas = KAS(cfg.kas)
+        kas = KAS(cfg.kas_config(lab, bh))
         kas.kas_checkout()
 
 
 @tbot.testcase
+@tc_config
 def generic_kas_build(
     lab: Optional[linux.LinuxShell] = None,
     bh: Optional[linux.LinuxShell] = None,
@@ -581,15 +586,14 @@ def generic_kas_build(
         if bh is None:
             bh = cx.request(tbot.role.BuildHost)
 
-        cfg.kas["labhost"] = lab
-        cfg.kas["buildhost"] = bh
-        kas = KAS(cfg.kas)
+        kas = KAS(cfg.kas_config(lab, bh))
 
         # build all targets
         kas.kas_build()
 
 
 @tbot.testcase
+@tc_config
 def generic_kas_check_build(
     lab: Optional[linux.LinuxShell] = None,
     bh: Optional[linux.LinuxShell] = None,
@@ -621,17 +625,16 @@ def generic_kas_check_build(
         if bh is None:
             bh = cx.request(tbot.role.BuildHost)
 
-        cfg.kas["labhost"] = lab
-        cfg.kas["buildhost"] = bh
-        kas = KAS(cfg.kas)
+        kas = KAS(cfg.kas_config(lab, bh))
 
         bp = kas.kas_get_buildpath()
 
-        for f in cfg.kas_check_files:
+        for f in cfg.get_config_literal("kas_check_files", "[]"):
             bh.exec0("ls", bp / f)
 
 
 @tbot.testcase
+@tc_config
 def generic_kas_copy(
     lab: Optional[linux.LinuxShell] = None,
     bh: Optional[linux.LinuxShell] = None,
@@ -661,11 +664,9 @@ def generic_kas_copy(
         if bh is None:
             bh = cx.request(tbot.role.BuildHost)
 
-        cfg.kas["labhost"] = lab
-        cfg.kas["buildhost"] = bh
-        kas = KAS(cfg.kas)
+        kas = KAS(cfg.kas_config(lab, bh))
 
-        path = kas.kas_copy(cfg.kas_results)
+        path = kas.kas_copy(cfg.get_config_literal("kas_results", "[]"))
         return path
 
 

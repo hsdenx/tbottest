@@ -16,6 +16,16 @@ before ``TC``, ``LABHOST_<labname>`` for the lab host) is known in one place.
 
 .. autofunction:: tbottest.initconfig.init_get_config
 
+.. autofunction:: tbottest.initconfig.init_config_sections
+
+.. autofunction:: tbottest.initconfig.init_testcase
+
+.. autofunction:: tbottest.initconfig.init_current_testcase
+
+.. autofunction:: tbottest.initconfig.init_get_config_int
+
+.. autofunction:: tbottest.initconfig.init_get_config_literal
+
 .. autofunction:: tbottest.initconfig.init_get_config_bool
 
 .. autofunction:: tbottest.initconfig.init_get_config_keys

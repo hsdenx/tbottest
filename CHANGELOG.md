@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 ### Added
+- Section `TC_BOARDNAME.TESTCASENAME` of the board configuration. While a
+  testcase decorated with `tc_config()` or `require_cfg()` runs, a key is
+  searched there first, then in `TC_BOARDNAME` and `TC`. There is
+  deliberately no section `TC_TESTCASENAME` for all boards.
+- `get_config_literal()` reads a key as Python literal.
 - Configuration as JSON. `tbot.json` and `BOARDNAME.json` replace
   `tbot.ini`, `BOARDNAME.ini` and `boardspecific.py` when the flags
   `inifile:` and `boardfile:` name `.json` files. Values that depend on a
@@ -59,6 +64,11 @@
 - A pytest unit test suite with its own CI workflow, and `pyproject.toml`.
 
 ### Changed
+- The generic testcases read their keys when they run, with the
+  `get_config*()` methods of `cfggeneric`, so they find their own section.
+  `require_cfg()` takes the name of the key. `cfggeneric.kas_config(lab, bh)`
+  and `cfggeneric.get_lnx_dump_files()` replace `cfg.kas` and
+  `cfg.lnx_dump_files`.
 - tbot is v0.10.10.
 - `tbot.ini` and the board configuration are read through the helpers of
   `tbottest.initconfig`, the board name comes from the flag `boardname:`,
@@ -80,6 +90,9 @@
 - Copies of the ini files were left behind.
 
 ### Removed
+- The attributes of `GenericBoardConfig` for the keys of the board
+  configuration (`cfg.dmesg`, `cfg.kas`, ...). It keeps what belongs to the
+  board (`tmpdir`, `shelltype`, ...).
 - `setup.py`, `pyproject.toml` replaces it.
 - `tftp_subdir` in the board configuration, `tftpsubdir` of the lab section
   replaces it.

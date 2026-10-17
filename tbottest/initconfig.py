@@ -1,6 +1,8 @@
 import ast
 import atexit
 import configparser
+import contextlib
+import contextvars
 import json
 from configparser import ExtendedInterpolation
 import tbot
@@ -59,6 +61,55 @@ def init_get_default_config(
     return value
 
 
+# Name of the testcase that runs now, set with init_testcase(); the
+# decorators tc_config() and require_cfg() of tbottest.tc.generictestdef do
+# this. The board configuration is then searched in its section first, see
+# init_config_sections().
+_CURRENT_TESTCASE = contextvars.ContextVar("tbottest_current_testcase", default=None)
+
+
+@contextlib.contextmanager
+def init_testcase(name: str):
+    """
+    make name the testcase that runs now, for the duration of the with
+    block, see init_config_sections(). At its end the name of an outer
+    block is valid again.
+
+    :param name: name of the testcase
+    """
+    token = _CURRENT_TESTCASE.set(name)
+    try:
+        yield
+    finally:
+        _CURRENT_TESTCASE.reset(token)
+
+
+def init_current_testcase():
+    """
+    returns the name of the testcase that runs now, see init_testcase(),
+    or None outside of a testcase
+    """
+    return _CURRENT_TESTCASE.get()
+
+
+def init_config_sections() -> list:
+    """
+    returns the sections of the board configuration in the order
+    init_get_config() searches them
+
+    While a testcase runs (see init_testcase()) first
+    "TC_BOARDNAME.TESTCASENAME", then "TC_BOARDNAME" and "TC", else only
+    the last two. There is deliberately no section "TC_TESTCASENAME" for
+    all boards, a value for all boards goes into "TC".
+    """
+    boardname = generic_get_boardname()
+    sections = [f"TC_{boardname}", "TC"]
+    testcase = _CURRENT_TESTCASE.get()
+    if testcase is not None:
+        sections.insert(0, f"TC_{boardname}.{testcase}")
+    return sections
+
+
 def init_get_config(
     cfgp: configparser.RawConfigParser,
     name: str,
@@ -67,9 +118,10 @@ def init_get_config(
     """
     returns value of key name from configparser.
 
-    Searches first for a "TC_BOARDNAME" section and if it there
-    is not the key, search in section "TC". If not found, return
-    default value. If default value is "None" return None
+    Searches the sections init_config_sections() returns, while a
+    testcase runs first "TC_BOARDNAME.TESTCASENAME", then "TC_BOARDNAME",
+    then "TC". If not found, return default value. If the value is "None"
+    return None
 
     So what happens without the key is up to the testcase. The generic
     testcases pass a default that means "not set" and are decorated with
@@ -82,17 +134,11 @@ def init_get_config(
     :param name: name of key
     :param default: default value if key is not found
     """
-    boardname = generic_get_boardname()
-    # first try boardname specific config
-    try:
-        value = cfgp.get(f"TC_{boardname}", name)
-        if value == "None":
-            return None
-        return value
-    except Exception:
-        pass
-    # next common config
-    value = cfgp.get("TC", name, fallback=default)
+    value = default
+    for section in init_config_sections():
+        if cfgp.has_option(section, name):
+            value = cfgp.get(section, name)
+            break
     if value == "None":
         return None
     return value
@@ -104,30 +150,37 @@ def init_get_config_int(
     default: str,
 ) -> int:
     """
-    returns value of key name from configparser.
-
-    Searches first for a "TC_BOARDNAME" section and if it there
-    is not the key, search in section "TC". If not found, return
-    default value. If default value is "None" return None
+    returns value of key name as int, searched as init_get_config()
+    does. If the value is "None" return None
 
     :param cfgp: current config parser
     :param name: name of key
     :param default: default value if key is not found
     """
-    boardname = generic_get_boardname()
-    # first try boardname specific config
-    try:
-        value = cfgp.get(f"TC_{boardname}", name)
-        if value == "None":
-            return None
-        return int(value)
-    except Exception:
-        pass
-    # next common config
-    value = cfgp.get("TC", name, fallback=default)
-    if value == "None":
+    value = init_get_config(cfgp, name, default)
+    if value is None:
         return None
     return int(value)
+
+
+def init_get_config_literal(
+    cfgp: configparser.RawConfigParser,
+    name: str,
+    default: str,
+):
+    """
+    returns value of key name read as Python literal with
+    ast.literal_eval(), e.g. a list or a dictionary, searched as
+    init_get_config() does. If the value is "None" return None
+
+    :param cfgp: current config parser
+    :param name: name of key
+    :param default: default value if key is not found, as string
+    """
+    value = init_get_config(cfgp, name, default)
+    if value is None:
+        return None
+    return ast.literal_eval(value)
 
 
 def init_get_config_keys(
@@ -138,17 +191,16 @@ def init_get_config_keys(
     returns the keys starting with prefix, from the sections
     init_get_config() searches.
 
-    Keys of section "TC_BOARDNAME" come first, then those of section
-    "TC", each key once, in the order of the ini file. Read their values
-    with init_get_config(), so a key in "TC_BOARDNAME" hides the same key
-    in "TC".
+    Keys of the sections init_config_sections() returns, in this order,
+    each key once, in the order of the file. Read their values with
+    init_get_config(), so a key in an earlier section hides the same key
+    in a later one.
 
     :param cfgp: current config parser
     :param prefix: start of the key names
     """
-    boardname = generic_get_boardname()
     keys = []
-    for section in (f"TC_{boardname}", "TC"):
+    for section in init_config_sections():
         if not cfgp.has_section(section):
             continue
         for key in cfgp.options(section):
@@ -978,6 +1030,18 @@ class IniConfig(metaclass=_Singleton):
         """
 
         return init_get_config_int(self.config_parser, name, default)
+
+    def get_config_literal(self, name: str, default: str):
+        """
+        returns the value of key name read as Python literal.
+
+        use internal function init_get_config_literal
+
+        :param name: name of key
+        :param default: default value if key is not found, as string
+        """
+
+        return init_get_config_literal(self.config_parser, name, default)
 
     def get_config_bool(self, name: str, default: bool) -> bool:
         """

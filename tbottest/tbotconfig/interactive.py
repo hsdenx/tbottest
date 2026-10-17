@@ -51,9 +51,7 @@ def kas() -> None:
     with tbot.ctx.request(tbot.role.BuildHost) as bh:
         lab = tbot.ctx.request(tbot.role.LabHost)
 
-        cfggeneric.kas["labhost"] = lab
-        cfggeneric.kas["buildhost"] = bh
-        kas = KAS(cfggeneric.kas)
+        kas = KAS(cfggeneric.kas_config(lab, bh))
 
         kas.kas_shell()
 

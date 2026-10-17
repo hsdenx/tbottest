@@ -174,15 +174,9 @@ class BoardIni:
     def __init__(self, sections):
         self.config_parser = configparser.RawConfigParser()
         self.config_parser.read_dict(sections)
-        self.ini = Funcs()
-        for name in ("init_get_config", "init_get_config_keys"):
-            part = load_definition(
-                f"tbottest_initconfig_{name}_only",
-                INITCONFIG_PATH,
-                name,
-                extra_src="import configparser\ndef generic_get_boardname():\n    return 'amc'",
-            )
-            setattr(self.ini, name, getattr(part, name))
+        from conftest import load_initconfig_functions
+
+        self.ini = load_initconfig_functions(boardname="amc")
 
     def get_config(self, name, default):
         return self.ini.init_get_config(self.config_parser, name, default)
@@ -369,3 +363,78 @@ class TestUbEnvFlagSet:
     def test_value_flag(self, flag_set):
         ev = {"name": "x", "val": "1", "flag": "kasvariant"}
         assert flag_set(ev, {"kasvariant:glibc"})
+
+
+class TestGenericBoardConfig:
+    """
+    the methods of GenericBoardConfig that read keys of the board
+    configuration when a testcase runs
+    """
+
+    def _gbc(self, monkeypatch, sections):
+        import types
+        import sys
+
+        board = BoardIni(sections)
+
+        class FakeCfg:
+            workdir = "/setup"
+
+            def get_config(self, name, default):
+                return board.ini.init_get_config(board.config_parser, name, default)
+
+            def get_config_literal(self, name, default):
+                return board.ini.init_get_config_literal(board.config_parser, name, default)
+
+        fake = types.ModuleType("_gbc_fake")
+        fake.cfg = FakeCfg()
+        fake.ini = types.SimpleNamespace(generic_get_boardname=lambda: "amc")
+        monkeypatch.setitem(sys.modules, "_gbc_fake", fake)
+        mod = load_definition(
+            "tbottest_boardgeneric_GenericBoardConfig_only",
+            BOARDGENERIC_PATH,
+            "GenericBoardConfig",
+            extra_src="import inspect\nimport os\nfrom _gbc_fake import cfg, ini",
+        )
+        return mod.GenericBoardConfig(), board
+
+    def test_kas_config_new_dict_with_hosts(self, monkeypatch):
+        gbc, _ = self._gbc(monkeypatch, {"TC": {"kas": "{'kasconfigfile': 'x.yml'}"}})
+        a = gbc.kas_config("lab", "bh")
+        assert a == {"kasconfigfile": "x.yml", "labhost": "lab", "buildhost": "bh"}
+        b = gbc.kas_config("lab2", "bh2")
+        assert a["labhost"] == "lab" and b["labhost"] == "lab2"
+
+    def test_kas_config_from_testcase_section(self, monkeypatch):
+        gbc, board = self._gbc(
+            monkeypatch,
+            {
+                "TC_amc.generic_kas_build": {"kas": "{'kasconfigfile': 'tc.yml'}"},
+                "TC": {"kas": "{'kasconfigfile': 'x.yml'}"},
+            },
+        )
+        with board.ini.init_testcase("generic_kas_build"):
+            assert gbc.kas_config("lab", "bh")["kasconfigfile"] == "tc.yml"
+
+    def test_kas_config_missing(self, monkeypatch):
+        gbc, _ = self._gbc(monkeypatch, {"TC": {}})
+        with pytest.raises(RuntimeError, match="key kas is missing"):
+            gbc.kas_config("lab", "bh")
+
+    def test_lnx_dump_files(self, monkeypatch):
+        gbc, _ = self._gbc(
+            monkeypatch,
+            {
+                "TC": {
+                    "lnx_dump_files": "[{'revfile': 'pinmux.reg', 'difffile': 'None', "
+                    "'timeout': '0.1'}]"
+                }
+            },
+        )
+        assert gbc.get_lnx_dump_files() == [
+            {
+                "revfile": "/setup/tbotconfig/amc/files/dumpfiles/pinmux.reg",
+                "difffile": None,
+                "timeout": "0.1",
+            }
+        ]

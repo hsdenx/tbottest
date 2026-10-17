@@ -233,12 +233,13 @@ class TestBdi2000PoweronCmds:
         assert CMDS["default"] == ["reset run"]
 
 
-init_keys = load_definition(
-    "tbottest_initconfig_init_get_config_keys_only",
-    INITCONFIG_PATH,
-    "init_get_config_keys",
-    extra_src="import configparser\ndef generic_get_boardname():\n    return \"amc\"",
-)
+def _load_init_keys():
+    from conftest import load_initconfig_functions
+
+    return load_initconfig_functions(boardname="amc")
+
+
+init_keys = _load_init_keys()
 
 
 class TestInitGetConfigKeys:
@@ -347,3 +348,99 @@ class TestSectionConfig:
         assert cfgt.get_section_config_bool("BUILDHOST", "install", False) is True
         assert cfgt.has_section("TC_amc")
         assert cfgt.find_sections("LABHOST") == ["LABHOST", "LABHOST_lab2"]
+
+
+class TestTestcaseSection:
+    """
+    sections of the board configuration while a testcase runs, see
+    init_testcase() and init_config_sections()
+    """
+
+    def _cp(self, sections):
+        import configparser
+
+        cp = configparser.RawConfigParser()
+        cp.read_dict(sections)
+        return cp
+
+    def test_sections_without_testcase(self):
+        assert init_keys.init_current_testcase() is None
+        assert init_keys.init_config_sections() == ["TC_amc", "TC"]
+
+    def test_sections_with_testcase(self):
+        with init_keys.init_testcase("tc1"):
+            assert init_keys.init_current_testcase() == "tc1"
+            assert init_keys.init_config_sections() == ["TC_amc.tc1", "TC_amc", "TC"]
+        assert init_keys.init_config_sections() == ["TC_amc", "TC"]
+
+    def test_nested_testcases_restore_the_outer_one(self):
+        with init_keys.init_testcase("outer"):
+            with init_keys.init_testcase("inner"):
+                assert init_keys.init_current_testcase() == "inner"
+            assert init_keys.init_current_testcase() == "outer"
+        assert init_keys.init_current_testcase() is None
+
+    def test_testcase_reset_after_exception(self):
+        try:
+            with init_keys.init_testcase("tc1"):
+                raise ValueError("boom")
+        except ValueError:
+            pass
+        assert init_keys.init_current_testcase() is None
+
+    def test_lookup_order(self):
+        cp = self._cp(
+            {
+                "TC_amc.tc1": {"a": "testcase"},
+                "TC_amc": {"a": "board", "b": "board"},
+                "TC": {"a": "all", "b": "all", "c": "all"},
+            }
+        )
+        get = init_keys.init_get_config
+        with init_keys.init_testcase("tc1"):
+            assert get(cp, "a", "x") == "testcase"
+            assert get(cp, "b", "x") == "board"
+            assert get(cp, "c", "x") == "all"
+            assert get(cp, "d", "x") == "x"
+        with init_keys.init_testcase("tc2"):
+            assert get(cp, "a", "x") == "board"
+        assert get(cp, "a", "x") == "board"
+
+    def test_no_section_for_a_testcase_on_all_boards(self):
+        cp = self._cp({"TC_tc1": {"a": "testcase"}, "TC": {"a": "all"}})
+        with init_keys.init_testcase("tc1"):
+            assert init_keys.init_get_config(cp, "a", "x") == "all"
+
+    def test_none_in_testcase_section_hides_the_others(self):
+        cp = self._cp({"TC_amc.tc1": {"a": "None"}, "TC_amc": {"a": "board"}})
+        with init_keys.init_testcase("tc1"):
+            assert init_keys.init_get_config(cp, "a", "x") is None
+
+    def test_int_and_literal(self):
+        cp = self._cp(
+            {
+                "TC_amc.tc1": {"count": "3", "dmesg": "['Linux version']"},
+                "TC": {"count": "1", "dmesg": "[]"},
+            }
+        )
+        with init_keys.init_testcase("tc1"):
+            assert init_keys.init_get_config_int(cp, "count", "0") == 3
+            assert init_keys.init_get_config_literal(cp, "dmesg", "[]") == ["Linux version"]
+        assert init_keys.init_get_config_int(cp, "count", "0") == 1
+        assert init_keys.init_get_config_literal(cp, "dmesg", "[]") == []
+        assert init_keys.init_get_config_literal(cp, "leds", "None") is None
+
+    def test_keys_testcase_section_first(self):
+        cp = self._cp(
+            {
+                "TC_amc.tc1": {"ub_env_c": "1"},
+                "TC_amc": {"ub_env_b": "1"},
+                "TC": {"ub_env_a": "2", "ub_env_c": "3"},
+            }
+        )
+        with init_keys.init_testcase("tc1"):
+            assert init_keys.init_get_config_keys(cp, "ub_env_") == [
+                "ub_env_c",
+                "ub_env_b",
+                "ub_env_a",
+            ]
