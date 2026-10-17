@@ -40,6 +40,9 @@ generic board test
 .. automodule:: tbottest.tc.generic_board
    :members:
 
+.. automodule:: tbottest.tc.generictestdef
+   :members:
+
 HAB (imx specific)
 ------------------
 

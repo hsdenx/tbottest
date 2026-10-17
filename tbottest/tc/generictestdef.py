@@ -8,8 +8,18 @@ TC_OKAY = "okay"
 
 def require_cfg(get_flag, msg=None):
     """
-    Decorator für tbot-Testcases, der eine Config-Variable prüft.
-    msg: Optional eigene Fehlermeldung, sonst generisch.
+    Decorator for a testcase that needs a value of the board configuration.
+
+    If the value is false (``None``, an empty string, an empty list, ...),
+    the testcase is not run. It logs ``msg`` or ``<testcase> not
+    configured`` and returns ``TC_SKIP``, which
+    :py:func:`tbottest.tc.generic_board.generic_lnx_all` counts as skipped.
+
+    The value is taken when the decorator is applied, i.e. when the module
+    is imported, e.g. ``@require_cfg(cfg.dmesg)``.
+
+    :param get_flag: value of the board configuration the testcase needs
+    :param msg: optional message instead of ``<testcase> not configured``
     """
     def decorator(func):
         @wraps(func)

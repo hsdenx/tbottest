@@ -71,6 +71,13 @@ def init_get_config(
     is not the key, search in section "TC". If not found, return
     default value. If default value is "None" return None
 
+    So what happens without the key is up to the testcase. The generic
+    testcases pass a default that means "not set" and are decorated with
+    :py:func:`tbottest.tc.generictestdef.require_cfg`, so they are skipped
+    and :py:func:`tbottest.tc.generic_board.generic_lnx_all` counts them as
+    skipped. A testcase that cannot do without the key should raise an
+    exception, so it fails.
+
     :param cfgp: current config parser
     :param name: name of key
     :param default: default value if key is not found

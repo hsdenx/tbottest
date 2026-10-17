@@ -458,6 +458,19 @@ def generic_lnx_all(
 ) -> None:  # noqa: D107
     """
     start all configured linux testcases
+
+    Runs every testcase of the list ``lnxtestcases`` in this module and
+    counts it as
+
+    - skipped, if it returns ``TC_SKIP``, as the testcases decorated with
+      :py:func:`tbottest.tc.generictestdef.require_cfg` do when their key
+      is not in the board configuration,
+    - failed, if it raises an exception,
+    - success otherwise.
+
+    At the end it logs the counts and the names of the skipped and the
+    failed testcases. It does not raise an exception itself when a
+    testcase failed.
     """
     count = 0
     failed = []
