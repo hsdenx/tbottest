@@ -688,7 +688,7 @@ class KAS:
     def kas_copy(
         self,
         resultimages=None,
-    ) -> linux.path:
+    ) -> linux.Path:
         """
         copy all results to tftp path on lab host
 

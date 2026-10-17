@@ -80,6 +80,8 @@
 - `GenericUBoot.exec()` reads back the echo of the command line like tbot.
 
 ### Fixed
+- `KAS.kas_copy()` was annotated with the module `tbot.machine.linux.path`
+  instead of `linux.Path`, so the documentation showed the module.
 - A race in `lab_get_lock()` of the board locking.
 - Unescaped values in shell command strings of testcases.
 - Retry loops in `board_wait_for_device()`, `lnx_wait_for_ip()` and the
