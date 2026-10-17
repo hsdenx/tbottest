@@ -90,8 +90,8 @@ POWERS = {
     ),
     "tbox-hwdaemon": (
         "TBOX_HWDAEMON",
-        ["amc"],
-        {"boardname": "amc"},
+        ["dut1"],
+        {"boardname": "dut1"},
     ),
     "tm021": (
         "TM021",

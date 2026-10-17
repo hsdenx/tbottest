@@ -14,25 +14,25 @@ yocto = load_module(
     os.path.join(os.path.dirname(__file__), "..", "tbottest", "tc", "yocto.py"),
 )
 
-INSTALL = "/work/sdk/abb-amc-musl"
+INSTALL = "/work/sdk/BOARDNAME-musl"
 
 # output of the installer of a core-image-minimal SDK (Wrynose), with
 # the install path replaced
-LOG = """ABB AMC Linux SDK installer version nodistro.0
+LOG = """BOARDNAME Linux SDK installer version nodistro.0
 ==============================================
-You are about to install the SDK to "/work/sdk/abb-amc-musl". Proceed [Y/n]? Y
+You are about to install the SDK to "/work/sdk/BOARDNAME-musl". Proceed [Y/n]? Y
 Extracting SDK....................................................................done
 Setting it up...done
 SDK has been successfully set up and is ready to be used.
 Each time you wish to use the SDK in a new shell session, you need to source the environment setup script e.g.
- $ . /work/sdk/abb-amc-musl/environment-setup-ppc8xx-abb-linux-musl
+ $ . /work/sdk/BOARDNAME-musl/environment-setup-ppc8xx-BOARDNAME-linux-musl
 """
 
 
 class TestEnvcmdFromLog:
     def test_environment_script_found(self):
         assert yocto.yocto_sdk_envcmd_from_log(LOG, INSTALL) == (
-            "/work/sdk/abb-amc-musl/environment-setup-ppc8xx-abb-linux-musl"
+            "/work/sdk/BOARDNAME-musl/environment-setup-ppc8xx-BOARDNAME-linux-musl"
         )
 
     def test_proceed_line_is_not_taken(self):
@@ -43,9 +43,9 @@ class TestEnvcmdFromLog:
         assert yocto.yocto_sdk_envcmd_from_log(LOG, "/other/path") is None
 
     def test_line_with_path_but_no_command(self):
-        log = "Setting up /work/sdk/abb-amc-musl\n" + LOG
+        log = "Setting up /work/sdk/BOARDNAME-musl\n" + LOG
         assert yocto.yocto_sdk_envcmd_from_log(log, INSTALL).endswith(
-            "environment-setup-ppc8xx-abb-linux-musl"
+            "environment-setup-ppc8xx-BOARDNAME-linux-musl"
         )
 
 
@@ -66,7 +66,7 @@ class TestInstallSdk:
     def test_install_dir_removed_by_absolute_path(self):
         lnx = FakeShell()
         env = yocto.check_yocto_build_install_sdk(lnx, INSTALL, "/sdk", "toolchain.sh")
-        assert env == INSTALL + "/environment-setup-ppc8xx-abb-linux-musl"
+        assert env == INSTALL + "/environment-setup-ppc8xx-BOARDNAME-linux-musl"
         assert lnx.calls[:3] == [
             ("rm", "-rf", INSTALL),
             ("mkdir", "-p", INSTALL),
@@ -78,7 +78,7 @@ class TestInstallSdk:
     def test_relative_install_path_refused(self):
         lnx = FakeShell()
         with pytest.raises(RuntimeError, match="must be absolute"):
-            yocto.check_yocto_build_install_sdk(lnx, "sdk/amc", "/sdk", "toolchain.sh")
+            yocto.check_yocto_build_install_sdk(lnx, "sdk/BOARDNAME", "/sdk", "toolchain.sh")
         assert lnx.calls == []
 
     def test_root_refused(self):

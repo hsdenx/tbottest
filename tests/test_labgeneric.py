@@ -78,9 +78,9 @@ class Lab:
 
 class TestNfsboardbasedir:
     def test_nfs_path_from_default_section(self, boardgeneric):
-        boardgeneric.cfggeneric = BoardConfig({"nfs_path": "/srv/nfs/abb/amc-tqm855m"})
+        boardgeneric.cfggeneric = BoardConfig({"nfs_path": "/srv/nfs/BOARDNAME"})
         nfsboardbasedir = load_method("GenericLab", "nfsboardbasedir")
-        assert nfsboardbasedir(Lab()) == ("workdir", "/srv/nfs/abb/amc-tqm855m")
+        assert nfsboardbasedir(Lab()) == ("workdir", "/srv/nfs/BOARDNAME")
 
     def test_nfs_path_missing(self, boardgeneric):
         boardgeneric.cfggeneric = BoardConfig({})
@@ -96,7 +96,7 @@ class _LocalPath(str):
 
 class LabWithWorkdir:
     def workdir(self):
-        return _LocalPath("/work/hs/tbot-workdir/amc")
+        return _LocalPath("/work/hs/tbot-workdir/BOARDNAME")
 
 
 class TestLabTestdir:
@@ -107,7 +107,7 @@ class TestLabTestdir:
         testdir = load_method("GenericLab", "testdir")
         assert testdir(LabWithWorkdir()) == (
             "workdir",
-            "/work/hs/tbot-workdir/amc/tbottests",
+            "/work/hs/tbot-workdir/BOARDNAME/tbottests",
         )
 
     def test_from_lab_section(self):

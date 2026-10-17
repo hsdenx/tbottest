@@ -236,8 +236,8 @@ def test_failed_init_list_raises():
             raise AssertionError("no RuntimeError on a failed init list")
 
 
-LOAD_CMD = "load 0x00100000 amc/20261001/musl/u-boot-ram.bin bin"
-LOAD_STARTED = "Loading amc/20261001/musl/u-boot-ram.bin , please wait ....\n"
+LOAD_CMD = "load 0x00100000 BOARDNAME/20261001/musl/u-boot-ram.bin bin"
+LOAD_STARTED = "Loading BOARDNAME/20261001/musl/u-boot-ram.bin , please wait ....\n"
 
 
 def test_reset_waits_for_an_init_list_starting_after_the_prompt():
@@ -329,8 +329,8 @@ CONFIG_OUT = (
     "    Config IP   : 192.168.3.1\n"
     "    Config File : {}\n"
 )
-CFG = "amc/bdi/tqm855-AMC.cfg"
-CFG_NOWDT = "amc/bdi/tqm855-AMC-nowdt.cfg"
+CFG = "BOARDNAME/bdi/BOARDNAME.cfg"
+CFG_NOWDT = "BOARDNAME/bdi/BOARDNAME-nowdt.cfg"
 
 
 def test_split_configname_takes_the_entry_out():
@@ -367,7 +367,7 @@ def test_config_without_file_raises(monkeypatch):
 
 
 UPDATED = (
-    b"config amc/bdi/tqm855-AMC.cfg 192.168.3.1\r\n"
+    b"config BOARDNAME/bdi/BOARDNAME.cfg 192.168.3.1\r\n"
     b"Updating configuration passed. Booting ....."
 )
 

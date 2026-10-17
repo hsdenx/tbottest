@@ -693,12 +693,12 @@ outputs belong to hwdamon: tbot runs on the lab host
 :py:meth:`tbottest.powercontrol.TboxHwdaemonControl`
 
 replace BOARDNAME with the name of your board!
-Here as example amc.
+Here as example BOARDNAME.
 
-.. csv-table:: [TBOX_HWDAEMON_amc]
+.. csv-table:: [TBOX_HWDAEMON_BOARDNAME]
         :header: "key", "value", "example"
 
-        "boardname", "name of the DUT in hwdamon, or its slot number (1-4)", "amc"
+        "boardname", "name of the DUT in hwdamon, or its slot number (1-4)", "BOARDNAME"
         "configfile", "optional hwdamon configuration file on the lab host, default /etc/hwdaemon.json", "/etc/hwdaemon.json"
 
 [TM021_BOARDNAME]
@@ -901,8 +901,8 @@ file that is not on the TFTP server:
 
 .. code-block:: text
 
-    [bdi2000] load 0x00100000 amc/20261001/musl/u-boot-ram.bin bin
-         ## Loading amc/20261001/musl/u-boot-ram.bin , please wait ....
+    [bdi2000] load 0x00100000 BOARDNAME/20261001/musl/u-boot-ram.bin bin
+         ## Loading BOARDNAME/20261001/musl/u-boot-ram.bin , please wait ....
          ## # Cannot open file on host
 
 ``poweron_cmds`` can also be a dictionary of named command lists, for a
@@ -937,8 +937,8 @@ bring the configuration file it needs:
 .. code-block:: ini
 
     poweron_cmds = {
-        "default": ["configname:amc/bdi/tqm855-AMC-nowdt.cfg", "reset", "go 0x40000100"],
-        "reset": ["configname:amc/bdi/tqm855-AMC.cfg", "reset run"],
+        "default": ["configname:BOARDNAME/bdi/BOARDNAME-nowdt.cfg", "reset", "go 0x40000100"],
+        "reset": ["configname:BOARDNAME/bdi/BOARDNAME.cfg", "reset run"],
         }
 
 .. csv-table:: [BDI2000_<boardname>]

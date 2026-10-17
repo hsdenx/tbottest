@@ -60,8 +60,8 @@ class TestGetImportPath:
     def test_nested_inifile_path(self, tmp_path, monkeypatch):
         monkeypatch.chdir(tmp_path)
         mod = fresh_dynamicimport()
-        sys.modules["tbot"].flags = {"inifile:tbotconfig/toptica/scale/tbot.ini"}
-        assert mod.get_import_path() == "tbotconfig.toptica.scale"
+        sys.modules["tbot"].flags = {"inifile:tbotconfig/VENDOR/BOARDNAME/tbot.ini"}
+        assert mod.get_import_path() == "tbotconfig.VENDOR.BOARDNAME"
 
 
 class TestGetBoardmodulepathImport:

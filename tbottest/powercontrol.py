@@ -425,14 +425,14 @@ class TboxHwdaemonControl(board.PowerControl):
         from tbottest.powercontrol import TboxHwdaemonControl
 
         class MyControl(TboxHwdaemonControl, board.Board):
-            hwdaemon_boardname = "amc"
+            hwdaemon_boardname = "BOARDNAME"
     """
 
     @property
     @abc.abstractmethod
     def hwdaemon_boardname(self) -> str:
         """
-        name (or slot number) of the DUT in hwdamon, e.g. "amc"
+        name (or slot number) of the DUT in hwdamon, e.g. "BOARDNAME"
 
         This property is **required**.
         """

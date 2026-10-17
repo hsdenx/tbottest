@@ -29,13 +29,13 @@ def ev(ty, **data):
 RUN = log(
     ev(["msg", "INFO"], text="TBOT.FLAGS ['do_power']"),
     ev(["tc", "begin"], name="outer"),
-    ev(["board", "on", "amc"]),
-    ev(["board", "uboot", "amc"], output="U-Boot 2026.07\r\nDRAM:  64 MiB\n"),
+    ev(["board", "on", "BOARDNAME"]),
+    ev(["board", "uboot", "BOARDNAME"], output="U-Boot 2026.07\r\nDRAM:  64 MiB\n"),
     ev(["tc", "begin"], name="inner"),
-    ev(["cmd", "amc-uboot"], cmd="version", stdout="U-Boot 2026.07\n"),
+    ev(["cmd", "BOARDNAME-uboot"], cmd="version", stdout="U-Boot 2026.07\n"),
     ev(["tc", "end"], name="inner", duration=0.5, success=True, skipped=False),
     ev(["msg", "CHANNEL"], text="only with -v"),
-    ev(["board", "off", "amc"]),
+    ev(["board", "off", "BOARDNAME"]),
     ev(["tc", "end"], name="outer", duration=1.25, success=False, skipped=False),
     ev(["exception"], name="RuntimeError", trace="Traceback\n  boom\n"),
     ev(["msg", "INFO"], text="─" * 4),
@@ -46,15 +46,15 @@ EXPECTED = [
     "tbot starting ...",
     "├─TBOT.FLAGS ['do_power']",
     "├─Calling outer ...",
-    "│   ├─POWERON (amc)",
-    "│   ├─UBOOT (amc)",
+    "│   ├─POWERON (BOARDNAME)",
+    "│   ├─UBOOT (BOARDNAME)",
     "│   │    <> U-Boot 2026.07",
     "│   │    <> DRAM:  64 MiB",
     "│   ├─Calling inner ...",
-    "│   │   ├─[amc-uboot] version",
+    "│   │   ├─[BOARDNAME-uboot] version",
     "│   │   │    ## U-Boot 2026.07",
     "│   │   └─Done. (0.500s)",
-    "│   ├─POWEROFF (amc)",
+    "│   ├─POWEROFF (BOARDNAME)",
     "│   └─Fail. (1.250s)",
     "├─Exception:",
     "│   Traceback",
@@ -72,7 +72,7 @@ def test_verbosity_like_tbot():
     more = console.render(RUN, console.STDOUT + 1)
     assert "│   ├─only with -v" in more
     quiet = console.render(RUN, console.QUIET)
-    assert "│   │   ├─[amc-uboot] version" not in quiet
+    assert "│   │   ├─[BOARDNAME-uboot] version" not in quiet
     assert "│   │    <> U-Boot 2026.07" not in quiet
     assert "├─Calling outer ..." in quiet
 

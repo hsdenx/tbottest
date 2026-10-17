@@ -201,7 +201,7 @@ class TestBdi2000PoweronCmds:
     def test_dict_with_name_flag(self):
         import tbot
 
-        tbot.flags = {"boardname:amc", "poweron_cmds:nowdt"}
+        tbot.flags = {"boardname:BOARDNAME", "poweron_cmds:nowdt"}
         assert load_poweron_cmds().bdi2000_poweron_cmds(CMDS) == [
             "reset",
             "go 0x40000100",
@@ -236,7 +236,7 @@ class TestBdi2000PoweronCmds:
 def _load_init_keys():
     from conftest import load_initconfig_functions
 
-    return load_initconfig_functions(boardname="amc")
+    return load_initconfig_functions(boardname="BOARDNAME")
 
 
 init_keys = _load_init_keys()
@@ -253,7 +253,7 @@ class TestInitGetConfigKeys:
     def test_board_section_first_each_key_once(self):
         cp = self._cp(
             {
-                "TC_amc": {"ub_env_b": "1", "linux_user": "x"},
+                "TC_BOARDNAME": {"ub_env_b": "1", "linux_user": "x"},
                 "TC": {"ub_env_a": "2", "ub_env_b": "3", "uboot_prompt": "=> "},
                 "TC_other": {"ub_env_c": "4"},
             }
@@ -272,7 +272,7 @@ class TestSectionConfig:
     def ini(self):
         from conftest import load_initconfig_functions
 
-        return load_initconfig_functions(boardname="amc", labsection="LABHOST_lab2")
+        return load_initconfig_functions(boardname="BOARDNAME", labsection="LABHOST_lab2")
 
     @pytest.fixture
     def cp(self):
@@ -286,7 +286,7 @@ class TestSectionConfig:
                 "BUILDHOST": {"name": "b", "docker": "None", "install": "Yes"},
                 "BUILDHOST_local": {"name": "l"},
                 "TC": {"ignore_hostkey": "false", "tmpdir": "None"},
-                "TC_amc": {"ignore_hostkey": "on"},
+                "TC_BOARDNAME": {"ignore_hostkey": "on"},
             }
         )
         return cp
@@ -326,7 +326,7 @@ class TestSectionConfig:
 
     def test_tc_bool_board_section_first(self, ini, cp):
         assert ini.init_get_config_bool(cp, "ignore_hostkey", False) is True
-        cp.remove_option("TC_amc", "ignore_hostkey")
+        cp.remove_option("TC_BOARDNAME", "ignore_hostkey")
         assert ini.init_get_config_bool(cp, "ignore_hostkey", True) is False
 
     def test_tc_bool_none_is_default(self, ini, cp):
@@ -346,7 +346,7 @@ class TestSectionConfig:
         assert cfgt.get_lab_config("uselocking") == "no"
         assert cfgt.get_section_config("BUILDHOST_local", "name") == "l"
         assert cfgt.get_section_config_bool("BUILDHOST", "install", False) is True
-        assert cfgt.has_section("TC_amc")
+        assert cfgt.has_section("TC_BOARDNAME")
         assert cfgt.find_sections("LABHOST") == ["LABHOST", "LABHOST_lab2"]
 
 
@@ -365,13 +365,13 @@ class TestTestcaseSection:
 
     def test_sections_without_testcase(self):
         assert init_keys.init_current_testcase() is None
-        assert init_keys.init_config_sections() == ["TC_amc", "TC"]
+        assert init_keys.init_config_sections() == ["TC_BOARDNAME", "TC"]
 
     def test_sections_with_testcase(self):
         with init_keys.init_testcase("tc1"):
             assert init_keys.init_current_testcase() == "tc1"
-            assert init_keys.init_config_sections() == ["TC_amc.tc1", "TC_amc", "TC"]
-        assert init_keys.init_config_sections() == ["TC_amc", "TC"]
+            assert init_keys.init_config_sections() == ["TC_BOARDNAME.tc1", "TC_BOARDNAME", "TC"]
+        assert init_keys.init_config_sections() == ["TC_BOARDNAME", "TC"]
 
     def test_nested_testcases_restore_the_outer_one(self):
         with init_keys.init_testcase("outer"):
@@ -391,8 +391,8 @@ class TestTestcaseSection:
     def test_lookup_order(self):
         cp = self._cp(
             {
-                "TC_amc.tc1": {"a": "testcase"},
-                "TC_amc": {"a": "board", "b": "board"},
+                "TC_BOARDNAME.tc1": {"a": "testcase"},
+                "TC_BOARDNAME": {"a": "board", "b": "board"},
                 "TC": {"a": "all", "b": "all", "c": "all"},
             }
         )
@@ -412,14 +412,14 @@ class TestTestcaseSection:
             assert init_keys.init_get_config(cp, "a", "x") == "all"
 
     def test_none_in_testcase_section_hides_the_others(self):
-        cp = self._cp({"TC_amc.tc1": {"a": "None"}, "TC_amc": {"a": "board"}})
+        cp = self._cp({"TC_BOARDNAME.tc1": {"a": "None"}, "TC_BOARDNAME": {"a": "board"}})
         with init_keys.init_testcase("tc1"):
             assert init_keys.init_get_config(cp, "a", "x") is None
 
     def test_int_and_literal(self):
         cp = self._cp(
             {
-                "TC_amc.tc1": {"count": "3", "dmesg": "['Linux version']"},
+                "TC_BOARDNAME.tc1": {"count": "3", "dmesg": "['Linux version']"},
                 "TC": {"count": "1", "dmesg": "[]"},
             }
         )
@@ -433,8 +433,8 @@ class TestTestcaseSection:
     def test_keys_testcase_section_first(self):
         cp = self._cp(
             {
-                "TC_amc.tc1": {"ub_env_c": "1"},
-                "TC_amc": {"ub_env_b": "1"},
+                "TC_BOARDNAME.tc1": {"ub_env_c": "1"},
+                "TC_BOARDNAME": {"ub_env_b": "1"},
                 "TC": {"ub_env_a": "2", "ub_env_c": "3"},
             }
         )

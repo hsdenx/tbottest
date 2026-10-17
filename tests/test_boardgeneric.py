@@ -87,7 +87,7 @@ def load_set_ethdevices(ini=None):
 
 
 MOUNTS_NFS = """rootfs / rootfs rw 0 0
-192.168.3.1:/srv/nfs/abb/amc-tqm855m/nfs / nfs rw,relatime,vers=3 0 0
+192.168.3.1:/srv/nfs/BOARDNAME/nfs / nfs rw,relatime,vers=3 0 0
 proc /proc proc rw,relatime 0 0
 """
 
@@ -168,7 +168,7 @@ INITCONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "tbottest", "ini
 class BoardIni:
     """
     the board ini as IniConfig reads it, with the real init_get_config()
-    and init_get_config_keys() of tbottest/initconfig.py, for board "amc"
+    and init_get_config_keys() of tbottest/initconfig.py, for board "BOARDNAME"
     """
 
     def __init__(self, sections):
@@ -176,7 +176,7 @@ class BoardIni:
         self.config_parser.read_dict(sections)
         from conftest import load_initconfig_functions
 
-        self.ini = load_initconfig_functions(boardname="amc")
+        self.ini = load_initconfig_functions(boardname="BOARDNAME")
 
     def get_config(self, name, default):
         return self.ini.init_get_config(self.config_parser, name, default)
@@ -240,7 +240,7 @@ class TestUbEnvGroups:
         ub = load_ub_env()
         cp = BoardIni(
             {
-                "TC_amc": {"ub_env_setip": env("serverip")},
+                "TC_BOARDNAME": {"ub_env_setip": env("serverip")},
                 "TC": {"ub_env_setip": env("ipaddr"), "ub_env_fitboot": env("net_fit")},
             }
         )
@@ -388,7 +388,7 @@ class TestGenericBoardConfig:
 
         fake = types.ModuleType("_gbc_fake")
         fake.cfg = FakeCfg()
-        fake.ini = types.SimpleNamespace(generic_get_boardname=lambda: "amc")
+        fake.ini = types.SimpleNamespace(generic_get_boardname=lambda: "BOARDNAME")
         monkeypatch.setitem(sys.modules, "_gbc_fake", fake)
         mod = load_definition(
             "tbottest_boardgeneric_GenericBoardConfig_only",
@@ -409,7 +409,7 @@ class TestGenericBoardConfig:
         gbc, board = self._gbc(
             monkeypatch,
             {
-                "TC_amc.generic_kas_build": {"kas": "{'kasconfigfile': 'tc.yml'}"},
+                "TC_BOARDNAME.generic_kas_build": {"kas": "{'kasconfigfile': 'tc.yml'}"},
                 "TC": {"kas": "{'kasconfigfile': 'x.yml'}"},
             },
         )
@@ -433,7 +433,7 @@ class TestGenericBoardConfig:
         )
         assert gbc.get_lnx_dump_files() == [
             {
-                "revfile": "/setup/tbotconfig/amc/files/dumpfiles/pinmux.reg",
+                "revfile": "/setup/tbotconfig/BOARDNAME/files/dumpfiles/pinmux.reg",
                 "difffile": None,
                 "timeout": "0.1",
             }

@@ -382,7 +382,7 @@ class TestSispmControl:
         assert ctl.host.commands == []
 
 
-def make_hwdaemon_control(name="amc", configfile=None):
+def make_hwdaemon_control(name="BOARDNAME", configfile=None):
     attrs = {"hwdaemon_boardname": name, "host": FakeExecHost()}
     if configfile is not None:
         attrs["hwdaemon_configfile"] = configfile
@@ -394,14 +394,14 @@ class TestTboxHwdaemonControl:
         ctl = make_hwdaemon_control()
         ctl.poweron()
         assert ctl.host.commands == [
-            ("hwdamon-dut-power", "-f", "/etc/hwdaemon.json", "on", "amc")
+            ("hwdamon-dut-power", "-f", "/etc/hwdaemon.json", "on", "BOARDNAME")
         ]
 
     def test_poweroff_calls_hwdamon_dut_power_off(self):
         ctl = make_hwdaemon_control()
         ctl.poweroff()
         assert ctl.host.commands == [
-            ("hwdamon-dut-power", "-f", "/etc/hwdaemon.json", "off", "amc")
+            ("hwdamon-dut-power", "-f", "/etc/hwdaemon.json", "off", "BOARDNAME")
         ]
 
     def test_configfile_and_slot_number(self):

@@ -32,7 +32,7 @@ TARGET_STATE = re.compile(r"Target state\s*:\s*(.*\S)")
 INIT_LIST_STARTED = "processing target init list"
 INIT_LIST_DONE = re.compile(r"init list (passed|failed)")
 
-# "Config IP   : 192.168.3.1" and "Config File : amc/bdi/tqm855-AMC.cfg" in
+# "Config IP   : 192.168.3.1" and "Config File : BOARDNAME/bdi/BOARDNAME.cfg" in
 # the output of the BDI command config without arguments
 CONFIG_IP = re.compile(r"Config IP\s*:\s*(\S+)")
 CONFIG_FILE = re.compile(r"Config File\s*:\s*(\S+)")

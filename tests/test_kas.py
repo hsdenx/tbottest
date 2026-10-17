@@ -35,11 +35,11 @@ def base_cfg(**overrides):
     cfg = {
         "labhost": object(),
         "buildhost": FakeHost(),
-        "build_machine": "scale",
-        "subdir": "toptica/scale",
-        "kaslayer": "kas-toptica",
+        "build_machine": "MACHINE",
+        "subdir": "VENDOR/BOARDNAME",
+        "kaslayer": "kas-BOARDNAME",
         "kaslayerbranch": "main",
-        "kasconfigfile": "toptica.yml",
+        "kasconfigfile": "BOARDNAME.yml",
     }
     cfg.update(overrides)
     return cfg
@@ -66,11 +66,11 @@ class TestRequiredFields:
 
     def test_all_required_fields_present_succeeds(self):
         obj = kas.KAS(base_cfg())
-        assert obj.build_machine == "scale"
-        assert obj.subdir == "toptica/scale"
-        assert obj.kaslayer == "kas-toptica"
+        assert obj.build_machine == "MACHINE"
+        assert obj.subdir == "VENDOR/BOARDNAME"
+        assert obj.kaslayer == "kas-BOARDNAME"
         assert obj.kaslayerbranch == "main"
-        assert obj.kasconfigfile == "toptica.yml"
+        assert obj.kasconfigfile == "BOARDNAME.yml"
 
 
 class TestOptionalFields:
@@ -231,10 +231,10 @@ class TestKasBuildDir:
     def test_build_dir_sets_buildpath_and_env(self):
         obj = kas.KAS(base_cfg(buildhost=self.Host(), kas_build_dir="build-musl"))
         assert obj.buildsubpath == "build-musl"
-        assert obj.kas_get_buildpath()._local_str() == "/work/bh/toptica/scale/build-musl"
+        assert obj.kas_get_buildpath()._local_str() == "/work/bh/VENDOR/BOARDNAME/build-musl"
         env = obj.kas_build_dir_env()
         assert [str(e) for e in env] == [
-            'KAS_BUILD_DIR="/work/bh/toptica/scale/build-musl"'
+            'KAS_BUILD_DIR="/work/bh/VENDOR/BOARDNAME/build-musl"'
         ]
 
     def test_deploypath_is_below_the_build_dir(self):
@@ -242,9 +242,9 @@ class TestKasBuildDir:
             base_cfg(
                 buildhost=self.Host(),
                 kas_build_dir="build-glibc",
-                deploypath="deploy-abb-amc-glibc/images/amc-tqm855m",
+                deploypath="deploy-glibc/images/MACHINE",
             )
         )
         assert obj.kas_get_deploypath()._local_str() == (
-            "/work/bh/toptica/scale/build-glibc/deploy-abb-amc-glibc/images/amc-tqm855m"
+            "/work/bh/VENDOR/BOARDNAME/build-glibc/deploy-glibc/images/MACHINE"
         )
