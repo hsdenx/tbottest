@@ -96,6 +96,8 @@
 - Copies of the ini files were left behind.
 
 ### Removed
+- The bootlin and linaro toolchains of the lab host. The classes are gone
+  from tbot, the lab host raises like the build hosts do.
 - The attributes of `GenericBoardConfig` for the keys of the board
   configuration (`cfg.dmesg`, `cfg.kas`, ...). It keeps what belongs to the
   board (`tmpdir`, `shelltype`, ...).

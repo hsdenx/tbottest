@@ -624,21 +624,7 @@ class GenericLab(CmdVersionsMixin, CON, LAB_LINUX_SHELL, linux.Lab, linux.Builde
 
     @property
     def toolchains(self) -> typing.Dict[str, linux.build.Toolchain]:
-        return {
-            "bootlin-armv5-eabi": linux.build.EnvSetBootlinToolchain(
-                arch="armv5-eabi",
-                libc="glibc",
-                typ="stable",
-                date="2018.11-1",
-            ),
-            "linaro-gnueabi": linux.build.EnvSetLinaroToolchain(
-                host_arch="x86_64",
-                arch="arm-linux-gnueabi",
-                date="2019.12",
-                gcc_vers="7.5",
-                gcc_subvers="0",
-            ),
-        }
+        raise RuntimeError("toolchains not implemented yet, please add support!")
 
     def lab_set_sd_mux_mode(self, mode: str):
         """
