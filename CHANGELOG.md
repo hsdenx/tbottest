@@ -60,7 +60,8 @@
   `TBOTTESTPATH` and sets `TBOT_STARTTIME` for the argument files.
   `generators/console.py` shows a JSON log as tbot showed it on the console.
 - Documentation of every tbot flag, the Tips section, testcase parameters,
-  and the pages CHANGELOG, CONTRIBUTING and LICENSE.
+  the generic testcases and how to start them, and the pages CHANGELOG,
+  CONTRIBUTING and LICENSE.
 - A pytest unit test suite with its own CI workflow, and `pyproject.toml`.
 
 ### Changed

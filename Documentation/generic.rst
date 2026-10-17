@@ -28,6 +28,62 @@ The rest of this document calls the files ``tbot.ini`` and
 With JSON these are ``tbot.json``, ``BOARDNAME.json`` and the key
 ``"SECTION"`` of the top level object.
 
+.. _generictestcases:
+
+generic testcases
+-----------------
+
+With this configuration the testcases in :py:mod:`tbottest.tc.generic_board`
+run without code of your own. What they check comes from keys of the board
+configuration (see `board configuration (BOARDNAME.ini or BOARDNAME.json)`_),
+a value for one testcase only goes into its section
+``TC_BOARDNAME.TESTCASENAME``. A testcase whose key is not set is skipped.
+
+Start them like any other testcase, e.g. with the aliases and variables of
+``setup.sh``
+
+.. code-block:: bash
+
+    $ source setup.sh
+    $ tbBOARDNAME $tbtc.generic_board.generic_lnx_test_dmesg
+
+The generic Linux testcases, all started by
+:py:func:`tbottest.tc.generic_board.generic_lnx_all`:
+
+.. csv-table:: generic Linux testcases
+        :header: "testcase", "keys", "what it checks"
+
+        ":py:func:`~tbottest.tc.generic_board.generic_lx_dump_register`", "regdump", "reads the registers with devmem2 and writes them with the register map of the SoC into generic_registerdump.txt in the workdir of the host tbot runs on; skipped if the SoC is not known"
+        ":py:func:`~tbottest.tc.generic_board.generic_lnx_network_iperf`", "iperf", "iperf between lab host and board, in both directions"
+        ":py:func:`~tbottest.tc.generic_board.generic_lnx_network_ping`", "ping", "ping from the board"
+        ":py:func:`~tbottest.tc.generic_board.generic_lnx_test_beep`", "beep", "the beeper"
+        ":py:func:`~tbottest.tc.generic_board.generic_lnx_commands`", "lnx_commands", "the output of Linux commands"
+        ":py:func:`~tbottest.tc.generic_board.generic_lnx_test_dmesg`", "dmesg, dmesg_false", "strings that must be in dmesg, and strings that must not"
+        ":py:func:`~tbottest.tc.generic_board.generic_lnx_test_led`", "leds", "switches the LEDs on and off"
+
+:py:func:`~tbottest.tc.generic_board.generic_lnx_all` runs them one after
+the other and logs at the end how many succeeded, were skipped or failed,
+with the names of the skipped and the failed ones. It does not fail itself
+when one of them failed, so read the summary.
+
+.. code-block:: bash
+
+    $ tbBOARDNAME $tbtc.generic_board.generic_lnx_all
+
+Further generic testcases:
+
+.. csv-table:: further generic testcases
+        :header: "testcase", "keys", "what it does"
+
+        ":py:func:`~tbottest.tc.generic_board.generic_lnx_create_dump_files`, :py:func:`~tbottest.tc.generic_board.generic_lnx_check_dump_files`", "lnx_dump_files", "write register dump files, and compare the registers with them later"
+        ":py:func:`~tbottest.tc.generic_board.generic_cmd_versions`", "", "finds out which implementation and version of the commands tbottest uses lab host, build host and board have, and logs a line for the key cmd_versions of each, see `command versions`_"
+        ":py:func:`~tbottest.tc.generic_board.generic_config_to_json`", "", "writes the configuration of a run as JSON, see :ref:`jsonconfiguration`"
+        ":py:func:`~tbottest.tc.generic_board.generic_kas_all`", "kas, kas_check_files, kas_results", "builds with kas, calls generic_kas_checkout, generic_kas_build, generic_kas_check_build and generic_kas_copy, see `kas settings`_"
+
+There is no generic testcase for all U-Boot testcases. The template
+``tbotconfig/BOARDNAME/BOARDNAME.py`` has ``BOARDNAME_ub_all``, which runs
+the U-Boot testcases of the board listed in ``ub_testcases``.
+
 .. _requirementslabhost:
 
 requirements for lab host
