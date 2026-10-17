@@ -5,14 +5,28 @@
 
 This is an example approach for a hopefully easy to use lab and board support.
 
-Therefore we use ini file based configuration, based on
+The configuration of a board is in two files, the lab configuration (lab
+host, build hosts, console, power control, ...) and the board
+configuration (the settings of the board for the testcases). Both come in
+one of two formats, with the same sections and keys:
 
-https://docs.python.org/3/library/configparser.html
+* ini files, ``tbot.ini`` and ``BOARDNAME.ini``, read with configparser
+  (https://docs.python.org/3/library/configparser.html, with all its
+  limitations). Values that change from run to run are ``@@...@@``
+  placeholders, which **boardspecific.py** replaces at every start, see
+  :ref:`boardspecificruntimeadaption`.
+* JSON files, ``tbot.json`` and ``BOARDNAME.json``. Values that change
+  from run to run are expressions like ``${flag:kasvariant:-musl}``, so
+  there is no **boardspecific.py**, see :ref:`jsonconfiguration`.
 
-with all its limitiations.
+The flags ``inifile:`` and ``boardfile:`` (see `tbot flags`_) name the two
+files, and their extension selects the format. create_setup.sh sets up ini
+files, or JSON files with ``--json``.
 
-But it showed, that for a first use of tbot, it is easier to explain
-to edit a tbot.ini file and start!
+The rest of this document calls the files ``tbot.ini`` and
+``BOARDNAME.ini`` and writes a section as ``[SECTION]``, as in an ini file.
+With JSON these are ``tbot.json``, ``BOARDNAME.json`` and the key
+``"SECTION"`` of the top level object.
 
 .. _requirementslabhost:
 
@@ -150,12 +164,14 @@ What scripts/create_setup.sh sets up, with tbotconfig for one board:
                 │   ├── argsBOARDNAME
                 │   ├── argsBOARDNAME-noeth
                 │   └── argsBOARDNAME-noeth-ssh
-                ├── boardspecific.py     runtime adaptions of the configuration (ini only)
-                ├── BOARDNAME.ini        settings of the board for the testcases (or BOARDNAME.json)
+                ├── boardspecific.py     runtime adaptions of the configuration (ini files only)
+                ├── BOARDNAME.ini        board configuration as ini file
+                ├── BOARDNAME.json       board configuration as JSON file (instead of BOARDNAME.ini)
                 ├── files/
                 │   └── dumpfiles/       files of the register dump testcases
                 ├── README.BOARDNAME     notes on the tbot setup of the board
-                └── tbot.ini             lab host, build hosts, console, power, ... (or tbot.json)
+                ├── tbot.ini             lab configuration as ini file
+                └── tbot.json            lab configuration as JSON file (instead of tbot.ini)
 
 .. csv-table:: files and directories
         :header: "Name", "content", "fastlink to documentation"
@@ -165,25 +181,221 @@ What scripts/create_setup.sh sets up, with tbotconfig for one board:
         "tbotconfig/ci", "testcases the github CI of tbottest runs; create_setup.sh copies them only with ``--ci``", ""
         "tbotconfig/tc_BOARDNAME.py", "testcases of the board, from tbottest/tbotconfig/BOARDNAME/BOARDNAME.py", ""
         "BOARDNAME/args", "argumentfiles: argsbase, argsBOARDNAME, and the variants -noeth (flags noethinit, noboardethinit) and -noeth-ssh (adds nopoweroff, always-on, ssh, nouboot)", "`argumentfiles`_"
-        "BOARDNAME/boardspecific.py", "functions that adapt the configuration at runtime, e.g. replace the @@...@@ placeholders", ":ref:`boardspecificruntimeadaption`"
-        "BOARDNAME/BOARDNAME.ini", "ini file with the board specific settings for the generic testcases", "`boardconfiguration file`_"
+        "BOARDNAME/boardspecific.py", "functions that adapt the configuration at runtime, e.g. replace the @@...@@ placeholders; ini files only, not imported with JSON", ":ref:`boardspecificruntimeadaption`"
+        "BOARDNAME/BOARDNAME.ini, BOARDNAME/BOARDNAME.json", "board configuration, the board specific settings for the generic testcases, as ini or JSON file", "`board configuration (BOARDNAME.ini or BOARDNAME.json)`_"
         "BOARDNAME/files/dumpfiles", "reference files of the register dump testcases (lnx_dump_files in BOARDNAME.ini)", ""
         "BOARDNAME/README.BOARDNAME", "notes on the tbot setup of the board, not mandatory", ""
-        "BOARDNAME/tbot.ini", "ini file for lab host, build hosts and how tbot reaches and controls the board", "`tbot ini file (tbot.ini)`_"
-        "BOARDNAME/tbot.ini-<id>, BOARDNAME/BOARDNAME.ini-<id>", "copies tbot writes at every start, with the placeholders replaced; flag tmpfilepath:<dir> writes them elsewhere", "`tbot flags`_"
-        "BOARDNAME/tbot.json, BOARDNAME/BOARDNAME.json", "the configuration as JSON instead of tbot.ini, BOARDNAME.ini and boardspecific.py, from create_setup.sh ``--json``; read as they are, no copies", ":ref:`jsonconfiguration`"
+        "BOARDNAME/tbot.ini, BOARDNAME/tbot.json", "lab configuration, lab host, build hosts and how tbot reaches and controls the board, as ini or JSON file", "`lab configuration (tbot.ini or tbot.json)`_"
+        "BOARDNAME/tbot.ini-<id>, BOARDNAME/BOARDNAME.ini-<id>", "copies tbot writes at every start, with the placeholders replaced; flag tmpfilepath:<dir> writes them elsewhere; ini files only, JSON files are read as they are", "`tbot flags`_"
 
-tbot ini file (tbot.ini)
-........................
+.. _boardspecificruntimeadaption:
 
-we use for configuring lab and board settings with:
+boardspecific runtime adaptions (ini files)
+............................................
 
-https://docs.python.org/3/library/configparser.html
+The ini file approach is static, which means we cannot change
+configuration @runtime. With JSON files, use expressions instead, see
+:ref:`jsonconfiguration`. This generic approach searches in **tbotconfig**
+for a **boardspecific.py** file, which can contains several
+functions, the generic approach tries to call.
 
-Find an example file here: `tbottest/tbotconfig/BOARDNAME/tbot.ini
+In this functions you can adapt settings dependend on the usecase.
+Or may do special stuff in machine shells.
+
+In the default ini files there are placeholders beginning with **@@**
+and ending with **@@**. You can easily replace them with
+:ref:`iniconfighelperfunctions`.
+
+Therefore the following functions are used:
+
+set_board_cfg(temp: str = None, filename: str = None)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This file is called early in bootup before any ini file
+is parsed. So you can adapt the ini files for your needs
+
+.. code-block:: python
+
+    import tbot
+    from tbottest.generic.iniconfig import replace_in_file
+
+    tbot.selectable.printed = False
+
+    def print_log(msg):
+         if tbot.selectable.printed:
+                return
+
+            tbot.log.message(tbot.log.c(msg).yellow)
+
+    def set_board_cfg(temp: str = None, filename: str = None):
+        """
+        setup board specific stuff in ini files before they get parsed
+        """
+        # print tbot.flags, as tbot prints them not longer
+        print_log(f"TBOT.FLAGS {tbot.flags}")
+
+        replace_in_file(filename, "@@TBOTBOARD@@", "<boardname in your lab setup>")
+        replace_in_file(filename, "@@TBOTDATE@@", "20230221")
+        replace_in_file(filename, "@@TBOTMACHINE@@", "<yocto machine name>")
+
+        tbot.selectable.boardname = None
+        for f in tbot.flags:
+            if f.startswith("boardname:"):
+                tbot.selectable.boardname = f.split(":", 1)[1]
+
+        if tbot.selectable.boardname == None:
+            tbot.selectable.boardname = "wandboard"
+
+
+board_set_boardname
+^^^^^^^^^^^^^^^^^^^
+
+called from initconfig.py generic_get_boardname()
+
+.. code-block:: python
+
+    import tbot
+
+
+    def board_set_boardname() -> str:
+        # do not use boardname flag
+        BOARDNAME = "foo"
+        for f in tbot.flags:
+            if "8G" in f:
+                if len(f) == 2:
+                    BOARDNAME = "foo-8G"
+
+        return BOARDNAME
+
+
+set_ub_board_specific
+^^^^^^^^^^^^^^^^^^^^^
+
+called from boardgeneric.py in init function.
+
+setup U-Boot specific parts after entering the U-Boot shell
+
+.. code-block:: python
+
+    def set_ub_board_specific(self):
+        optargs = self.env("optargs")
+        optupd = False
+        if "bootchartd" in tbot.flags:
+            optargs = f"{optargs} init=/lib/systemd/systemd-bootchart"
+            optupd = True
+
+        if "debug_initcalls" in tbot.flags:
+            optargs = f"{optargs} initcall_debug"
+            optupd = True
+
+        if optupd == True:
+            self.env("optargs", optargs)
+
+        if "silent" in tbot.flags:
+            self.env("console", "silent")
+
+
+.. _jsonconfiguration:
+
+JSON configuration and expressions
+..................................
+
+Instead of the two ini files, tbot reads the same configuration from two
+JSON files, if the flags ``inifile:`` and ``boardfile:`` name files that
+end in ``.json`` (both, mixing ini and JSON stops tbot):
+
+.. code-block:: bash
+
+    -f inifile:tbotconfig/BOARDNAME/tbot.json -f boardfile:tbotconfig/BOARDNAME/BOARDNAME.json
+
+A JSON file is an object of sections, each an object of keys, with the
+same names as in the ini file. A value may be a string, a number, true,
+false, null, a list or an object; tbot keeps it as the string the ini
+file would have (lists and objects as Python literal), so every testcase
+reads it as before.
+
+With JSON, tbot reads the files as they are: no copies, no ``@@...@@``
+placeholders, and no **boardspecific.py**, which is not even imported.
+What depended on flags or the environment is written as an expression
+in the file. The expressions also work in ini files, after the
+placeholders are replaced:
+
+.. csv-table:: expressions in the configuration files
+        :header: "expression", "value"
+
+        "``${env:NAME}``, ``${env:NAME:-default}``", "environment variable NAME"
+        "``${flag:NAME}``, ``${flag:NAME:-default}``", "value of the tbot flag NAME:<value>, True for a flag NAME without value"
+        "``${lab:key}``", "key of the lab section of tbot.ini or tbot.json (LABHOST or LABHOST_<labname>), in the board file"
+        "``${tbot:SECTION:key}``", "key of SECTION of tbot.ini or tbot.json, in the board file"
+
+A value that is not set and has no default stops tbot with the
+expression and the file. The default is used only when the value is not
+set. Expressions may be nested, and are replaced before configparser
+interpolates ``${key}`` and ``${section:key}`` of the same file, so a
+section can be selected by a flag:
+
+.. code-block:: json
+
+    {
+        "default": {
+            "kasvariant": "${flag:kasvariant:-musl}",
+            "kasymlname": "${KASVARIANT_${flag:kasvariant:-musl}:kasfile}",
+            "nfs_path": "${lab:nfs_base_path}/${vendor}/${machine}/${kasvariant}",
+            "serverip": "${tbot:IPSETUP_BOARDNAME_eth0:serverip}"
+        },
+        "KASVARIANT_musl": {"kasfile": "BOARDNAME-musl.yml"},
+        "KASVARIANT_glibc": {"kasfile": "BOARDNAME-glibc.yml"}
+    }
+
+Without the flag ``boardname:`` the board name comes from the key
+``board`` of the lab section of tbot.json, e.g.
+``"board": "${flag:boardname:-BOARDNAME}"``. A U-Boot variable that depends on
+a flag, what ``set_ub_board_specific()`` of **boardspecific.py** did,
+is an entry of ``ub_env`` with ``"flag"``, set only with that flag:
+
+.. code-block:: json
+
+    {"name": "console", "val": "silent", "flag": "silent"}
+
+The testcase :py:func:`tbottest.tc.generic_board.generic_config_to_json`
+writes the configuration of a run with ini files as tbot.json and
+<boardname>.json, as the start of a JSON configuration (flag
+``config_json_dir:<dir>``, default ``config-json``); with the flag
+``config_json_resolved`` it writes the values resolved, to compare two
+configurations.
+
+lab configuration (tbot.ini or tbot.json)
+.........................................
+
+The lab configuration describes the lab host, the build hosts and how
+tbot reaches and controls the board. Find example files here:
+`tbottest/tbotconfig/BOARDNAME/tbot.ini
 <https://github.com/hsdenx/tbottest/blob/master/tbottest/tbotconfig/BOARDNAME/tbot.ini>`_
+and `tbottest/tbotconfig/BOARDNAME/tbot.json
+<https://github.com/hsdenx/tbottest/blob/master/tbottest/tbotconfig/BOARDNAME/tbot.json>`_.
 
-Currently there are the following sections in tbot.ini:
+The same section in both formats, first as ini file
+
+.. code-block:: ini
+
+    [LABHOST]
+    labname = mylab
+    username = pi
+    tmpdir = /tmp/tbot/${username}
+
+and then as JSON file
+
+.. code-block:: json
+
+    {
+        "LABHOST": {
+            "labname": "mylab",
+            "username": "pi",
+            "tmpdir": "/tmp/tbot/${username}"
+        }
+    }
+
+Currently there are the following sections:
 
 [LABHOST]
 ^^^^^^^^^
@@ -205,6 +417,7 @@ For login with ssh key set key 'sshkeyfile', for password login set key 'passwor
         "sshkeyfile", "path to the ssh keyfile, tbot uses", "/home/USERNAME/.ssh/id_rsa"
         "password", "set password to login into lab host", "FooBar"
         "date", "subdirectory in boards tftp path", "20210803-ml"
+        "board", "name of the board, used without the flag boardname:, see `JSON configuration and expressions`_", "${flag:boardname:-foo}"
         "shelltype","type of the linux shell (bash|ash)","bash"
         "toolsdir", "where does tbot find tools installed on lab host", "/home/USERNAME/source"
         "tftproot", "rootpath to tftp directory on lab host. tbot stores there build results.", "/srv/tftpboot"
@@ -214,7 +427,7 @@ For login with ssh key set key 'sshkeyfile', for password login set key 'passwor
         "testdir", "optional, path where testcases install or build things on the lab host, default workdir/tbottests", "/work/USERNAME/tbot-workdir/BOARD/tbottests"
         "proxyjump", "if set, proxyjump settings for ssh login on lab host", "pi@xeidos.ddns.net"
         "labinit", "array of strings which contains commands, executed when you init the lab. They run once per boot of the lab host, marked by /tmp/tbotlabinitdone; the setup of the board's ethernet devices on the lab host runs once per board, marked by /tmp/tbotlabinitdone-<boardname>. Remove a marker to run its part again", "['sudo systemctl --all --no-pager restart tftpd-hpa']"
-        "nfs_base_path", "base path to nfs share on lab host. !! May you have board specific subdir, so use placeholder @@TBOTLABBASENFSPATH@@ in board ini file and replace it in set_board_cfg", "/srv/nfs"
+        "nfs_base_path", "base path to nfs share on lab host. For a board specific subdirectory use ${lab:nfs_base_path} in the board configuration, or in an ini file the placeholder @@TBOTLABBASENFSPATH@@, replaced in set_board_cfg", "/srv/nfs"
         "uselocking", "use board locking mechanism. You must pass correct locking id for the board with tbot flag lablocking:<lockingid> else tbot will fail.", "yes|no"
         "cmd_versions", "optional, preset of cmd_get_version() for the lab host, see `command versions`_", "{""top"": ""busybox:1.37.0"", ""ip"": ""iproute2:6.19.0""}"
 
@@ -736,200 +949,27 @@ bring the configuration file it needs:
         "poweron_wait_state", "optional target state, as info reports it, to wait for before poweron_cmds", "debug mode"
         "poweron_timeout", "seconds to wait for poweron_wait_state, and for the BDI to boot for configname:<file>, default 30", "30"
 
-.. _jsonconfiguration:
+board configuration (BOARDNAME.ini or BOARDNAME.json)
+......................................................
 
-JSON configuration and expressions
-..................................
+The board configuration holds the settings of the board for the
+testcases, in tbotconfig/BOARDNAME/BOARDNAME.ini or BOARDNAME.json (flag
+``boardfile:``). Find example files here:
+`tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini
+<https://github.com/hsdenx/tbottest/blob/master/tbottest/tbotconfig/BOARDNAME/BOARDNAME.ini>`_
+and `tbottest/tbotconfig/BOARDNAME/BOARDNAME.json
+<https://github.com/hsdenx/tbottest/blob/master/tbottest/tbotconfig/BOARDNAME/BOARDNAME.json>`_.
 
-Instead of the two ini files, tbot reads the same configuration from two
-JSON files, if the flags ``inifile:`` and ``boardfile:`` name files that
-end in ``.json`` (both, mixing ini and JSON stops tbot):
+It contains two sections, ``TC_BOARDNAME`` and ``TC``. A key is looked
+up first in ``TC_BOARDNAME`` and, if it is not there, in ``TC``. What
+happens if neither section has it is described at
+:py:func:`tbottest.initconfig.init_get_config`.
 
-.. code-block:: bash
-
-    -f inifile:tbotconfig/BOARDNAME/tbot.json -f boardfile:tbotconfig/BOARDNAME/BOARDNAME.json
-
-A JSON file is an object of sections, each an object of keys, with the
-same names as in the ini file. A value may be a string, a number, true,
-false, null, a list or an object; tbot keeps it as the string the ini
-file would have (lists and objects as Python literal), so every testcase
-reads it as before.
-
-With JSON, tbot reads the files as they are: no copies, no ``@@...@@``
-placeholders, and no **boardspecific.py**, which is not even imported.
-What depended on flags or the environment is written as an expression
-in the file. The expressions also work in ini files, after the
-placeholders are replaced:
-
-.. csv-table:: expressions in the configuration files
-        :header: "expression", "value"
-
-        "``${env:NAME}``, ``${env:NAME:-default}``", "environment variable NAME"
-        "``${flag:NAME}``, ``${flag:NAME:-default}``", "value of the tbot flag NAME:<value>, True for a flag NAME without value"
-        "``${lab:key}``", "key of the lab section of tbot.ini or tbot.json (LABHOST or LABHOST_<labname>), in the board file"
-        "``${tbot:SECTION:key}``", "key of SECTION of tbot.ini or tbot.json, in the board file"
-
-A value that is not set and has no default stops tbot with the
-expression and the file. The default is used only when the value is not
-set. Expressions may be nested, and are replaced before configparser
-interpolates ``${key}`` and ``${section:key}`` of the same file, so a
-section can be selected by a flag:
-
-.. code-block:: json
-
-    {
-        "default": {
-            "kasvariant": "${flag:kasvariant:-musl}",
-            "kasymlname": "${KASVARIANT_${flag:kasvariant:-musl}:kasfile}",
-            "nfs_path": "${lab:nfs_base_path}/${vendor}/${machine}/${kasvariant}",
-            "serverip": "${tbot:IPSETUP_BOARDNAME_eth0:serverip}"
-        },
-        "KASVARIANT_musl": {"kasfile": "BOARDNAME-musl.yml"},
-        "KASVARIANT_glibc": {"kasfile": "BOARDNAME-glibc.yml"}
-    }
-
-Without the flag ``boardname:`` the board name comes from the key
-``board`` of the lab section of tbot.json, e.g.
-``"board": "${flag:boardname:-BOARDNAME}"``. A U-Boot variable that depends on
-a flag, what ``set_ub_board_specific()`` of **boardspecific.py** did,
-is an entry of ``ub_env`` with ``"flag"``, set only with that flag:
-
-.. code-block:: json
-
-    {"name": "console", "val": "silent", "flag": "silent"}
-
-The testcase :py:func:`tbottest.tc.generic_board.generic_config_to_json`
-writes the configuration of a run with ini files as tbot.json and
-<boardname>.json, as the start of a JSON configuration (flag
-``config_json_dir:<dir>``, default ``config-json``); with the flag
-``config_json_resolved`` it writes the values resolved, to compare two
-configurations.
-
-.. _boardspecificruntimeadaption:
-
-boardspecfic runtime adaptions
-..............................
-
-The ini file approach is static, which means we cannot change
-configuration @runtime. This generic approach searches in **tbotconfig**
-for a **boardspecific.py** file, which can contains several
-functions, the generic approach tries to call.
-
-In this functions you can adapt settings dependend on the usecase.
-Or may do special stuff in machine shells.
-
-In the default ini files there are placeholders beginning with **@@**
-and ending with **@@**. You can easily replace them with
-:ref:`iniconfighelperfunctions`.
-
-Therefore the following functions are used:
-
-set_board_cfg(temp: str = None, filename: str = None)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This file is called early in bootup before any ini file
-is parsed. So you can adapt the ini files for your needs
-
-.. code-block:: python
-
-    import tbot
-    from tbottest.generic.iniconfig import replace_in_file
-
-    tbot.selectable.printed = False
-
-    def print_log(msg):
-         if tbot.selectable.printed:
-                return
-
-            tbot.log.message(tbot.log.c(msg).yellow)
-
-    def set_board_cfg(temp: str = None, filename: str = None):
-        """
-        setup board specific stuff in ini files before they get parsed
-        """
-        # print tbot.flags, as tbot prints them not longer
-        print_log(f"TBOT.FLAGS {tbot.flags}")
-
-        replace_in_file(filename, "@@TBOTBOARD@@", "<boardname in your lab setup>")
-        replace_in_file(filename, "@@TBOTDATE@@", "20230221")
-        replace_in_file(filename, "@@TBOTMACHINE@@", "<yocto machine name>")
-
-        tbot.selectable.boardname = None
-        for f in tbot.flags:
-            if f.startswith("boardname:"):
-                tbot.selectable.boardname = f.split(":", 1)[1]
-
-        if tbot.selectable.boardname == None:
-            tbot.selectable.boardname = "wandboard"
-
-
-board_set_boardname
-^^^^^^^^^^^^^^^^^^^
-
-called from initconfig.py generic_get_boardname()
-
-.. code-block:: python
-
-    import tbot
-
-
-    def board_set_boardname() -> str:
-        # do not use boardname flag
-        BOARDNAME = "foo"
-        for f in tbot.flags:
-            if "8G" in f:
-                if len(f) == 2:
-                    BOARDNAME = "foo-8G"
-
-        return BOARDNAME
-
-
-set_ub_board_specific
-^^^^^^^^^^^^^^^^^^^^^
-
-called from boardgeneric.py in init function.
-
-setup U-Boot specific parts after entering the U-Boot shell
-
-.. code-block:: python
-
-    def set_ub_board_specific(self):
-        optargs = self.env("optargs")
-        optupd = False
-        if "bootchartd" in tbot.flags:
-            optargs = f"{optargs} init=/lib/systemd/systemd-bootchart"
-            optupd = True
-
-        if "debug_initcalls" in tbot.flags:
-            optargs = f"{optargs} initcall_debug"
-            optupd = True
-
-        if optupd == True:
-            self.env("optargs", optargs)
-
-        if "silent" in tbot.flags:
-            self.env("console", "silent")
-
-
-boardconfiguration file
-.......................
-
-we use for configuring for boardspecific testcasesettings with:
-
-https://docs.python.org/3/library/configparser.html
-
-add therefore a BOARDNAME.ini file must exist in tbotconfig/BOARDNAME
-
-It contains two sections:
-
-```TC_BOARDNAME``` and ```TC```
-
-see also:
-:py:func:`tbottest.initconfig.init_get_config`
-
-from where the generic board testcase approach boardgeneric.py
-takes the config to generate the class GenericBoardConfig,
-used from generic testcases.
+`tbottest/boardgeneric.py
+<https://github.com/hsdenx/tbottest/blob/master/tbottest/boardgeneric.py>`__
+reads the keys into the class ``GenericBoardConfig``. Its instance
+``cfggeneric`` is the ``cfg`` the generic testcases in
+:py:mod:`tbottest.tc.generic_board` use.
 
 common settings
 ^^^^^^^^^^^^^^^
@@ -1079,7 +1119,7 @@ them out on every run. It goes into section ``[LABHOST]`` (or
 (or ``[BUILDHOST_<name>]``) of tbot.ini for the build host and into
 ``[TC]`` (or ``[TC_<boardname>]``) of the board ini for the board. A command that
 is not in it is found out as before. A value a testcase sets with
-``cmd_versions_set()`` wins over the ini file.
+``cmd_versions_set()`` wins over the configuration.
 
 .. code-block:: ini
 
@@ -1092,12 +1132,20 @@ is not in it is found out as before. A value a testcase sets with
 One command per line works, as configparser takes every line indented
 deeper than the key as continuation of the value. In ``[TC]`` of the
 board ini template the keys are indented by four spaces, so the commands
-need eight.
+need eight. In a JSON file the value is an object:
+
+.. code-block:: json
+
+    {
+        "TC": {
+            "cmd_versions": {"top": "procps-ng:4.0.6", "devmem": "busybox:1.37.0"}
+        }
+    }
 
 The testcase :py:func:`tbottest.tc.generic_board.generic_cmd_versions`
 finds out the commands tbottest uses on the lab host, the build host (if
 tbot.ini has a ``[BUILDHOST]`` section) and the board and logs the line
-for each, ready to copy into the ini files. Run it again when the root
+for each, ready to copy into the configuration. Run it again when the root
 filesystem, the lab host or the build host changes.
 
 ``cmd_get_version(cmd, autoinstall=True)`` installs a missing command on
@@ -1342,7 +1390,7 @@ It is recommended to collect arguments in so called argumentsfiles, else you are
 tbot flag                Description
 ======================== ====================================================
 always-on                board is already on, log into linux
-boardfile                format boardfile:<path>, the board ini file, relative to the tbotconfig directory or absolute; default the BOARDNAME.ini template
+boardfile                format boardfile:<path>, the board configuration, an ini file or, if the name ends in .json, a JSON file, relative to the tbotconfig directory or absolute; default the BOARDNAME.ini template
 boardname                format boardname:<name>, name of the board, used when boardspecific.py does not define board_set_boardname()
 bootcmd                  format bootcmd:<real bootcmd>, example bootcmd:net_nfs will execute "run net_nfs"
 buildername              format buildername:<name>, select the used build host, section BUILDHOST_<name> in tbot.ini; buildername:local builds on the host tbot runs on
@@ -1357,7 +1405,7 @@ emmc                     u-boot bootcmd "run boot_emmc" (deprecated, use flag bo
 enterinitramfs           enter initramfs, add enterinitramfs to miscargs (deprecated, use set_ub_board_specific)
 gpiopower                use a gpio pin for boards power control
 ignore_loglevel          add ignore_loglevel to miscargs (deprecated, use set_ub_board_specific)
-inifile                  format inifile:<path>, the tbot.ini file, relative to the tbotconfig directory or absolute; default the tbot.ini template
+inifile                  format inifile:<path>, the lab configuration, an ini file or, if the name ends in .json, a JSON file, relative to the tbotconfig directory or absolute; default the tbot.ini template
 kas                      u-boot bootcmd "run bootcmdkas"
 kaskeepconfig            keep the repo checkouts and build/conf of the kas build as they are, like kas --keep-config-unchanged
 kasskipcheckout          skip the kas checkout step
@@ -1390,7 +1438,7 @@ ssh                      login to linux console through ssh (only possible if bo
 telnet                   use telnet for serial console
 tftpfit                  u-boot bootcmd "run tftp_mmc" (deprecated, use flag bootcmd)
 tinkerforge              use tinkerforge for boards power control
-tmpfilepath              format tmpfilepath:<directory>, where tbot writes its copies of tbot.ini and the board ini; default next to them
+tmpfilepath              format tmpfilepath:<directory>, where tbot writes its copies of tbot.ini and the board ini; default next to them; ini files only
 ub_env                   format ub_env:<group>[,<group>...], set ub_env and only these ub_env_<group> groups of the board ini, with the groups they depend on (ub_env_depends) and those ub_env_bootcmd names for the flag bootcmd; ub_env:none sets none of the groups; default the groups of the boot command, else all groups, see `ub_env groups`_
 uboot_no_env_set         do not set any U-Boot Environment after U-Boot login
 usbloader                load SPL/U-Boot with imx_usb_loader

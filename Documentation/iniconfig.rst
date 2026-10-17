@@ -8,7 +8,7 @@
 helper functions
 ----------------
 
-Values of ``tbot.ini`` and of the board ini are read through these
+Values of the lab and the board configuration (ini or JSON) are read through these
 functions, or the methods of :py:class:`~tbottest.initconfig.IniTBotConfig`
 and :py:class:`~tbottest.initconfig.IniConfig` built on them, never through
 ``config_parser`` directly. Then the order of the sections (``TC_BOARDNAME``
