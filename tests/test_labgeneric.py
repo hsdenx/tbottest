@@ -10,6 +10,7 @@ tbottest.boardgeneric and tbot's linux module.
 import ast
 import configparser
 import os
+import posixpath
 import sys
 import textwrap
 import types
@@ -50,7 +51,13 @@ def load_method(classname, methodname):
         Workdir=types.SimpleNamespace(static=lambda host, path: ("workdir", path))
     )
     ini = types.SimpleNamespace(generic_get_boardname=lambda: "BOARDNAME")
-    ns = {"linux": linux, "LABSECTIONNAME": "LABHOST", "cfgt": CFGT, "ini": ini}
+    ns = {
+        "linux": linux,
+        "LABSECTIONNAME": "LABHOST",
+        "cfgt": CFGT,
+        "ini": ini,
+        "posixpath": posixpath,
+    }
     exec(compile(def_src, LABGENERIC_PATH, "exec"), ns)
     return ns[methodname]
 
@@ -89,31 +96,50 @@ class TestNfsboardbasedir:
             nfsboardbasedir(Lab())
 
 
-class _LocalPath(str):
-    def _local_str(self):
-        return str(self)
-
-
-class LabWithWorkdir:
-    def workdir(self):
-        return _LocalPath("/work/hs/tbot-workdir/BOARDNAME")
+WORKDIR = "/work/hs/tbot-workdir/BOARDNAME"
 
 
 class TestLabTestdir:
     def setup_method(self):
-        tbot_ini({"LABHOST": {}})
+        tbot_ini({"LABHOST": {"workdir": WORKDIR}})
 
     def test_default_below_workdir(self):
         testdir = load_method("GenericLab", "testdir")
-        assert testdir(LabWithWorkdir()) == (
-            "workdir",
-            "/work/hs/tbot-workdir/BOARDNAME/tbottests",
-        )
+        assert testdir(object()) == ("workdir", WORKDIR + "/tbottests")
+
+    def test_default_below_workdir_with_trailing_slash(self):
+        tbot_ini({"LABHOST": {"workdir": WORKDIR + "/"}})
+        testdir = load_method("GenericLab", "testdir")
+        assert testdir(object()) == ("workdir", WORKDIR + "/tbottests")
 
     def test_from_lab_section(self):
-        tbot_ini({"LABHOST": {"testdir": "/srv/tbottests"}})
+        tbot_ini({"LABHOST": {"workdir": WORKDIR, "testdir": "/srv/tbottests"}})
         testdir = load_method("GenericLab", "testdir")
-        assert testdir(LabWithWorkdir()) == ("workdir", "/srv/tbottests")
+        assert testdir(object()) == ("workdir", "/srv/tbottests")
+
+
+class SSHMachineWithWorkdir:
+    wdir = "/home/user/tbot"
+
+
+class TestSSHMachineTestdir:
+    def test_default_below_workdir(self):
+        tbot_ini({"SSHMACHINE": {}})
+        testdir = load_method("SSHMachine", "testdir")
+        assert testdir(SSHMachineWithWorkdir()) == ("workdir", "/home/user/tbot/tbottests")
+
+    def test_default_below_workdir_with_trailing_slash(self):
+        class Machine:
+            wdir = "/home/user/tbot/"
+
+        tbot_ini({"SSHMACHINE": {}})
+        testdir = load_method("SSHMachine", "testdir")
+        assert testdir(Machine()) == ("workdir", "/home/user/tbot/tbottests")
+
+    def test_from_section(self):
+        tbot_ini({"SSHMACHINE": {"testdir": "/srv/ssh-tests"}})
+        testdir = load_method("SSHMachine", "testdir")
+        assert testdir(SSHMachineWithWorkdir()) == ("workdir", "/srv/ssh-tests")
 
 
 class LabExec:

@@ -84,6 +84,8 @@
 - `GenericUBoot.exec()` reads back the echo of the command line like tbot.
 
 ### Fixed
+- The default `testdir` of the lab host and of `[SSHMACHINE]`,
+  `<workdir>/tbottests`, got a double slash when `workdir` ended in one.
 - A relative `workdir` or `testdir` of a build host reached over ssh was
   taken from the directory tbot runs in on the local machine. It is taken
   from the home directory of the build host now; `[BUILDHOST_local]` keeps

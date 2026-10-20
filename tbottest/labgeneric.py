@@ -1,5 +1,6 @@
 import ast
 import os
+import posixpath
 import typing
 import tbot
 from tbot.machine import connector, linux, board
@@ -550,7 +551,7 @@ class GenericLab(CmdVersionsMixin, CON, LAB_LINUX_SHELL, linux.Lab, linux.Builde
         """
         tmp = cfgt.get_lab_config("testdir", None)
         if not tmp:
-            tmp = self.workdir()._local_str() + "/tbottests"
+            tmp = posixpath.join(cfgt.get_lab_config("workdir"), "tbottests")
         return linux.Workdir.static(self, tmp)
 
     def tmpdir(self) -> "linux.path.Path[GenericLab]":
@@ -856,7 +857,7 @@ class SSHMachine(connector.SSHConnector, linux.Bash):
         """
         tmp = cfgt.get_section_config("SSHMACHINE", "testdir", None)
         if not tmp:
-            tmp = self.wdir + "/tbottests"
+            tmp = posixpath.join(self.wdir, "tbottests")
         return linux.Workdir.static(self, tmp)
 
     def init(self) -> None:
