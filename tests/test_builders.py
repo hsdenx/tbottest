@@ -63,6 +63,24 @@ class FakeExecHost:
         return ""
 
 
+class FakeEnv:
+    """env() of a build host whose HOME is /home/user, counts the calls"""
+
+    def __init__(self):
+        self.asked = []
+
+    def __call__(self, var):
+        self.asked.append(var)
+        return "/home/user\n"
+
+
+def remote_builder(builders):
+    gb = builders.genericbuilder()
+    gb.exec0 = FakeExecHost().exec0
+    gb.env = FakeEnv()
+    return gb
+
+
 class TestCmdVersions:
     def test_preset_from_buildhost_section(self):
         sections = {
@@ -92,11 +110,27 @@ class TestGenericbuilderConfig:
         assert gb.username == "user"
         assert gb.hostname == "build.example.com"
 
-    def test_relative_workdir_is_prefixed_with_cwd(self):
+    def test_relative_workdir_is_below_home_of_build_host(self):
+        # not below the directory tbot runs in on this machine
         builders = load_builders(BASE_SECTIONS)
-        gb = builders.genericbuilder()
-        gb.exec0 = FakeExecHost().exec0
-        assert str(gb.workdir).endswith(os.getcwd() + "/relwork")
+        gb = remote_builder(builders)
+        assert str(gb.workdir).endswith("/home/user/relwork")
+        assert os.getcwd() not in str(gb.workdir)
+
+    def test_home_of_build_host_asked_once(self):
+        builders = load_builders(BASE_SECTIONS)
+        gb = remote_builder(builders)
+        gb.workdir
+        gb.testdir
+        assert gb.env.asked == ["HOME"]
+
+    def test_absolute_workdir_does_not_ask_home(self):
+        sections = dict(BASE_SECTIONS)
+        sections["BUILDHOST"] = dict(sections["BUILDHOST"], workdir="/abs/work")
+        builders = load_builders(sections)
+        gb = remote_builder(builders)
+        assert str(gb.workdir).endswith("/abs/work")
+        assert gb.env.asked == []
 
     def test_absolute_kas_ref_dir_used_as_is(self):
         builders = load_builders(BASE_SECTIONS)
@@ -120,9 +154,8 @@ class TestGenericbuilderConfig:
 class TestTestdir:
     def test_default_below_workdir(self):
         builders = load_builders(BASE_SECTIONS)
-        gb = builders.genericbuilder()
-        gb.exec0 = FakeExecHost().exec0
-        assert str(gb.testdir).endswith(os.getcwd() + "/relwork/tbottests")
+        gb = remote_builder(builders)
+        assert str(gb.testdir).endswith("/home/user/relwork/tbottests")
 
     def test_absolute_testdir(self):
         sections = dict(BASE_SECTIONS)
@@ -132,13 +165,12 @@ class TestTestdir:
         gb.exec0 = FakeExecHost().exec0
         assert str(gb.testdir).endswith("/abs/tests")
 
-    def test_relative_testdir_is_prefixed_with_cwd(self):
+    def test_relative_testdir_is_below_home_of_build_host(self):
         sections = dict(BASE_SECTIONS)
         sections["BUILDHOST"] = dict(sections["BUILDHOST"], testdir="reltests")
         builders = load_builders(sections)
-        gb = builders.genericbuilder()
-        gb.exec0 = FakeExecHost().exec0
-        assert str(gb.testdir).endswith(os.getcwd() + "/reltests")
+        gb = remote_builder(builders)
+        assert str(gb.testdir).endswith("/home/user/reltests")
 
     def test_local_builder_has_it_too(self):
         builders = load_builders(BASE_SECTIONS)
@@ -159,6 +191,15 @@ class TestGenericbuilderlocalConfig:
         gbl = builders.genericbuilderlocal()
         gbl.exec0 = FakeExecHost().exec0
         assert str(gbl.workdir).endswith("/abs/localwork")
+
+    def test_relative_workdir_is_below_cwd(self):
+        # the local build host runs where tbot runs
+        sections = dict(BASE_SECTIONS)
+        sections["BUILDHOST_local"] = dict(sections["BUILDHOST_local"], workdir="rel")
+        builders = load_builders(sections)
+        gbl = builders.genericbuilderlocal()
+        gbl.exec0 = FakeExecHost().exec0
+        assert str(gbl.workdir).endswith(os.getcwd() + "/rel")
 
     def test_missing_section_falls_back_to_placeholder(self):
         builders = load_builders({"BUILDHOST": BASE_SECTIONS["BUILDHOST"]})

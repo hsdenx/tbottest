@@ -1,5 +1,6 @@
 import ast
 import os
+import posixpath
 import tbottest.initconfig as ini
 import typing
 import pathlib
@@ -28,26 +29,38 @@ class _BuilderPathsMixin:
         kas_ref_dir = cfgt.get_section_config(self.sn, "kas_ref_dir")
         return linux.Workdir.static(self, kas_ref_dir)
 
+    def _relative_base(self) -> str:
+        """
+        directory a relative workdir or testdir is taken from, the
+        directory the shell of the build host starts in; for the local
+        build host the directory tbot runs in
+        """
+        return os.getcwd()
+
+    def _build_host_path(self, path: str) -> str:
+        # the build host has POSIX paths; an absolute one stays as it is,
+        # without asking the build host for its start directory
+        if posixpath.isabs(path):
+            return path
+        return posixpath.join(self._relative_base(), path)
+
     @property
     def workdir(self) -> "linux.Path[genericbuilder]":
         workdir = cfgt.get_section_config(self.sn, "workdir")
-        if workdir[0] != "/":
-            workdir = os.getcwd() + "/" + workdir
-        return linux.Workdir.static(self, workdir)
+        return linux.Workdir.static(self, self._build_host_path(workdir))
 
     @property
     def testdir(self) -> "linux.Path[genericbuilder]":
         """
         directory for what testcases install or build on the build host,
         key testdir, default <workdir>/tbottests; a relative path is taken
-        from the current directory, as for workdir
+        from the same directory as a relative workdir
         """
         testdir = cfgt.get_section_config(self.sn, "testdir", None)
         if not testdir:
-            testdir = self.workdir._local_str() + "/tbottests"
-        elif testdir[0] != "/":
-            testdir = os.getcwd() + "/" + testdir
-        return linux.Workdir.static(self, testdir)
+            workdir = cfgt.get_section_config(self.sn, "workdir")
+            testdir = posixpath.join(workdir, "tbottests")
+        return linux.Workdir.static(self, self._build_host_path(testdir))
 
     def init(self) -> None:
         # cache key is per-class (not a shared literal): genericbuilder
@@ -81,6 +94,7 @@ class genericbuilder(
         return "BUILDHOST"
 
     sn = builder_get_sectionname()
+    _home: typing.Optional[str] = None
     # preset for cmd_get_version(), see tbottest.cmdversions
     cmd_versions_config = cfgt.get_section_config(sn, "cmd_versions", None)
     name = cfgt.get_section_config(sn, "name")
@@ -128,6 +142,15 @@ class genericbuilder(
             return linux.auth.PasswordAuthenticator(password)
 
         return linux.auth.NoneAuthenticator()
+
+    def _relative_base(self) -> str:
+        """
+        the home directory of the build host, where its ssh login starts,
+        not the directory tbot runs in on this machine; asked once
+        """
+        if self._home is None:
+            self._home = self.env("HOME").strip()
+        return self._home
 
     def toolchains(self) -> typing.Dict[str, linux.build.Toolchain]:
         raise RuntimeError("toolchains not implemented yet, please add support!")

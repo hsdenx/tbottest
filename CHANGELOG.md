@@ -84,6 +84,10 @@
 - `GenericUBoot.exec()` reads back the echo of the command line like tbot.
 
 ### Fixed
+- A relative `workdir` or `testdir` of a build host reached over ssh was
+  taken from the directory tbot runs in on the local machine. It is taken
+  from the home directory of the build host now; `[BUILDHOST_local]` keeps
+  the directory tbot runs in, where its shell starts.
 - `KAS.kas_copy()` was annotated with the module `tbot.machine.linux.path`
   instead of `linux.Path`, so the documentation showed the module.
 - A race in `lab_get_lock()` of the board locking.
