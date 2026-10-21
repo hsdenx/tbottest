@@ -17,6 +17,7 @@ from tbottest.tc.network import lnx_network_ping
 from tbottest.tc.network import network_linux_iperf
 from tbottest.tc.kas import KAS
 from tbottest.tc.leds import lnx_test_led_simple
+from tbottest.tc.can import board_lnx_cangen, cangen_config_kwargs
 from tbottest.tc.generictestdef import TC_SKIP, TC_FAIL, TC_OKAY, require_cfg, tc_config
 from tbottest.tc.registermap import REGISTERMAP
 
@@ -371,6 +372,44 @@ def generic_lnx_test_led(
 
     return TC_OKAY
 
+
+@tbot.testcase
+@require_cfg("cangen")
+def generic_lnx_test_cangen(
+    lnx: Optional[linux.LinuxShell] = None,
+) -> str:  # noqa: D107
+    """
+    prerequisite: Board boots into linux
+
+    sends CAN frames with cangen and checks what candump received, with
+    :py:func:`tbottest.tc.can.board_lnx_cangen` once for every entry of
+    cangen
+
+    :param lnx: Linux machine we run on
+
+    Uses config variables:
+    cangen -- array of dictionary, the keys are parameters of
+    board_lnx_cangen (see :py:data:`tbottest.tc.can.CANGEN_CONFIG_KEYS`),
+    missing ones keep its defaults
+
+    .. code-block:: python
+
+        cangen = [
+            {"candev": ["can0", "can1"], "candevsend": ["can1"],
+             "candevdump": "can0", "frames": "1000", "dllength": "8",
+             "bitrate": "500000"},
+        ]
+    """
+    with tbot.ctx() as cx:
+        if lnx is None:
+            lnx = cx.request(tbot.role.BoardLinux)
+
+        for run in cfg.get_config_literal("cangen", "[]"):
+            board_lnx_cangen(lnx=lnx, **cangen_config_kwargs(run))
+
+    return TC_OKAY
+
+
 lnxtestcases = [
     "generic_lx_dump_register",
     "generic_lnx_network_iperf",
@@ -379,6 +418,7 @@ lnxtestcases = [
     "generic_lnx_commands",
     "generic_lnx_test_dmesg",
     "generic_lnx_test_led",
+    "generic_lnx_test_cangen",
 ]
 
 

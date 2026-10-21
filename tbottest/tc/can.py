@@ -215,6 +215,48 @@ def candump_log_duration(log: str) -> float:
     return times[-1] - times[0]
 
 
+# keys of an entry of the board configuration key cangen, the parameters
+# of board_lnx_cangen() that a board configuration can set
+CANGEN_CONFIG_KEYS = (
+    "tmpdir",
+    "candev",
+    "candevsend",
+    "candevdump",
+    "frames",
+    "dllength",
+    "bitrate",
+    "txqueuelen",
+    "cangen_gap",
+)
+
+
+def cangen_config_kwargs(run: dict) -> dict:
+    """
+    Keyword arguments for :py:func:`board_lnx_cangen` from one entry of the
+    board configuration key ``cangen``.
+
+    Every key must be one of :py:data:`CANGEN_CONFIG_KEYS`.  ``candev`` and
+    ``candevsend`` become lists of strings (a single interface is fine),
+    every other value a string, as a JSON configuration may give numbers.
+
+    :param run: one entry of ``cangen``
+    :returns: the keyword arguments
+    """
+    unknown = sorted(set(run) - set(CANGEN_CONFIG_KEYS))
+    if unknown:
+        raise ValueError(
+            f"unknown keys {unknown} in cangen, known are {', '.join(CANGEN_CONFIG_KEYS)}"
+        )
+    kwargs = {}
+    for key, value in run.items():
+        if key in ("candev", "candevsend"):
+            values = value if isinstance(value, (list, tuple)) else [value]
+            kwargs[key] = [str(v) for v in values]
+        else:
+            kwargs[key] = str(value)
+    return kwargs
+
+
 @tbot.testcase
 def board_lnx_cangen(
     lnx: Optional[linux.LinuxShell] = None,

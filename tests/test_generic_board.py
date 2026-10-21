@@ -8,7 +8,8 @@ strings, the helpers of tc/common.py, tc/network.py, tc/leds.py and
 tc/cpu.py only record their calls. generictestdef.py is the real one, so
 require_cfg() really skips a testcase whose key is not set.
 
-The kas testcases are not covered, they need the KAS class.
+tc/can.py is the real one as well, for cangen_config_kwargs(). The kas
+testcases are not covered, they need the KAS class.
 """
 
 import ast
@@ -25,6 +26,7 @@ from conftest import install_real_submodule, load_module
 HERE = os.path.dirname(__file__)
 GENERIC_BOARD_PATH = os.path.join(HERE, "..", "tbottest", "tc", "generic_board.py")
 GENERICTESTDEF_PATH = os.path.join(HERE, "..", "tbottest", "tc", "generictestdef.py")
+CAN_PATH = os.path.join(HERE, "..", "tbottest", "tc", "can.py")
 
 # the board configuration of a test, key -> ini string
 CONFIG = {}
@@ -105,6 +107,10 @@ def install_fakes():
     common.lnx_check_cmd = recorder("lnx_check_cmd", lambda: CONFIG.get("_ret", True))
     common.lnx_check_dmesg = recorder("lnx_check_dmesg", lambda: CONFIG.get("_ret", True))
     common.lx_devmem2_get = recorder("lx_devmem2_get", "0x1234")
+    # for the real tc/can.py
+    common.lnx_sudo = lambda lnx: []
+    common.tbot_start_thread = recorder("tbot_start_thread")
+    common.tbot_stop_thread = recorder("tbot_stop_thread")
     sys.modules["tbottest.tc.common"] = common
 
     cpu = types.ModuleType("tbottest.tc.cpu")
@@ -136,6 +142,7 @@ def install_fakes():
     sys.modules["tbottest.tc.registermap"] = registermap
 
     install_real_submodule("tbottest.tc.generictestdef", GENERICTESTDEF_PATH)
+    install_real_submodule("tbottest.tc.can", CAN_PATH)
 
 
 install_fakes()
@@ -168,6 +175,7 @@ LAB = object()
         ("generic_lnx_commands", "lnx_commands"),
         ("generic_lnx_test_dmesg", "dmesg"),
         ("generic_lnx_test_led", "leds"),
+        ("generic_lnx_test_cangen", "cangen"),
     ],
 )
 def test_skipped_without_its_key(testcase, key):
@@ -241,6 +249,29 @@ def test_leds():
     assert calls("lnx_test_led_simple") == [
         ((LNX, [{"path": "/sys/class/leds/led-orange", "bootval": "0", "onval": "1"}]), {})
     ]
+
+
+def test_cangen_runs_board_lnx_cangen_per_entry(monkeypatch):
+    monkeypatch.setattr(gb, "board_lnx_cangen", recorder("board_lnx_cangen"))
+    CONFIG["cangen"] = repr(
+        [
+            {"candev": ["can0", "can1"], "candevsend": "can1", "frames": 500},
+            {"dllength": 1, "bitrate": "250000"},
+        ]
+    )
+    assert gb.generic_lnx_test_cangen(lnx=LNX) == gtd.TC_OKAY
+    assert calls("board_lnx_cangen") == [
+        ((), {"lnx": LNX, "candev": ["can0", "can1"], "candevsend": ["can1"], "frames": "500"}),
+        ((), {"lnx": LNX, "dllength": "1", "bitrate": "250000"}),
+    ]
+
+
+def test_cangen_unknown_key(monkeypatch):
+    monkeypatch.setattr(gb, "board_lnx_cangen", recorder("board_lnx_cangen"))
+    CONFIG["cangen"] = '[{"frame": "1000"}]'
+    with pytest.raises(ValueError, match="unknown keys"):
+        gb.generic_lnx_test_cangen(lnx=LNX)
+    assert calls("board_lnx_cangen") == []
 
 
 DUMP = {

@@ -2,10 +2,13 @@
 
 ## [Unreleased]
 ### Added
-- Unit tests for the generic testcases of `tc/generic_board.py`: the
+- Unit tests for the generic testcases of `tc/generic_board.py`, for the
   configuration a testcase reads, the calls it makes with it, the skip
   without its key and the counts of `generic_lnx_all`. The kas testcases
   are not covered yet.
+- `generic_lnx_test_cangen`, run by `generic_lnx_all`, runs
+  `board_lnx_cangen` once for every entry of the board configuration key
+  `cangen`, whose keys are its parameters (`cangen_config_kwargs()`).
 - `linux_safe_init_prompt` in the board configuration, True by default,
   sets tbot's `safe_init_prompt`, so the prompt is read with
   `read_until_prompt_safe()` while tbot sets up the linux shell.

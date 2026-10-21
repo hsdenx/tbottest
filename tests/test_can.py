@@ -13,6 +13,7 @@ Python, board_lnx_cangen() itself runs against a fake board that
 answers wc and cat with a canned log.
 """
 
+import inspect
 import os
 
 import pytest
@@ -263,3 +264,38 @@ class TestBoardLnxCangen:
     def test_lost_frames_raise(self, monkeypatch):
         with pytest.raises(RuntimeError, match="differences in the candump log of can1 -> can0"):
             self.run(monkeypatch, cangen_log(15, 8))
+
+
+class TestCangenConfigKwargs:
+    def test_strings_and_lists(self):
+        kwargs = can.cangen_config_kwargs(
+            {"candev": ["can0", "can1"], "candevsend": "can1", "frames": 500, "dllength": 2}
+        )
+        assert kwargs == {
+            "candev": ["can0", "can1"],
+            "candevsend": ["can1"],
+            "frames": "500",
+            "dllength": "2",
+        }
+
+    def test_empty_entry_keeps_the_defaults(self):
+        assert can.cangen_config_kwargs({}) == {}
+
+    def test_unknown_key(self):
+        with pytest.raises(ValueError, match="unknown keys \\['frame'\\] in cangen"):
+            can.cangen_config_kwargs({"frame": "1000"})
+
+    def test_keys_are_parameters_of_board_lnx_cangen(self):
+        params = inspect.signature(can.board_lnx_cangen).parameters
+        assert set(can.CANGEN_CONFIG_KEYS) <= set(params)
+        # the machines come from the testcase, not from the configuration
+        assert not {"lnx", "lnxsend"} & set(can.CANGEN_CONFIG_KEYS)
+
+    def test_runs_board_lnx_cangen(self, monkeypatch):
+        monkeypatch.setattr(can.time, "sleep", lambda s: None)
+        board = FakeCanBoard(cangen_log(5, 1, dev="can1"))
+        kwargs = can.cangen_config_kwargs(
+            {"candev": "can1", "candevsend": "can1", "candevdump": "can1", "frames": 5, "dllength": 1}
+        )
+        can.board_lnx_cangen(lnx=board, **kwargs)
+        assert any(c[:2] == ("cangen", "-g") and "5" in c for c in board.commands)
