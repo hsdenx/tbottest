@@ -63,8 +63,6 @@ def board_setup_can(
 
 
 def lnx_can_write_dump_compare(
-    lab: linux.LinuxShell,
-    lnx: linux.LinuxShell,
     lnxsend: linux.LinuxShell,
     senddev: List[str],
     lnxread: linux.LinuxShell,
@@ -78,8 +76,6 @@ def lnx_can_write_dump_compare(
     data and dump it with candump in lnxread shell on
     readdev. Use bitrate and txqueuelen
 
-    :param lab: linux  machine where we work on
-    :param lnx: linux machine where we work on
     :param lnxsend: linux machine from where we send CAN data
     :param senddev: List of device from which we send
     :param lnxread: linux machine where we receive CAN data

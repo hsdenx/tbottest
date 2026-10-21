@@ -120,19 +120,17 @@ class TestLnxCanWriteDumpCompare:
     ]
 
     def test_matching_dump_does_not_raise(self):
-        lab = FakeLinuxShell()
         lnxread = FakeLinuxShell()
         lnxread.dump_log = "\n".join(d["res"] for d in self.DATA)
         lnxsend = FakeLinuxShell()
 
         can.lnx_can_write_dump_compare(
-            lab, lab, lnxsend, ["can0"], lnxread, ["can0"], "500000", "500", self.DATA
+            lnxsend, ["can0"], lnxread, ["can0"], "500000", "500", self.DATA
         )
         sent = [c for c in lnxsend.commands if c[0] == "cansend"]
         assert sent == [("cansend", "can0", "123#DEADBEEF"), ("cansend", "can0", "124#CAFE")]
 
     def test_interface_line_is_skipped_not_compared(self):
-        lab = FakeLinuxShell()
         lnxread = FakeLinuxShell()
         lnxread.dump_log = "\n".join(
             ["interface can0", self.DATA[0]["res"], self.DATA[1]["res"]]
@@ -140,18 +138,17 @@ class TestLnxCanWriteDumpCompare:
         lnxsend = FakeLinuxShell()
 
         can.lnx_can_write_dump_compare(
-            lab, lab, lnxsend, ["can0"], lnxread, ["can0"], "500000", "500", self.DATA
+            lnxsend, ["can0"], lnxread, ["can0"], "500000", "500", self.DATA
         )  # must not raise
 
     def test_mismatch_raises(self):
-        lab = FakeLinuxShell()
         lnxread = FakeLinuxShell()
         lnxread.dump_log = "\n".join(["wrong line", self.DATA[1]["res"]])
         lnxsend = FakeLinuxShell()
 
         with pytest.raises(RuntimeError, match="candump errors"):
             can.lnx_can_write_dump_compare(
-                lab, lab, lnxsend, ["can0"], lnxread, ["can0"], "500000", "500", self.DATA
+                lnxsend, ["can0"], lnxread, ["can0"], "500000", "500", self.DATA
             )
 
     def test_not_root_uses_sudo_for_both(self):
@@ -159,7 +156,7 @@ class TestLnxCanWriteDumpCompare:
         lab.dump_log = "\n".join(d["res"] for d in self.DATA)
 
         can.lnx_can_write_dump_compare(
-            lab, lab, lab, ["can0"], lab, ["can0"], "500000", "500", self.DATA
+            lab, ["can0"], lab, ["can0"], "500000", "500", self.DATA
         )
         sudo_setup_calls = [
             c for c in lab.commands if c[:3] == ("sudo", "ip", "link") and c[-1] in ("down", "up")
