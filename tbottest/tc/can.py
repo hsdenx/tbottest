@@ -215,13 +215,15 @@ def candump_log_duration(log: str) -> float:
     return times[-1] - times[0]
 
 
-# keys of an entry of the board configuration key cangen, the parameters
-# of board_lnx_cangen() that a board configuration can set
+# directions of generic_lnx_test_cangen, who sends and who receives
+CANGEN_DIRECTIONS = ("lab2board", "board2lab")
+
+# keys of an entry of the board configuration key cangen
 CANGEN_CONFIG_KEYS = (
+    "boarddev",
+    "labdev",
+    "directions",
     "tmpdir",
-    "candev",
-    "candevsend",
-    "candevdump",
     "frames",
     "dllength",
     "bitrate",
@@ -230,31 +232,57 @@ CANGEN_CONFIG_KEYS = (
 )
 
 
-def cangen_config_kwargs(run: dict) -> dict:
+def cangen_config_calls(run: dict) -> List[typing.Tuple[str, dict]]:
     """
-    Keyword arguments for :py:func:`board_lnx_cangen` from one entry of the
-    board configuration key ``cangen``.
+    The calls of :py:func:`board_lnx_cangen` for one entry of the board
+    configuration key ``cangen``.
 
-    Every key must be one of :py:data:`CANGEN_CONFIG_KEYS`.  ``candev`` and
-    ``candevsend`` become lists of strings (a single interface is fine),
-    every other value a string, as a JSON configuration may give numbers.
+    ``boarddev`` and ``labdev`` name the CAN interfaces of the board and of
+    the lab host, a list or a single interface. For every direction of
+    ``directions`` (default both of :py:data:`CANGEN_DIRECTIONS`) the
+    receiving side gets its interfaces as ``candev`` and candump reads from
+    the first of them, the sending side gets its interfaces as
+    ``candevsend``. The other keys of :py:data:`CANGEN_CONFIG_KEYS` go to
+    every call as strings, as a JSON configuration may give numbers.
 
     :param run: one entry of ``cangen``
-    :returns: the keyword arguments
+    :returns: the direction and the keyword arguments, without the
+        machines, for every direction
     """
     unknown = sorted(set(run) - set(CANGEN_CONFIG_KEYS))
     if unknown:
         raise ValueError(
             f"unknown keys {unknown} in cangen, known are {', '.join(CANGEN_CONFIG_KEYS)}"
         )
-    kwargs = {}
-    for key, value in run.items():
-        if key in ("candev", "candevsend"):
-            values = value if isinstance(value, (list, tuple)) else [value]
-            kwargs[key] = [str(v) for v in values]
-        else:
-            kwargs[key] = str(value)
-    return kwargs
+    missing = [key for key in ("boarddev", "labdev") if key not in run]
+    if missing:
+        raise ValueError(f"cangen needs {', '.join(missing)}")
+
+    def as_list(value: typing.Any) -> List[str]:
+        values = value if isinstance(value, (list, tuple)) else [value]
+        return [str(v) for v in values]
+
+    boarddev = as_list(run["boarddev"])
+    labdev = as_list(run["labdev"])
+    directions = as_list(run.get("directions", CANGEN_DIRECTIONS))
+    bad = [d for d in directions if d not in CANGEN_DIRECTIONS]
+    if bad:
+        raise ValueError(
+            f"unknown directions {bad} in cangen, known are {', '.join(CANGEN_DIRECTIONS)}"
+        )
+
+    common = {
+        key: str(value)
+        for key, value in run.items()
+        if key not in ("boarddev", "labdev", "directions")
+    }
+    calls = []
+    for direction in directions:
+        recv, send = (boarddev, labdev) if direction == "lab2board" else (labdev, boarddev)
+        calls.append(
+            (direction, dict(common, candev=recv, candevsend=send, candevdump=recv[0]))
+        )
+    return calls
 
 
 @tbot.testcase

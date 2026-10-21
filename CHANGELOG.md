@@ -7,9 +7,11 @@
   without its key and the counts of `generic_lnx_all`. The kas testcases
   are not covered yet.
 - `generic_lnx_test_cangen`, run by `generic_lnx_all`, runs
-  `board_lnx_cangen` once for every entry of the board configuration key
-  `cangen`, whose keys are its parameters (`cangen_config_kwargs()`). The
-  lab host sends the frames, the board receives them.
+  `board_lnx_cangen` for every entry of the board configuration key
+  `cangen`, from the lab host to the board and from the board to the lab
+  host (`cangen_config_calls()`). An entry names the CAN interfaces of
+  board and lab host (`boarddev`, `labdev`) and may restrict the
+  `directions`.
 - `linux_safe_init_prompt` in the board configuration, True by default,
   sets tbot's `safe_init_prompt`, so the prompt is read with
   `read_until_prompt_safe()` while tbot sets up the linux shell.

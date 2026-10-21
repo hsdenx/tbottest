@@ -8,7 +8,7 @@ strings, the helpers of tc/common.py, tc/network.py, tc/leds.py and
 tc/cpu.py only record their calls. generictestdef.py is the real one, so
 require_cfg() really skips a testcase whose key is not set.
 
-tc/can.py is the real one as well, for cangen_config_kwargs(). The kas
+tc/can.py is the real one as well, for cangen_config_calls(). The kas
 testcases are not covered, they need the KAS class.
 """
 
@@ -255,24 +255,17 @@ def test_cangen_runs_board_lnx_cangen_per_entry(monkeypatch):
     monkeypatch.setattr(gb, "board_lnx_cangen", recorder("board_lnx_cangen"))
     CONFIG["cangen"] = repr(
         [
-            {"candev": ["can0", "can1"], "candevsend": "can1", "frames": 500},
-            {"dllength": 1, "bitrate": "250000"},
+            {"boarddev": ["can0", "can1"], "labdev": "can2", "frames": 500},
+            {"boarddev": "can0", "labdev": "can2", "directions": ["board2lab"], "dllength": 1},
         ]
     )
     assert gb.generic_lnx_test_cangen(lab=LAB, lnx=LNX) == gtd.TC_OKAY
-    # the lab host sends, the board receives
+    lab2board = {"lnx": LNX, "lnxsend": LAB, "candev": ["can0", "can1"], "candevsend": ["can2"]}
+    board2lab = {"lnx": LAB, "lnxsend": LNX, "candev": ["can2"], "candevdump": "can2"}
     assert calls("board_lnx_cangen") == [
-        (
-            (),
-            {
-                "lnx": LNX,
-                "lnxsend": LAB,
-                "candev": ["can0", "can1"],
-                "candevsend": ["can1"],
-                "frames": "500",
-            },
-        ),
-        ((), {"lnx": LNX, "lnxsend": LAB, "dllength": "1", "bitrate": "250000"}),
+        ((), dict(lab2board, candevdump="can0", frames="500")),
+        ((), dict(board2lab, candevsend=["can0", "can1"], frames="500")),
+        ((), dict(board2lab, candevsend=["can0"], dllength="1")),
     ]
 
 
@@ -280,14 +273,25 @@ def test_cangen_requests_lab_host_and_board(monkeypatch):
     monkeypatch.setattr(gb, "board_lnx_cangen", recorder("board_lnx_cangen"))
     machines = {gb.tbot.role.LabHost: LAB, gb.tbot.role.BoardLinux: LNX}
     monkeypatch.setattr(gb.tbot, "ctx", lambda: FakeCx(machines))
-    CONFIG["cangen"] = '[{"frames": "10"}]'
+    CONFIG["cangen"] = '[{"boarddev": "can0", "labdev": "can1", "directions": ["lab2board"]}]'
     gb.generic_lnx_test_cangen()
-    assert calls("board_lnx_cangen") == [((), {"lnx": LNX, "lnxsend": LAB, "frames": "10"})]
+    assert calls("board_lnx_cangen") == [
+        (
+            (),
+            {
+                "lnx": LNX,
+                "lnxsend": LAB,
+                "candev": ["can0"],
+                "candevsend": ["can1"],
+                "candevdump": "can0",
+            },
+        )
+    ]
 
 
 def test_cangen_unknown_key(monkeypatch):
     monkeypatch.setattr(gb, "board_lnx_cangen", recorder("board_lnx_cangen"))
-    CONFIG["cangen"] = '[{"frame": "1000"}]'
+    CONFIG["cangen"] = '[{"boarddev": "can0", "labdev": "can1", "frame": "1000"}]'
     with pytest.raises(ValueError, match="unknown keys"):
         gb.generic_lnx_test_cangen(lab=LAB, lnx=LNX)
     assert calls("board_lnx_cangen") == []

@@ -17,7 +17,7 @@ from tbottest.tc.network import lnx_network_ping
 from tbottest.tc.network import network_linux_iperf
 from tbottest.tc.kas import KAS
 from tbottest.tc.leds import lnx_test_led_simple
-from tbottest.tc.can import board_lnx_cangen, cangen_config_kwargs
+from tbottest.tc.can import board_lnx_cangen, cangen_config_calls
 from tbottest.tc.generictestdef import TC_SKIP, TC_FAIL, TC_OKAY, require_cfg, tc_config
 from tbottest.tc.registermap import REGISTERMAP
 
@@ -383,26 +383,30 @@ def generic_lnx_test_cangen(
     prerequisite: Board boots into linux, the lab host has a CAN interface
     on the CAN bus of the board
 
-    the lab host sends CAN frames with cangen and the board checks what
-    candump received, with :py:func:`tbottest.tc.can.board_lnx_cangen`
-    once for every entry of cangen
+    sends CAN frames with cangen from the lab host to the board and from
+    the board to the lab host, and the receiving side checks what candump
+    received, with :py:func:`tbottest.tc.can.board_lnx_cangen`, for every
+    entry of cangen (see :py:func:`tbottest.tc.can.cangen_config_calls`)
 
-    :param lab: lab host, sends the frames
-    :param lnx: Linux machine of the board, receives them
+    :param lab: lab host
+    :param lnx: Linux machine of the board
 
     Uses config variables:
-    cangen -- array of dictionary, the keys are parameters of
-    board_lnx_cangen (see :py:data:`tbottest.tc.can.CANGEN_CONFIG_KEYS`),
-    missing ones keep its defaults. candevsend are interfaces of the lab
-    host, candev and candevdump interfaces of the board.
+    cangen -- array of dictionary with the keys boarddev and labdev, the
+    CAN interfaces of the board and of the lab host, directions, a list of
+    lab2board and board2lab (default both), and the parameters tmpdir,
+    frames, dllength, bitrate, txqueuelen and cangen_gap of
+    board_lnx_cangen, missing ones keep its defaults
 
     .. code-block:: python
 
         cangen = [
-            {"candev": ["can0"], "candevsend": ["can0"],
-             "candevdump": "can0", "frames": "1000", "dllength": "8",
-             "bitrate": "500000"},
+            {"boarddev": ["can0"], "labdev": ["can0"], "frames": "1000",
+             "dllength": "8", "bitrate": "500000"},
         ]
+
+    If other machines are used, you need a board specific implementation
+    and call board_lnx_cangen().
     """
     with tbot.ctx() as cx:
         if lab is None:
@@ -412,7 +416,12 @@ def generic_lnx_test_cangen(
             lnx = cx.request(tbot.role.BoardLinux)
 
         for run in cfg.get_config_literal("cangen", "[]"):
-            board_lnx_cangen(lnx=lnx, lnxsend=lab, **cangen_config_kwargs(run))
+            for direction, kwargs in cangen_config_calls(run):
+                tbot.log.message(tbot.log.c(f"cangen {direction}").green)
+                if direction == "lab2board":
+                    board_lnx_cangen(lnx=lnx, lnxsend=lab, **kwargs)
+                else:
+                    board_lnx_cangen(lnx=lab, lnxsend=lnx, **kwargs)
 
     return TC_OKAY
 

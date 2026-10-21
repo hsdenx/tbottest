@@ -266,36 +266,77 @@ class TestBoardLnxCangen:
             self.run(monkeypatch, cangen_log(15, 8))
 
 
-class TestCangenConfigKwargs:
-    def test_strings_and_lists(self):
-        kwargs = can.cangen_config_kwargs(
-            {"candev": ["can0", "can1"], "candevsend": "can1", "frames": 500, "dllength": 2}
+class TestCangenConfigCalls:
+    def test_both_directions(self):
+        calls = can.cangen_config_calls(
+            {"boarddev": ["can0", "can1"], "labdev": "can2", "frames": 500, "dllength": 2}
         )
-        assert kwargs == {
-            "candev": ["can0", "can1"],
-            "candevsend": ["can1"],
-            "frames": "500",
-            "dllength": "2",
-        }
+        assert calls == [
+            (
+                "lab2board",
+                {
+                    "candev": ["can0", "can1"],
+                    "candevsend": ["can2"],
+                    "candevdump": "can0",
+                    "frames": "500",
+                    "dllength": "2",
+                },
+            ),
+            (
+                "board2lab",
+                {
+                    "candev": ["can2"],
+                    "candevsend": ["can0", "can1"],
+                    "candevdump": "can2",
+                    "frames": "500",
+                    "dllength": "2",
+                },
+            ),
+        ]
 
-    def test_empty_entry_keeps_the_defaults(self):
-        assert can.cangen_config_kwargs({}) == {}
+    def test_one_direction(self):
+        calls = can.cangen_config_calls(
+            {"boarddev": "can0", "labdev": "can1", "directions": "board2lab"}
+        )
+        assert calls == [
+            ("board2lab", {"candev": ["can1"], "candevsend": ["can0"], "candevdump": "can1"})
+        ]
+
+    def test_no_direction(self):
+        assert can.cangen_config_calls({"boarddev": "can0", "labdev": "can1", "directions": []}) == []
+
+    def test_unknown_direction(self):
+        with pytest.raises(ValueError, match="unknown directions \\['lab2lab'\\] in cangen"):
+            can.cangen_config_calls(
+                {"boarddev": "can0", "labdev": "can1", "directions": ["lab2board", "lab2lab"]}
+            )
+
+    @pytest.mark.parametrize(
+        "run, missing",
+        [({}, "boarddev, labdev"), ({"boarddev": "can0"}, "labdev"), ({"labdev": "can0"}, "boarddev")],
+    )
+    def test_interfaces_are_needed(self, run, missing):
+        with pytest.raises(ValueError, match=f"cangen needs {missing}$"):
+            can.cangen_config_calls(run)
 
     def test_unknown_key(self):
-        with pytest.raises(ValueError, match="unknown keys \\['frame'\\] in cangen"):
-            can.cangen_config_kwargs({"frame": "1000"})
+        with pytest.raises(ValueError, match="unknown keys \\['candev'\\] in cangen"):
+            can.cangen_config_calls({"boarddev": "can0", "labdev": "can1", "candev": "can0"})
 
-    def test_keys_are_parameters_of_board_lnx_cangen(self):
-        params = inspect.signature(can.board_lnx_cangen).parameters
-        assert set(can.CANGEN_CONFIG_KEYS) <= set(params)
-        # the machines come from the testcase, not from the configuration
-        assert not {"lnx", "lnxsend"} & set(can.CANGEN_CONFIG_KEYS)
+    def test_kwargs_are_parameters_of_board_lnx_cangen(self):
+        params = set(inspect.signature(can.board_lnx_cangen).parameters)
+        run = {key: "1" for key in can.CANGEN_CONFIG_KEYS}
+        run["directions"] = list(can.CANGEN_DIRECTIONS)
+        for _, kwargs in can.cangen_config_calls(run):
+            assert set(kwargs) <= params
+            # the machines come from the testcase, not from the configuration
+            assert not {"lnx", "lnxsend"} & set(kwargs)
 
     def test_runs_board_lnx_cangen(self, monkeypatch):
         monkeypatch.setattr(can.time, "sleep", lambda s: None)
         board = FakeCanBoard(cangen_log(5, 1, dev="can1"))
-        kwargs = can.cangen_config_kwargs(
-            {"candev": "can1", "candevsend": "can1", "candevdump": "can1", "frames": 5, "dllength": 1}
+        [(_, kwargs)] = can.cangen_config_calls(
+            {"boarddev": "can1", "labdev": "can1", "directions": ["lab2board"], "frames": 5, "dllength": 1}
         )
         can.board_lnx_cangen(lnx=board, **kwargs)
         assert any(c[:2] == ("cangen", "-g") and "5" in c for c in board.commands)
