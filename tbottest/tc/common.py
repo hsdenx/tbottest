@@ -522,14 +522,22 @@ def lnx_check_cmd(
     if cmd_dict["val"] != "undef" check if cmd_dict["val"]
     is in command output
 
+    An element without "val" only runs its command, as with "undef".
+    With "mode": "exec" its return code does not matter, else ("exec0",
+    the default) the command must succeed, as for linux_init.
+
     :param machine lnx: machine on which commands are executed
     :param dict cmd_dict: list of dictionary with command and return values.
     """
     for c in cmd_dict:
-        cmdret = lnx.exec0(linux.Raw(c["cmd"]))
-        if c["val"] != "undef":
-            if c["val"] not in cmdret:
-                raise RuntimeError(c["val"] + " not found in " + cmdret)
+        if c.get("mode", "exec0") == "exec0":
+            cmdret = lnx.exec0(linux.Raw(c["cmd"]))
+        else:
+            cmdret = lnx.exec(linux.Raw(c["cmd"]))[1]
+        val = c.get("val", "undef")
+        if val != "undef":
+            if val not in cmdret:
+                raise RuntimeError(val + " not found in " + cmdret)
 
     return True
 

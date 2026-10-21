@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 ### Added
+- An entry of `lnx_commands` may leave out `"val"` and only run its
+  command, and may have `"mode": "exec"`, then its return code does not
+  matter, as for `linux_init` (`lnx_check_cmd()`). So commands that
+  prepare the checks, such as stopping a service, fit in the same list.
 - `board_lnx_cangen` sends with `cansequence` of canutils when the
   sending machine has no cangen, e.g. a board with canutils of
   Pengutronix, so the direction board2lab of `generic_lnx_test_cangen`

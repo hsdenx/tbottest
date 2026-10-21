@@ -290,7 +290,12 @@ def generic_lnx_commands(
 
         lnx_commands = [
            {"cmd":"linux command", "val":"string commandoutput, 'undef' if none"},
+           {"mode":"exec", "cmd":"systemctl --all stop my-service"},
            ]
+
+    An entry without "val" only runs its command; with "mode": "exec"
+    its return code does not matter, see
+    :py:func:`tbottest.tc.common.lnx_check_cmd`.
     """
     with tbot.ctx() as cx:
         if lnx is None:

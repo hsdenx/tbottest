@@ -271,6 +271,44 @@ class TestLnxCheckCmd:
         with pytest.raises(RuntimeError, match="not found in"):
             common.lnx_check_cmd(RawHost(), cmd_dict)
 
+    class ModeHost(FakeLinuxShell):
+        """exec0 fails for a command with retcode 1, as tbot's does"""
+
+        def __init__(self, retcode=0, out="out"):
+            super().__init__()
+            self.retcode = retcode
+            self.out = out
+
+        def exec(self, *args):
+            self.commands.append(("exec",) + tuple(str(a) for a in args))
+            return (self.retcode, self.out)
+
+        def exec0(self, *args):
+            self.commands.append(("exec0",) + tuple(str(a) for a in args))
+            if self.retcode != 0:
+                raise RuntimeError("command failed")
+            return self.out
+
+    def test_without_value_only_runs(self):
+        lnx = self.ModeHost()
+        assert common.lnx_check_cmd(lnx, [{"cmd": "export SYSTEMD_PAGER"}]) is True
+        assert lnx.commands == [("exec0", "export SYSTEMD_PAGER")]
+
+    def test_mode_exec_ignores_the_return_code(self):
+        lnx = self.ModeHost(retcode=5)
+        cmd = "systemctl --all stop my-service"
+        assert common.lnx_check_cmd(lnx, [{"mode": "exec", "cmd": cmd}]) is True
+        assert lnx.commands == [("exec", cmd)]
+
+    def test_mode_exec_checks_the_value(self):
+        lnx = self.ModeHost(retcode=1, out="no such unit")
+        with pytest.raises(RuntimeError, match="stopped not found in no such unit"):
+            common.lnx_check_cmd(lnx, [{"mode": "exec", "cmd": "x", "val": "stopped"}])
+
+    def test_default_mode_needs_success(self):
+        with pytest.raises(RuntimeError, match="command failed"):
+            common.lnx_check_cmd(self.ModeHost(retcode=1), [{"cmd": "false"}])
+
 
 class TestLnxInstallPackage:
     def test_debian_uses_apt(self):
