@@ -8,7 +8,8 @@ strings, the helpers of tc/common.py, tc/network.py, tc/leds.py and
 tc/cpu.py only record their calls. generictestdef.py is the real one, so
 require_cfg() really skips a testcase whose key is not set.
 
-tc/can.py is the real one as well, for cangen_config_calls(). The kas
+tc/can.py and tc/rs485.py are the real ones as well, for
+cangen_config_calls() and rs485_config_kwargs(). The kas
 testcases are not covered, they need the KAS class.
 """
 
@@ -27,6 +28,7 @@ HERE = os.path.dirname(__file__)
 GENERIC_BOARD_PATH = os.path.join(HERE, "..", "tbottest", "tc", "generic_board.py")
 GENERICTESTDEF_PATH = os.path.join(HERE, "..", "tbottest", "tc", "generictestdef.py")
 CAN_PATH = os.path.join(HERE, "..", "tbottest", "tc", "can.py")
+RS485_PATH = os.path.join(HERE, "..", "tbottest", "tc", "rs485.py")
 
 # the board configuration of a test, key -> ini string
 CONFIG = {}
@@ -111,6 +113,9 @@ def install_fakes():
     common.lnx_sudo = lambda lnx: []
     common.tbot_start_thread = recorder("tbot_start_thread")
     common.tbot_stop_thread = recorder("tbot_stop_thread")
+    # for the real tc/rs485.py
+    common.lnx_create_random = recorder("lnx_create_random")
+    common.tbot_copy_file_to_board = recorder("tbot_copy_file_to_board")
     sys.modules["tbottest.tc.common"] = common
 
     cpu = types.ModuleType("tbottest.tc.cpu")
@@ -143,6 +148,7 @@ def install_fakes():
 
     install_real_submodule("tbottest.tc.generictestdef", GENERICTESTDEF_PATH)
     install_real_submodule("tbottest.tc.can", CAN_PATH)
+    install_real_submodule("tbottest.tc.rs485", RS485_PATH)
 
 
 install_fakes()
@@ -176,6 +182,7 @@ LAB = object()
         ("generic_lnx_test_dmesg", "dmesg"),
         ("generic_lnx_test_led", "leds"),
         ("generic_lnx_test_cangen", "cangen"),
+        ("generic_lnx_test_rs485", "rs485"),
     ],
 )
 def test_skipped_without_its_key(testcase, key):
@@ -295,6 +302,55 @@ def test_cangen_unknown_key(monkeypatch):
     with pytest.raises(ValueError, match="unknown keys"):
         gb.generic_lnx_test_cangen(lab=LAB, lnx=LNX)
     assert calls("board_lnx_cangen") == []
+
+
+def test_rs485_runs_board_lnx_rs485_per_entry(monkeypatch):
+    monkeypatch.setattr(gb, "board_lnx_rs485", recorder("board_lnx_rs485"))
+    CONFIG["rs485"] = repr(
+        [
+            {
+                "ethdevice": "eth0",
+                "rs485labdev": "/dev/ttyUSB0",
+                "rs485baud": 115200,
+                "rs485boarddev": "/dev/ttymxc2",
+                "rs485lengths": [1, "100"],
+            },
+            {"rs485boarddev": ["/dev/ttymxc1", "/dev/ttymxc3"], "debug": "1"},
+        ]
+    )
+    assert gb.generic_lnx_test_rs485(lab=LAB, lnx=LNX) == gtd.TC_OKAY
+    assert calls("board_lnx_rs485") == [
+        (
+            (),
+            {
+                "lab": LAB,
+                "lnx": LNX,
+                "ethdevice": "eth0",
+                "rs485labdev": "/dev/ttyUSB0",
+                "rs485baud": "115200",
+                "rs485boarddev": ["/dev/ttymxc2"],
+                "rs485lengths": ["1", "100"],
+            },
+        ),
+        ((), {"lab": LAB, "lnx": LNX, "rs485boarddev": ["/dev/ttymxc1", "/dev/ttymxc3"], "debug": 1}),
+    ]
+
+
+def test_rs485_requests_lab_host_and_board(monkeypatch):
+    monkeypatch.setattr(gb, "board_lnx_rs485", recorder("board_lnx_rs485"))
+    machines = {gb.tbot.role.LabHost: LAB, gb.tbot.role.BoardLinux: LNX}
+    monkeypatch.setattr(gb.tbot, "ctx", lambda: FakeCx(machines))
+    CONFIG["rs485"] = '[{"rs485baud": "9600"}]'
+    gb.generic_lnx_test_rs485()
+    assert calls("board_lnx_rs485") == [((), {"lab": LAB, "lnx": LNX, "rs485baud": "9600"})]
+
+
+def test_rs485_unknown_key(monkeypatch):
+    monkeypatch.setattr(gb, "board_lnx_rs485", recorder("board_lnx_rs485"))
+    CONFIG["rs485"] = '[{"rs485dev": "/dev/ttymxc2"}]'
+    with pytest.raises(ValueError, match="unknown keys"):
+        gb.generic_lnx_test_rs485(lab=LAB, lnx=LNX)
+    assert calls("board_lnx_rs485") == []
 
 
 DUMP = {

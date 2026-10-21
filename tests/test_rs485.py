@@ -19,6 +19,7 @@ this dedup only extracts existing per-direction logic rather than
 changing it.
 """
 
+import inspect
 import os
 
 import pytest
@@ -179,3 +180,42 @@ class TestBoardLnxRs485EndToEnd:
         # 2 lengths x 2 directions = 4 cmp comparisons, all on the board
         cmp_calls = [c for c in lnx.commands if c[1][0] == "cmp"]
         assert len(cmp_calls) == 4
+
+
+class TestRs485ConfigKwargs:
+    def test_lists_ints_and_strings(self):
+        kwargs = rs485.rs485_config_kwargs(
+            {
+                "ethdevice": "eth0",
+                "rs485labdev": "/dev/ttyUSB0",
+                "rs485baud": 115200,
+                "rs485boarddev": "/dev/ttymxc2",
+                "rs485lengths": [1, "100"],
+                "debug": "1",
+            }
+        )
+        assert kwargs == {
+            "ethdevice": "eth0",
+            "rs485labdev": "/dev/ttyUSB0",
+            "rs485baud": "115200",
+            "rs485boarddev": ["/dev/ttymxc2"],
+            "rs485lengths": ["1", "100"],
+            "debug": 1,
+        }
+
+    def test_empty_entry_gives_no_arguments(self):
+        assert rs485.rs485_config_kwargs({}) == {}
+
+    def test_unknown_key(self):
+        with pytest.raises(ValueError, match="unknown keys \\['lab', 'rs485dev'\\] in rs485"):
+            rs485.rs485_config_kwargs({"rs485dev": "/dev/ttymxc2", "lab": "x"})
+
+    def test_keys_are_parameters_of_board_lnx_rs485(self):
+        params = inspect.signature(rs485.board_lnx_rs485).parameters
+        assert set(rs485.RS485_CONFIG_KEYS) <= set(params)
+        # the machines come from the testcase, not from the configuration
+        assert not {"lab", "lnx"} & set(rs485.RS485_CONFIG_KEYS)
+
+    def test_missing_keys_are_reported_by_board_lnx_rs485(self):
+        with pytest.raises(RuntimeError, match="please configure rs485labdev"):
+            rs485.board_lnx_rs485(**rs485.rs485_config_kwargs({"ethdevice": "eth0"}))

@@ -1,3 +1,5 @@
+import typing
+
 import tbot
 from tbot.machine import linux
 from tbot.context import Optional
@@ -98,6 +100,49 @@ def _rs485_send_and_compare(
             src.exec0("cat", sendfilehex)
             src.exec0("cat", lnx.tmpdir() / rcvfile)
             raise RuntimeError(errmsg)
+
+
+# keys of an entry of the board configuration key rs485, the parameters
+# of board_lnx_rs485 without the machines
+RS485_CONFIG_KEYS = (
+    "ethdevice",
+    "rs485labdev",
+    "rs485baud",
+    "rs485boarddev",
+    "rs485lengths",
+    "debug",
+)
+
+
+def rs485_config_kwargs(run: dict) -> dict:
+    """
+    The keyword arguments of :py:func:`board_lnx_rs485` for one entry of
+    the board configuration key ``rs485``.
+
+    rs485boarddev and rs485lengths become lists of strings (a single value
+    a list of one), debug an int, the other keys strings, as a JSON
+    configuration may give numbers. Missing keys are left out, so
+    board_lnx_rs485 reports the ones it needs.
+
+    :param run: one entry of ``rs485``
+    :returns: the keyword arguments, without the machines
+    """
+    unknown = sorted(set(run) - set(RS485_CONFIG_KEYS))
+    if unknown:
+        raise ValueError(
+            f"unknown keys {unknown} in rs485, known are {', '.join(RS485_CONFIG_KEYS)}"
+        )
+
+    kwargs: typing.Dict[str, typing.Any] = {}
+    for key, value in run.items():
+        if key in ("rs485boarddev", "rs485lengths"):
+            values = value if isinstance(value, (list, tuple)) else [value]
+            kwargs[key] = [str(v) for v in values]
+        elif key == "debug":
+            kwargs[key] = int(value)
+        else:
+            kwargs[key] = str(value)
+    return kwargs
 
 
 def board_lnx_rs485(

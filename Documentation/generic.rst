@@ -61,6 +61,7 @@ The generic Linux testcases, all started by
         ":py:func:`~tbottest.tc.generic_board.generic_lnx_test_dmesg`", "dmesg, dmesg_false", "strings that must be in dmesg, and strings that must not"
         ":py:func:`~tbottest.tc.generic_board.generic_lnx_test_led`", "leds", "switches the LEDs on and off"
         ":py:func:`~tbottest.tc.generic_board.generic_lnx_test_cangen`", "cangen", "CAN frames with cangen from the lab host to the board and back, the receiving side checks what candump received"
+        ":py:func:`~tbottest.tc.generic_board.generic_lnx_test_rs485`", "rs485", "random bytes over RS485 from the lab host to the board and back"
 
 :py:func:`~tbottest.tc.generic_board.generic_lnx_all` runs them one after
 the other and logs at the end how many succeeded, were skipped or failed,
@@ -1190,6 +1191,7 @@ settings needed for linux testcases.
         "nvramsz", "size of nvram device", "8192", "nvramsz = 8192"
         "ping","list of dict for ping config.","[]","ping = [{""ip"":""${default:serverip}"",""retry"":""10""}]"
         "regdump","list of dict for generic regdump","[]","regdump = [{""address"":""0x30340004""}, {""address"":""0x30330070""}]"
+        "rs485","list of dictionary, each a run of board_lnx_rs485 with its parameters ethdevice, rs485labdev, rs485baud, rs485boarddev, rs485lengths and debug","[]","rs485 = [{""ethdevice"": ""eth0"", ""rs485labdev"": ""/dev/ttyUSB0"", ""rs485baud"": ""115200"", ""rs485boarddev"": [""/dev/ttymxc2""], ""rs485lengths"": [""1"", ""100""]}]"
         "rs485labdev","path to device","/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0","rs485labdev = ""/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0"""
         "rs485baud","baudrate used for test","115200","rs485baud = ""115200"""
         "rs485boarddev","list of strings, each string contains a path to device which used in test","[""/dev/ttymxc2""]","rs485boarddev = [""/dev/ttymxc2""]"

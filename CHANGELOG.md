@@ -12,6 +12,9 @@
   host (`cangen_config_calls()`). An entry names the CAN interfaces of
   board and lab host (`boarddev`, `labdev`) and may restrict the
   `directions`.
+- `generic_lnx_test_rs485`, run by `generic_lnx_all`, runs
+  `board_lnx_rs485` once for every entry of the board configuration key
+  `rs485`, whose keys are its parameters (`rs485_config_kwargs()`).
 - `linux_safe_init_prompt` in the board configuration, True by default,
   sets tbot's `safe_init_prompt`, so the prompt is read with
   `read_until_prompt_safe()` while tbot sets up the linux shell.

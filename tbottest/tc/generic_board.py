@@ -18,6 +18,7 @@ from tbottest.tc.network import network_linux_iperf
 from tbottest.tc.kas import KAS
 from tbottest.tc.leds import lnx_test_led_simple
 from tbottest.tc.can import board_lnx_cangen, cangen_config_calls
+from tbottest.tc.rs485 import board_lnx_rs485, rs485_config_kwargs
 from tbottest.tc.generictestdef import TC_SKIP, TC_FAIL, TC_OKAY, require_cfg, tc_config
 from tbottest.tc.registermap import REGISTERMAP
 
@@ -426,6 +427,49 @@ def generic_lnx_test_cangen(
     return TC_OKAY
 
 
+@tbot.testcase
+@require_cfg("rs485")
+def generic_lnx_test_rs485(
+    lab: Optional[linux.LinuxShell] = None,
+    lnx: Optional[linux.LinuxShell] = None,
+) -> int:  # noqa: D107
+    """
+    prerequisite: Board boots into linux, the lab host has a serial
+    interface on the RS485 line of the board
+
+    sends random bytes over RS485 from the lab host to the board and back,
+    with :py:func:`tbottest.tc.rs485.board_lnx_rs485`, once for every entry
+    of rs485 (see :py:func:`tbottest.tc.rs485.rs485_config_kwargs`)
+
+    :param lab: lab host
+    :param lnx: Linux machine of the board
+
+    Uses config variables:
+    rs485 -- array of dictionary, the keys are the parameters ethdevice,
+    rs485labdev, rs485baud, rs485boarddev, rs485lengths and debug of
+    board_lnx_rs485
+
+    .. code-block:: python
+
+        rs485 = [
+            {"ethdevice": "eth0",
+             "rs485labdev": "/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AB0PI210-if00-port0",
+             "rs485baud": "115200", "rs485boarddev": ["/dev/ttymxc2"],
+             "rs485lengths": ["1", "100"]},
+        ]
+    """
+    with tbot.ctx() as cx:
+        if lab is None:
+            lab = cx.request(tbot.role.LabHost)
+        if lnx is None:
+            lnx = cx.request(tbot.role.BoardLinux)
+
+        for run in cfg.get_config_literal("rs485", "[]"):
+            board_lnx_rs485(lab=lab, lnx=lnx, **rs485_config_kwargs(run))
+
+    return TC_OKAY
+
+
 lnxtestcases = [
     "generic_lx_dump_register",
     "generic_lnx_network_iperf",
@@ -435,6 +479,7 @@ lnxtestcases = [
     "generic_lnx_test_dmesg",
     "generic_lnx_test_led",
     "generic_lnx_test_cangen",
+    "generic_lnx_test_rs485",
 ]
 
 
