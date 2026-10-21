@@ -124,6 +124,15 @@
 - `GenericUBoot.exec()` reads back the echo of the command line like tbot.
 
 ### Fixed
+- `board_lnx_cangen` hung after cangen on a board with candump of
+  canutils (Pengutronix), which ends on SIGTERM only when the next frame
+  arrives; `stop_candump()` kills it after 2 seconds. Such a candump has
+  no `-L` either: tbot's `cmd_get_version()` reports it as `canutils`
+  (`candump_is_canutils()`), and its log is checked without interface
+  and without transfer rate, it has no timestamps. A sender without
+  cangen (canutils has none) stops with an error naming the machine.
+  candump and cangen are in `TBOTTEST_COMMANDS` now, with the Debian
+  package can-utils for `cmd_versions_install`.
 - The check of `board_lnx_cangen` did not let the data counter wrap, so
   it failed after 256 frames with `dllength=1`; it compared the log with
   the board path on the lab host and copied it from a fixed IP address.

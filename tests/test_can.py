@@ -14,7 +14,9 @@ answers wc and cat with a canned log.
 """
 
 import inspect
+import itertools
 import os
+import types
 
 import pytest
 
@@ -32,13 +34,29 @@ can = load_module(
 )
 
 
+# a name of its own for every fake machine
+FAKE_NAMES = itertools.count()
+
+
 class FakeLinuxShell:
     """records the commands, logged in as root unless uid says otherwise"""
 
-    def __init__(self, uid=0):
+    def __init__(self, uid=0, versions=None):
+        # lnx_sudo() caches its answer per machine name
+        self.name = f"fake-linux-{next(FAKE_NAMES)}"
         self.commands = []
         self.dump_log = ""
         self.uid = uid
+        # cmd_get_version(): command -> "impl:version", "notfound" or
+        # missing for full:unknown
+        self.versions = versions or {}
+
+    def cmd_get_version(self, cmd):
+        impl = self.versions.get(cmd, "full:unknown").split(":")[0]
+        return types.SimpleNamespace(impl=impl, found=impl != "notfound")
+
+    def test(self, *args):
+        return self.exec(*args)[0] == 0
 
     def exec0(self, *args):
         return self.exec(*args)[1]
@@ -229,11 +247,13 @@ class TestCandumpLogDuration:
 
 
 class FakeCanBoard(FakeLinuxShell):
-    """answers wc -l and cat of the candump log with a canned log"""
+    """answers wc -l and cat of the candump log with a canned log; candump
+    keeps running after SIGTERM for `alive` checks with kill -0"""
 
-    def __init__(self, log):
-        super().__init__()
+    def __init__(self, log, versions=None, alive=0):
+        super().__init__(versions=versions)
         self.log = log
+        self.alive = alive
 
     def exec(self, *args):
         key = tuple(str(a) for a in args)
@@ -243,17 +263,135 @@ class FakeCanBoard(FakeLinuxShell):
         if key[0] == "cat" and key[1].endswith("candump.log"):
             self.commands.append(key)
             return (0, self.log)
+        if key[:2] == ("kill", "-0"):
+            self.commands.append(key)
+            if self.alive > 0:
+                self.alive -= 1
+                return (0, "")
+            return (1, "")
         return super().exec(*args)
 
 
+def canutils_log(frames, dllength, dev="can0"):
+    """the log of candump of canutils for cangen -I i -L <dllength> -D i -n <frames>"""
+    lines = [f"interface = {dev}, family = 29, type = 3, proto = 1"]
+    for n in range(frames):
+        data = (n % 256**dllength).to_bytes(dllength, "little")
+        lines.append(f"<0x{n % 0x800:03x}> [{dllength}] " + "".join(f"{b:02x} " for b in data))
+    return "\n".join(lines) + "\n"
+
+
+class TestCheckCangenLogCanutils:
+    def test_matching_log(self):
+        assert can.check_cangen_log(canutils_log(10, 8), 10, 8, "can0", canutils=True) == []
+
+    def test_no_data(self):
+        assert can.check_cangen_log(canutils_log(3, 0), 3, 0, "can0", canutils=True) == []
+
+    def test_lost_frame(self):
+        lines = canutils_log(10, 8).splitlines()
+        del lines[5]
+        errors = can.check_cangen_log("\n".join(lines), 10, 8, "can0", canutils=True)
+        # lines[5] is frame 4, so line 5 holds frame 5
+        assert errors[:2] == [
+            "9 frames in the candump log, 10 sent",
+            "line 5 has CAN ID 0x5, expected 0x4",
+        ]
+
+    def test_wrong_data(self):
+        log = canutils_log(3, 2).replace("<0x002> [2] 02 00", "<0x002> [2] 03 00")
+        assert can.check_cangen_log(log, 3, 2, "can0", canutils=True) == [
+            "line 3 has data 3, expected 2"
+        ]
+
+    def test_length_does_not_match_bytes(self):
+        log = canutils_log(2, 2).replace("<0x001> [2]", "<0x001> [3]")
+        assert can.check_cangen_log(log, 2, 2, "can0", canutils=True) == [
+            "line 2 has length 3 for 2 bytes"
+        ]
+
+    def test_error_line(self):
+        log = "candump: invalid option -- 'L'\n" + canutils_log(2, 8)
+        errors = can.check_cangen_log(log, 2, 8, "can0", canutils=True)
+        assert "line 1 is no candump frame: \"candump: invalid option -- 'L'\"" in errors
+
+    def test_header_only_skipped_for_canutils(self):
+        errors = can.check_cangen_log(canutils_log(2, 8), 2, 8, "can0")
+        assert errors[0] == "3 frames in the candump log, 2 sent"
+
+
+class TestCandumpIsCanutils:
+    def test_canutils(self):
+        assert can.candump_is_canutils(FakeLinuxShell(versions={"candump": "canutils:4.0.6"}))
+
+    def test_can_utils(self):
+        assert not can.candump_is_canutils(FakeLinuxShell())
+
+
+class TestStopCandump:
+    @pytest.fixture
+    def clock(self, monkeypatch):
+        now = [0.0]
+
+        def sleep(s):
+            now[0] += s
+
+        monkeypatch.setattr(can.time, "sleep", sleep)
+        monkeypatch.setattr(can.time, "monotonic", lambda: now[0])
+        return now
+
+    def test_ends_on_sigterm(self, clock):
+        board = FakeCanBoard("")
+        can.stop_candump(board, "269")
+        assert board.commands == [("kill", "269"), ("kill", "-0", "269"), ("wait", "269")]
+
+    def test_ends_a_bit_later(self, clock):
+        board = FakeCanBoard("", alive=3)
+        can.stop_candump(board, "269")
+        assert ("kill", "-9", "269") not in board.commands
+        assert board.commands[-1] == ("wait", "269")
+
+    def test_killed_after_timeout(self, clock):
+        board = FakeCanBoard("", alive=100)
+        can.stop_candump(board, "269", timeout=2.0)
+        assert board.commands[-2:] == [("kill", "-9", "269"), ("wait", "269")]
+        assert 2.0 <= clock[0] < 2.5
+
+
 class TestBoardLnxCangen:
-    def run(self, monkeypatch, log, **kwargs):
+    def run(self, monkeypatch, log, versions=None, **kwargs):
         monkeypatch.setattr(can.time, "sleep", lambda s: None)
-        board = FakeCanBoard(log)
+        board = FakeCanBoard(log, versions=versions)
         can.board_lnx_cangen(
             lnx=board, candev=["can0"], candevsend=["can1"], frames="20", dllength="8", **kwargs
         )
         return board
+
+    def candump_started(self, board):
+        return [c for c in board.commands if c[0] == "candump"]
+
+    def test_can_utils_candump_with_log_format(self, monkeypatch):
+        board = self.run(monkeypatch, cangen_log(20, 8))
+        assert self.candump_started(board)[0][:3] == ("candump", "can0", "-L")
+
+    def test_canutils_candump(self, monkeypatch):
+        messages = []
+        log = types.SimpleNamespace(
+            message=messages.append, c=lambda s: types.SimpleNamespace(green=s, red=s)
+        )
+        monkeypatch.setattr(can.tbot, "log", log)
+        board = self.run(monkeypatch, canutils_log(20, 8), versions={"candump": "canutils:4.0.6"})
+        [started] = self.candump_started(board)
+        assert "-L" not in started
+        assert any("no timestamps, no bitrate" in m for m in messages)
+
+    def test_canutils_lost_frames_raise(self, monkeypatch):
+        with pytest.raises(RuntimeError, match="differences in the candump log"):
+            self.run(monkeypatch, canutils_log(15, 8), versions={"candump": "canutils:4.0.6"})
+
+    def test_no_cangen_on_the_sender(self, monkeypatch):
+        with pytest.raises(RuntimeError, match="cangen not found on fake-linux-"):
+            self.run(monkeypatch, cangen_log(20, 8), versions={"cangen": "notfound"})
 
     def test_good_log(self, monkeypatch):
         board = self.run(monkeypatch, cangen_log(20, 8), tmpdir="/run/can")

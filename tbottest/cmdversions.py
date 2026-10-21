@@ -27,6 +27,8 @@ import tbot
 # lnx_cmd_versions reports these by default
 TBOTTEST_COMMANDS = [
     "awk",
+    "candump",
+    "cangen",
     "dd",
     "devmem",
     "devmem2",
@@ -49,6 +51,8 @@ TBOTTEST_COMMANDS = [
 # (packages.debian.org, stable); every other command is installed as the
 # package of the same name
 DEBIAN_PACKAGES = {
+    "candump": "can-utils",
+    "cangen": "can-utils",
     "free": "procps",
     "flash_erase": "mtd-utils",
     "hexdump": "bsdextrautils",
