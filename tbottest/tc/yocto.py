@@ -61,7 +61,7 @@ def check_yocto_build_install_sdk(
         raise RuntimeError(f"SDK install path {sdk_install_path!r} must be absolute, not /")
     lnx.exec0("rm", "-rf", sdk_install_path)
     lnx.exec0("mkdir", "-p", sdk_install_path)
-    log = lnx.exec0(f"{sdk_path}/{sdk_name}", "-y", "-d", sdk_install_path)
+    log = lnx.exec0(linux.Path(lnx, sdk_path) / sdk_name, "-y", "-d", sdk_install_path)
     # get command for sourcing environment script
     ENVCMD = yocto_sdk_envcmd_from_log(log, sdk_install_path)
     if ENVCMD is None:
