@@ -376,36 +376,43 @@ def generic_lnx_test_led(
 @tbot.testcase
 @require_cfg("cangen")
 def generic_lnx_test_cangen(
+    lab: Optional[linux.LinuxShell] = None,
     lnx: Optional[linux.LinuxShell] = None,
 ) -> str:  # noqa: D107
     """
-    prerequisite: Board boots into linux
+    prerequisite: Board boots into linux, the lab host has a CAN interface
+    on the CAN bus of the board
 
-    sends CAN frames with cangen and checks what candump received, with
-    :py:func:`tbottest.tc.can.board_lnx_cangen` once for every entry of
-    cangen
+    the lab host sends CAN frames with cangen and the board checks what
+    candump received, with :py:func:`tbottest.tc.can.board_lnx_cangen`
+    once for every entry of cangen
 
-    :param lnx: Linux machine we run on
+    :param lab: lab host, sends the frames
+    :param lnx: Linux machine of the board, receives them
 
     Uses config variables:
     cangen -- array of dictionary, the keys are parameters of
     board_lnx_cangen (see :py:data:`tbottest.tc.can.CANGEN_CONFIG_KEYS`),
-    missing ones keep its defaults
+    missing ones keep its defaults. candevsend are interfaces of the lab
+    host, candev and candevdump interfaces of the board.
 
     .. code-block:: python
 
         cangen = [
-            {"candev": ["can0", "can1"], "candevsend": ["can1"],
+            {"candev": ["can0"], "candevsend": ["can0"],
              "candevdump": "can0", "frames": "1000", "dllength": "8",
              "bitrate": "500000"},
         ]
     """
     with tbot.ctx() as cx:
+        if lab is None:
+            lab = cx.request(tbot.role.LabHost)
+
         if lnx is None:
             lnx = cx.request(tbot.role.BoardLinux)
 
         for run in cfg.get_config_literal("cangen", "[]"):
-            board_lnx_cangen(lnx=lnx, **cangen_config_kwargs(run))
+            board_lnx_cangen(lnx=lnx, lnxsend=lab, **cangen_config_kwargs(run))
 
     return TC_OKAY
 

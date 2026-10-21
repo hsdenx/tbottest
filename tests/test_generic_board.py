@@ -259,18 +259,37 @@ def test_cangen_runs_board_lnx_cangen_per_entry(monkeypatch):
             {"dllength": 1, "bitrate": "250000"},
         ]
     )
-    assert gb.generic_lnx_test_cangen(lnx=LNX) == gtd.TC_OKAY
+    assert gb.generic_lnx_test_cangen(lab=LAB, lnx=LNX) == gtd.TC_OKAY
+    # the lab host sends, the board receives
     assert calls("board_lnx_cangen") == [
-        ((), {"lnx": LNX, "candev": ["can0", "can1"], "candevsend": ["can1"], "frames": "500"}),
-        ((), {"lnx": LNX, "dllength": "1", "bitrate": "250000"}),
+        (
+            (),
+            {
+                "lnx": LNX,
+                "lnxsend": LAB,
+                "candev": ["can0", "can1"],
+                "candevsend": ["can1"],
+                "frames": "500",
+            },
+        ),
+        ((), {"lnx": LNX, "lnxsend": LAB, "dllength": "1", "bitrate": "250000"}),
     ]
+
+
+def test_cangen_requests_lab_host_and_board(monkeypatch):
+    monkeypatch.setattr(gb, "board_lnx_cangen", recorder("board_lnx_cangen"))
+    machines = {gb.tbot.role.LabHost: LAB, gb.tbot.role.BoardLinux: LNX}
+    monkeypatch.setattr(gb.tbot, "ctx", lambda: FakeCx(machines))
+    CONFIG["cangen"] = '[{"frames": "10"}]'
+    gb.generic_lnx_test_cangen()
+    assert calls("board_lnx_cangen") == [((), {"lnx": LNX, "lnxsend": LAB, "frames": "10"})]
 
 
 def test_cangen_unknown_key(monkeypatch):
     monkeypatch.setattr(gb, "board_lnx_cangen", recorder("board_lnx_cangen"))
     CONFIG["cangen"] = '[{"frame": "1000"}]'
     with pytest.raises(ValueError, match="unknown keys"):
-        gb.generic_lnx_test_cangen(lnx=LNX)
+        gb.generic_lnx_test_cangen(lab=LAB, lnx=LNX)
     assert calls("board_lnx_cangen") == []
 
 

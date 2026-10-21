@@ -60,7 +60,7 @@ The generic Linux testcases, all started by
         ":py:func:`~tbottest.tc.generic_board.generic_lnx_commands`", "lnx_commands", "the output of Linux commands"
         ":py:func:`~tbottest.tc.generic_board.generic_lnx_test_dmesg`", "dmesg, dmesg_false", "strings that must be in dmesg, and strings that must not"
         ":py:func:`~tbottest.tc.generic_board.generic_lnx_test_led`", "leds", "switches the LEDs on and off"
-        ":py:func:`~tbottest.tc.generic_board.generic_lnx_test_cangen`", "cangen", "sends CAN frames with cangen and checks what candump received"
+        ":py:func:`~tbottest.tc.generic_board.generic_lnx_test_cangen`", "cangen", "the lab host sends CAN frames with cangen, the board checks what candump received"
 
 :py:func:`~tbottest.tc.generic_board.generic_lnx_all` runs them one after
 the other and logs at the end how many succeeded, were skipped or failed,
@@ -1175,7 +1175,7 @@ settings needed for linux testcases.
         "linux_plain_prompt", "True gives the interactive linux shell a plain <name>> prompt, without the color escapes and the directory that an old busybox ash prints literally (tbot's interactive_plain_prompt)", "False", "True"
         "linux_safe_init_prompt", "True reads the prompt while tbot sets up the linux shell with read_until_prompt_safe(), which sends an empty line when kernel messages tear the prompt apart (tbot's safe_init_prompt)", "True", "False"
         "beep","list of dictionary of commands for beep command","[]","[{""freq"": ""440"", ""length"":""1000""}]"
-        "cangen","list of dictionary, each a run of board_lnx_cangen with its parameters tmpdir, candev, candevsend, candevdump, frames, dllength, bitrate, txqueuelen and cangen_gap; missing ones keep the defaults","[]","cangen = [{""candev"": [""can0"", ""can1""], ""candevsend"": [""can1""], ""candevdump"": ""can0"", ""frames"": ""1000""}]"
+        "cangen","list of dictionary, each a run of board_lnx_cangen with its parameters tmpdir, candev, candevsend, candevdump, frames, dllength, bitrate, txqueuelen and cangen_gap; missing ones keep the defaults. The lab host sends, so candevsend are interfaces of the lab host, candev and candevdump interfaces of the board","[]","cangen = [{""candev"": [""can0""], ""candevsend"": [""can0""], ""candevdump"": ""can0"", ""frames"": ""1000""}]"
         "cyclictestmaxvalue", "maximum allowed value from stress-ng 'Max' colum", "100", "cyclictestmaxvalue = 100"
         "dmesg","list of strings, which should be in dmesg output","[]","dmesg = [""OF: fdt: Machine model:"", ""gpio-193 (eeprom-wc): hogged as output/low"",]"
         "dmesg_false","list of strings, which should be not in dmesg output","[]","dmesg_false = [""crash""]"
