@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 ### Added
+- `board_lnx_cangen` sends with `cansequence` of canutils when the
+  sending machine has no cangen, e.g. a board with canutils of
+  Pengutronix, so the direction board2lab of `generic_lnx_test_cangen`
+  works there. Its frames have the fixed CAN ID 2 and one data byte,
+  counted up, and there is no gap; `check_cangen_log()` takes the CAN ID
+  as `canid`.
 - create_setup.sh writes a `.gitignore` into the setup directory if there
   is none, from the template `tbottest/tbotconfig/gitignore`. It keeps
   tbot/, tbottest/, log/, `*.pyc` and `*.swp` out of a git repository of

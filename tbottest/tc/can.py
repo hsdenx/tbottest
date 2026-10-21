@@ -180,8 +180,17 @@ def candump_is_canutils(lnx: linux.LinuxShell) -> bool:
     return lnx.cmd_get_version("candump").impl == "canutils"
 
 
+# CAN ID of the frames of cansequence (canutils) without -i
+CANSEQUENCE_ID = 2
+
+
 def check_cangen_log(
-    log: str, frames: int, dllength: int, candev: str, canutils: bool = False
+    log: str,
+    frames: int,
+    dllength: int,
+    candev: str,
+    canutils: bool = False,
+    canid: typing.Optional[int] = None,
 ) -> List[str]:
     """
     Check the candump log of ``cangen -I i -L <dllength> -D i -n <frames>``.
@@ -190,6 +199,10 @@ def check_cangen_log(
     a little endian counter in the first ``dllength`` bytes, up from 0
     (wrapping after 256 ** dllength).  So frame n has CAN ID n % 0x800 and
     data n % 256 ** dllength.
+
+    With ``canid`` every frame has this CAN ID, as the frames of
+    ``cansequence`` (canutils) have; with ``dllength`` 1 their data, a
+    counter in one byte, is checked the same way.
 
     The log is the output of ``candump -L``, or with ``canutils`` the
     output of candump of canutils, which has no interface in its lines
@@ -200,6 +213,7 @@ def check_cangen_log(
     :param dllength: data length cangen used
     :param candev: interface candump read from
     :param canutils: the log comes from candump of canutils
+    :param canid: CAN ID of every frame, None for the counting one of cangen
     :returns: the differences found, an empty list if the log matches
     """
     errors = []
@@ -227,9 +241,10 @@ def check_cangen_log(
             if m.group("dev") != candev:
                 errors.append(f"line {n + 1} from {m.group('dev')}, not {candev}: {line!r}")
             data = bytes.fromhex(m.group("data"))
-        canid = int(m.group("canid"), 16)
-        if canid != n % CAN_SFF_IDS:
-            errors.append(f"line {n + 1} has CAN ID {canid:#x}, expected {n % CAN_SFF_IDS:#x}")
+        frameid = int(m.group("canid"), 16)
+        expected = n % CAN_SFF_IDS if canid is None else canid
+        if frameid != expected:
+            errors.append(f"line {n + 1} has CAN ID {frameid:#x}, expected {expected:#x}")
         if len(data) != dllength:
             errors.append(f"line {n + 1} has {len(data)} data bytes, expected {dllength}")
             continue
@@ -252,28 +267,79 @@ def candump_log_duration(log: str) -> float:
     return times[-1] - times[0]
 
 
-def stop_candump(lnx: linux.LinuxShell, pid: str, timeout: float = 2.0) -> None:
+def stop_candump_script(pid: str, timeout: int = 2) -> str:
+    """
+    The shell command line that stops the background job pid: SIGTERM,
+    up to timeout seconds for it to end, then SIGKILL, and wait.
+
+    It is one command line, so wait collects the job in it and an
+    interactive shell has no message about the ended job left for the
+    next command (it would end up in the output of tbot's "echo $?").
+    sleep takes whole seconds, as busybox sleep may know no fractions.
+    """
+    return (
+        f"kill {pid}; i=0; "
+        f"while [ $i -lt {timeout} ] && kill -0 {pid} 2>/dev/null; do sleep 1; i=$((i+1)); done; "
+        f"kill -9 {pid} 2>/dev/null; wait {pid}"
+    )
+
+
+def stop_candump(lnx: linux.LinuxShell, pid: str, timeout: int = 2) -> None:
     """
     Stop the candump started in the background on lnx with process id pid.
 
     candump of canutils only notices SIGTERM when the next frame arrives,
     its read() of the socket goes on after the signal. So if it still runs
     after timeout seconds, it is killed with SIGKILL. It writes every frame
-    at once, so nothing gets lost.
+    at once, so nothing gets lost. See :py:func:`stop_candump_script`.
 
     :param lnx: Linux machine candump runs on
     :param pid: process id of candump
     :param timeout: seconds to wait for candump to end after SIGTERM
     """
-    lnx.exec("kill", pid)
-    end = time.monotonic() + timeout
-    while lnx.test("kill", "-0", pid):
-        if time.monotonic() >= end:
-            lnx.exec("kill", "-9", pid)
-            break
-        time.sleep(0.2)
-    # wait reports the exit status of candump, 143 or 137 after a signal
-    lnx.exec("wait", pid)
+    if not pid.strip().isdigit():
+        raise ValueError(f"no process id: {pid!r}")
+    # the exit status is the one of candump, 143 or 137 after a signal
+    lnx.exec(linux.Raw(stop_candump_script(pid.strip(), timeout)))
+
+
+def cangen_sender_canid(lnxsend: linux.LinuxShell) -> typing.Optional[int]:
+    """
+    How lnxsend sends the frames of :py:func:`board_lnx_cangen`.
+
+    :param lnxsend: Linux machine that sends
+    :returns: None for cangen, else CANSEQUENCE_ID, the CAN ID of the
+        frames of cansequence (canutils), when lnxsend has no cangen
+    """
+    if lnxsend.cmd_get_version("cangen").found:
+        return None
+    if not lnxsend.cmd_get_version("cansequence").found:
+        raise RuntimeError(f"neither cangen nor cansequence found on {lnxsend.name}")
+    tbot.log.message(
+        tbot.log.c(
+            f"no cangen on {lnxsend.name}, sending with cansequence: CAN ID "
+            f"{CANSEQUENCE_ID:#x}, 1 data byte, no gap (dllength and cangen_gap do not apply)"
+        ).yellow
+    )
+    return CANSEQUENCE_ID
+
+
+def _send_frames(
+    lnxsend: linux.LinuxShell,
+    candev: str,
+    frames: str,
+    dllength: str,
+    gap: str,
+    canid: typing.Optional[int],
+) -> None:
+    """send frames frames on candev, with cangen or (canid set) cansequence"""
+    if canid is None:
+        lnxsend.exec0(
+            "cangen", "-g", gap, "-I", "i", "-L", dllength, "-D", "i", candev, "-n", frames
+        )
+    else:
+        # -p waits for space in the send buffer instead of ending
+        lnxsend.exec0("cansequence", candev, "-p", f"--loop={frames}")
 
 
 # directions of generic_lnx_test_cangen, who sends and who receives
@@ -374,7 +440,10 @@ def board_lnx_cangen(
     candump of canutils (Pengutronix, see :py:func:`candump_is_canutils`)
     has no log format ``-L``; its log has no interface and no timestamps,
     so these are not checked and the transfer rate is not reported.
-    canutils has no cangen, ``lnxsend`` needs the one of can-utils.
+    canutils has no cangen. Without cangen on ``lnxsend``, the frames are
+    sent with ``cansequence`` of canutils, which sends one data byte with
+    the fixed CAN ID :py:data:`CANSEQUENCE_ID` and no gap, so ``dllength``
+    and ``cangen_gap`` do not apply then.
     """
     candev, candevsend = _default_can_devices(candev, candevsend)
     nframes = int(frames)
@@ -388,11 +457,9 @@ def board_lnx_cangen(
         if lnxsend is None:
             lnxsend = lnx
 
-        if not lnxsend.cmd_get_version("cangen").found:
-            raise RuntimeError(
-                f"cangen not found on {lnxsend.name}, it needs the one of can-utils "
-                "(canutils of Pengutronix has none)"
-            )
+        canid = cangen_sender_canid(lnxsend)
+        if canid is not None:
+            ndata = 1
 
         board_setup_can(lnxsend, candevsend, br=bitrate, tql=txqueuelen)
         canutils = candump_is_canutils(lnx)
@@ -405,20 +472,7 @@ def board_lnx_cangen(
             lnx.exec("candump", candevdump, *dumpopts, linux.Background(stdout=cand, stderr=cand))
             pid = lnx.env("!")
 
-            lnxsend.exec0(
-                "cangen",
-                "-g",
-                cangen_gap,
-                "-I",
-                "i",
-                "-L",
-                dllength,
-                "-D",
-                "i",
-                cs,
-                "-n",
-                frames,
-            )
+            _send_frames(lnxsend, cs, frames, dllength, cangen_gap, canid)
 
             # wait until all frames are in the log, or it stops growing
             cl = get_lines(lnx, cand)
@@ -436,7 +490,7 @@ def board_lnx_cangen(
             stop_candump(lnx, pid)
 
             log = lnx.exec0("cat", cand)
-            errors = check_cangen_log(log, nframes, ndata, candevdump, canutils)
+            errors = check_cangen_log(log, nframes, ndata, candevdump, canutils, canid)
             for e in errors[:20]:
                 tbot.log.message(tbot.log.c(e).red)
             if errors:
@@ -447,7 +501,7 @@ def board_lnx_cangen(
             if canutils:
                 tbot.log.message(
                     tbot.log.c(
-                        f"send {frames} msgs with {dllength} databytes from {cs} to "
+                        f"send {frames} msgs with {ndata} databytes from {cs} to "
                         f"{candevdump}; candump of canutils has no timestamps, no bitrate"
                     ).green
                 )
@@ -460,8 +514,9 @@ def board_lnx_cangen(
 
             tbot.log.message(
                 tbot.log.c(
-                    f"send {frames} msgs with {dllength} databytes in {duration:.3f} s from "
-                    f"{cs} to {candevdump} with gap {cangen_gap} txqueuelen {txqueuelen} "
+                    f"send {frames} msgs with {ndata} databytes in {duration:.3f} s from "
+                    f"{cs} to {candevdump} with gap {'none' if canid else cangen_gap} "
+                    f"txqueuelen {txqueuelen} "
                     f"bitrate {bitrate} {realbitrate:.0f}"
                 ).green
             )
