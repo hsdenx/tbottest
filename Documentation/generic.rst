@@ -209,6 +209,7 @@ What scripts/create_setup.sh sets up, with tbotconfig for one board:
 .. code-block:: text
 
         tbotsetup/
+        ├── .gitignore                   for a git repository of the setup
         ├── setup.sh                     aliases for starting tbot (source setup.sh)
         ├── tbot/                        tbot, branch v0.10.10-emb of github.com/EmbLux-Kft/tbot
         ├── tbottest/                    this repository; newtbot_starter.py starts tbot
@@ -234,6 +235,7 @@ What scripts/create_setup.sh sets up, with tbotconfig for one board:
 .. csv-table:: files and directories
         :header: "Name", "content", "fastlink to documentation"
 
+        ".gitignore", "keeps tbot/, tbottest/, log/, \*.pyc and \*.swp out of a git repository of the setup; create_setup.sh writes it only if there is none", "`tbottest/tbotconfig/gitignore <https://github.com/hsdenx/tbottest/blob/master/tbottest/tbotconfig/gitignore>`__"
         "setup.sh", "aliases for starting tbot", "`tbottest/tbotconfig/setup.sh <https://github.com/hsdenx/tbottest/blob/master/tbottest/tbotconfig/setup.sh>`__"
         "tbotconfig/interactive.py", "testcases for interactive sessions: lab host, build host, kas shell, board, U-Boot, Linux, BDI2000", ""
         "tbotconfig/ci", "testcases the github CI of tbottest runs; create_setup.sh copies them only with ``--ci``", ""

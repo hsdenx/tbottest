@@ -515,6 +515,12 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 	fi
 fi
 
+# for a git repository of the setup: tbot and tbottest are clones of their
+# own; the template has no leading dot, so it does not apply to tbottest
+if [ ! -e .gitignore ];then
+	cp tbottest/tbottest/tbotconfig/gitignore .gitignore
+fi
+
 # end print some starter help
 echo "add commandline completions with:"
 echo "source tbottest/completions.sh"

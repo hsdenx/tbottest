@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 ### Added
+- create_setup.sh writes a `.gitignore` into the setup directory if there
+  is none, from the template `tbottest/tbotconfig/gitignore`. It keeps
+  tbot/, tbottest/, log/, `*.pyc` and `*.swp` out of a git repository of
+  the setup.
 - An entry of `ub_env` or of a group `ub_env_<name>` may have `"append"`
   or `"remove"` instead of `"val"`, words added to or taken out of the
   value the U-Boot variable has on the board (`ub_env_apply()`,
