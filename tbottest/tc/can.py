@@ -2,11 +2,11 @@
 # collection of testcases, for CAN
 # may go into mainline
 #
+import re
 import typing
 from typing import List
 import tbot
 import time
-from datetime import datetime
 from tbot.machine import linux
 from tbot.context import Optional
 from tbottest.tc.common import tbot_start_thread
@@ -22,7 +22,7 @@ def sudo_exec0(lnx: linux.LinuxShell, usesudo: bool, *args) -> str:
     return lnx.exec0(*args)
 
 
-def get_lines(lnx: linux.LinuxShell, fi: str) -> int:
+def get_lines(lnx: linux.LinuxShell, fi: typing.Union[str, "linux.Path"]) -> int:
     out = lnx.exec0("wc", "-l", fi)
     cl = out.split(" ")
     return int(cl[0])
@@ -168,12 +168,74 @@ def lnx_can_write_dump_compare(
         raise RuntimeError("candump errors")
 
 
+# frames of `cangen -I i`: the CAN ID counts up and wraps after the 11 bit
+# standard IDs (cangen masks it with CAN_SFF_MASK)
+CAN_SFF_IDS = 0x800
+
+# a line of `candump -L`: (1598423840.039597) can0 08C#8C00000000000000
+CANDUMP_LOG_LINE = re.compile(
+    r"^\((?P<time>\d+\.\d+)\) (?P<dev>\S+) (?P<canid>[0-9A-Fa-f]+)#(?P<data>[0-9A-Fa-f]*)$"
+)
+
+
+def check_cangen_log(log: str, frames: int, dllength: int, candev: str) -> List[str]:
+    """
+    Check the ``candump -L`` log of ``cangen -I i -L <dllength> -D i -n <frames>``.
+
+    cangen counts the CAN ID up from 0 (wrapping after 0x7FF) and the data,
+    a little endian counter in the first ``dllength`` bytes, up from 0
+    (wrapping after 256 ** dllength).  So frame n has CAN ID n % 0x800 and
+    data n % 256 ** dllength.
+
+    :param log: the output of ``candump -L``
+    :param frames: number of frames cangen sent
+    :param dllength: data length cangen used
+    :param candev: interface candump read from
+    :returns: the differences found, an empty list if the log matches
+    """
+    errors = []
+    lines = [ln.strip() for ln in log.splitlines() if ln.strip()]
+    if len(lines) != frames:
+        errors.append(f"{len(lines)} frames in the candump log, {frames} sent")
+
+    datawrap = 1 << (8 * dllength)
+    for n, line in enumerate(lines):
+        m = CANDUMP_LOG_LINE.match(line)
+        if m is None:
+            errors.append(f"line {n + 1} is no candump -L frame: {line!r}")
+            continue
+        if m.group("dev") != candev:
+            errors.append(f"line {n + 1} from {m.group('dev')}, not {candev}: {line!r}")
+        canid = int(m.group("canid"), 16)
+        if canid != n % CAN_SFF_IDS:
+            errors.append(f"line {n + 1} has CAN ID {canid:#x}, expected {n % CAN_SFF_IDS:#x}")
+        data = bytes.fromhex(m.group("data"))
+        if len(data) != dllength:
+            errors.append(f"line {n + 1} has {len(data)} data bytes, expected {dllength}")
+            continue
+        value = int.from_bytes(data, "little")
+        if value != n % datawrap:
+            errors.append(f"line {n + 1} has data {value}, expected {n % datawrap}")
+
+    return errors
+
+
+def candump_log_duration(log: str) -> float:
+    """seconds between the first and the last frame of a ``candump -L`` log"""
+    times = []
+    for line in log.splitlines():
+        m = CANDUMP_LOG_LINE.match(line.strip())
+        if m is not None:
+            times.append(float(m.group("time")))
+    if len(times) < 2:
+        return 0.0
+    return times[-1] - times[0]
+
+
 @tbot.testcase
 def board_lnx_cangen(
-    lab: typing.Optional[linux.LinuxShell] = None,
     lnx: Optional[linux.LinuxShell] = None,
     lnxsend: Optional[linux.LinuxShell] = None,
-    labtbottestcasepath: typing.Optional[str] = None,
     tmpdir: str = "/tmp",
     candev: typing.Optional[List[str]] = None,
     candevsend: typing.Optional[List[str]] = None,
@@ -185,33 +247,36 @@ def board_lnx_cangen(
     cangen_gap: str = "10",
 ) -> None:
     """
-    use cangen for generating testdata
+    Send frames with cangen and check what candump received.
+
+    For each interface of ``candevsend``, ``lnxsend`` sends ``frames``
+    frames with incrementing CAN ID and data (``cangen -I i -D i``), and
+    candump on ``lnx`` logs them from ``candevdump`` to ``tmpdir`` on the
+    board.  The log is read back and checked with
+    :py:func:`check_cangen_log`: number of frames, interface, CAN IDs, data
+    length and data.  The transfer rate comes from the timestamps of the
+    first and the last frame in the log.
     """
     candev, candevsend = _default_can_devices(candev, candevsend)
+    nframes = int(frames)
+    ndata = int(dllength)
 
     with tbot.ctx() as cx:
-        if lab is None:
-            lab = cx.request(tbot.role.LabHost)
-
         if lnx is None:
             lnx = cx.request(tbot.role.BoardLinux)
 
         board_setup_can(lnx, candev, br=bitrate, tql=txqueuelen)
-        # lnx.interactive()
         if lnxsend is None:
             lnxsend = lnx
 
         board_setup_can(lnxsend, candevsend, br=bitrate, tql=txqueuelen, usesudo=True)
-        # lnx.interactive()
+        cand = linux.Workdir.static(lnx, tmpdir) / "candump.log"
         for cs in candevsend:
-            cand = "/tmp/candump.log"
-            lnx.exec("rm", cand)
+            lnx.exec("rm", "-f", cand)
             # use logformat "-L" for candump output
-            lnx.exec(linux.Raw(f"candump {candevdump} -L > {cand} 2>&1 &"))
+            lnx.exec("candump", candevdump, "-L", linux.Background(stdout=cand, stderr=cand))
             pid = lnx.env("!")
 
-            # create data
-            start = datetime.now()
             lnxsend.exec0(
                 "cangen",
                 "-g",
@@ -227,74 +292,39 @@ def board_lnx_cangen(
                 frames,
             )
 
-            # wait until all lines are in dump
+            # wait until all frames are in the log, or it stops growing
             cl = get_lines(lnx, cand)
-            stop = int(frames)
             retry = 4
-            re = 0
-            while cl < stop:
+            tries = 0
+            while cl < nframes:
                 time.sleep(1)
                 clold = cl
                 cl = get_lines(lnx, cand)
-                if re < retry:
-                    re += 1
+                if tries < retry:
+                    tries += 1
                     continue
                 if cl == clold:
-                    lnx.interactive()
-                    lnx.exec0("kill", pid, linux.Then, "wait", pid)
-                    raise RuntimeError("Lost messages")
-
-            end = datetime.now()
+                    break
             lnx.exec0("kill", pid, linux.Then, "wait", pid)
 
-            delta = end - start
+            log = lnx.exec0("cat", cand)
+            errors = check_cangen_log(log, nframes, ndata, candevdump)
+            for e in errors[:20]:
+                tbot.log.message(tbot.log.c(e).red)
+            if errors:
+                raise RuntimeError(
+                    f"{len(errors)} differences in the candump log of {cs} -> {candevdump}"
+                )
+
             # length of one message
-            bits = 1 + 1 + 11 + 6 + int(dllength) * 8 + 15 + 2 + 7 + 3
-            alldata = int(frames) * bits
-
-            realbitrate = alldata / delta.total_seconds()
-            # lnx.interactive()
-
-            # copy file to lab host and check it
-            # ToDo use
-            # lab.boardip["imx8mp"]
-            # lab.workdir
-            tmppath = lab.tmpdir()._local_str()
-            df = f"{tmpdir}/candump.log"
-            lab.exec0(
-                "scp",
-                "-o",
-                "StrictHostKeyChecking=no",
-                "-o",
-                "UserKnownHostsFile=/dev/null",
-                f"root@192.168.3.21:{df}",
-                tmppath,
-            )
-            ret, out = lab.exec("ls", "-1", f"{tmppath}/check_cangen_output.py")
-            if ret != 0:
-                if labtbottestcasepath is None:
-                    raise RuntimeError("could not install check_cangen_output.py")
-                else:
-                    lab.exec0(
-                        "scp",
-                        "-o",
-                        "StrictHostKeyChecking=no",
-                        "-o",
-                        "UserKnownHostsFile=/dev/null",
-                        f"{labtbottestcasepath}/check_cangen_output.py",
-                        tmppath,
-                    )
-
-            ret, out = lab.exec("python3", f"{tmppath}/check_cangen_output.py", "-i", df)
-            if ret != 0:
-                lnx.interactive()
+            bits = 1 + 1 + 11 + 6 + ndata * 8 + 15 + 2 + 7 + 3
+            duration = candump_log_duration(log)
+            realbitrate = nframes * bits / duration if duration > 0 else 0.0
 
             tbot.log.message(
                 tbot.log.c(
-                    f"send {frames} msgs with {dllength} databytes in {delta} from {cs} to "
-                    f"{candevdump} with gap {cangen_gap} txqueuelen {txqueuelen} "
-                    f"bitrate {bitrate} {realbitrate}"
+                    f"send {frames} msgs with {dllength} databytes in {duration:.3f} s from "
+                    f"{cs} to {candevdump} with gap {cangen_gap} txqueuelen {txqueuelen} "
+                    f"bitrate {bitrate} {realbitrate:.0f}"
                 ).green
             )
-
-            # lnx.interactive()

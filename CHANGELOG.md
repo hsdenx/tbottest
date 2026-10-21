@@ -68,6 +68,13 @@
 - A pytest unit test suite with its own CI workflow, and `pyproject.toml`.
 
 ### Changed
+- `board_lnx_cangen` checks the candump log itself, with the new
+  `check_cangen_log()`, on the output of `cat` on the board. Nothing is
+  copied to the lab host any more, so the parameters `lab` and
+  `labtbottestcasepath` and `tc/files/check_cangen_output.py` are gone.
+  It checks the number of frames, interface, CAN ID, data length and
+  data, reports every difference and raises instead of stopping in an
+  interactive shell. The transfer rate comes from the candump timestamps.
 - The generic testcases read their keys when they run, with the
   `get_config*()` methods of `cfggeneric`, so they find their own section.
   `require_cfg()` takes the name of the key. `cfggeneric.kas_config(lab, bh)`
@@ -84,6 +91,9 @@
 - `GenericUBoot.exec()` reads back the echo of the command line like tbot.
 
 ### Fixed
+- The check of `board_lnx_cangen` did not let the data counter wrap, so
+  it failed after 256 frames with `dllength=1`; it compared the log with
+  the board path on the lab host and copied it from a fixed IP address.
 - The default `testdir` of the lab host and of `[SSHMACHINE]`,
   `<workdir>/tbottests`, got a double slash when `workdir` ended in one.
 - A relative `workdir` or `testdir` of a build host reached over ssh was

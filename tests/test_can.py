@@ -8,10 +8,9 @@ is tested against canned "cat"/"wc" output through the same kind of
 fake, routed by command name (since tbot_start_thread() generates a
 real random tid, exact command strings can't be pre-registered).
 
-board_lnx_cangen() itself (the real hardware-timing loop, scp,
-external check_cangen_output.py) is not covered here -- see
-test_board_lnx_cangen_datetime_regression below for the one thing
-that specifically needed a regression test out of it.
+check_cangen_log() checks the candump log of board_lnx_cangen() in
+Python, board_lnx_cangen() itself runs against a fake board that
+answers wc and cat with a canned log.
 """
 
 import os
@@ -170,17 +169,100 @@ class TestLnxCanWriteDumpCompare:
         assert len(sudo_setup_calls) == 4
 
 
-class TestBoardLnxCangenDatetimeRegression:
-    def test_datetime_now_does_not_raise_attributeerror(self):
-        """
-        Regression test: can.py used to `import datetime` and then
-        call `datetime.now()` (the *module*, not the datetime.datetime
-        class), which raises AttributeError on the very first call --
-        board_lnx_cangen would never get past its first iteration.
-        This only checks the import/usage is fixed, not the full
-        hardware-timing workflow around it.
-        """
-        from datetime import datetime as real_datetime
+def cangen_log(frames, dllength, dev="can0", t0=1000.0, step=0.01):
+    """the candump -L log of cangen -I i -L <dllength> -D i -n <frames>"""
+    lines = []
+    for n in range(frames):
+        data = (n % 256**dllength).to_bytes(dllength, "little").hex().upper()
+        lines.append(f"({t0 + n * step:.6f}) {dev} {n % 0x800:03X}#{data}")
+    return "\n".join(lines) + "\n"
 
-        assert can.datetime is real_datetime
-        can.datetime.now()  # must not raise AttributeError
+
+class TestCheckCangenLog:
+    def test_matching_log(self):
+        assert can.check_cangen_log(cangen_log(10, 8), 10, 8, "can0") == []
+
+    def test_can_id_wraps_after_7ff(self):
+        log = cangen_log(0x802, 2)
+        assert "can0 7FF#" in log.splitlines()[0x7FF]
+        assert "can0 000#" in log.splitlines()[0x800]
+        assert can.check_cangen_log(log, 0x802, 2, "can0") == []
+
+    def test_data_wraps_with_one_byte(self):
+        # the counter of one data byte wraps after 255
+        log = cangen_log(300, 1)
+        assert log.splitlines()[256].endswith("#00")
+        assert can.check_cangen_log(log, 300, 1, "can0") == []
+
+    def test_missing_frame(self):
+        lines = cangen_log(10, 8).splitlines()
+        del lines[4]
+        errors = can.check_cangen_log("\n".join(lines), 10, 8, "can0")
+        assert errors[0] == "9 frames in the candump log, 10 sent"
+        assert any("line 5 has CAN ID 0x5, expected 0x4" in e for e in errors)
+
+    def test_wrong_data_length(self):
+        errors = can.check_cangen_log(cangen_log(3, 4), 3, 8, "can0")
+        assert errors == [f"line {n} has 4 data bytes, expected 8" for n in (1, 2, 3)]
+
+    def test_wrong_interface(self):
+        errors = can.check_cangen_log(cangen_log(2, 8, dev="can1"), 2, 8, "can0")
+        assert len(errors) == 2
+        assert "from can1, not can0" in errors[0]
+
+    def test_wrong_data(self):
+        log = cangen_log(3, 2).replace("002#0200", "002#0300")
+        errors = can.check_cangen_log(log, 3, 2, "can0")
+        assert errors == ["line 3 has data 3, expected 2"]
+
+    def test_error_message_in_log(self):
+        log = cangen_log(2, 8) + "read: Network is down\n"
+        errors = can.check_cangen_log(log, 2, 8, "can0")
+        assert errors[0] == "3 frames in the candump log, 2 sent"
+        assert "line 3 is no candump -L frame" in errors[1]
+
+
+class TestCandumpLogDuration:
+    def test_first_to_last_frame(self):
+        assert can.candump_log_duration(cangen_log(101, 8, step=0.01)) == pytest.approx(1.0)
+
+    def test_one_frame(self):
+        assert can.candump_log_duration(cangen_log(1, 8)) == 0.0
+
+
+class FakeCanBoard(FakeLinuxShell):
+    """answers wc -l and cat of the candump log with a canned log"""
+
+    def __init__(self, log):
+        super().__init__()
+        self.log = log
+
+    def exec(self, *args):
+        key = tuple(str(a) for a in args)
+        if key[:2] == ("wc", "-l"):
+            self.commands.append(key)
+            return (0, f"{len(self.log.splitlines())} {key[2]}")
+        if key[0] == "cat" and key[1].endswith("candump.log"):
+            self.commands.append(key)
+            return (0, self.log)
+        return super().exec(*args)
+
+
+class TestBoardLnxCangen:
+    def run(self, monkeypatch, log, **kwargs):
+        monkeypatch.setattr(can.time, "sleep", lambda s: None)
+        board = FakeCanBoard(log)
+        can.board_lnx_cangen(
+            lnx=board, candev=["can0"], candevsend=["can1"], frames="20", dllength="8", **kwargs
+        )
+        return board
+
+    def test_good_log(self, monkeypatch):
+        board = self.run(monkeypatch, cangen_log(20, 8), tmpdir="/run/can")
+        assert ("cat", "/run/can/candump.log") in board.commands
+        # nothing is copied to another machine
+        assert not any(c[0] == "scp" for c in board.commands)
+
+    def test_lost_frames_raise(self, monkeypatch):
+        with pytest.raises(RuntimeError, match="differences in the candump log of can1 -> can0"):
+            self.run(monkeypatch, cangen_log(15, 8))
