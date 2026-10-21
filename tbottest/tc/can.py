@@ -14,14 +14,6 @@ from tbottest.tc.common import tbot_stop_thread
 from tbottest.tc.common import lnx_sudo
 
 
-def sudo_exec0(lnx: linux.LinuxShell, usesudo: bool, *args) -> str:
-    if usesudo:
-        # root rights: sudo, unless lnx is logged in as root
-        return lnx.exec0(*lnx_sudo(lnx), *args)
-
-    return lnx.exec0(*args)
-
-
 def get_lines(lnx: linux.LinuxShell, fi: typing.Union[str, "linux.Path"]) -> int:
     out = lnx.exec0("wc", "-l", fi)
     cl = out.split(" ")
@@ -43,29 +35,31 @@ def board_setup_can(
     candev: typing.Optional[List[str]] = None,
     br: str = "500000",
     tql: str = "500",
-    usesudo: bool = False,
 ) -> None:
     """
     setup the can interface on linux machine
+
+    ip needs root rights, so the commands run with sudo unless lnx is
+    logged in as root (:py:func:`tbottest.tc.common.lnx_sudo`).
 
     :param lnx: linux machine where we work on
     :param candev: List of candevices which get intialized
     :param br: used bitrate
     :param tql: use tx queuelen
-    :param usesudo: if we need a sudo for calling ip command
     """
     if candev is None:
         candev = ["can0", "can1"]
+    sudo = lnx_sudo(lnx)
 
     for n in candev:
-        sudo_exec0(lnx, usesudo, "ip", "link", "set", n, "down")
+        lnx.exec0(*sudo, "ip", "link", "set", n, "down")
 
     for n in candev:
-        sudo_exec0(lnx, usesudo, "ip", "link", "set", n, "type", "can", "bitrate", br)
-        sudo_exec0(lnx, usesudo, "ip", "link", "set", n, "txqueuelen", tql)
+        lnx.exec0(*sudo, "ip", "link", "set", n, "type", "can", "bitrate", br)
+        lnx.exec0(*sudo, "ip", "link", "set", n, "txqueuelen", tql)
 
     for n in candev:
-        sudo_exec0(lnx, usesudo, "ip", "link", "set", n, "up")
+        lnx.exec0(*sudo, "ip", "link", "set", n, "up")
 
 
 def lnx_can_write_dump_compare(
@@ -106,15 +100,8 @@ def lnx_can_write_dump_compare(
 
     """
     # init can busses
-    lnxsendsudo = False
-    lnxreadsudo = False
-    if lab == lnxsend:
-        lnxsendsudo = True
-    if lab == lnxread:
-        lnxreadsudo = True
-
-    board_setup_can(lnxsend, senddev, br=bitrate, tql=txqueuelen, usesudo=lnxsendsudo)
-    board_setup_can(lnxread, readdev, br=bitrate, tql=txqueuelen, usesudo=lnxreadsudo)
+    board_setup_can(lnxsend, senddev, br=bitrate, tql=txqueuelen)
+    board_setup_can(lnxread, readdev, br=bitrate, tql=txqueuelen)
 
     # logfiles in stdin: /tmp/thread_1_{tid} and stderr: /tmp/thread_2_{tid}
     tid = tbot_start_thread(lnxread, f"candump {readdev[0]}")
@@ -269,7 +256,7 @@ def board_lnx_cangen(
         if lnxsend is None:
             lnxsend = lnx
 
-        board_setup_can(lnxsend, candevsend, br=bitrate, tql=txqueuelen, usesudo=True)
+        board_setup_can(lnxsend, candevsend, br=bitrate, tql=txqueuelen)
         cand = linux.Workdir.static(lnx, tmpdir) / "candump.log"
         for cs in candevsend:
             lnx.exec("rm", "-f", cand)

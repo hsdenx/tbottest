@@ -68,6 +68,10 @@
 - A pytest unit test suite with its own CI workflow, and `pyproject.toml`.
 
 ### Changed
+- `board_setup_can()` runs `ip` with `lnx_sudo()`, so with sudo unless
+  the machine is logged in as root. Its parameter `usesudo` and
+  `sudo_exec0()` of `tc/can.py` are gone, and `lnx_can_write_dump_compare()`
+  no longer guesses from `lab == lnxsend` whether sudo is needed.
 - `board_lnx_cangen` checks the candump log itself, with the new
   `check_cangen_log()`, on the output of `cat` on the board. Nothing is
   copied to the lab host any more, so the parameters `lab` and

@@ -139,12 +139,16 @@ class TestNetworkSudo:
 
 
 class TestCanSudo:
-    def test_usesudo_as_root(self):
+    def test_setup_as_root(self):
         lab = FakeShell(0)
-        can.sudo_exec0(lab, True, "ip", "link", "set", "can0", "up")
-        assert lab.commands() == [("ip", "link", "set", "can0", "up")]
+        can.board_setup_can(lab, candev=["can0"])
+        cmds = lab.commands()
+        assert len(cmds) == 4
+        assert not [c for c in cmds if c[0] == "sudo"]
 
-    def test_usesudo_as_user(self):
-        lab = FakeShell(1000)
-        can.sudo_exec0(lab, True, "ip", "link", "set", "can0", "up")
-        assert lab.commands() == [("sudo", "ip", "link", "set", "can0", "up")]
+    def test_setup_as_user(self):
+        lab = FakeShell(1000, name="lab-user")
+        can.board_setup_can(lab, candev=["can0"])
+        cmds = lab.commands()
+        assert len(cmds) == 4
+        assert all(c[:2] == ("sudo", "ip") for c in cmds)

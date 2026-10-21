@@ -1,7 +1,7 @@
 """
 Unit tests for tbottest/tc/can.py.
 
-sudo_exec0/get_lines/_default_can_devices/board_setup_can are pure
+get_lines/_default_can_devices/board_setup_can are pure
 exec0()-driven logic, tested via a FakeLinuxShell that just records
 calls. lnx_can_write_dump_compare()'s candump-output comparison logic
 is tested against canned "cat"/"wc" output through the same kind of
@@ -32,9 +32,12 @@ can = load_module(
 
 
 class FakeLinuxShell:
-    def __init__(self):
+    """records the commands, logged in as root unless uid says otherwise"""
+
+    def __init__(self, uid=0):
         self.commands = []
         self.dump_log = ""
+        self.uid = uid
 
     def exec0(self, *args):
         return self.exec(*args)[1]
@@ -43,6 +46,8 @@ class FakeLinuxShell:
         key = tuple(str(a) for a in args)
         self.commands.append(key)
         cmd = key[0] if key else ""
+        if key == ("id", "-u"):
+            return (0, f"{self.uid}\n")
         if cmd == "wc":
             return (0, "0")
         if cmd == "cat":
@@ -54,19 +59,6 @@ class FakeLinuxShell:
 
     def env(self, name):
         return "1234"
-
-
-class TestSudoExec0:
-    def test_without_sudo(self):
-        lnx = FakeLinuxShell()
-        can.sudo_exec0(lnx, False, "ifconfig", "can0", "up")
-        assert lnx.commands == [("ifconfig", "can0", "up")]
-
-    def test_with_sudo_prepends_sudo(self):
-        lnx = FakeLinuxShell()
-        can.sudo_exec0(lnx, True, "ifconfig", "can0", "up")
-        # not logged in as root: id -u, then the command with sudo
-        assert lnx.commands == [("id", "-u"), ("sudo", "ifconfig", "can0", "up")]
 
 
 class TestGetLines:
@@ -101,16 +93,24 @@ class TestBoardSetupCan:
         lnx = FakeLinuxShell()
         can.board_setup_can(lnx, candev=["can0"], br="250000", tql="100")
         assert lnx.commands == [
+            ("id", "-u"),
             ("ip", "link", "set", "can0", "down"),
             ("ip", "link", "set", "can0", "type", "can", "bitrate", "250000"),
             ("ip", "link", "set", "can0", "txqueuelen", "100"),
             ("ip", "link", "set", "can0", "up"),
         ]
 
-    def test_usesudo_prefixes_every_command(self):
-        lnx = FakeLinuxShell()
-        can.board_setup_can(lnx, candev=["can0"], usesudo=True)
-        assert all(c[0] == "sudo" for c in lnx.commands if c != ("id", "-u"))
+    def test_not_root_prefixes_every_command_with_sudo(self):
+        lnx = FakeLinuxShell(uid=1000)
+        can.board_setup_can(lnx, candev=["can0"])
+        assert lnx.commands[0] == ("id", "-u")
+        assert len(lnx.commands) == 5
+        assert all(c[0] == "sudo" for c in lnx.commands[1:])
+
+    def test_root_without_sudo(self):
+        lnx = FakeLinuxShell(uid=0)
+        can.board_setup_can(lnx, candev=["can0"])
+        assert not [c for c in lnx.commands if c[0] == "sudo"]
 
 
 class TestLnxCanWriteDumpCompare:
@@ -154,8 +154,8 @@ class TestLnxCanWriteDumpCompare:
                 lab, lab, lnxsend, ["can0"], lnxread, ["can0"], "500000", "500", self.DATA
             )
 
-    def test_lab_equal_to_send_and_read_uses_sudo_for_both(self):
-        lab = FakeLinuxShell()
+    def test_not_root_uses_sudo_for_both(self):
+        lab = FakeLinuxShell(uid=1000)
         lab.dump_log = "\n".join(d["res"] for d in self.DATA)
 
         can.lnx_can_write_dump_compare(
