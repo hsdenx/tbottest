@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 ### Added
+- An entry of `ub_env` or of a group `ub_env_<name>` may have `"append"`
+  or `"remove"` instead of `"val"`, words added to or taken out of the
+  value the U-Boot variable has on the board (`ub_env_apply()`,
+  `ub_env_edit()`). Together with `"flag"`, several flags can each add a
+  word to the same variable, e.g. to `optargs`, what needed
+  `set_ub_board_specific()` in boardspecific.py before.
 - Unit tests for the generic testcases of `tc/generic_board.py`, for the
   configuration a testcase reads, the calls it makes with it, the skip
   without its key and the counts of `generic_lnx_all`. The kas testcases

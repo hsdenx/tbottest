@@ -365,6 +365,135 @@ class TestUbEnvFlagSet:
         assert flag_set(ev, {"kasvariant:glibc"})
 
 
+class TestUbEnvEdit:
+    @pytest.fixture
+    def edit(self):
+        return load_definition(
+            "tbottest_boardgeneric_ub_env_edit_only", BOARDGENERIC_PATH, "ub_env_edit"
+        ).ub_env_edit
+
+    def test_append(self, edit):
+        assert edit("quiet ", {"append": "initcall_debug"}) == "quiet initcall_debug"
+
+    def test_append_to_unset(self, edit):
+        assert edit("", {"append": "a b"}) == "a b"
+
+    def test_append_once(self, edit):
+        assert edit("a quiet", {"append": "quiet b"}) == "a quiet b"
+
+    def test_remove_whole_words(self, edit):
+        assert edit("quiet quietly quiet x", {"remove": "quiet"}) == "quietly x"
+
+    def test_remove_then_append(self, edit):
+        assert edit("rauc.slot=A quiet", {"remove": "rauc.slot=A", "append": "rauc.slot=B"}) == (
+            "quiet rauc.slot=B"
+        )
+
+
+class TestUbEnvPrintenvValue:
+    @pytest.fixture
+    def value(self):
+        return load_definition(
+            "tbottest_boardgeneric_ub_env_printenv_value_only",
+            BOARDGENERIC_PATH,
+            "ub_env_printenv_value",
+        ).ub_env_printenv_value
+
+    def test_set(self, value):
+        assert value("optargs", 0, "optargs=quiet a=b\n") == "quiet a=b"
+
+    def test_without_newline(self, value):
+        assert value("optargs", 0, "optargs=quiet") == "quiet"
+
+    def test_not_set(self, value):
+        assert value("optargs", 1, '## Error: "optargs" not defined\n') == ""
+
+    def test_not_set_without_retcode(self, value):
+        assert value("optargs", 0, '## Error: "optargs" not defined\n') == ""
+
+    def test_other_variable_with_same_prefix(self, value):
+        assert value("opt", 0, "optargs=quiet\n") == ""
+
+
+class FakeUBoot:
+    def __init__(self, env):
+        self.vars = dict(env)
+        self.calls = []
+
+    def exec(self, *args):
+        self.calls.append(args)
+        name = args[1]
+        if name in self.vars:
+            return 0, f"{name}={self.vars[name]}\n"
+        return 1, f'## Error: "{name}" not defined\n'
+
+    def exec0(self, *args):
+        self.calls.append(args)
+        assert args[0] == "setenv" and len(args) == 2
+        self.vars.pop(args[1], None)
+        return ""
+
+    def env(self, name, value):
+        self.calls.append(("env", name, value))
+        self.vars[name] = value
+        return value
+
+
+class TestUbEnvApply:
+    @pytest.fixture
+    def apply(self):
+        mod = load_definition(
+            "tbottest_boardgeneric_ub_env_apply_only", BOARDGENERIC_PATH, "ub_env_apply"
+        )
+        for name in ("ub_env_edit", "ub_env_printenv_value"):
+            setattr(mod, name, getattr(load_definition(f"tbottest_bg_{name}", BOARDGENERIC_PATH, name), name))
+        return mod.ub_env_apply
+
+    def test_val_sets(self, apply):
+        ub = FakeUBoot({})
+        apply(ub, {"name": "console", "val": "silent"})
+        assert ub.calls == [("env", "console", "silent")]
+
+    def test_append_reads_the_board_value(self, apply):
+        ub = FakeUBoot({"optargs": "consoleblank=0 quiet "})
+        apply(ub, {"name": "optargs", "append": "initcall_debug"})
+        assert ub.calls == [
+            ("printenv", "optargs"),
+            ("env", "optargs", "consoleblank=0 quiet initcall_debug"),
+        ]
+
+    def test_two_appends_add_up(self, apply):
+        ub = FakeUBoot({"optargs": "quiet"})
+        apply(ub, {"name": "optargs", "append": "init=/lib/systemd/systemd-bootchart"})
+        apply(ub, {"name": "optargs", "append": "initcall_debug"})
+        assert ub.vars["optargs"] == "quiet init=/lib/systemd/systemd-bootchart initcall_debug"
+
+    def test_append_to_unset_variable(self, apply):
+        ub = FakeUBoot({})
+        apply(ub, {"name": "miscargs", "append": "ignore_loglevel"})
+        assert ub.vars == {"miscargs": "ignore_loglevel"}
+
+    def test_empty_result_deletes(self, apply):
+        ub = FakeUBoot({"optargs": "quiet"})
+        apply(ub, {"name": "optargs", "remove": "quiet"})
+        assert ub.calls[-1] == ("setenv", "optargs")
+        assert "optargs" not in ub.vars
+
+    @pytest.mark.parametrize(
+        "ev",
+        [
+            {"name": "optargs"},
+            {"name": "optargs", "val": "quiet", "append": "initcall_debug"},
+            {"name": "optargs", "val": "quiet", "remove": "quiet"},
+        ],
+    )
+    def test_val_or_edit(self, apply, ev):
+        ub = FakeUBoot({})
+        with pytest.raises(ValueError, match="needs either val or append/remove"):
+            apply(ub, ev)
+        assert ub.calls == []
+
+
 class TestGenericBoardConfig:
     """
     the methods of GenericBoardConfig that read keys of the board

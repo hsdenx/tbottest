@@ -216,7 +216,7 @@ class GenericUBoot(
             envvalues = envvalues + groups[name]
         for ev in envvalues:
             if ub_env_flag_set(ev, tbot.flags):
-                self.env(ev["name"], ev["val"])
+                ub_env_apply(self, ev)
 
         if set_ub_board_specific:
             set_ub_board_specific(self)
@@ -236,6 +236,76 @@ def ub_env_flag_set(ev: dict, flags) -> bool:
     if flag is None:
         return True
     return any(f == flag or f.startswith(flag + ":") for f in flags)
+
+
+def ub_env_edit(value: str, ev: dict) -> str:
+    """
+    value of a U-Boot variable after the "remove" and "append" of the
+    ub_env entry ev
+
+    The value is taken as words separated by blanks. Every word of
+    "remove" is taken out, then every word of "append" that is not in
+    the value yet is added at the end. The words are joined with one
+    blank.
+
+    :param value: current value of the variable, "" if it is not set
+    :param ev: entry of ub_env, {"name": .., "append": .., "remove": ..}
+    :returns: the new value
+    """
+    remove = ev.get("remove", "").split()
+    words = [w for w in value.split() if w not in remove]
+    for w in ev.get("append", "").split():
+        if w not in words:
+            words.append(w)
+    return " ".join(words)
+
+
+def ub_env_printenv_value(name: str, retcode: int, out: str) -> str:
+    """
+    value of the U-Boot variable name from the output of printenv name,
+    "" if the variable is not set
+
+    A U-Boot without return codes (uboot_has_retcode = False) reports 0
+    also for a variable that is not set, so the output must start with
+    "<name>=".
+
+    :param name: name of the variable
+    :param retcode: return code of printenv
+    :param out: output of printenv
+    """
+    if retcode != 0 or not out.startswith(name + "="):
+        return ""
+    value = out[len(name) + 1 :]
+    return value[:-1] if value.endswith("\n") else value
+
+
+def ub_env_apply(ub, ev: dict) -> None:
+    """
+    set the U-Boot variable of the ub_env entry ev
+
+    An entry with "val" sets the variable to it. An entry with "append"
+    or "remove" changes the current value of the variable on the board
+    instead, see ub_env_edit(); a variable whose value is empty after
+    that is deleted.
+
+    :param ub: U-Boot shell of the board
+    :param ev: entry of ub_env
+    """
+    edit = "append" in ev or "remove" in ev
+    if edit == ("val" in ev):
+        raise ValueError(
+            f"ub_env entry {ev!r} needs either val or append/remove"
+        )
+    if not edit:
+        ub.env(ev["name"], ev["val"])
+        return
+
+    retcode, out = ub.exec("printenv", ev["name"])
+    value = ub_env_edit(ub_env_printenv_value(ev["name"], retcode, out), ev)
+    if value:
+        ub.env(ev["name"], value)
+    else:
+        ub.exec0("setenv", ev["name"])
 
 
 def ub_env_groups(cfgp) -> dict:
