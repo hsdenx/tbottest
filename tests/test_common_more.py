@@ -490,3 +490,37 @@ class TestGenericMachineDumpWrite:
         dumpfile.write_text("0x1000     0xdeadbeef\n")
         with pytest.raises(RuntimeError, match="not supported"):
             common.generic_machine_dump_write("linux", FakeLinuxShell(), str(dumpfile))
+
+
+class _HostPath(str):
+    """a linux.Path: str() names the machine, at_host() gives the path"""
+
+    def __new__(cls, host, path):
+        obj = super().__new__(cls, f"{host}:{path}")
+        obj.path = path
+        return obj
+
+    def at_host(self, host):
+        return self.path
+
+
+class _DdHost:
+    def __init__(self):
+        self.calls = []
+
+    def exec0(self, *args):
+        self.calls.append(tuple(str(a) for a in args))
+        return ""
+
+
+class TestLnxCreateRandom:
+    def test_path_of_the_machine(self):
+        lnx = _DdHost()
+        common.lnx_create_random(lnx, _HostPath("lab", "/tmp/f"), 10)
+        # not of=lab:/tmp/f, the str() of a linux.Path
+        assert lnx.calls == [("dd", "if=/dev/urandom", "of=/tmp/f", "bs=1", "count=10")]
+
+    def test_string(self):
+        lnx = _DdHost()
+        common.lnx_create_random(lnx, "/tmp/g", 4)
+        assert lnx.calls == [("dd", "if=/dev/urandom", "of=/tmp/g", "bs=1", "count=4")]

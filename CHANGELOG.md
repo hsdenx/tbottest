@@ -75,6 +75,8 @@
 - A pytest unit test suite with its own CI workflow, and `pyproject.toml`.
 
 ### Changed
+- `lnx_create_random()` takes a linux.Path as well as a string, and the
+  RS485 test passes its paths as linux.Path instead of `_local_str()`.
 - `lnx_can_write_dump_compare()` has no parameters `lab` and `lnx` any
   more. `lab` only decided whether to use sudo, `lnx` was not used.
 - `board_setup_can()` runs `ip` with `lnx_sudo()`, so with sudo unless

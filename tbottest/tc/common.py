@@ -536,17 +536,21 @@ def lnx_check_cmd(
 
 def lnx_create_random(
     lnx: linux.LinuxShell,
-    f: str,
+    f: typing.Union[str, "linux.Path"],
     len: int,
 ) -> bool:
     """
     create file f with len bytes and random content
 
     :param lnx: linux machine on which the file gets created
-    :param f: full path and filename which gets reated
+    :param f: full path and filename which gets reated, a string or a
+        linux.Path of lnx
     :param len: length of created file
     """
-    lnx.exec0("dd", "if=/dev/urandom", f"of={f}", "bs=1", f"count={len}")
+    # str() of a linux.Path is "<machine>:<path>"; at_host() gives the
+    # path and checks that it belongs to lnx
+    of = f.at_host(lnx) if hasattr(f, "at_host") else f
+    lnx.exec0("dd", "if=/dev/urandom", f"of={of}", "bs=1", f"count={len}")
     return True
 
 

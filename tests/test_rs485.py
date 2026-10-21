@@ -44,6 +44,9 @@ class FakePath(str):
     def _local_str(self):
         return str(self)
 
+    def at_host(self, host):
+        return str(self)
+
 
 class FakeHost:
     def __init__(self, name, cmp_ok=True):
@@ -91,6 +94,14 @@ class TestRs485SendAndCompare:
         cmp_calls = [c for c in lnx.commands if c[1][0] == "cmp"]
         assert len(cmp_calls) == 1
         assert [c for c in lab.commands if c[1][0] == "cmp"] == []
+
+    def test_send_file_paths(self):
+        lab = FakeHost("lab")
+        lnx = FakeHost("lnx")
+        rs485._rs485_send_and_compare(lab, lnx, lab, lnx, "eth0", "10", 0, "receive error")
+        cmds = [c[1] for c in lab.commands]
+        assert ("dd", "if=/dev/urandom", "of=/tmp/lab/rs485send", "bs=1", "count=10") in cmds
+        assert ("hexdump", "-C", "/tmp/lab/rs485send", ">/tmp/lab/rs485sendhex") in cmds
 
     def test_lab_to_board_mismatch_raises_receive_error(self):
         lab = FakeHost("lab")

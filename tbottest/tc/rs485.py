@@ -61,26 +61,20 @@ def _rs485_send_and_compare(
     pid = tar.env("!")
 
     # create randomfile and send
-    lnx_create_random(src, sendfile._local_str(), length)
-    src.exec0(
-        "hexdump",
-        "-C",
-        sendfile._local_str(),
-        linux.Raw(">"),
-        sendfilehex._local_str(),
-    )
+    lnx_create_random(src, sendfile, length)
+    src.exec0("hexdump", "-C", sendfile, linux.RedirStdout(sendfilehex))
     src.exec0(
         "cat",
-        sendfilehex._local_str(),
+        sendfilehex,
         linux.Raw(">"),
         linux.Raw("$SERIAL_DEV"),
     )
     if debug:
-        src.exec0("cat", sendfilehex._local_str())
+        src.exec0("cat", sendfilehex)
 
     tar.exec("kill", pid, linux.Then, "wait", pid)
     if debug:
-        tar.exec0("cat", rcvtmpfile._local_str())
+        tar.exec0("cat", rcvtmpfile)
 
     if src is lab:
         # lab -> board: the reference file lives on lab; copy it onto
@@ -88,10 +82,10 @@ def _rs485_send_and_compare(
         # compare there against what the board received
         tbot_copy_file_to_board(lab, lnx, ethdevice, sendfilehexbase)
         try:
-            tar.exec0("cmp", tar.tmpdir() / sendfilehexbase, rcvtmpfile._local_str())
+            tar.exec0("cmp", tar.tmpdir() / sendfilehexbase, rcvtmpfile)
         except Exception:
             tar.exec0("cat", tar.tmpdir() / sendfilehexbase)
-            tar.exec0("cat", rcvtmpfile._local_str())
+            tar.exec0("cat", rcvtmpfile)
             raise RuntimeError(errmsg)
     else:
         # board -> lab: the reference file already lives on the
@@ -101,7 +95,7 @@ def _rs485_send_and_compare(
         try:
             lnx.exec0("cmp", sendfilehex, lnx.tmpdir() / rcvfile)
         except Exception:
-            src.exec0("cat", sendfilehex._local_str())
+            src.exec0("cat", sendfilehex)
             src.exec0("cat", lnx.tmpdir() / rcvfile)
             raise RuntimeError(errmsg)
 

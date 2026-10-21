@@ -130,8 +130,15 @@ def install_tbot_stubs() -> None:
     linux_mod = _AnyAttrModule("tbot.machine.linux")
 
     class FakePath(str):
+        # linux.Path(host, path) as in tbot, or FakePath(path)
+        def __new__(cls, *args):
+            return super().__new__(cls, args[-1])
+
         def __truediv__(self, other):
             return FakePath(f"{self}/{other}")
+
+        def at_host(self, host):
+            return str(self)
 
         def _local_str(self):
             return str(self)
@@ -142,6 +149,15 @@ def install_tbot_stubs() -> None:
     class Raw(str):
         pass
 
+    class RedirStdout:
+        """keeps its target, shows as >target in recorded commands"""
+
+        def __init__(self, path):
+            self.path = path
+
+        def __str__(self):
+            return f">{self.path}"
+
     class Workdir:
         @staticmethod
         def static(host, path):
@@ -151,6 +167,7 @@ def install_tbot_stubs() -> None:
     linux_mod.Path = FakePath
     linux_mod.path = types.SimpleNamespace(Path=FakePath)
     linux_mod.Raw = Raw
+    linux_mod.RedirStdout = RedirStdout
     linux_mod.Pipe = "|"
     linux_mod.Workdir = Workdir
     machine_mod.linux = linux_mod
