@@ -179,6 +179,10 @@
 - Copies of the ini files were left behind.
 
 ### Removed
+- The rows of the board keys `rs485labdev`, `rs485baud`, `rs485boarddev`
+  and `rs485lengths` in the documentation of the board configuration. No
+  code reads them; the values are entries of the key `rs485` of
+  `generic_lnx_test_rs485`, or parameters of `board_lnx_rs485`.
 - The bootlin and linaro toolchains of the lab host. The classes are gone
   from tbot, the lab host raises like the build hosts do.
 - The attributes of `GenericBoardConfig` for the keys of the board
