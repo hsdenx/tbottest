@@ -27,6 +27,9 @@ Currently supported SoCs:
 
 # use the regdump tool without tbot
 
+regdump.py needs neither tbot nor the installed tbottest, it takes
+registermap.py from this repository.
+
 clone this repo
 
 	git clone https://github.com/hsdenx/tbottest.git

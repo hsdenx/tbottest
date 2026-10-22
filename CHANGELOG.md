@@ -136,6 +136,11 @@
 - `GenericUBoot.exec()` reads back the echo of the command line like tbot.
 
 ### Fixed
+- `scripts/registermap/regdump.py` did not run without tbot, as
+  importing `tbottest.tc.registermap` ran `tbottest/__init__.py`, which
+  imports tbot, and it found tbottest only in a directory named
+  tbottest. It takes the repository it is in now and loads the modules
+  without the `__init__.py` of the packages. With unit tests.
 - `create_setup.sh` kept an existing `setup.sh` without a word when it
   had no aliases for the board just set up, e.g. one from an earlier run
   for another board, and printed aliases that did not exist. It still

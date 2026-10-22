@@ -12,9 +12,21 @@ import inspect
 import json
 import os
 import sys
+import types
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-sys.path.insert(0, currentdir + "/../../../tbottest")
+# the tbottest repository, scripts/registermap is two levels below it
+repodir = os.path.normpath(os.path.join(currentdir, "..", ".."))
+
+# This script runs without tbot. tbottest/__init__.py imports tbot, so
+# register the packages tbottest and tbottest.tc with their directories
+# only, without running their __init__.py, and import the modules of
+# them that work without tbot.
+for _name in ("tbottest", "tbottest.tc"):
+    if _name not in sys.modules:
+        _pkg = types.ModuleType(_name)
+        _pkg.__path__ = [os.path.join(repodir, *_name.split("."))]
+        sys.modules[_name] = _pkg
 
 from tbottest.tc.registermap import REGISTERMAP  # noqa: E402
 
