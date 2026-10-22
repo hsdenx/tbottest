@@ -100,8 +100,9 @@ Aliases for starting tbot
 ``create_setup.sh`` also writes ``setup.sh`` next to ``tbot``,
 ``tbottest`` and ``tbotconfig``, from the example
 ``tbottest/tbotconfig/setup.sh``, with the board name and the vendor
-filled in. An existing ``setup.sh`` is left alone. Source it in that
-directory:
+filled in. An existing ``setup.sh`` is left alone; if it has no aliases
+for the board, ``create_setup.sh`` warns and prints the two commands that
+write one. Source it in that directory:
 
 .. code-block:: bash
 

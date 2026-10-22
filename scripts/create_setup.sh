@@ -507,7 +507,15 @@ if [ "$TBOTCONFIGEXISTS" == "no" ];then
 
 	# aliases for starting tbot, see the quick start documentation
 	if [ -e setup.sh ];then
-		echo "Found existing setup.sh, do nothing with it!"
+		if grep -q "^alias tb${BOARDNAME}=" setup.sh; then
+			echo "Found existing setup.sh, do nothing with it!"
+		else
+			# left alone as well, but the aliases printed below are missing
+			echo "WARNING: the existing setup.sh has no aliases for ${BOARDNAME}, it is left as it is."
+			echo "Write a setup.sh for ${BOARDNAME} with:"
+			echo "cp tbottest/tbottest/tbotconfig/setup.sh setup.sh"
+			echo "sed -i \"s|VENDOR|${VENDOR}|g; s|BOARDNAME|${BOARDNAME}|g\" setup.sh"
+		fi
 	else
 		cp tbottest/tbottest/tbotconfig/setup.sh setup.sh
 		sed -i "s|VENDOR|$VENDOR|g" setup.sh

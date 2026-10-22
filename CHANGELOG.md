@@ -136,6 +136,11 @@
 - `GenericUBoot.exec()` reads back the echo of the command line like tbot.
 
 ### Fixed
+- `create_setup.sh` kept an existing `setup.sh` without a word when it
+  had no aliases for the board just set up, e.g. one from an earlier run
+  for another board, and printed aliases that did not exist. It still
+  keeps it, but warns and prints the commands that write a `setup.sh`
+  for the board.
 - Command line completion of tbottest testcases, e.g.
   `$tbtc.generic_board.gen<TAB>`, found nothing, because tbot looks a
   module up below the working directory, and in a setup made by
