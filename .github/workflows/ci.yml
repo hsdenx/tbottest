@@ -80,6 +80,11 @@ jobs:
             echo "Commandline completion testcase failed"
             returncode=1
           fi
+          RET=$(tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth --complete-module tbottest.tc.generic_b)
+          if [[ "${RET}" != "tbottest.tc.generic_board" ]];then
+            echo "Commandline completion tbottest module failed"
+            returncode=1
+          fi
           echo "----- now try to login into lab with tbot setup and do all tests -----"
           tbottest/newtbot_starter.py @tbotconfig/foo/args/argsfoo-noeth -q -q tbotconfig.ci.tests.all
           exitcode="$?"

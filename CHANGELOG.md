@@ -134,6 +134,14 @@
 - `GenericUBoot.exec()` reads back the echo of the command line like tbot.
 
 ### Fixed
+- Command line completion of tbottest testcases, e.g.
+  `$tbtc.generic_board.gen<TAB>`, found nothing, because tbot looks a
+  module up below the working directory, and in a setup made by
+  create_setup.sh the package is tbottest/tbottest there. `newtbot_completion.py`, which
+  `newtbot_starter.py` installs into tbot, looks it up through sys.path
+  as an import does. `completions.sh` completes a variable name such as
+  `$tbtc` without the space bash-completion adds, so the module path can
+  follow.
 - `board_lnx_cangen` hung after cangen on a board with candump of
   canutils (Pengutronix), which ends on SIGTERM only when the next frame
   arrives; `stop_candump()` kills it after 2 seconds. Such a candump has

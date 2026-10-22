@@ -1,6 +1,17 @@
 _newbot()
 {
     local cur prev words cword
+
+    # complete a variable name such as $tbtc from setup.sh here, without
+    # the space _init_completion adds, so the module path can follow
+    # ($tbtc.generic_board...)
+    local word="${COMP_WORDS[COMP_CWORD]}"
+    if [[ "$word" =~ ^\$[A-Za-z0-9_]*$ ]]; then
+        compopt -o nospace
+        mapfile -t COMPREPLY < <(compgen -v -P "\$" -- "${word:1}")
+        return
+    fi
+
     _init_completion || return
 
     # bash looks up the completion before it expands an alias, so replace

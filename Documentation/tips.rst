@@ -10,6 +10,10 @@ enable commandline completions with:
 
         $ source tbottest/completions.sh
 
+It completes the testcases of tbotconfig and of tbottest, also behind the
+variables of setup.sh, for example ``$tbtc.generic_board.gen<TAB>``, and
+the aliases of setup.sh.
+
 testcase parameters
 -------------------
 

@@ -41,7 +41,13 @@ try:
 except:
     sys.path.insert(0, currentdir + "/../tbottest")
 
+import tbot.newbot  # noqa: E402
 from tbot.newbot import main  # noqa: E402
+
+# complete tbottest.tc.<TAB> as well, see newtbot_completion.py
+import newtbot_completion  # noqa: E402
+
+newtbot_completion.install(tbot.newbot)
 
 if __name__ == "__main__":
     # start time of this run for argumentfiles, which tbot expands shell
