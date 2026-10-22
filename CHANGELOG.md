@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 ### Added
+- `scripts/registermap/stm32_svd_create_registermap.py` makes the
+  registermap of an STM32MP1 from the SVD file of ST and takes the bus of
+  every peripheral and the descriptions and pages of an existing
+  registermap of the reference manual over, register by register at the
+  same address.
+  `stm32mp157_registers.json` is made that way now, with 123 peripherals
+  and 3724 registers instead of 9 registermaps, 514 of the registers with
+  the texts of the reference manual. The register names are the ones of the
+  SVD (`CR1` of USART1, not `USART_CR1`), which matters for `--regsfile`
+  of regdump.py. With unit tests.
 - The quick start recommends the JSON configuration (`create_setup.sh
   --json`) for a new setup.
 - An entry of `lnx_commands` may leave out `"val"` and only run its
