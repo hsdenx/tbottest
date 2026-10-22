@@ -3,7 +3,7 @@
 stm32_svd_create_registermap.py - create the registermap in JSON format for
 STM32MP1 SoCs from the SVD file of ST.
 
-usage: stm32_svd_create_registermap.py [-h] -s SVD [-m MERGE] -o OUTPUT
+usage: stm32_svd_create_registermap.py [-h] -s SVD [-m MERGE] [--rm RM] -o OUTPUT
 
 example:
 
@@ -12,21 +12,30 @@ example:
     $ unzip stm32mp1-svd.zip
     $ python3 stm32_svd_create_registermap.py \\
         -s STM32MP1_svd/STM32MP1_svd_v1.1/STM32MP157x.svd \\
-        -m stm32mp157_registers.json -o stm32mp157_registers.json
+        -m stm32mp157_registers.json --rm rm0436.pdf -o stm32mp157_registers.json
 
 The SVD has every peripheral with its base address, every register with
 offset and reset value and every bit field with its position, but most
 field descriptions are only the name of the field and there is no page
-of the reference manual. With -m the bus of every peripheral, and the descriptions,
-pages and chapters of an existing registermap (e.g. made with stm32mp157_create_registermap.py
-from the reference manual) are taken over, register by register at the
-same address, field by field of the same name or bit range.
+of the reference manual. With -m the bus of every peripheral, and the
+descriptions, pages and chapters of an existing registermap (e.g. made
+with stm32mp157_create_registermap.py from the reference manual) are
+taken over, register by register at the same address, field by field of
+the same name or bit range.
+
+With --rm the descriptions of the fields, and page and chapter of the
+registers, are taken from the reference manual (PDF) in place of the
+ones of the SVD or of -m, where the reference manual has them, see
+stm32_rm_descriptions.py; that needs pdfplumber.
 """
 
 import argparse
 import json
 import typing
 import xml.etree.ElementTree as ET
+
+# only re and typing at import, pdfplumber is loaded for --rm only
+from stm32_rm_descriptions import FOOTER, FOOTER_TAIL
 
 
 def parse_arguments():
@@ -37,6 +46,9 @@ def parse_arguments():
     parser.add_argument("-s", "--svd", required=True, help="SVD file of ST")
     parser.add_argument(
         "-m", "--merge", help="existing registermap to take descriptions and pages from"
+    )
+    parser.add_argument(
+        "--rm", help="reference manual (PDF) to take the missing descriptions from"
     )
     parser.add_argument("-o", "--output", required=True, help="JSON file to write")
     return parser.parse_args()
@@ -165,6 +177,20 @@ def merge_bus(registermap: list, old: list) -> int:
     return n
 
 
+def clean_description(desc: str) -> str:
+    """a description without the page headers and footers an older
+    extraction from the reference manual left in it"""
+    lines = []
+    for line in desc.split("\n"):
+        if line.strip() and FOOTER.match(line.strip()):
+            continue
+        cut = FOOTER_TAIL.sub("", line)
+        if line.strip() and not cut.strip():
+            continue
+        lines.append(cut)
+    return "\n".join(lines)
+
+
 def map_pairs(registermap: list, old: list) -> typing.List[typing.Tuple[dict, dict]]:
     """
     pairs of an old registermap and the new one of the peripheral at the
@@ -217,14 +243,25 @@ def merge_descriptions(registermap: list, old: list) -> typing.Tuple[int, int]:
             for bit in reg["bits"]:
                 desc = byfield.get(bit["field"], byrange.get(bit["range"]))
                 if desc is not None:
-                    bit["description"] = desc
+                    bit["description"] = clean_description(desc)
                     nfields += 1
     return nregs, nfields
 
 
+def map_groups(root: ET.Element) -> typing.Dict[str, typing.Tuple[str, str]]:
+    """mapname -> (group name, peripheral name) of every registermap of the SVD"""
+    groups = {}
+    for p in root.find("peripherals").findall("peripheral"):
+        if not p.get("derivedFrom"):
+            name = text(p, "name")
+            groups[f"{name} registers"] = (text(p, "groupName"), name)
+    return groups
+
+
 def main() -> None:
     args = parse_arguments()
-    registermap = svd_to_registermap(ET.parse(args.svd).getroot())
+    root = ET.parse(args.svd).getroot()
+    registermap = svd_to_registermap(root)
     if args.merge:
         with open(args.merge, encoding="utf-8") as f:
             old = json.load(f)
@@ -232,6 +269,15 @@ def main() -> None:
         nbus = merge_bus(registermap, old)
         print(f"took over {nregs} registers and {nfields} field descriptions from {args.merge}")
         print(f"took over the bus of {nbus} peripherals from {args.merge}")
+    if args.rm:
+        # needs pdfplumber, only loaded for --rm
+        import stm32_rm_descriptions as rmdesc
+
+        index = rmdesc.RmIndex(rmdesc.pdf_outline(args.rm))
+        nregs, nfields = rmdesc.apply_rm(
+            registermap, index, rmdesc.PdfPages(args.rm), map_groups(root)
+        )
+        print(f"found {nregs} registers in {args.rm}, took {nfields} field descriptions")
     with open(args.output, "w", encoding="utf-8") as f:
         json.dump(registermap, f, indent=1)
         f.write("\n")

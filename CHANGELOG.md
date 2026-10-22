@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 ### Added
+- `stm32_svd_create_registermap.py --rm` takes page, chapter and the
+  field descriptions from the reference manual (PDF, with
+  `stm32_rm_descriptions.py`). The register is looked up in the table of
+  contents of the PDF, by its name or by a name with an index letter
+  (`GPIOx_MODER` for `GPIOA_MODER`), and the fields are taken from the
+  "Bit n NAME: ..." lines of its section. Headers and footers an older
+  extraction left in descriptions taken over with `-m` are dropped.
+  `stm32mp157_registers.json` is made with RM0436 now, with 15634 of the
+  17044 fields described and 3466 of the 3724 registers with a page.
 - `scripts/registermap/stm32_svd_create_registermap.py` makes the
   registermap of an STM32MP1 from the SVD file of ST and takes the bus of
   every peripheral and the descriptions and pages of an existing

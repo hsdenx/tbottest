@@ -36,10 +36,15 @@ register at the same address:
 
 	wget -U "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)" https://www.st.com/resource/en/svd/stm32mp1-svd.zip
 	unzip stm32mp1-svd.zip
-	python3 stm32_svd_create_registermap.py -s STM32MP1_svd/STM32MP1_svd_v1.1/STM32MP157x.svd -m stm32mp157_registers.json -o stm32mp157_registers.json
+	python3 stm32_svd_create_registermap.py -s STM32MP1_svd/STM32MP1_svd_v1.1/STM32MP157x.svd -m stm32mp157_registers.json --rm rm0436.pdf -o stm32mp157_registers.json
 
-Most bit fields of the SVD have only their name as description, and a
-register without a counterpart in the PDF registermap has no page
+Most bit fields of the SVD have only their name as description. With
+```--rm``` and the reference manual RM0436 (PDF, needs ```pdfplumber```),
+```stm32_rm_descriptions.py``` looks every register up in the table of
+contents of the PDF and takes page, chapter and the descriptions of the
+fields from its section; they take the place of the ones of the SVD and of
+```-m```. A field the reference manual names otherwise keeps what it has,
+and a register it does not have (e.g. NVIC of the Cortex-M4) has no page
 (```RM page None``` in the dump). The names of the registers are the ones
 of the SVD, e.g. ```CR1``` for USART1, where the PDF has ```USART_CR1```.
 

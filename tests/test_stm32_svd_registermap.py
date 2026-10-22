@@ -19,6 +19,8 @@ from conftest import load_module
 HERE = os.path.dirname(__file__)
 SCRIPT = os.path.join(HERE, "..", "scripts", "registermap", "stm32_svd_create_registermap.py")
 REGDUMP = os.path.join(HERE, "..", "scripts", "registermap", "regdump.py")
+# the script imports stm32_rm_descriptions from its own directory
+sys.path.insert(0, os.path.dirname(SCRIPT))
 svd = load_module("stm32_svd_create_registermap", SCRIPT)
 
 SVD = """<?xml version="1.0" encoding="utf-8"?>
@@ -218,6 +220,15 @@ class TestMerge:
         assert [(o["mapname"], n["mapname"]) for o, n in pairs] == [
             ("USART registers", "USART1 registers")
         ]
+
+
+def test_clean_description():
+    desc = "USART enable\n1: enabled\n2628/4054 RM0436 Rev 7\nmore 2629/4054 RM0436 Rev\n"
+    assert svd.clean_description(desc) == "USART enable\n1: enabled\nmore\n"
+
+
+def test_map_groups(root):
+    assert svd.map_groups(root) == {"USART1 registers": ("USART", "USART1")}
 
 
 def test_script_and_regdump(tmp_path):
