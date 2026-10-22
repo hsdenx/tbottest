@@ -325,11 +325,32 @@ def test_setup_sh_ci(tmp_path):
 
 
 def test_setup_sh_kept(tmp_path):
-    (tmp_path / "setup.sh").write_text("# my own\n")
+    own = "# my own\nalias tbfoo=\"tb @args\"\n"
+    (tmp_path / "setup.sh").write_text(own)
     res = run_setup(tmp_path, [], inter=False)
     assert res.returncode == 0, res.stdout + res.stderr
-    assert (tmp_path / "setup.sh").read_text() == "# my own\n"
+    assert (tmp_path / "setup.sh").read_text() == own
     assert "Found existing setup.sh" in res.stdout
+    assert "WARNING" not in res.stdout
+
+
+def test_setup_sh_of_another_board_kept_with_warning(tmp_path):
+    """a setup.sh without the aliases of the board stays, with a warning
+    and the commands that write the one a fresh setup gets"""
+    (tmp_path / "setup.sh").write_text("# my own\nalias tbbar=\"tb @args\"\n")
+    res = run_setup(tmp_path, [], inter=False)
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert (tmp_path / "setup.sh").read_text().startswith("# my own")
+    assert "WARNING: the existing setup.sh has no aliases for foo" in res.stdout
+    assert "Found existing setup.sh" not in res.stdout
+
+    cmds = [ln for ln in res.stdout.splitlines() if ln.startswith(("cp ", "sed "))]
+    assert len(cmds) == 2
+    subprocess.run(["bash", "-c", "; ".join(cmds)], cwd=tmp_path, check=True)
+    fresh = tmp_path / "fresh"
+    fresh.mkdir()
+    assert run_setup(fresh, [], inter=False).returncode == 0
+    assert (tmp_path / "setup.sh").read_text() == (fresh / "setup.sh").read_text()
 
 
 def test_no_ci_testcases_by_default(tmp_path):
