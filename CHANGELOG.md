@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 ### Added
+- `scripts/registermap/am335x_create_registermap.py` makes the
+  registermap of the TI AM335x from its Technical Reference Manual
+  (SPRUH73), as TI publishes no SVD file for it, and
+  `am335x_registers.json` is made that way from SPRUH73L, with 63
+  instances of 40 modules, 1411 registers and 6518 fields, every register
+  with page and chapter. The subsystems CPSW, USB and PRU-ICSS are not in
+  it yet.
 - `stm32_svd_create_registermap.py --rm` takes page, chapter and the
   field descriptions from the reference manual (PDF, with
   `stm32_rm_descriptions.py`). The register is looked up in the table of
@@ -122,6 +129,10 @@
 - A pytest unit test suite with its own CI workflow, and `pyproject.toml`.
 
 ### Changed
+- `REGISTERMAP` (registermap.py) takes the format of a registermap from
+  its file instead of from the name of the SoC, so `am335x_registers.json`
+  works without a code path of its own; a SoC name it did not know raised
+  an error before.
 - `check_yocto_build_install_sdk()` starts the SDK installer as
   linux.Path instead of a path built as string.
 - `lnx_create_random()` takes a linux.Path as well as a string, and the

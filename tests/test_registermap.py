@@ -131,10 +131,40 @@ class TestGetRegisternameFromDict:
             REGISTERMAP(stm32_map_path).get_registername_from_dict() == "registername"
         )
 
-    def test_unsupported_soc_raises(self, nxp_map_path):
-        rm = REGISTERMAP(nxp_map_path, socname="unsupported")
-        with pytest.raises(RuntimeError, match="not found"):
-            rm.get_registername_from_dict()
+    def test_format_from_the_file_not_the_soc(self, nxp_map_path, stm32_map_path):
+        assert REGISTERMAP(nxp_map_path, socname="other").get_registername_from_dict() == (
+            "register"
+        )
+        assert REGISTERMAP(stm32_map_path, socname="other").get_registername_from_dict() == (
+            "registername"
+        )
+
+
+class TestFormatOfOtherSocs:
+    """a SoC that registermap.py does not name, e.g. the AM335x, works with
+    the format of its file"""
+
+    @pytest.fixture
+    def am335x_map_path(self, tmp_path):
+        p = tmp_path / "am335x_registers.json"
+        p.write_text(json.dumps(STM32_MAP))
+        return str(p)
+
+    def test_peripheralmaps(self, am335x_map_path):
+        rm = REGISTERMAP(am335x_map_path)
+        assert rm.socname == "am335x"
+        assert rm.has_peripheralmaps()
+        reg = rm.registermap_search_address("0x40005400")
+        assert reg["registername"] == "I2C_CR1"
+        assert rm.get_registername_from_dict() == "registername"
+
+    def test_flat_list(self, tmp_path):
+        p = tmp_path / "othersoc_registers.json"
+        p.write_text(json.dumps(NXP_MAP))
+        rm = REGISTERMAP(str(p))
+        assert not rm.has_peripheralmaps()
+        reg = rm.registermap_search_address("0x30330070")
+        assert reg["register"] == "IOMUXC_SW_MUX_CTL_PAD_ENET_TXC"
 
 
 class TestNxpSearchAddress:

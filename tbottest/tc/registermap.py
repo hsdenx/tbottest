@@ -36,7 +36,7 @@ class REGISTERMAP:
           },
         ]
 
-    registermap format for STM32MP157 is
+    registermap format for STM32MP157 and AM335x is
 
     .. code-block:: python
 
@@ -154,19 +154,27 @@ class REGISTERMAP:
         self.registermap = None
         self.register_load_map()
 
+    def has_peripheralmaps(self) -> bool:
+        """
+        True for a registermap in the format of the STM32MP157 (peripheralmaps
+        and registermaps, also used for the AM335x), False for the flat list
+        of registers of the i.MX8MP; the format comes from the file, not from
+        the name of the SoC
+        """
+        rmap = self.registermap
+        return (
+            isinstance(rmap, list)
+            and len(rmap) == 2
+            and isinstance(rmap[0], dict)
+            and "peripheralmaps" in rmap[0]
+        )
+
     def get_registername_from_dict(self) -> str:
         """
         return the name of the registername field in the
-        dictionary for the SoC.
+        dictionary of the format of the registermap.
         """
-        if self.socname == "imx8mp":
-            return "register"
-        elif self.socname == "stm32mp157":
-            return "registername"
-
-        raise RuntimeError(
-            f"register field name in dict for SoC {self.socname} not found"
-        )
+        return "registername" if self.has_peripheralmaps() else "register"
 
 
     def registername_to_address(self, name, index) -> str:
@@ -294,12 +302,9 @@ class REGISTERMAP:
 
         :param address: hex string of address
         """
-        if self.socname == "imx8mp":
-            return self.registermap_nxp_search_address(address)
-        elif self.socname == "stm32mp157":
+        if self.has_peripheralmaps():
             return self.registermap_stm32mp1_search_address(address)
-
-        raise RuntimeError(f"Soc {self.socname} not yet supported")
+        return self.registermap_nxp_search_address(address)
 
     def registermap_dump_register(self, address, val) -> bool:
         """

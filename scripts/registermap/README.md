@@ -24,6 +24,26 @@ Currently supported SoCs:
 
 - ```imx8mp```
 - ```stm32mp157```
+- ```am335x```
+
+registermap.py takes the format of a registermap from its file, a list of
+registers (imx8mp) or peripheralmaps and registermaps (stm32mp157, am335x),
+so a new SoC needs no change there.
+
+# am335x from the Technical Reference Manual of TI
+
+TI publishes no SVD file for the AM335x. ```am335x_create_registermap.py```
+takes the registers from the table of contents of the Technical Reference
+Manual SPRUH73 (PDF, needs ```pdfplumber```), the fields from their
+"Field Descriptions" tables, and the base addresses and the bus of the
+instances from the memory map tables of chapter 2:
+
+	python3 am335x_create_registermap.py -t spruh73l.pdf -o am335x_registers.json
+
+```INSTANCE_MODULES``` in the script links an instance of the memory map
+(```UART1```) to the register section of its module (```UART```).
+Instances inside a subsystem (CPSW, USB, PRU-ICSS) have their offsets in
+their own chapters and are not in the registermap yet.
 
 # stm32mp157 from the SVD file of ST
 
