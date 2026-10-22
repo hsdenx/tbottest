@@ -80,6 +80,7 @@ Further generic testcases:
         ":py:func:`~tbottest.tc.generic_board.generic_lnx_create_dump_files`, :py:func:`~tbottest.tc.generic_board.generic_lnx_check_dump_files`", "lnx_dump_files", "write register dump files, and compare the registers with them later"
         ":py:func:`~tbottest.tc.generic_board.generic_cmd_versions`", "", "finds out which implementation and version of the commands tbottest uses lab host, build host and board have, and logs a line for the key cmd_versions of each, see `command versions`_"
         ":py:func:`~tbottest.tc.generic_board.generic_config_to_json`", "", "writes the configuration of a run as JSON, see :ref:`jsonconfiguration`"
+        ":py:func:`~tbottest.tc.generic_board.generic_ub_dump_register`", "regdump, socname", "reads the registers in U-Boot with md.l and writes them with the register map of the SoC socname into generic_registerdump_uboot.txt in the workdir of the local host; skipped without socname"
         ":py:func:`~tbottest.tc.generic_board.generic_kas_all`", "kas, kas_check_files, kas_results", "builds with kas, calls generic_kas_checkout, generic_kas_build, generic_kas_check_build and generic_kas_copy, see `kas settings`_"
 
 There is no generic testcase for all U-Boot testcases. The template
@@ -1209,6 +1210,7 @@ settings needed for linux testcases.
         "nvramsz", "size of nvram device", "8192", "nvramsz = 8192"
         "ping","list of dict for ping config.","[]","ping = [{""ip"":""${default:serverip}"",""retry"":""10""}]"
         "regdump","list of dict for generic regdump","[]","regdump = [{""address"":""0x30340004""}, {""address"":""0x30330070""}]"
+        "socname","name of the SoC whose register map the register dumps take (scripts/registermap/<socname>_registers.json), needed by generic_ub_dump_register; generic_lx_dump_register finds the SoC itself without it","None","socname = ""am335x"""
         "rs485","list of dictionary, each a run of board_lnx_rs485 with its parameters ethdevice, rs485labdev, rs485baud, rs485boarddev, rs485lengths and debug","[]","rs485 = [{""ethdevice"": ""eth0"", ""rs485labdev"": ""/dev/ttyUSB0"", ""rs485baud"": ""115200"", ""rs485boarddev"": [""/dev/ttymxc2""], ""rs485lengths"": [""1"", ""100""]}]"
         "sensors","list of dictionary for checking temperature sensors","[]","sensors = [{""path"":""/sys/class/hwmon/hwmon0"", ""name"":""tmp102"", ""tmpvalues"":[{""valname"":""temp1_input"", ""min"":""0"", ""max"":""100000""}]},]"
         "mtd_parts","list of dictionary for MTD parts definition","[]","mtd_parts = [{""name"":""SPL"", ""size"":""10000""},]"

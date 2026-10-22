@@ -1,5 +1,5 @@
 import tbot
-from tbot.machine import linux
+from tbot.machine import board, linux
 from tbot.context import Optional
 
 from tbottest.boardgeneric import cfggeneric
@@ -21,6 +21,7 @@ from tbottest.tc.can import board_lnx_cangen, cangen_config_calls
 from tbottest.tc.rs485 import board_lnx_rs485, rs485_config_kwargs
 from tbottest.tc.generictestdef import TC_SKIP, TC_FAIL, TC_OKAY, require_cfg, tc_config
 from tbottest.tc.registermap import REGISTERMAP
+from tbottest.tc.uboot import ub_read_register
 
 cfg = cfggeneric
 
@@ -139,6 +140,29 @@ def generic_lnx_create_dump_files(
                 config["readtype"],
             )
 
+def dump_registers(local, socname: str, read, outname: str) -> None:
+    """
+    read the registers of the key regdump with read and dump them with
+    the registermap of socname (scripts/registermap/<socname>_registers.json
+    of the source directory) into outname in the workdir of local
+
+    :param local: local host
+    :param socname: name of the SoC
+    :param read: function that reads an address and returns its value
+    :param outname: name of the dump file
+    """
+    sourcepath = local.sourcedir()._local_str()
+    workpath = local.workdir()._local_str()
+    regmap = REGISTERMAP(f"{sourcepath}/scripts/registermap/{socname}_registers.json")
+    outputpath = f"{workpath}/{outname}"
+    local.exec0("rm", "-rf", outputpath)
+    for dump in cfg.get_config_literal("regdump", "[]"):
+        address = dump["address"]
+        regmap.registermap_dump_register_file(outputpath, address, read(address))
+
+    tbot.log.message(tbot.log.c(f"Register dumped to file {outputpath}").green)
+
+
 @tbot.testcase
 @require_cfg("regdump")
 def generic_lx_dump_register(
@@ -148,11 +172,15 @@ def generic_lx_dump_register(
     Create a register dump on lnx machine, and
     save it on local hosts workdir in file "generic_registerdump.txt"
 
+    The registermap is the one of the SoC the key socname of the board
+    configuration names, else the one generic_get_socname() finds.
+
     :param lnx: Linux machine we run on
 
     Uses config variables:
 
     regdump -- list of dictionary
+    socname -- optional, name of the SoC, e.g. am335x
 
     .. code-block:: python
 
@@ -163,25 +191,59 @@ def generic_lx_dump_register(
             lnx = cx.request(tbot.role.BoardLinux)
 
         local = cx.request(tbot.role.LocalHost)
-        sourcepath = local.sourcedir()._local_str()
-        workpath = local.workdir()._local_str()
-        socname = generic_get_socname(lnx)
+        socname = cfg.get_config("socname", None) or generic_get_socname(lnx)
         if "not detected" in socname:
             tbot.log.message(tbot.log.c(f"SoC not detected, please add in generic_get_socname").yellow)
             return TC_SKIP
 
-        name = f"{socname}_registers.json"
-        registerfilepath = f"{sourcepath}/scripts/registermap/{name}"
-        regmap = REGISTERMAP(registerfilepath)
-        outputpath = f"{workpath}/generic_registerdump.txt"
-        local.exec0("rm", "-rf", outputpath)
-        for dump in cfg.get_config_literal("regdump", "[]"):
-            address = dump["address"]
-            #val = ub_read_register(ub, address)
-            val = lx_devmem2_get(lnx, address, "w")
-            regmap.registermap_dump_register_file(outputpath, address, val)
+        dump_registers(
+            local, socname, lambda address: lx_devmem2_get(lnx, address, "w"),
+            "generic_registerdump.txt",
+        )
 
-        tbot.log.message(tbot.log.c(f"Register dumped to file {outputpath}").green)
+
+@tbot.testcase
+@require_cfg("regdump")
+def generic_ub_dump_register(
+    ub: Optional[board.UBootShell] = None,
+) -> int:  # noqa: D107
+    """
+    Create a register dump in U-Boot with md.l, and save it on local hosts
+    workdir in file "generic_registerdump_uboot.txt", as
+    :py:func:`generic_lx_dump_register` does in Linux
+
+    The registermap is the one of the SoC the key socname of the board
+    configuration names; there is no /proc/device-tree in U-Boot to find
+    it, and "fdt addr" would overwrite the variable fdtaddr. Without
+    socname the testcase is skipped.
+
+    A register of a module whose clock is off may end in a data abort
+    and a reset of U-Boot, so regdump should name registers of modules
+    U-Boot has running.
+
+    :param ub: U-Boot machine we run on
+
+    Uses config variables:
+
+    regdump -- list of dictionary
+    socname -- name of the SoC, e.g. am335x
+    """
+    with tbot.ctx() as cx:
+        if ub is None:
+            ub = cx.request(tbot.role.BoardUBoot)
+
+        socname = cfg.get_config("socname", None)
+        if not socname:
+            tbot.log.message(tbot.log.c("no socname in the board configuration").yellow)
+            return TC_SKIP
+
+        local = cx.request(tbot.role.LocalHost)
+        dump_registers(
+            local, socname, lambda address: ub_read_register(ub, address),
+            "generic_registerdump_uboot.txt",
+        )
+
+    return TC_OKAY
 
 
 @tbot.testcase

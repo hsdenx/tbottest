@@ -144,6 +144,10 @@ def install_fakes():
 
     registermap = types.ModuleType("tbottest.tc.registermap")
     registermap.REGISTERMAP = FakeRegisterMap
+
+    uboot = types.ModuleType("tbottest.tc.uboot")
+    uboot.ub_read_register = recorder("ub_read_register", "0x5678")
+    sys.modules["tbottest.tc.uboot"] = uboot
     sys.modules["tbottest.tc.registermap"] = registermap
 
     install_real_submodule("tbottest.tc.generictestdef", GENERICTESTDEF_PATH)
@@ -442,6 +446,45 @@ def test_dump_register_unknown_soc(local):
     CONFIG["_soc"] = "SoC not detected"
     assert gb.generic_lx_dump_register(lnx=LNX) == gtd.TC_SKIP
     assert calls("lx_devmem2_get") == []
+
+
+def test_dump_register_socname_from_config(local):
+    CONFIG["regdump"] = '[{"address": "0x44E0900C"}]'
+    CONFIG["socname"] = "am335x"
+    CONFIG["_soc"] = "SoC not detected"
+    gb.generic_lx_dump_register(lnx=LNX)
+    assert calls("generic_get_socname") == []
+    assert calls("REGISTERMAP") == [(("/src/scripts/registermap/am335x_registers.json",), {})]
+
+
+UB = object()
+
+
+def test_ub_dump_register(local):
+    CONFIG["regdump"] = '[{"address": "0x44E0900C"}, {"address": "0x44E004B4"}]'
+    CONFIG["socname"] = "am335x"
+    assert gb.generic_ub_dump_register(ub=UB) == gtd.TC_OKAY
+    assert calls("REGISTERMAP") == [(("/src/scripts/registermap/am335x_registers.json",), {})]
+    assert local.commands == [("rm", "-rf", "/work/generic_registerdump_uboot.txt")]
+    assert calls("ub_read_register") == [((UB, "0x44E0900C"), {}), ((UB, "0x44E004B4"), {})]
+    assert calls("registermap_dump_register_file") == [
+        (("/work/generic_registerdump_uboot.txt", "0x44E0900C", "0x5678"), {}),
+        (("/work/generic_registerdump_uboot.txt", "0x44E004B4", "0x5678"), {}),
+    ]
+    # no SoC detection in U-Boot
+    assert calls("generic_get_socname") == []
+
+
+def test_ub_dump_register_without_socname(local):
+    CONFIG["regdump"] = '[{"address": "0x44E0900C"}]'
+    assert gb.generic_ub_dump_register(ub=UB) == gtd.TC_SKIP
+    assert calls("ub_read_register") == []
+
+
+def test_ub_dump_register_without_regdump(local):
+    CONFIG["socname"] = "am335x"
+    assert gb.generic_ub_dump_register(ub=UB) == gtd.TC_SKIP
+    assert CALLS == []
 
 
 def test_cmd_versions_without_build_host(monkeypatch):

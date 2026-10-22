@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 ### Added
+- `generic_ub_dump_register` dumps the registers of the key `regdump` in
+  U-Boot with `md.l`, with the register map of the SoC the new board key
+  `socname` names, into `generic_registerdump_uboot.txt`. U-Boot has no
+  `/proc/device-tree`, and `fdt addr` would overwrite the variable
+  `fdtaddr`, so without `socname` it is skipped. `socname` also takes the
+  place of the detection in `generic_lx_dump_register`. Both share
+  `dump_registers()`.
 - `generic_get_socname()` recognises the AM335x by `ti,am33xx` in the
   compatible of the root of the device tree, as it has no
   `/proc/device-tree/soc@0/compatible`, so `generic_lx_dump_register`
