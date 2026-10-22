@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 ### Added
+- `scripts/registermap/mpc855_create_registermap.py` makes the
+  registermap of the PowerPC MPC855T from its user's manual: the
+  registers from Table 2-1, the fields from the field and bit description
+  tables, with the bit numbering of the manual (bit 0 the most
+  significant) turned into the one of the registermap. Its peripheral
+  table is relative to the IMMR (`"relative_to": "IMMR"`), the base comes
+  from `REGISTERMAP(..., base=...)`, `regdump.py --base` or the new board
+  key `registermap_base`. `mpc855_registers.json` is made that way, with
+  20 blocks, 161 registers and 677 fields.
 - `generic_ub_dump_register` dumps the registers of the key `regdump` in
   U-Boot with `md.l`, with the register map of the SoC the new board key
   `socname` names, into `generic_registerdump_uboot.txt`. U-Boot has no

@@ -144,7 +144,9 @@ def dump_registers(local, socname: str, read, outname: str) -> None:
     """
     read the registers of the key regdump with read and dump them with
     the registermap of socname (scripts/registermap/<socname>_registers.json
-    of the source directory) into outname in the workdir of local
+    of the source directory) into outname in the workdir of local; a
+    registermap relative to a base the board sets (the IMMR of the
+    MPC855T) takes it from the key registermap_base
 
     :param local: local host
     :param socname: name of the SoC
@@ -153,7 +155,10 @@ def dump_registers(local, socname: str, read, outname: str) -> None:
     """
     sourcepath = local.sourcedir()._local_str()
     workpath = local.workdir()._local_str()
-    regmap = REGISTERMAP(f"{sourcepath}/scripts/registermap/{socname}_registers.json")
+    regmap = REGISTERMAP(
+        f"{sourcepath}/scripts/registermap/{socname}_registers.json",
+        base=cfg.get_config("registermap_base", None),
+    )
     outputpath = f"{workpath}/{outname}"
     local.exec0("rm", "-rf", outputpath)
     for dump in cfg.get_config_literal("regdump", "[]"):

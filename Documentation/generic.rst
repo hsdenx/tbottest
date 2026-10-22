@@ -1211,6 +1211,7 @@ settings needed for linux testcases.
         "ping","list of dict for ping config.","[]","ping = [{""ip"":""${default:serverip}"",""retry"":""10""}]"
         "regdump","list of dict for generic regdump","[]","regdump = [{""address"":""0x30340004""}, {""address"":""0x30330070""}]"
         "socname","name of the SoC whose register map the register dumps take (scripts/registermap/<socname>_registers.json), needed by generic_ub_dump_register; generic_lx_dump_register finds the SoC itself without it","None","socname = ""am335x"""
+        "registermap_base","base address of a register map whose addresses are relative to it, as the one of the MPC855T to its IMMR (internal memory map register), for the register dump testcases","None","registermap_base = ""0xFFF00000"""
         "rs485","list of dictionary, each a run of board_lnx_rs485 with its parameters ethdevice, rs485labdev, rs485baud, rs485boarddev, rs485lengths and debug","[]","rs485 = [{""ethdevice"": ""eth0"", ""rs485labdev"": ""/dev/ttyUSB0"", ""rs485baud"": ""115200"", ""rs485boarddev"": [""/dev/ttymxc2""], ""rs485lengths"": [""1"", ""100""]}]"
         "sensors","list of dictionary for checking temperature sensors","[]","sensors = [{""path"":""/sys/class/hwmon/hwmon0"", ""name"":""tmp102"", ""tmpvalues"":[{""valname"":""temp1_input"", ""min"":""0"", ""max"":""100000""}]},]"
         "mtd_parts","list of dictionary for MTD parts definition","[]","mtd_parts = [{""name"":""SPL"", ""size"":""10000""},]"

@@ -25,10 +25,32 @@ Currently supported SoCs:
 - ```imx8mp```
 - ```stm32mp157```
 - ```am335x```
+- ```mpc855```
 
 registermap.py takes the format of a registermap from its file, a list of
 registers (imx8mp) or peripheralmaps and registermaps (stm32mp157, am335x),
 so a new SoC needs no change there.
+
+# mpc855 from the user's manual, relative to the IMMR
+
+The registers of the MPC855T lie in a 16 Kbyte block at the address of the
+internal memory map register (IMMR), which the board sets. So
+```mpc855_registers.json``` has offsets to the IMMR, its peripheral table
+says so with ```"relative_to": "IMMR"```, and the base comes from who uses
+it: ```regdump.py --base <IMMR>```, ```REGISTERMAP(..., base=...)``` or the
+board key ```registermap_base``` for the register dump testcases.
+
+	python3 mpc855_create_registermap.py -u MPC855TUM.pdf -o mpc855_registers.json
+	scripts/registermap/regdump.py -s mpc855 --base 0xFFF00000 '[{"address":"0xFFF00000", "value":"0x00032640"}]'
+
+The script takes the registers from Table 2-1 "MPC855T Internal Memory
+Map" and the fields from the "Field Descriptions" or "Bit Descriptions"
+table of their section. The manual numbers the bits from the most
+significant one; a dump reads a 32-bit word at the register address, in
+which bit 0 of a 32, 16 or 8 bit register is bit 31 on the big-endian
+PowerPC, so the registermap has bit b of the manual as 31 - b. A 16 or 8
+bit register at an address that is not 32-bit aligned can not be read as
+a word.
 
 # am335x from the Technical Reference Manual of TI
 

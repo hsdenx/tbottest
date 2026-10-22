@@ -140,9 +140,15 @@ class REGISTERMAP:
     There are also helper script in `scripts/registermap <https://github.com/hsdenx/tbottest/tree/master/scripts/registermap>`_
     with which you can generate such a mapping from a reference manual.
 
+    A registermap whose first entry has ``"relative_to"`` (e.g. ``"IMMR"``
+    for the MPC855T, whose registers lie at an address the board sets)
+    has the ranges of its peripheralmaps as offsets; base is then the
+    address they are relative to.
+
+    :param base: base address of a relative registermap, an int or a hex string
     """
 
-    def __init__(self, mapname: str, socname: str = None) -> None:
+    def __init__(self, mapname: str, socname: str = None, base=None) -> None:
         self.mapname = mapname
         if socname is None:
             # Try to get socname from filename
@@ -151,8 +157,28 @@ class REGISTERMAP:
         else:
             self.socname = socname
 
+        self.base = int(base, 0) if isinstance(base, str) else base
         self.registermap = None
         self.register_load_map()
+
+    def relative_to(self):
+        """what the ranges of the peripheralmaps are relative to, None for
+        absolute addresses"""
+        if not self.has_peripheralmaps():
+            return None
+        return self.registermap[0].get("relative_to")
+
+    def map_base(self) -> int:
+        """the address the ranges of the peripheralmaps start from: 0, or
+        the base of a relative registermap"""
+        rel = self.relative_to()
+        if rel is None:
+            return 0
+        if self.base is None:
+            raise RuntimeError(
+                f"registermap {self.mapname} is relative to {rel}, give its base address"
+            )
+        return self.base
 
     def has_peripheralmaps(self) -> bool:
         """
@@ -207,7 +233,7 @@ class REGISTERMAP:
                     start = int(start_str, 16)
                     offset_str = r["offset"]
                     offset = int(offset_str, 16)
-                    addr = start + offset
+                    addr = self.map_base() + start + offset
                     return f"0x{addr:08x}"
 
                 i += 1
@@ -261,7 +287,7 @@ class REGISTERMAP:
         """
         permaps = self.registermap[0]["peripheralmaps"]
         regmaps = self.registermap[1]["registermaps"]
-        tmpaddr = int(address, 16)
+        tmpaddr = int(address, 16) - self.map_base()
 
         # search peripheral mapping
         permap = None

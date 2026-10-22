@@ -136,8 +136,8 @@ def install_fakes():
     sys.modules["tbottest.tc.kas"] = kas
 
     class FakeRegisterMap:
-        def __init__(self, path):
-            CALLS.append(("REGISTERMAP", (path,), {}))
+        def __init__(self, path, base=None):
+            CALLS.append(("REGISTERMAP", (path,), {"base": base}))
 
         def registermap_dump_register_file(self, *args):
             CALLS.append(("registermap_dump_register_file", args, {}))
@@ -432,7 +432,7 @@ def local(monkeypatch):
 def test_dump_register(local):
     CONFIG["regdump"] = '[{"address": "0x30340004"}, {"address": "0x30330070"}]'
     gb.generic_lx_dump_register(lnx=LNX)
-    assert calls("REGISTERMAP") == [(("/src/scripts/registermap/imx8mp_registers.json",), {})]
+    assert calls("REGISTERMAP") == [(("/src/scripts/registermap/imx8mp_registers.json",), {"base": None})]
     assert local.commands == [("rm", "-rf", "/work/generic_registerdump.txt")]
     assert calls("lx_devmem2_get") == [((LNX, "0x30340004", "w"), {}), ((LNX, "0x30330070", "w"), {})]
     assert calls("registermap_dump_register_file") == [
@@ -454,7 +454,7 @@ def test_dump_register_socname_from_config(local):
     CONFIG["_soc"] = "SoC not detected"
     gb.generic_lx_dump_register(lnx=LNX)
     assert calls("generic_get_socname") == []
-    assert calls("REGISTERMAP") == [(("/src/scripts/registermap/am335x_registers.json",), {})]
+    assert calls("REGISTERMAP") == [(("/src/scripts/registermap/am335x_registers.json",), {"base": None})]
 
 
 UB = object()
@@ -464,7 +464,7 @@ def test_ub_dump_register(local):
     CONFIG["regdump"] = '[{"address": "0x44E0900C"}, {"address": "0x44E004B4"}]'
     CONFIG["socname"] = "am335x"
     assert gb.generic_ub_dump_register(ub=UB) == gtd.TC_OKAY
-    assert calls("REGISTERMAP") == [(("/src/scripts/registermap/am335x_registers.json",), {})]
+    assert calls("REGISTERMAP") == [(("/src/scripts/registermap/am335x_registers.json",), {"base": None})]
     assert local.commands == [("rm", "-rf", "/work/generic_registerdump_uboot.txt")]
     assert calls("ub_read_register") == [((UB, "0x44E0900C"), {}), ((UB, "0x44E004B4"), {})]
     assert calls("registermap_dump_register_file") == [
@@ -473,6 +473,16 @@ def test_ub_dump_register(local):
     ]
     # no SoC detection in U-Boot
     assert calls("generic_get_socname") == []
+
+
+def test_dump_register_base_from_config(local):
+    CONFIG["regdump"] = '[{"address": "0xFFF00000"}]'
+    CONFIG["socname"] = "mpc855"
+    CONFIG["registermap_base"] = "0xFFF00000"
+    assert gb.generic_ub_dump_register(ub=UB) == gtd.TC_OKAY
+    assert calls("REGISTERMAP") == [
+        (("/src/scripts/registermap/mpc855_registers.json",), {"base": "0xFFF00000"})
+    ]
 
 
 def test_ub_dump_register_without_socname(local):

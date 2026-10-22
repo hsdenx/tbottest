@@ -196,3 +196,19 @@ def test_runs_without_tbot(mapdir):
     res, out = regdump(mapdir, "stm32mp157", '[{"address":"0x40012000","value":"0x0"}]')
     assert res.returncode == 0, res.stdout + res.stderr
     assert "register name: I2C_CR1" in out
+
+
+def test_relative_map_with_base(tmp_path):
+    rmap = json.loads(json.dumps(STM32MAP))
+    rmap[0]["relative_to"] = "IMMR"
+    for p in rmap[0]["peripheralmaps"]:
+        start, end = (int(a, 16) - 0x40012000 for a in p["range"].split(" - "))
+        p["range"] = f"0x{start:08X} - 0x{end:08X}"
+    (tmp_path / "mpc855_registers.json").write_text(json.dumps(rmap))
+    regs = '[{"address":"0xFFF00004","value":"0x3FF"}]'
+    res, out = regdump(tmp_path, "mpc855", regs, "--base", "0xFFF00000")
+    assert res.returncode == 0, res.stdout + res.stderr
+    assert "register name: I2C_CR2 addr 0xFFF00004" in out
+    # without the base the register can not be found
+    res, out = regdump(tmp_path, "mpc855", regs)
+    assert "address 0xFFF00004 not found" in res.stdout

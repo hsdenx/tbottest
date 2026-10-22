@@ -257,3 +257,45 @@ class TestDumpRegisterFile:
         ok = rm.registermap_dump_register_file(str(out), "0xdeadbeef", "0x0")
         assert ok is False
         assert "not found" in out.read_text()
+
+
+class TestRelativeRegistermap:
+    """a registermap relative to a base the board sets, as the IMMR of the
+    MPC855T"""
+
+    @pytest.fixture
+    def rel_map_path(self, tmp_path):
+        rmap = json.loads(json.dumps(STM32_MAP))
+        rmap[0]["relative_to"] = "IMMR"
+        for p in rmap[0]["peripheralmaps"]:
+            start, end = (int(a, 16) - 0x40005400 for a in p["range"].split(" - "))
+            p["range"] = f"0x{start:08X} - 0x{end:08X}"
+        path = tmp_path / "mpc855_registers.json"
+        path.write_text(json.dumps(rmap))
+        return str(path)
+
+    def test_search_with_base(self, rel_map_path):
+        rm = REGISTERMAP(rel_map_path, base="0xFFF00000")
+        assert rm.relative_to() == "IMMR"
+        assert rm.registermap_search_address("0xFFF00000")["registername"] == "I2C_CR1"
+        # the second peripheral, 0x400 behind the first
+        assert rm.registermap_search_address("0xFFF00400")["registername"] == "I2C_CR1"
+
+    def test_base_as_int(self, rel_map_path):
+        rm = REGISTERMAP(rel_map_path, base=0xFFF00000)
+        assert rm.registermap_search_address("0xFFF00000")["registername"] == "I2C_CR1"
+
+    def test_registername_to_address(self, rel_map_path):
+        rm = REGISTERMAP(rel_map_path, base="0xFFF00000")
+        assert rm.registername_to_address("I2C_CR1", 1) == "0xfff00400"
+
+    def test_without_base(self, rel_map_path):
+        rm = REGISTERMAP(rel_map_path)
+        with pytest.raises(RuntimeError, match="relative to IMMR, give its base address"):
+            rm.registermap_search_address("0xFFF00000")
+
+    def test_absolute_map_ignores_base(self, stm32_map_path, nxp_map_path):
+        assert REGISTERMAP(stm32_map_path).relative_to() is None
+        assert REGISTERMAP(nxp_map_path).relative_to() is None
+        rm = REGISTERMAP(stm32_map_path, base="0x1000")
+        assert rm.registermap_search_address("0x40005400")["registername"] == "I2C_CR1"

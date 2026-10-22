@@ -56,6 +56,12 @@ def parse_arguments():
     )
 
     parser.add_argument(
+        "--base",
+        default=None,
+        help="base address of a registermap relative to it, e.g. the IMMR of the MPC855T",
+    )
+
+    parser.add_argument(
         "--regsfile",
         default=None,
         help="File with a list of registername, index, value lines",
@@ -103,7 +109,7 @@ def analyze_register(args):
     """
     os.makedirs(args.input_dir, exist_ok=True)
     input_path = os.path.join(args.input_dir, f"{args.soc}_registers.json")
-    regmap = REGISTERMAP(input_path)
+    regmap = REGISTERMAP(input_path, base=args.base)
     os.makedirs(args.output_dir, exist_ok=True)
     output_path = os.path.join(args.output_dir, f"{args.soc}_result.txt")
     if args.regsfile:
