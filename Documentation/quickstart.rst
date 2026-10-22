@@ -23,6 +23,20 @@ need them. ``--json`` sets the configuration up as ``tbot.json`` and
 ``boardspecific.py``, see :ref:`jsonconfiguration`; only one of the two
 is copied, and the argument file ``argsbase`` names the JSON files.
 
+JSON is the preferred format for a new setup, so start it with
+``--json``:
+
+.. code-block:: bash
+
+    $ ./create_setup.sh --inter --json
+
+tbot reads the JSON files as they are. There are no modified copies, no
+``@@...@@`` placeholders and no ``boardspecific.py``; what depends on a
+flag or on the environment is written in the file as an expression such
+as ``${flag:NAME:-default}``. The ini files keep working, and
+``generic_config_to_json`` turns the configuration of an ini setup into
+JSON files, see :ref:`jsonconfiguration`.
+
 Lab setup
 ^^^^^^^^^
 

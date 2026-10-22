@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 ### Added
+- The quick start recommends the JSON configuration (`create_setup.sh
+  --json`) for a new setup.
 - An entry of `lnx_commands` may leave out `"val"` and only run its
   command, and may have `"mode": "exec"`, then its return code does not
   matter, as for `linux_init` (`lnx_check_cmd()`). So commands that
