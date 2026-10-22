@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 ### Added
+- `generic_get_socname()` recognises the AM335x by `ti,am33xx` in the
+  compatible of the root of the device tree, as it has no
+  `/proc/device-tree/soc@0/compatible`, so `generic_lx_dump_register`
+  takes `am335x_registers.json` there.
 - `scripts/registermap/am335x_create_registermap.py` makes the
   registermap of the TI AM335x from its Technical Reference Manual
   (SPRUH73), as TI publishes no SVD file for it, and

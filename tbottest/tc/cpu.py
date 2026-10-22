@@ -50,6 +50,10 @@ def generic_get_socname(
     Currently supported SoC
 
     fsl,imx8mp-soc    -> NXP imx8mp -> return "imx8mp"
+    ti,am33xx         -> TI am335x  -> return "am335x"
+
+    The AM335x has no compatible of its own in /proc/device-tree/soc@0, it
+    is taken from the compatible of the root of the device tree.
 
     :param lnx: linux machine where we run
 
@@ -64,6 +68,13 @@ def generic_get_socname(
             log = lnx.exec0("cat", "/proc/device-tree/soc@0/compatible")
             if "fsl,imx8mp-soc" in log:
                 return "imx8mp"
+        except Exception:
+            pass
+
+        try:
+            log = lnx.exec0("cat", "/proc/device-tree/compatible")
+            if "ti,am33xx" in log:
+                return "am335x"
         except Exception:
             pass
 
