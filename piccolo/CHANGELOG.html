@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Changelog &#8212; tbottest 0.0.1-453-g11e260a documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="_static/piccolo.css?v=c7a21aa7" />
+    <script src="_static/documentation_options.js?v=96142921"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-doc-theme="piccolo" src="_static/themeswitch.js?v=8de3ea61"></script>
+    <script src="_static/js/theme.js"></script>
+    <script src="_static/js/petite-vue.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing to tbot-test" href="CONTRIBUTING.html" />
+    <link rel="prev" title="tbottest.tbotconfig - ini file config" href="boardspecific.html" /> 
+  </head><body data-dark_mode_code_blocks="true">
+
+<div id="top_nav">
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="index.html" title="Go to homepage"><img src="_static/tbot-logo-white.png"/></a></h1>
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">quick start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic approach</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="generic.html"><code class="docutils literal notranslate"><span class="pre">tbottest.generic</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="boardlocking.html"><code class="docutils literal notranslate"><span class="pre">tbottest.boardlocking</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Testcase Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tc.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tc</span></code> - Testcases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfig.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="iniconfighelper.html"><code class="docutils literal notranslate"><span class="pre">tbottest.initconfighelper</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="machineinit.html"><code class="docutils literal notranslate"><span class="pre">tbottest.machineinit</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="connector.html"><code class="docutils literal notranslate"><span class="pre">tbottest.connector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="decorators.html"><code class="docutils literal notranslate"><span class="pre">tbottest.decorators</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="powercontrol.html"><code class="docutils literal notranslate"><span class="pre">tbottest.powercontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="labgeneric.html">Generic tbot config implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">generic config</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="boardspecific.html"><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Info</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#unreleased">[Unreleased]</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#added">Added</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#changed">Changed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fixed">Fixed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#removed">Removed</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing to tbot-test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">¶</a></h1>
+<section id="unreleased">
+<h2>[Unreleased]<a class="headerlink" href="#unreleased" title="Link to this heading">¶</a></h2>
+<section id="added">
+<h3>Added<a class="headerlink" href="#added" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">scripts/registermap/mpc855_create_registermap.py</span></code> makes the
+registermap of the PowerPC MPC855T from its user’s manual: the
+registers from Table 2-1, the fields from the field and bit description
+tables, with the bit numbering of the manual (bit 0 the most
+significant) turned into the one of the registermap. Its peripheral
+table is relative to the IMMR (<code class="docutils literal notranslate"><span class="pre">&quot;relative_to&quot;:</span> <span class="pre">&quot;IMMR&quot;</span></code>), the base comes
+from <code class="docutils literal notranslate"><span class="pre">REGISTERMAP(...,</span> <span class="pre">base=...)</span></code>, <code class="docutils literal notranslate"><span class="pre">regdump.py</span> <span class="pre">--base</span></code> or the new board
+key <code class="docutils literal notranslate"><span class="pre">registermap_base</span></code>. <code class="docutils literal notranslate"><span class="pre">mpc855_registers.json</span></code> is made that way, with
+20 blocks, 161 registers and 677 fields.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generic_ub_dump_register</span></code> dumps the registers of the key <code class="docutils literal notranslate"><span class="pre">regdump</span></code> in
+U-Boot with <code class="docutils literal notranslate"><span class="pre">md.l</span></code>, with the register map of the SoC the new board key
+<code class="docutils literal notranslate"><span class="pre">socname</span></code> names, into <code class="docutils literal notranslate"><span class="pre">generic_registerdump_uboot.txt</span></code>. U-Boot has no
+<code class="docutils literal notranslate"><span class="pre">/proc/device-tree</span></code>, and <code class="docutils literal notranslate"><span class="pre">fdt</span> <span class="pre">addr</span></code> would overwrite the variable
+<code class="docutils literal notranslate"><span class="pre">fdtaddr</span></code>, so without <code class="docutils literal notranslate"><span class="pre">socname</span></code> it is skipped. <code class="docutils literal notranslate"><span class="pre">socname</span></code> also takes the
+place of the detection in <code class="docutils literal notranslate"><span class="pre">generic_lx_dump_register</span></code>. Both share
+<code class="docutils literal notranslate"><span class="pre">dump_registers()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generic_get_socname()</span></code> recognises the AM335x by <code class="docutils literal notranslate"><span class="pre">ti,am33xx</span></code> in the
+compatible of the root of the device tree, as it has no
+<code class="docutils literal notranslate"><span class="pre">/proc/device-tree/soc&#64;0/compatible</span></code>, so <code class="docutils literal notranslate"><span class="pre">generic_lx_dump_register</span></code>
+takes <code class="docutils literal notranslate"><span class="pre">am335x_registers.json</span></code> there.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scripts/registermap/am335x_create_registermap.py</span></code> makes the
+registermap of the TI AM335x from its Technical Reference Manual
+(SPRUH73), as TI publishes no SVD file for it, and
+<code class="docutils literal notranslate"><span class="pre">am335x_registers.json</span></code> is made that way from SPRUH73L, with 63
+instances of 40 modules, 1411 registers and 6518 fields, every register
+with page and chapter. The subsystems CPSW, USB and PRU-ICSS are not in
+it yet.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stm32_svd_create_registermap.py</span> <span class="pre">--rm</span></code> takes page, chapter and the
+field descriptions from the reference manual (PDF, with
+<code class="docutils literal notranslate"><span class="pre">stm32_rm_descriptions.py</span></code>). The register is looked up in the table of
+contents of the PDF, by its name or by a name with an index letter
+(<code class="docutils literal notranslate"><span class="pre">GPIOx_MODER</span></code> for <code class="docutils literal notranslate"><span class="pre">GPIOA_MODER</span></code>), and the fields are taken from the
+“Bit n NAME: …” lines of its section. Headers and footers an older
+extraction left in descriptions taken over with <code class="docutils literal notranslate"><span class="pre">-m</span></code> are dropped.
+<code class="docutils literal notranslate"><span class="pre">stm32mp157_registers.json</span></code> is made with RM0436 now, with 15634 of the
+17044 fields described and 3466 of the 3724 registers with a page.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scripts/registermap/stm32_svd_create_registermap.py</span></code> makes the
+registermap of an STM32MP1 from the SVD file of ST and takes the bus of
+every peripheral and the descriptions and pages of an existing
+registermap of the reference manual over, register by register at the
+same address.
+<code class="docutils literal notranslate"><span class="pre">stm32mp157_registers.json</span></code> is made that way now, with 123 peripherals
+and 3724 registers instead of 9 registermaps, 514 of the registers with
+the texts of the reference manual. The register names are the ones of the
+SVD (<code class="docutils literal notranslate"><span class="pre">CR1</span></code> of USART1, not <code class="docutils literal notranslate"><span class="pre">USART_CR1</span></code>), which matters for <code class="docutils literal notranslate"><span class="pre">--regsfile</span></code>
+of regdump.py. With unit tests.</p></li>
+<li><p>The quick start recommends the JSON configuration (<code class="docutils literal notranslate"><span class="pre">create_setup.sh</span> <span class="pre">--json</span></code>) for a new setup.</p></li>
+<li><p>An entry of <code class="docutils literal notranslate"><span class="pre">lnx_commands</span></code> may leave out <code class="docutils literal notranslate"><span class="pre">&quot;val&quot;</span></code> and only run its
+command, and may have <code class="docutils literal notranslate"><span class="pre">&quot;mode&quot;:</span> <span class="pre">&quot;exec&quot;</span></code>, then its return code does not
+matter, as for <code class="docutils literal notranslate"><span class="pre">linux_init</span></code> (<code class="docutils literal notranslate"><span class="pre">lnx_check_cmd()</span></code>). So commands that
+prepare the checks, such as stopping a service, fit in the same list.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">board_lnx_cangen</span></code> sends with <code class="docutils literal notranslate"><span class="pre">cansequence</span></code> of canutils when the
+sending machine has no cangen, e.g. a board with canutils of
+Pengutronix, so the direction board2lab of <code class="docutils literal notranslate"><span class="pre">generic_lnx_test_cangen</span></code>
+works there. Its frames have the fixed CAN ID 2 and one data byte,
+counted up, and there is no gap; <code class="docutils literal notranslate"><span class="pre">check_cangen_log()</span></code> takes the CAN ID
+as <code class="docutils literal notranslate"><span class="pre">canid</span></code>.</p></li>
+<li><p>create_setup.sh writes a <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> into the setup directory if there
+is none, from the template <code class="docutils literal notranslate"><span class="pre">tbottest/tbotconfig/gitignore</span></code>. It keeps
+tbot/, tbottest/, log/, <code class="docutils literal notranslate"><span class="pre">*.pyc</span></code> and <code class="docutils literal notranslate"><span class="pre">*.swp</span></code> out of a git repository of
+the setup.</p></li>
+<li><p>An entry of <code class="docutils literal notranslate"><span class="pre">ub_env</span></code> or of a group <code class="docutils literal notranslate"><span class="pre">ub_env_&lt;name&gt;</span></code> may have <code class="docutils literal notranslate"><span class="pre">&quot;append&quot;</span></code>
+or <code class="docutils literal notranslate"><span class="pre">&quot;remove&quot;</span></code> instead of <code class="docutils literal notranslate"><span class="pre">&quot;val&quot;</span></code>, words added to or taken out of the
+value the U-Boot variable has on the board (<code class="docutils literal notranslate"><span class="pre">ub_env_apply()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ub_env_edit()</span></code>). Together with <code class="docutils literal notranslate"><span class="pre">&quot;flag&quot;</span></code>, several flags can each add a
+word to the same variable, e.g. to <code class="docutils literal notranslate"><span class="pre">optargs</span></code>, what needed
+<code class="docutils literal notranslate"><span class="pre">set_ub_board_specific()</span></code> in boardspecific.py before.</p></li>
+<li><p>Unit tests for the generic testcases of <code class="docutils literal notranslate"><span class="pre">tc/generic_board.py</span></code>, for the
+configuration a testcase reads, the calls it makes with it, the skip
+without its key and the counts of <code class="docutils literal notranslate"><span class="pre">generic_lnx_all</span></code>. The kas testcases
+are not covered yet.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generic_lnx_test_cangen</span></code>, run by <code class="docutils literal notranslate"><span class="pre">generic_lnx_all</span></code>, runs
+<code class="docutils literal notranslate"><span class="pre">board_lnx_cangen</span></code> for every entry of the board configuration key
+<code class="docutils literal notranslate"><span class="pre">cangen</span></code>, from the lab host to the board and from the board to the lab
+host (<code class="docutils literal notranslate"><span class="pre">cangen_config_calls()</span></code>). An entry names the CAN interfaces of
+board and lab host (<code class="docutils literal notranslate"><span class="pre">boarddev</span></code>, <code class="docutils literal notranslate"><span class="pre">labdev</span></code>) and may restrict the
+<code class="docutils literal notranslate"><span class="pre">directions</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generic_lnx_test_rs485</span></code>, run by <code class="docutils literal notranslate"><span class="pre">generic_lnx_all</span></code>, runs
+<code class="docutils literal notranslate"><span class="pre">board_lnx_rs485</span></code> once for every entry of the board configuration key
+<code class="docutils literal notranslate"><span class="pre">rs485</span></code>, whose keys are its parameters (<code class="docutils literal notranslate"><span class="pre">rs485_config_kwargs()</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">linux_safe_init_prompt</span></code> in the board configuration, True by default,
+sets tbot’s <code class="docutils literal notranslate"><span class="pre">safe_init_prompt</span></code>, so the prompt is read with
+<code class="docutils literal notranslate"><span class="pre">read_until_prompt_safe()</span></code> while tbot sets up the linux shell.</p></li>
+<li><p>Section <code class="docutils literal notranslate"><span class="pre">TC_BOARDNAME.TESTCASENAME</span></code> of the board configuration. While a
+testcase decorated with <code class="docutils literal notranslate"><span class="pre">tc_config()</span></code> or <code class="docutils literal notranslate"><span class="pre">require_cfg()</span></code> runs, a key is
+searched there first, then in <code class="docutils literal notranslate"><span class="pre">TC_BOARDNAME</span></code> and <code class="docutils literal notranslate"><span class="pre">TC</span></code>. There is
+deliberately no section <code class="docutils literal notranslate"><span class="pre">TC_TESTCASENAME</span></code> for all boards.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_config_literal()</span></code> reads a key as Python literal.</p></li>
+<li><p>Configuration as JSON. <code class="docutils literal notranslate"><span class="pre">tbot.json</span></code> and <code class="docutils literal notranslate"><span class="pre">BOARDNAME.json</span></code> replace
+<code class="docutils literal notranslate"><span class="pre">tbot.ini</span></code>, <code class="docutils literal notranslate"><span class="pre">BOARDNAME.ini</span></code> and <code class="docutils literal notranslate"><span class="pre">boardspecific.py</span></code> when the flags
+<code class="docutils literal notranslate"><span class="pre">inifile:</span></code> and <code class="docutils literal notranslate"><span class="pre">boardfile:</span></code> name <code class="docutils literal notranslate"><span class="pre">.json</span></code> files. Values that depend on a
+run are expressions (<code class="docutils literal notranslate"><span class="pre">${env:NAME}</span></code>, <code class="docutils literal notranslate"><span class="pre">${flag:NAME}</span></code>, <code class="docutils literal notranslate"><span class="pre">${lab:key}</span></code>,
+<code class="docutils literal notranslate"><span class="pre">${tbot:SECTION:key}</span></code>), which also work in ini files. An <code class="docutils literal notranslate"><span class="pre">ub_env</span></code> entry
+with <code class="docutils literal notranslate"><span class="pre">&quot;flag&quot;</span></code> is set only with that flag. <code class="docutils literal notranslate"><span class="pre">generic_config_to_json</span></code> writes
+a configuration as JSON, <code class="docutils literal notranslate"><span class="pre">create_setup.sh</span> <span class="pre">--json</span></code> sets one up.</p></li>
+<li><p>Groups of the U-Boot environment (<code class="docutils literal notranslate"><span class="pre">ub_env_&lt;group&gt;</span></code>), selected with the
+flag <code class="docutils literal notranslate"><span class="pre">ub_env:</span></code> or by the boot command.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cmd_versions</span></code> presets <code class="docutils literal notranslate"><span class="pre">cmd_get_version()</span></code> of tbot for the lab host, the
+build hosts and the board. The testcase <code class="docutils literal notranslate"><span class="pre">generic_cmd_versions</span></code> finds the
+versions out and installs missing packages with <code class="docutils literal notranslate"><span class="pre">cmd_versions_install</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">testdir</span></code>, a directory for testcases on the build host, the lab host and
+the board.</p></li>
+<li><p>Power control with a shell script, a GPIO, Tinkerforge, a Shelly device
+(<code class="docutils literal notranslate"><span class="pre">ShellyControl</span></code>), a tbox SYSTEM Controller Modul (<code class="docutils literal notranslate"><span class="pre">TboxCtrlControl</span></code>), a
+tbox lab host through hwdamon-dut-power (<code class="docutils literal notranslate"><span class="pre">TboxHwdaemonControl</span></code>) and the
+DH electronics TM-021 relay module. Console and power connector are
+detected from the configuration.</p></li>
+<li><p>Console access with a script of your own (<code class="docutils literal notranslate"><span class="pre">ScriptConnector</span></code>) and with
+telnet (<code class="docutils literal notranslate"><span class="pre">TelnetConnector</span></code>). Picocom sends slowly with <code class="docutils literal notranslate"><span class="pre">slow_send_delay</span></code>
+and <code class="docutils literal notranslate"><span class="pre">slow_send_chunksize</span></code>, the kermit options are configurable.</p></li>
+<li><p>Loading after power on with dfu-util and over the serial line (sb), and
+the Abatron BDI2000, which runs <code class="docutils literal notranslate"><span class="pre">poweron_cmds</span></code> after power on and
+selects its configuration file with <code class="docutils literal notranslate"><span class="pre">configname:</span></code>. <code class="docutils literal notranslate"><span class="pre">tc/bdi2000.py</span></code> opens
+a telnet session to the BDI2000.</p></li>
+<li><p>More than one lab host (<code class="docutils literal notranslate"><span class="pre">LABHOST_&lt;name&gt;</span></code>, flag <code class="docutils literal notranslate"><span class="pre">labname:</span></code>), password
+login and a configurable ssh authenticator, board locking, the boot mode
+switched with sd-mux or a shell command, and a local build host (flag
+<code class="docutils literal notranslate"><span class="pre">buildername:local</span></code>). The lab init runs once per boot of the lab host,
+the ethernet setup once per board.</p></li>
+<li><p>U-Boot without return codes (<code class="docutils literal notranslate"><span class="pre">uboot_has_retcode</span></code>), boards that log in
+automatically, <code class="docutils literal notranslate"><span class="pre">linux_plain_prompt</span></code>, and <code class="docutils literal notranslate"><span class="pre">linux_netcmd</span></code> to choose <code class="docutils literal notranslate"><span class="pre">ip</span></code> or
+<code class="docutils literal notranslate"><span class="pre">ifconfig</span></code>.</p></li>
+<li><p>Testcases for process measurement with top and ps (with gnuplot), register
+dumps with register maps of NXP i.MX and STM32MP157 (and the standalone
+<code class="docutils literal notranslate"><span class="pre">regdump</span></code> tool), the generic linux tests with <code class="docutils literal notranslate"><span class="pre">generic_lnx_all</span></code>, iperf
+and ping, the unit tests of U-Boot, U-Boot builds with buildman, a boot
+counter, swupdate over the embedded web server, the watchdog,
+<code class="docutils literal notranslate"><span class="pre">lnx_mtd_dump</span></code> and the hello world build of a Yocto SDK.
+<code class="docutils literal notranslate"><span class="pre">exec_check()</span></code> and <code class="docutils literal notranslate"><span class="pre">exec0_check()</span></code> abort early on death strings.</p></li>
+<li><p>kas with an interactive shell, <code class="docutils literal notranslate"><span class="pre">--runtime-args</span></code>, <code class="docutils literal notranslate"><span class="pre">.netrc</span></code>, <code class="docutils literal notranslate"><span class="pre">auto.conf</span></code>,
+bitbake targets, <code class="docutils literal notranslate"><span class="pre">kas_build_dir</span></code>, <code class="docutils literal notranslate"><span class="pre">kas_mounts</span></code>, a configurable deploy path
+and the flag <code class="docutils literal notranslate"><span class="pre">kaskeepconfig</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">create_setup.sh</span></code> asks for console and power control with <code class="docutils literal notranslate"><span class="pre">--inter</span></code>,
+writes a <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> with aliases, copies the CI testcases only with
+<code class="docutils literal notranslate"><span class="pre">--ci</span></code>, checks out tbottest with <code class="docutils literal notranslate"><span class="pre">-b</span></code> or <code class="docutils literal notranslate"><span class="pre">-c</span></code>, takes tbot from the branch
+<code class="docutils literal notranslate"><span class="pre">v0.10.10-emb</span></code> of github.com/EmbLux-Kft/tbot and updates existing clones.
+<code class="docutils literal notranslate"><span class="pre">completions.sh</span></code> completes the testcases and the aliases.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">newtbot_starter.py</span></code> takes the paths from <code class="docutils literal notranslate"><span class="pre">TBOTCONFIGPATH</span></code> and
+<code class="docutils literal notranslate"><span class="pre">TBOTTESTPATH</span></code> and sets <code class="docutils literal notranslate"><span class="pre">TBOT_STARTTIME</span></code> for the argument files.
+<code class="docutils literal notranslate"><span class="pre">generators/console.py</span></code> shows a JSON log as tbot showed it on the console.</p></li>
+<li><p>Documentation of every tbot flag, the Tips section, testcase parameters,
+the generic testcases and how to start them, and the pages CHANGELOG,
+CONTRIBUTING and LICENSE.</p></li>
+<li><p>A pytest unit test suite with its own CI workflow, and <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>.</p></li>
+</ul>
+</section>
+<section id="changed">
+<h3>Changed<a class="headerlink" href="#changed" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">REGISTERMAP</span></code> (registermap.py) takes the format of a registermap from
+its file instead of from the name of the SoC, so <code class="docutils literal notranslate"><span class="pre">am335x_registers.json</span></code>
+works without a code path of its own; a SoC name it did not know raised
+an error before.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">check_yocto_build_install_sdk()</span></code> starts the SDK installer as
+linux.Path instead of a path built as string.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lnx_create_random()</span></code> takes a linux.Path as well as a string, and the
+RS485 test passes its paths as linux.Path instead of <code class="docutils literal notranslate"><span class="pre">_local_str()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lnx_can_write_dump_compare()</span></code> has no parameters <code class="docutils literal notranslate"><span class="pre">lab</span></code> and <code class="docutils literal notranslate"><span class="pre">lnx</span></code> any
+more. <code class="docutils literal notranslate"><span class="pre">lab</span></code> only decided whether to use sudo, <code class="docutils literal notranslate"><span class="pre">lnx</span></code> was not used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">board_setup_can()</span></code> runs <code class="docutils literal notranslate"><span class="pre">ip</span></code> with <code class="docutils literal notranslate"><span class="pre">lnx_sudo()</span></code>, so with sudo unless
+the machine is logged in as root. Its parameter <code class="docutils literal notranslate"><span class="pre">usesudo</span></code> and
+<code class="docutils literal notranslate"><span class="pre">sudo_exec0()</span></code> of <code class="docutils literal notranslate"><span class="pre">tc/can.py</span></code> are gone, and <code class="docutils literal notranslate"><span class="pre">lnx_can_write_dump_compare()</span></code>
+no longer guesses from <code class="docutils literal notranslate"><span class="pre">lab</span> <span class="pre">==</span> <span class="pre">lnxsend</span></code> whether sudo is needed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">board_lnx_cangen</span></code> checks the candump log itself, with the new
+<code class="docutils literal notranslate"><span class="pre">check_cangen_log()</span></code>, on the output of <code class="docutils literal notranslate"><span class="pre">cat</span></code> on the board. Nothing is
+copied to the lab host any more, so the parameters <code class="docutils literal notranslate"><span class="pre">lab</span></code> and
+<code class="docutils literal notranslate"><span class="pre">labtbottestcasepath</span></code> and <code class="docutils literal notranslate"><span class="pre">tc/files/check_cangen_output.py</span></code> are gone.
+It checks the number of frames, interface, CAN ID, data length and
+data, reports every difference and raises instead of stopping in an
+interactive shell. The transfer rate comes from the candump timestamps.</p></li>
+<li><p>The generic testcases read their keys when they run, with the
+<code class="docutils literal notranslate"><span class="pre">get_config*()</span></code> methods of <code class="docutils literal notranslate"><span class="pre">cfggeneric</span></code>, so they find their own section.
+<code class="docutils literal notranslate"><span class="pre">require_cfg()</span></code> takes the name of the key. <code class="docutils literal notranslate"><span class="pre">cfggeneric.kas_config(lab,</span> <span class="pre">bh)</span></code>
+and <code class="docutils literal notranslate"><span class="pre">cfggeneric.get_lnx_dump_files()</span></code> replace <code class="docutils literal notranslate"><span class="pre">cfg.kas</span></code> and
+<code class="docutils literal notranslate"><span class="pre">cfg.lnx_dump_files</span></code>.</p></li>
+<li><p>tbot is v0.10.10.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tbot.ini</span></code> and the board configuration are read through the helpers of
+<code class="docutils literal notranslate"><span class="pre">tbottest.initconfig</span></code>, the board name comes from the flag <code class="docutils literal notranslate"><span class="pre">boardname:</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">boardspecific.py</span></code> sits next to <code class="docutils literal notranslate"><span class="pre">tbot.ini</span></code>.</p></li>
+<li><p>Configuration values are read with <code class="docutils literal notranslate"><span class="pre">ast.literal_eval()</span></code> instead of
+<code class="docutils literal notranslate"><span class="pre">eval()</span></code>.</p></li>
+<li><p>Commands that need root rights run without sudo when tbot is logged in
+as root.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GenericUBoot.exec()</span></code> reads back the echo of the command line like tbot.</p></li>
+</ul>
+</section>
+<section id="fixed">
+<h3>Fixed<a class="headerlink" href="#fixed" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">scripts/registermap/regdump.py</span></code> did not run without tbot, as
+importing <code class="docutils literal notranslate"><span class="pre">tbottest.tc.registermap</span></code> ran <code class="docutils literal notranslate"><span class="pre">tbottest/__init__.py</span></code>, which
+imports tbot, and it found tbottest only in a directory named
+tbottest. It takes the repository it is in now and loads the modules
+without the <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> of the packages. With unit tests.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">create_setup.sh</span></code> kept an existing <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> without a word when it
+had no aliases for the board just set up, e.g. one from an earlier run
+for another board, and printed aliases that did not exist. It still
+keeps it, but warns and prints the commands that write a <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>
+for the board.</p></li>
+<li><p>Command line completion of tbottest testcases, e.g.
+<code class="docutils literal notranslate"><span class="pre">$tbtc.generic_board.gen&lt;TAB&gt;</span></code>, found nothing, because tbot looks a
+module up below the working directory, and in a setup made by
+create_setup.sh the package is tbottest/tbottest there. <code class="docutils literal notranslate"><span class="pre">newtbot_completion.py</span></code>, which
+<code class="docutils literal notranslate"><span class="pre">newtbot_starter.py</span></code> installs into tbot, looks it up through sys.path
+as an import does. <code class="docutils literal notranslate"><span class="pre">completions.sh</span></code> completes a variable name such as
+<code class="docutils literal notranslate"><span class="pre">$tbtc</span></code> without the space bash-completion adds, so the module path can
+follow.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">board_lnx_cangen</span></code> hung after cangen on a board with candump of
+canutils (Pengutronix), which ends on SIGTERM only when the next frame
+arrives; <code class="docutils literal notranslate"><span class="pre">stop_candump()</span></code> kills it after 2 seconds. Such a candump has
+no <code class="docutils literal notranslate"><span class="pre">-L</span></code> either: tbot’s <code class="docutils literal notranslate"><span class="pre">cmd_get_version()</span></code> reports it as <code class="docutils literal notranslate"><span class="pre">canutils</span></code>
+(<code class="docutils literal notranslate"><span class="pre">candump_is_canutils()</span></code>), and its log is checked without interface
+and without transfer rate, it has no timestamps. A sender without
+cangen (canutils has none) stops with an error naming the machine.
+candump and cangen are in <code class="docutils literal notranslate"><span class="pre">TBOTTEST_COMMANDS</span></code> now, with the Debian
+package can-utils for <code class="docutils literal notranslate"><span class="pre">cmd_versions_install</span></code>.</p></li>
+<li><p>The check of <code class="docutils literal notranslate"><span class="pre">board_lnx_cangen</span></code> did not let the data counter wrap, so
+it failed after 256 frames with <code class="docutils literal notranslate"><span class="pre">dllength=1</span></code>; it compared the log with
+the board path on the lab host and copied it from a fixed IP address.</p></li>
+<li><p>The default <code class="docutils literal notranslate"><span class="pre">testdir</span></code> of the lab host and of <code class="docutils literal notranslate"><span class="pre">[SSHMACHINE]</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&lt;workdir&gt;/tbottests</span></code>, got a double slash when <code class="docutils literal notranslate"><span class="pre">workdir</span></code> ended in one.</p></li>
+<li><p>A relative <code class="docutils literal notranslate"><span class="pre">workdir</span></code> or <code class="docutils literal notranslate"><span class="pre">testdir</span></code> of a build host reached over ssh was
+taken from the directory tbot runs in on the local machine. It is taken
+from the home directory of the build host now; <code class="docutils literal notranslate"><span class="pre">[BUILDHOST_local]</span></code> keeps
+the directory tbot runs in, where its shell starts.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">KAS.kas_copy()</span></code> was annotated with the module <code class="docutils literal notranslate"><span class="pre">tbot.machine.linux.path</span></code>
+instead of <code class="docutils literal notranslate"><span class="pre">linux.Path</span></code>, so the documentation showed the module.</p></li>
+<li><p>A race in <code class="docutils literal notranslate"><span class="pre">lab_get_lock()</span></code> of the board locking.</p></li>
+<li><p>Unescaped values in shell command strings of testcases.</p></li>
+<li><p>Retry loops in <code class="docutils literal notranslate"><span class="pre">board_wait_for_device()</span></code>, <code class="docutils literal notranslate"><span class="pre">lnx_wait_for_ip()</span></code> and the
+check of <code class="docutils literal notranslate"><span class="pre">tbot_start_thread()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ps_parse_top()</span></code> dropped the last loop, the IPv6 regex of
+<code class="docutils literal notranslate"><span class="pre">_lnx_get_ipaddr()</span></code> did not match, <code class="docutils literal notranslate"><span class="pre">TM021Control.poweroff()</span></code> and the CAN
+testcases failed with an AttributeError.</p></li>
+<li><p>Copies of the ini files were left behind.</p></li>
+</ul>
+</section>
+<section id="removed">
+<h3>Removed<a class="headerlink" href="#removed" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The rows of the board keys <code class="docutils literal notranslate"><span class="pre">rs485labdev</span></code>, <code class="docutils literal notranslate"><span class="pre">rs485baud</span></code>, <code class="docutils literal notranslate"><span class="pre">rs485boarddev</span></code>
+and <code class="docutils literal notranslate"><span class="pre">rs485lengths</span></code> in the documentation of the board configuration. No
+code reads them; the values are entries of the key <code class="docutils literal notranslate"><span class="pre">rs485</span></code> of
+<code class="docutils literal notranslate"><span class="pre">generic_lnx_test_rs485</span></code>, or parameters of <code class="docutils literal notranslate"><span class="pre">board_lnx_rs485</span></code>.</p></li>
+<li><p>The bootlin and linaro toolchains of the lab host. The classes are gone
+from tbot, the lab host raises like the build hosts do.</p></li>
+<li><p>The attributes of <code class="docutils literal notranslate"><span class="pre">GenericBoardConfig</span></code> for the keys of the board
+configuration (<code class="docutils literal notranslate"><span class="pre">cfg.dmesg</span></code>, <code class="docutils literal notranslate"><span class="pre">cfg.kas</span></code>, …). It keeps what belongs to the
+board (<code class="docutils literal notranslate"><span class="pre">tmpdir</span></code>, <code class="docutils literal notranslate"><span class="pre">shelltype</span></code>, …).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setup.py</span></code>, <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> replaces it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tftp_subdir</span></code> in the board configuration, <code class="docutils literal notranslate"><span class="pre">tftpsubdir</span></code> of the lab section
+replaces it.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Changelog</a><ul>
+<li><a class="reference internal" href="#unreleased">[Unreleased]</a><ul>
+<li><a class="reference internal" href="#added">Added</a></li>
+<li><a class="reference internal" href="#changed">Changed</a></li>
+<li><a class="reference internal" href="#fixed">Fixed</a></li>
+<li><a class="reference internal" href="#removed">Removed</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+                <a href="boardspecific.html">
+                    <span class="icon">&lt;</span><span><code class="docutils literal notranslate"><span class="pre">tbottest.tbotconfig</span></code> - ini file config</span></a>
+                
+            </div>
+
+            <div class="right">
+                
+                    <a href="CONTRIBUTING.html"><span>Contributing to tbot-test</span><span class="icon">&gt;</span></a>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2023, Heiko Schocher.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
+</html>
