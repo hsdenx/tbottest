@@ -186,6 +186,11 @@
 - `GenericUBoot.exec()` reads back the echo of the command line like tbot.
 
 ### Fixed
+- `KAS.kas_checkout()` left an existing clone of the kas layer on the
+  branch it was cloned with and only pulled it, so a changed
+  `kaslayerbranch` was ignored, and a branch the remote does not have
+  did not stop the build. It fetches `kaslayerbranch` now and checks it
+  out, and fails if the fetch does. With unit tests.
 - `scripts/registermap/regdump.py` did not run without tbot, as
   importing `tbottest.tc.registermap` ran `tbottest/__init__.py`, which
   imports tbot, and it found tbottest only in a directory named

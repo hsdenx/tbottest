@@ -1,3 +1,5 @@
+import os
+
 import tbot
 from tbot.machine import linux
 from tbot.tc.shell import copy as shell_copy
@@ -466,24 +468,30 @@ class KAS:
             return
 
         post = []
+        layerdir = os.path.basename(str(self.kaslayer)).removesuffix(".git")
         if self.kaslayername is not None:
             post = [linux.Raw(f" {self.kaslayername}")]
+            layerdir = self.kaslayername
 
         self.bh.exec0("mkdir", "-p", self.kasconfigpath)
         self.bh.exec0("cd", self.kasconfigpath)
-        self.bh.exec0(
-            "git",
-            "-C",
-            f"{self.kaslayername}",
-            "pull",
-            linux.Raw("||"),
-            "git",
-            "clone",
-            self.kaslayer,
-            "-b",
-            self.kaslayerbranch,
-            *post,
-        )
+        # An existing clone is switched to kaslayerbranch, so a changed
+        # branch takes effect. A branch the remote does not have makes
+        # fetch fail, and with it the build.
+        if self.bh.test("test", "-d", f"{layerdir}/.git"):
+            self.bh.exec0("git", "-C", layerdir, "fetch", "origin", self.kaslayerbranch)
+            self.bh.exec0(
+                "git", "-C", layerdir, "checkout", "-B", self.kaslayerbranch, "FETCH_HEAD"
+            )
+        else:
+            self.bh.exec0(
+                "git",
+                "clone",
+                self.kaslayer,
+                "-b",
+                self.kaslayerbranch,
+                *post,
+            )
         pre = []
         try:
             kas_ref_dir = self.bh.kas_ref_dir

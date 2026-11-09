@@ -214,6 +214,69 @@ class TestKeepConfig:
             kas.KAS(base_cfg()).kas_checkout()
 
 
+class TestCheckoutLayerBranch:
+    """kas_checkout() puts the kas layer on kaslayerbranch, also in an
+    existing clone"""
+
+    class Host(FakeHost):
+        def __init__(self, clone_exists):
+            self.clone_exists = clone_exists
+            self.cmds = []
+
+        def test(self, *a, **kw):
+            return self.clone_exists
+
+        def exec0(self, *a, **kw):
+            self.cmds.append([str(x) for x in a])
+            return ""
+
+    @pytest.fixture(autouse=True)
+    def flags(self, monkeypatch):
+        monkeypatch.setattr(sys.modules["tbot"], "flags", set())
+
+    def git_cmds(self, host):
+        return [c for c in host.cmds if c[0] == "git"]
+
+    def checkout(self, host):
+        kas.KAS(
+            base_cfg(
+                buildhost=host, kaslayername="kas-BOARDNAME", kaslayerbranch="feature/xyz"
+            )
+        ).kas_checkout()
+
+    def test_existing_clone_is_switched_to_the_branch(self):
+        host = self.Host(clone_exists=True)
+        self.checkout(host)
+        assert self.git_cmds(host) == [
+            ["git", "-C", "kas-BOARDNAME", "fetch", "origin", "feature/xyz"],
+            ["git", "-C", "kas-BOARDNAME", "checkout", "-B", "feature/xyz", "FETCH_HEAD"],
+        ]
+
+    def test_missing_clone_is_cloned_with_the_branch(self):
+        host = self.Host(clone_exists=False)
+        self.checkout(host)
+        assert self.git_cmds(host) == [
+            ["git", "clone", "kas-BOARDNAME", "-b", "feature/xyz", " kas-BOARDNAME"],
+        ]
+
+    def test_without_kaslayername_the_dir_comes_from_the_url(self):
+        host = self.Host(clone_exists=True)
+        kas.KAS(
+            base_cfg(buildhost=host, kaslayer="https://example.com/kas-BOARDNAME.git")
+        ).kas_checkout()
+        assert self.git_cmds(host)[0][:3] == ["git", "-C", "kas-BOARDNAME"]
+
+    def test_missing_branch_fails(self):
+        class Host(self.Host):
+            def exec0(self, *a, **kw):
+                if "fetch" in a:
+                    raise RuntimeError("couldn't find remote ref")
+                return super().exec0(*a, **kw)
+
+        with pytest.raises(RuntimeError, match="remote ref"):
+            kas.KAS(base_cfg(buildhost=Host(clone_exists=True))).kas_checkout()
+
+
 class TestKasBuildDir:
     """kas_build_dir: own build directory, passed as KAS_BUILD_DIR"""
 
