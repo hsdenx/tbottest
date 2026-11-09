@@ -149,6 +149,14 @@ class KAS:
     kas shell and kas build get --keep-config-unchanged. It needs one
     earlier run without the flag, which set the build tree up.
 
+    tbot flag kasupdate
+
+    passes --update to kas checkout, kas shell and kas build, so kas
+    pulls the newest commit of repos given by a branch, also when the
+    branch is already checked out. Without it kas keeps such a checkout
+    as it is. Ignored with kaskeepconfig, which leaves the checkouts
+    alone anyway.
+
     kas_build_dir
 
     optional build directory, relative to kas_get_basepath(), default
@@ -268,6 +276,7 @@ class KAS:
         self.kas_mounts = []
         self.kas_ssh_dir = None
         self.keep_config = "kaskeepconfig" in tbot.flags
+        self.update = "kasupdate" in tbot.flags
         self.container_engine = None
         self.container = False
         self.kasconfigpath = None
@@ -439,6 +448,15 @@ class KAS:
             return ["--keep-config-unchanged"]
         return []
 
+    def kas_update_args(self) -> list:
+        """
+        returns the kas option that pulls repos given by a branch, if tbot
+        flag kasupdate is set and kaskeepconfig is not
+        """
+        if self.update and not self.keep_config:
+            return ["--update"]
+        return []
+
     def kas_create_autoconf(self) -> None:
         if self.autoconf:
             bp = self.kas_get_buildpath()
@@ -510,6 +528,7 @@ class KAS:
                 *self.kas_build_dir_env(),
                 self.kascmd,
                 "checkout",
+                *self.kas_update_args(),
                 self.kasconfigpath / self.kasconfigfile,
             )
 
@@ -582,6 +601,7 @@ class KAS:
             *kasarg,
             "build",
             *self.kas_keep_config_args(),
+            *self.kas_update_args(),
             self.kasconfigpath / self.kasconfigfile,
             *post,
         )
@@ -679,7 +699,7 @@ class KAS:
             cmd += " ".join(kasarg)
 
         cmd += " shell"
-        for a in self.kas_keep_config_args():
+        for a in self.kas_keep_config_args() + self.kas_update_args():
             cmd += f" {a}"
         cmd += f" {self.kasconfigpath._local_str()}/{self.kasconfigfile}"
         with tbot.log_event.command("kas-shell", cmd) as ev:

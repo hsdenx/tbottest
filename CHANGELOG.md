@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 ### Added
+- tbot flag `kasupdate` passes `--update` to kas checkout, kas shell and
+  kas build. Without it kas does not fetch a repo given by a branch once
+  that branch is checked out, so a CI build of a feature branch kept
+  building the commit it found from an earlier build. Ignored with
+  `kaskeepconfig`. With unit tests.
 - `scripts/registermap/mpc855_create_registermap.py` makes the
   registermap of the PowerPC MPC855T from its user's manual: the
   registers from Table 2-1, the fields from the field and bit description

@@ -1310,6 +1310,10 @@ they are (kas --keep-config-unchanged): tbot does no kas checkout and passes
 the option to kas shell and kas build. It needs one earlier run without the
 flag, which set the build tree up.
 
+With tbot flag kasupdate, tbot passes --update to kas checkout, kas shell and
+kas build, so kas pulls the newest commit of repos given by a branch, also
+when the branch is already checked out. It is ignored with kaskeepconfig.
+
 argumentfiles
 .............
 
@@ -1527,6 +1531,7 @@ inifile                  format inifile:<path>, the lab configuration, an ini fi
 kas                      u-boot bootcmd "run bootcmdkas"
 kaskeepconfig            keep the repo checkouts and build/conf of the kas build as they are, like kas --keep-config-unchanged
 kasskipcheckout          skip the kas checkout step
+kasupdate                pull the newest commit of kas repos given by a branch, like kas --update
 lablockid                format lablockid:<yourlockid>, the lock id for board locking
 labname                  format labname:<name of lab host>, select the used lab host (configure in tbot.ini with LABHOST_<name> section)
 lauterbachloader         load SPL/U-Boot with Lauterbach TRACE32

@@ -879,6 +879,9 @@ FLAGS = {
     "config_json_dir": "config_json_dir:<dir> generic_config_to_json: directory for the files",
     "config_json_resolved": "generic_config_to_json: write the values resolved",
     "kasskipcheckout": "skip kas checkout step",
+    "kasupdate": (
+        "kas: pull the newest commit of repos given by a branch (kas --update)"
+    ),
     "kaskeepconfig": (
         "kas: keep repo checkouts and build/conf unchanged (kas "
         "--keep-config-unchanged), needs an earlier run without it"

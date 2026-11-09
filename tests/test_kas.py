@@ -277,6 +277,39 @@ class TestCheckoutLayerBranch:
             kas.KAS(base_cfg(buildhost=Host(clone_exists=True))).kas_checkout()
 
 
+class TestKasUpdate:
+    """tbot flag kasupdate, like kas --update"""
+
+    @pytest.fixture
+    def flags(self, monkeypatch):
+        tbot = sys.modules["tbot"]
+        monkeypatch.setattr(tbot, "flags", set())
+        return tbot.flags
+
+    def kas_checkout_cmd(self):
+        host = TestCheckoutLayerBranch.Host(clone_exists=True)
+        kas.KAS(base_cfg(buildhost=host)).kas_checkout()
+        return [c for c in host.cmds if "checkout" in c and c[0] == "kas"][0]
+
+    def test_without_flag_no_extra_option(self, flags):
+        assert kas.KAS(base_cfg()).kas_update_args() == []
+        assert "--update" not in self.kas_checkout_cmd()
+
+    def test_with_flag_passes_update(self, flags):
+        flags.add("kasupdate")
+        assert kas.KAS(base_cfg()).kas_update_args() == ["--update"]
+        assert self.kas_checkout_cmd()[1:] == [
+            "checkout",
+            "--update",
+            "/work/bh/VENDOR/BOARDNAME/kasconfig/BOARDNAME.yml",
+        ]
+
+    def test_kaskeepconfig_wins(self, flags):
+        flags.add("kasupdate")
+        flags.add("kaskeepconfig")
+        assert kas.KAS(base_cfg()).kas_update_args() == []
+
+
 class TestKasBuildDir:
     """kas_build_dir: own build directory, passed as KAS_BUILD_DIR"""
 
