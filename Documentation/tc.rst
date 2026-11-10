@@ -124,6 +124,12 @@ TPM
 .. automodule:: tbottest.tc.tpm
    :members:
 
+Buildinfo
+---------
+
+.. automodule:: tbottest.tc.buildinfo
+   :members:
+
 Watchdog
 --------
 

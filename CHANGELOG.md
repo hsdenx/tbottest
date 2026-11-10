@@ -34,6 +34,11 @@
   alone could not be told apart. With unit tests.
 
 ### Added
+- `tbottest.tc.buildinfo`: `lnx_check_buildinfo` reads `/etc/buildinfo`
+  of image-buildinfo on the board and compares variables and layer
+  revisions with the values handed in, so a test can tell it runs the build
+  it is meant to test. A layer built from a modified checkout does not
+  match. With unit tests.
 - KAS takes `site.conf` in the kas dictionary: lines written to
   `build/conf/site.conf` before every kas checkout and kas build, anew each
   time, for values that change from build to build such as an ID of the
