@@ -1,0 +1,6 @@
+/* piccolo_theme limits the middle column to 45rem; use the whole width
+ * of the window, so wide tables fit. */
+div.document div.documentwrapper,
+div.button_nav_wrapper div.button_nav {
+    max-width: none;
+}

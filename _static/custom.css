@@ -1,0 +1,18 @@
+/* Use the whole width of the window for the page, not only the 800px
+ * sphinx_rtd_theme sets, so wide tables fit. */
+.wy-nav-content {
+    max-width: none;
+}
+
+/* Wrap long table cells instead of showing a horizontal scroll bar. */
+.wy-table-responsive table td,
+.wy-table-responsive table th {
+    white-space: normal;
+}
+
+/* Note boxes and code boxes only as wide as their content. */
+.rst-content .admonition,
+.rst-content div[class^="highlight"] {
+    width: fit-content;
+    max-width: 100%;
+}
