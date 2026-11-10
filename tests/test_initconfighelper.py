@@ -47,8 +47,8 @@ class TestGetLabSectionname:
         assert initconfighelper.get_lab_sectionname() == "LABHOST"
 
     def test_labname_flag_builds_section_name(self):
-        sys.modules["tbot"].flags = {"labname:graefelfing"}
-        assert initconfighelper.get_lab_sectionname() == "LABHOST_graefelfing"
+        sys.modules["tbot"].flags = {"labname:dummylab"}
+        assert initconfighelper.get_lab_sectionname() == "LABHOST_dummylab"
 
 
 class TestGetUniqueFilenameExtension:
@@ -60,9 +60,9 @@ class TestGetUniqueFilenameExtension:
 
 class TestGetTbotArguments:
     def test_parses_flags_from_argv(self):
-        sys.argv = ["tbot", "-f", "boardname:scale-mc"]
+        sys.argv = ["tbot", "-f", "boardname:dummyboard"]
         args = initconfighelper.get_tbot_arguments()
-        assert args.flags == ["boardname:scale-mc"]
+        assert args.flags == ["boardname:dummyboard"]
 
     def test_parser_error_raises_runtimeerror_not_unboundlocalerror(self, monkeypatch):
         """
@@ -92,12 +92,12 @@ class TestGetTbotArguments:
 class TestGetTbotFlags:
     def test_usetbotflags_reads_from_tbot_flags(self):
         sys.argv = ["tbot", "--usetbotflags"]
-        sys.modules["tbot"].flags = ["boardname:scale-mc"]
-        assert initconfighelper.get_tbot_flags() == ["boardname:scale-mc"]
+        sys.modules["tbot"].flags = ["boardname:dummyboard"]
+        assert initconfighelper.get_tbot_flags() == ["boardname:dummyboard"]
 
     def test_without_usetbotflags_parses_argv(self):
-        sys.argv = ["tbot", "-f", "boardname:scale-mc"]
-        assert initconfighelper.get_tbot_flags() == ["boardname:scale-mc"]
+        sys.argv = ["tbot", "-f", "boardname:dummyboard"]
+        assert initconfighelper.get_tbot_flags() == ["boardname:dummyboard"]
 
 
 class TestGetTbotconfigPath:
