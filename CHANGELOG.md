@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 ### Changed
+- The dfu-util loader (tbot flag `dfuutilloader`) stops when a file of
+  `dfuutil_loader_steps` does not exist on the lab host or dfu-util could
+  not download it. Before, its return code was not looked at, so tbot went
+  on and waited for a U-Boot that was never loaded. A return code other
+  than 0 after "Download done." still counts as success: the device leaves
+  DFU mode once it starts what it got, and the status request after the
+  download fails then. dfu-util runs under `timeout`, 30 s per step or
+  the "timeout" of the step: `dfu-util -w` waits forever for a DFU device,
+  also when the board is not in DFU boot mode. With unit tests.
 - `generic_lnx_all` returns False when one of its testcases failed, True
   otherwise. It still runs all of them and raises no exception, but a
   caller, e.g. a CI job, can now tell the result. With unit tests.

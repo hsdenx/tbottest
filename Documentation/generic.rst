@@ -865,6 +865,19 @@ define the section
 
         "cmds", "array of dictionary, format see example", "[{'a':'@FSBL /0x01/1*1Me', 'D':'${LABHOST:tftproot}/${LABHOST:tftpsubdir}/u-boot-spl.stm32'}, {'a':'u-boot.itb', 'D':'${LABHOST:tftproot}/${LABHOST:tftpsubdir}/u-boot.itb'}]"
 
+Each step has the keys ``a`` (alt setting, ``dfu-util -a``) and ``D`` (file
+on the lab host, ``dfu-util -D``), and optional:
+
+- ``timeout``: seconds dfu-util gets for this step, default 30. ``dfu-util
+  -w`` waits for a DFU device forever, also when the board is not in DFU
+  boot mode, so tbot stops after that time, e.g. ``{'a':'bootloader',
+  'D':'...', 'timeout':60}``
+- ``dmesgcheck``: a string tbot waits for in the dmesg of the lab host
+  before the step
+
+tbot stops when the file of a step does not exist on the lab host or
+dfu-util could not download it.
+
 
 setup for uuu tool
 ^^^^^^^^^^^^^^^^^^

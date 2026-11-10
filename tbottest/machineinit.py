@@ -443,6 +443,26 @@ class UsbSdpLoad(machine.Initializer):
     def _init_machine(self) -> typing.ContextManager:
         return _flag_gated_load("usbloader", self._load)
 
+
+def dfuutil_download_done(retcode: int, output: str) -> bool:
+    """
+    did dfu-util download the file
+
+    dfu-util often ends with an error although the file went down: the
+    device starts what it got and leaves DFU mode, so the status request
+    after the download fails. "Download done." says the transfer itself
+    went through, so a return code other than 0 counts only without it.
+
+    :param retcode: return code of dfu-util
+    :param output: output of dfu-util
+    """
+    return retcode == 0 or "Download done." in output
+
+
+# seconds dfu-util gets for one step of dfuutil_loader_steps
+DFUUTIL_TIMEOUT = 30
+
+
 class DFUUTIL(machine.Initializer):
     """
     Machine-initializer for loading SPL/U-Boot image into
@@ -468,6 +488,11 @@ class DFUUTIL(machine.Initializer):
                 return [{'a':'@FSBL /0x01/1*1Me', 'D':'/tftpdir/u-boot-spl.stm32', 'dmesgcheck':'004900383232510630323432'}, {'a':'u-boot.itb', 'D':'/tftpdir/u-boot.itb'}]
 
 
+    A step may set "timeout", the seconds dfu-util gets for it, default
+    DFUUTIL_TIMEOUT. dfu-util -w waits for a DFU device forever, also when
+    the board never shows up because it is not in DFU boot mode, so tbot
+    stops after that time.
+
     This class sets also a tbot flag "dfuutilloader"
 
     if passed to tbot, this class is active, if not passed
@@ -489,7 +514,9 @@ class DFUUTIL(machine.Initializer):
     def _load(self) -> None:
         cmds = self.dfuutil_loader_steps()  # type: List[str]
         for cmd in cmds:
-            # command fails... FixMe
+            if not self.host.test("test", "-f", cmd["D"]):
+                raise RuntimeError(f"dfu-util: {cmd['D']} does not exist on {self.host.name}")
+
             try:
                 dmesgcheck = cmd["dmesgcheck"]
             except Exception:
@@ -504,7 +531,18 @@ class DFUUTIL(machine.Initializer):
 
                     time.sleep(1)
 
-            self.host.exec("dfu-util", "-w", "-a", cmd["a"], "-D", cmd["D"])  # type: ignore
+            limit = str(cmd.get("timeout", DFUUTIL_TIMEOUT))
+            ret, out = self.host.exec(
+                "timeout", limit, "dfu-util", "-w", "-a", cmd["a"], "-D", cmd["D"]
+            )  # type: ignore
+            # 124 is what timeout returns when it had to stop the command
+            if ret == 124:
+                raise RuntimeError(
+                    f"dfu-util did not load {cmd['D']} within {limit} s, "
+                    "is the board in DFU boot mode?"
+                )
+            if not dfuutil_download_done(ret, out):
+                raise RuntimeError(f"dfu-util could not download {cmd['D']} to {cmd['a']}")
 
     def _init_machine(self) -> typing.ContextManager:
         return _flag_gated_load("dfuutilloader", self._load)
