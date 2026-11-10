@@ -105,6 +105,17 @@ class TestLoad:
         loader(host, [{"a": "bootloader", "D": "/tftp/tiboot3.bin", "timeout": 90}])._load()
         assert host.commands[-1][:3] == ("timeout", "90", "dfu-util")
 
+    def test_device_filter(self):
+        host = FakeHost({"/tftp/tiboot3.bin"}, (0, DONE))
+        loader(host, [{"a": "bootloader", "D": "/tftp/tiboot3.bin", "d": "0451:6165"}])._load()
+        cmd = host.commands[-1]
+        assert cmd[cmd.index("-d") + 1] == "0451:6165"
+
+    def test_no_device_filter_without_d(self):
+        host = FakeHost({"/tftp/tiboot3.bin"}, (0, DONE))
+        loader(host, [{"a": "bootloader", "D": "/tftp/tiboot3.bin"}])._load()
+        assert "-d" not in host.commands[-1]
+
     def test_board_not_in_dfu_mode_stops(self):
         waiting = "dfu-util: Cannot open DFU device 04f2:b6be found on devnum 3 (LIBUSB_ERROR_ACCESS)\n"
         host = FakeHost({"/tftp/tiboot3.bin", "/tftp/tispl.bin"}, (124, waiting * 20))

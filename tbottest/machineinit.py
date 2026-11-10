@@ -493,6 +493,10 @@ class DFUUTIL(machine.Initializer):
     the board never shows up because it is not in DFU boot mode, so tbot
     stops after that time.
 
+    A step may set "d", the device dfu-util takes, as for dfu-util -d
+    <vid>:<pid>. Without it dfu-util tries every DFU device of the lab
+    host, also a webcam with a DFU interface for its firmware.
+
     This class sets also a tbot flag "dfuutilloader"
 
     if passed to tbot, this class is active, if not passed
@@ -532,8 +536,9 @@ class DFUUTIL(machine.Initializer):
                     time.sleep(1)
 
             limit = str(cmd.get("timeout", DFUUTIL_TIMEOUT))
+            device = ["-d", cmd["d"]] if "d" in cmd else []
             ret, out = self.host.exec(
-                "timeout", limit, "dfu-util", "-w", "-a", cmd["a"], "-D", cmd["D"]
+                "timeout", limit, "dfu-util", "-w", *device, "-a", cmd["a"], "-D", cmd["D"]
             )  # type: ignore
             # 124 is what timeout returns when it had to stop the command
             if ret == 124:

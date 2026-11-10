@@ -872,6 +872,10 @@ on the lab host, ``dfu-util -D``), and optional:
   -w`` waits for a DFU device forever, also when the board is not in DFU
   boot mode, so tbot stops after that time, e.g. ``{'a':'bootloader',
   'D':'...', 'timeout':60}``
+- ``d``: the device, ``<vid>:<pid>`` as for ``dfu-util -d``. Without it
+  dfu-util tries every DFU device of the lab host, also e.g. a webcam with
+  a DFU interface for its firmware, and keeps failing on it while the
+  board is not there yet
 - ``dmesgcheck``: a string tbot waits for in the dmesg of the lab host
   before the step
 

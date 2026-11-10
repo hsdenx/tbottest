@@ -20,6 +20,9 @@
   alone could not be told apart. With unit tests.
 
 ### Added
+- A step of the dfu-util loader takes the device with the optional key
+  `d`, `<vid>:<pid>` as for `dfu-util -d`, so dfu-util does not try other
+  DFU devices of the lab host, e.g. a webcam. With unit tests.
 - tbot flag `kasupdate` passes `--update` to kas checkout, kas shell and
   kas build. Without it kas does not fetch a repo given by a branch once
   that branch is checked out, so a CI build of a feature branch kept
