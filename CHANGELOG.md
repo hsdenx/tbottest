@@ -1,6 +1,13 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- `kas_checkout` runs `kas-container checkout` when the container is used,
+  with the same credentials and environment as the build. Before it ran no
+  kas checkout at all with the container, so the tbot flag `kasupdate` had
+  nothing to act on and a build after a separate checkout built whatever the
+  repos were left at. With unit tests.
+
 ### Changed
 - KAS builds plain build targets that follow each other in `buildtargets`
   in one bitbake call instead of one call per target. A recipe whose task

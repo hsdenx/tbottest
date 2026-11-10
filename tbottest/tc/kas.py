@@ -582,8 +582,21 @@ class KAS:
             pre.append(f"NETRC_FILE={self.netrc_file}")
 
         self.bh.exec0("cd", self.kas_get_basepath())
-        # do not execute in case we use docker
-        if self.container is False:
+        # also with the container: kas build checks out as well, but only
+        # a checkout of its own lets a build after it take exactly what
+        # was checked out, and kasupdate needs a checkout to act on
+        if self.container:
+            cpre, kasarg = self.kas_container_args()
+            self.bh.exec0(
+                *cpre,
+                *self.kas_build_dir_env(),
+                self.kascmd,
+                *kasarg,
+                "checkout",
+                *self.kas_update_args(),
+                self.kasconfigpath / self.kasconfigfile,
+            )
+        else:
             self.bh.exec0(
                 *pre,
                 *self.kas_build_dir_env(),
@@ -596,14 +609,22 @@ class KAS:
         self.kas_create_autoconf()
         self.kas_write_siteconf()
 
-    def kas_call_container(self, t: str) -> None:
+    def kas_container_args(self) -> tuple:
+        """
+        the environment settings and the options kas-container needs for
+        a checkout and for a build alike
+
+        :returns: (environment settings in front, options after the command)
+        """
         pre = []
-        post = []
         try:
             kas_ref_dir = self.bh.kas_ref_dir
             pre.append(linux.Raw(f'KAS_REPO_REF_DIR="{kas_ref_dir._local_str()}"'))
         except Exception:
             pass
+
+        if self.netrc_file:
+            pre.append(f"NETRC_FILE={self.netrc_file}")
 
         kasarg = []
         if self.git_credential_store:
@@ -620,6 +641,12 @@ class KAS:
         if self.kas_ssh_dir:
             kasarg.append("--ssh-dir")
             kasarg.append(self.kas_ssh_dir)
+
+        return pre, kasarg
+
+    def kas_call_container(self, t: str) -> None:
+        post = []
+        pre, kasarg = self.kas_container_args()
 
         path = self.kas_get_basepath()
         self.bh.exec0("cd", path)
@@ -644,10 +671,6 @@ class KAS:
                 raise RuntimeError("no task found, please set it with -c option")
         else:
             target = t
-
-        # set NETRC_FILE
-        if self.netrc_file:
-            pre.append(f"NETRC_FILE={self.netrc_file}")
 
         # set KAS_TARGET
         pre.append(linux.Raw(f"KAS_TARGET='{target}'"))

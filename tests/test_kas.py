@@ -440,3 +440,46 @@ class TestSiteConf:
         host = self.Host()
         kas.KAS(base_cfg(buildhost=host, **{"site.conf": self.LINES})).kas_checkout()
         assert self.siteconf_writes(host) == []
+
+
+class TestContainerCheckout:
+    """kas_checkout() with kas-container, as the CI uses it"""
+
+    class Host(TestCheckoutLayerBranch.Host):
+        def __init__(self):
+            super().__init__(clone_exists=True)
+
+    @pytest.fixture(autouse=True)
+    def flags(self, monkeypatch):
+        monkeypatch.setattr(sys.modules["tbot"], "flags", set())
+        return sys.modules["tbot"].flags
+
+    def checkout_cmd(self, host, **cfg):
+        k = kas.KAS(base_cfg(buildhost=host, **cfg))
+        k.container = True
+        k.kascmd = "kas-container"
+        k.kas_checkout()
+        cmds = [c for c in host.cmds if "kas-container" in c]
+        assert len(cmds) == 1
+        return cmds[0]
+
+    def test_container_checks_out(self):
+        cmd = self.checkout_cmd(self.Host())
+        assert cmd[cmd.index("kas-container") + 1:] == [
+            "checkout",
+            "/work/bh/VENDOR/BOARDNAME/kasconfig/BOARDNAME.yml",
+        ]
+
+    def test_container_checkout_with_kasupdate(self, flags):
+        flags.add("kasupdate")
+        cmd = self.checkout_cmd(self.Host())
+        assert cmd[cmd.index("checkout") + 1] == "--update"
+
+    def test_container_checkout_gets_the_credentials_of_the_build(self):
+        cmd = self.checkout_cmd(
+            self.Host(), git_credential_store="/home/u/.git-credentials", netrc_file="/home/u/.netrc"
+        )
+        assert "NETRC_FILE=/home/u/.netrc" in cmd
+        i = cmd.index("--git-credential-store")
+        assert cmd[i + 1] == "/home/u/.git-credentials"
+        assert i < cmd.index("checkout")
