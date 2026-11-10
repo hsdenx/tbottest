@@ -554,10 +554,20 @@ def test_lnx_all_counts(monkeypatch):
     monkeypatch.setattr(gb, "tc_ok", lambda: gtd.TC_OKAY, raising=False)
     monkeypatch.setattr(gb, "tc_skip", lambda: gtd.TC_SKIP, raising=False)
     monkeypatch.setattr(gb, "tc_fail", fail, raising=False)
-    gb.generic_lnx_all()  # does not raise for a failed testcase
+    # does not raise for a failed testcase, but says so
+    assert gb.generic_lnx_all() is False
     assert "tc count 3 success 1 skipped 1 failed 1" in messages
     assert "skipped ['tc_skip']" in messages
     assert "failed ['tc_fail']" in messages
+
+
+def test_lnx_all_true_without_failed_testcase(monkeypatch):
+    monkeypatch.setattr(gb.tbot.log, "c", LogText)
+    monkeypatch.setattr(gb.tbot.log, "message", lambda text: None)
+    monkeypatch.setattr(gb, "lnxtestcases", ["tc_ok", "tc_skip"])
+    monkeypatch.setattr(gb, "tc_ok", lambda: gtd.TC_OKAY, raising=False)
+    monkeypatch.setattr(gb, "tc_skip", lambda: gtd.TC_SKIP, raising=False)
+    assert gb.generic_lnx_all() is True
 
 
 def test_lnx_all_list_names_testcases_of_the_module():

@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 ### Changed
+- `generic_lnx_all` returns False when one of its testcases failed, True
+  otherwise. It still runs all of them and raises no exception, but a
+  caller, e.g. a CI job, can now tell the result. With unit tests.
 - A boot command named in `ub_env_bootcmd` with an empty list selects no
   `ub_env_<name>` group. Before, `[]` meant the same as a boot command not
   named there, all groups, so a boot from the environment of the board

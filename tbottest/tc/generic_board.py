@@ -636,7 +636,7 @@ def generic_config_to_json(outdir: Optional[str] = None) -> None:  # noqa: D107
 @tbot.testcase
 def generic_lnx_all(
     lnx: Optional[linux.LinuxShell] = None,
-) -> None:  # noqa: D107
+) -> bool:  # noqa: D107
     """
     start all configured linux testcases
 
@@ -652,6 +652,8 @@ def generic_lnx_all(
     At the end it logs the counts and the names of the skipped and the
     failed testcases. It does not raise an exception itself when a
     testcase failed.
+
+    :returns: False if a testcase failed, else True
     """
     count = 0
     failed = []
@@ -680,6 +682,8 @@ def generic_lnx_all(
         tbot.log.message(tbot.log.c(f"skipped {skipped}").yellow)
     if len(failed):
         tbot.log.message(tbot.log.c(f"failed {failed}").red)
+
+    return not failed
 
 ##############################################################
 # kas

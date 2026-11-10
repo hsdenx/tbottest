@@ -66,7 +66,8 @@ The generic Linux testcases, all started by
 :py:func:`~tbottest.tc.generic_board.generic_lnx_all` runs them one after
 the other and logs at the end how many succeeded, were skipped or failed,
 with the names of the skipped and the failed ones. It does not fail itself
-when one of them failed, so read the summary.
+when one of them failed, so read the summary; it returns False then, for a
+caller like a CI job that has to tell the result.
 
 .. code-block:: bash
 
