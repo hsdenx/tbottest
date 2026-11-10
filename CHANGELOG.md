@@ -1,6 +1,12 @@
 # Changelog
 
 ## [Unreleased]
+### Changed
+- A boot command named in `ub_env_bootcmd` with an empty list selects no
+  `ub_env_<name>` group. Before, `[]` meant the same as a boot command not
+  named there, all groups, so a boot from the environment of the board
+  alone could not be told apart. With unit tests.
+
 ### Added
 - tbot flag `kasupdate` passes `--update` to kas checkout, kas shell and
   kas build. Without it kas does not fetch a repo given by a branch once

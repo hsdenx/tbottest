@@ -1163,7 +1163,9 @@ flag ``bootcmd:<cmd>`` selects them by itself:
 without a flag ``ub_env``. With ``ub_env:<group>`` as well, both are set;
 ``ub_env:none`` sets only ``ub_env``, also with ``bootcmd``. A boot
 command that ``ub_env_bootcmd`` does not name leaves the selection as it
-is: the groups of ``ub_env:<group>``, or all of them.
+is: the groups of ``ub_env:<group>``, or all of them. A boot command
+named with an empty list, ``{"bootcmd_mmc": []}``, needs no group, so
+``-f bootcmd:bootcmd_mmc`` sets only ``ub_env``.
 
 .. csv-table:: uboot_autoboot_keys example
         :escape: '

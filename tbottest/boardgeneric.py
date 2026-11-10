@@ -352,8 +352,9 @@ def ub_env_select(groups: dict, depends: dict, flags, bootcmds: dict = None) -> 
 
     The tbot flag ub_env:<name>[,<name>...] selects groups, ub_env:none
     selects none. The flag bootcmd:<cmd> adds the groups bootcmds names
-    for <cmd> (ub_env_bootcmd). Without ub_env and without groups for the
-    boot command all groups are selected. The groups a selected group
+    for <cmd> (ub_env_bootcmd); a boot command named there with [] needs
+    no group. Without ub_env and with a boot command ub_env_bootcmd does
+    not name, or none, all groups are selected. The groups a selected group
     depends on (ub_env_depends) are added, and every group comes after
     the groups it depends on, each group once.
 
@@ -372,7 +373,8 @@ def ub_env_select(groups: dict, depends: dict, flags, bootcmds: dict = None) -> 
     bootcmd = next((f.split(":", 1)[1] for f in flags if f.startswith("bootcmd:")), None)
     bootgroups = list(bootcmds.get(bootcmd, []))
     if flag is None:
-        wanted = bootgroups or list(groups)
+        # a boot command with [] needs no group, one not named all
+        wanted = bootgroups if bootcmd in bootcmds else list(groups)
     else:
         wanted = [n.strip() for n in flag.split(",") if n.strip()]
         if wanted == ["none"]:

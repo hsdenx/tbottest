@@ -319,6 +319,17 @@ class TestUbEnvBootcmd:
         order = ub.ub_env_select(GROUPS, DEPENDS, ["bootcmd:net_initramfs"], BOOTCMDS)
         assert sorted(order) == sorted(GROUPS)
 
+    def test_bootcmd_with_empty_list_selects_none(self):
+        ub = load_ub_env()
+        bootcmds = dict(BOOTCMDS, boardenv=[])
+        assert ub.ub_env_select(GROUPS, DEPENDS, ["bootcmd:boardenv"], bootcmds) == []
+
+    def test_bootcmd_with_empty_list_and_ub_env_flag(self):
+        ub = load_ub_env()
+        bootcmds = dict(BOOTCMDS, boardenv=[])
+        flags = ["ub_env:setip", "bootcmd:boardenv"]
+        assert ub.ub_env_select(GROUPS, DEPENDS, flags, bootcmds) == ["setip"]
+
     def test_union_with_ub_env_flag(self):
         ub = load_ub_env()
         flags = ["ub_env:uimageboot", "bootcmd:net_fit"]
