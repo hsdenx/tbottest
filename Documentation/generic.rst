@@ -1334,6 +1334,12 @@ With tbot flag kasupdate, tbot passes --update to kas checkout, kas shell and
 kas build, so kas pulls the newest commit of repos given by a branch, also
 when the branch is already checked out. It is ignored with kaskeepconfig.
 
+Inside the kas dictionary, "site.conf" is a list of lines tbot writes to
+build/conf/site.conf before every kas checkout and kas build, anew each time,
+unlike "auto.conf", which is written once and then kept. It is the place for
+values that change from build to build, e.g. an ID of the build. Left alone
+with kaskeepconfig.
+
 Build targets without blanks that follow each other in "buildtargets" go to
 one bitbake call. A recipe whose task hash changes from call to call is then
 built once per build, not once per target, so an image or bundle cannot carry

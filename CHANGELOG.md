@@ -27,6 +27,11 @@
   alone could not be told apart. With unit tests.
 
 ### Added
+- KAS takes `site.conf` in the kas dictionary: lines written to
+  `build/conf/site.conf` before every kas checkout and kas build, anew each
+  time, for values that change from build to build such as an ID of the
+  build. `auto.conf` is written once and kept. Left alone with
+  `kaskeepconfig`. With unit tests.
 - A step of the dfu-util loader takes the device with the optional key
   `d`, `<vid>:<pid>` as for `dfu-util -d`, so dfu-util does not try other
   DFU devices of the lab host, e.g. a webcam. With unit tests.

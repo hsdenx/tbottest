@@ -235,6 +235,18 @@ class KAS:
                      'SSTATE_DIR="/worksstate-cache"',
            ],
 
+    site.conf
+
+    Lines for build/conf/site.conf, which bitbake reads like local.conf.
+    Unlike auto.conf it is written anew before every kas checkout and kas
+    build, so it is the place for values that change from build to build,
+    e.g. an ID of the build. With the tbot flag kaskeepconfig it is left
+    alone.
+
+    .. code-block:: python
+
+       "site.conf" : ['MY_BUILD_ID = "1234"'],
+
     bitbakeenvinit
 
     if you are not using a kas container you need to source the oe environment
@@ -397,6 +409,7 @@ class KAS:
 
         self.envinit = self.cfg.get("envinit")
         self.autoconf = self.cfg.get("auto.conf")
+        self.siteconf = self.cfg.get("site.conf")
 
         self.kasconfigpath = self.kas_get_basepath() / "kasconfig"
 
@@ -490,6 +503,21 @@ class KAS:
             return ["--update"]
         return []
 
+    def kas_write_siteconf(self) -> None:
+        """
+        write the lines of site.conf to build/conf/site.conf, anew every
+        time; nothing with the tbot flag kaskeepconfig
+        """
+        if not self.siteconf or self.keep_config:
+            return
+
+        cfgp = self.kas_get_buildpath() / "conf"
+        self.bh.exec0("mkdir", "-p", cfgp)
+        op = linux.Raw(">")
+        for line in self.siteconf:
+            self.bh.exec0("echo", line, op, cfgp / "site.conf")
+            op = linux.Raw(">>")
+
     def kas_create_autoconf(self) -> None:
         if self.autoconf:
             bp = self.kas_get_buildpath()
@@ -566,6 +594,7 @@ class KAS:
             )
 
         self.kas_create_autoconf()
+        self.kas_write_siteconf()
 
     def kas_call_container(self, t: str) -> None:
         pre = []
@@ -675,6 +704,7 @@ class KAS:
                 raise RuntimeError("please specify buildtargets (array of strings)")
 
         self.kas_env_init()
+        self.kas_write_siteconf()
         for t in kas_group_targets(buildtargets):
             if self.container:
                 self.kas_call_container(t)

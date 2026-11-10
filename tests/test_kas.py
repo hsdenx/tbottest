@@ -398,3 +398,45 @@ class TestBuildCalls:
         assert "KAS_TARGET='linux-cxx image'" in build
         assert "KAS_TASK=build" in build
 
+
+class TestSiteConf:
+    class Host(TestCheckoutLayerBranch.Host):
+        def __init__(self):
+            super().__init__(clone_exists=True)
+
+    @pytest.fixture(autouse=True)
+    def flags(self, monkeypatch):
+        monkeypatch.setattr(sys.modules["tbot"], "flags", set())
+        return sys.modules["tbot"].flags
+
+    LINES = ['MY_BUILD_ID = "1234"', 'OTHER = "x"']
+
+    def siteconf_writes(self, host):
+        return [c for c in host.cmds if c and c[-1].endswith("conf/site.conf")]
+
+    def test_written_anew_on_checkout(self):
+        host = self.Host()
+        kas.KAS(base_cfg(buildhost=host, **{"site.conf": self.LINES})).kas_checkout()
+        writes = self.siteconf_writes(host)
+        assert [w[:3] for w in writes] == [
+            ["echo", self.LINES[0], ">"],
+            ["echo", self.LINES[1], ">>"],
+        ]
+
+    def test_written_anew_on_build(self):
+        host = self.Host()
+        k = kas.KAS(base_cfg(buildhost=host, buildtargets=["image"], **{"site.conf": self.LINES}))
+        k.container = True
+        k.kas_build()
+        assert [w[2] for w in self.siteconf_writes(host)] == [">", ">>"]
+
+    def test_nothing_without_key(self):
+        host = self.Host()
+        kas.KAS(base_cfg(buildhost=host)).kas_checkout()
+        assert self.siteconf_writes(host) == []
+
+    def test_kaskeepconfig_leaves_it(self, flags):
+        flags.add("kaskeepconfig")
+        host = self.Host()
+        kas.KAS(base_cfg(buildhost=host, **{"site.conf": self.LINES})).kas_checkout()
+        assert self.siteconf_writes(host) == []
