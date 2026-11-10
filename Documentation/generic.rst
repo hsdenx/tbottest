@@ -1334,6 +1334,11 @@ With tbot flag kasupdate, tbot passes --update to kas checkout, kas shell and
 kas build, so kas pulls the newest commit of repos given by a branch, also
 when the branch is already checked out. It is ignored with kaskeepconfig.
 
+Build targets without blanks that follow each other in "buildtargets" go to
+one bitbake call. A recipe whose task hash changes from call to call is then
+built once per build, not once per target, so an image or bundle cannot carry
+an older copy of it than the one deployed last.
+
 argumentfiles
 .............
 

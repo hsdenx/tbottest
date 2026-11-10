@@ -5,6 +5,33 @@ from tbot.machine import linux
 from tbot.tc.shell import copy as shell_copy
 
 
+def kas_group_targets(buildtargets) -> list:
+    """
+    the buildtargets, plain target names that follow each other joined
+    with a blank, so that they go to one bitbake call
+
+    An entry with a blank (a bitbake command line, an environment
+    setting in front) or starting with "-" stays a call of its own, in
+    its place.
+
+    :param buildtargets: list of strings, see buildtargets of KAS
+    :returns: list of strings, one per bitbake call
+    """
+    calls = []
+    plain = []
+    for t in buildtargets:
+        if " " in t.strip() or t.startswith("-"):
+            if plain:
+                calls.append(" ".join(plain))
+                plain = []
+            calls.append(t)
+        else:
+            plain.append(t.strip())
+    if plain:
+        calls.append(" ".join(plain))
+    return calls
+
+
 def kas_check_mounts(mounts) -> list:
     """
     returns mounts as a list, after checking that every entry has the
@@ -226,6 +253,12 @@ class KAS:
 
     If string "bitbake" is in buildtargets, bitbake command is not added
     to command.
+
+    Plain target names that follow each other are built in one bitbake
+    call, see kas_group_targets(): a recipe whose task hash changes from
+    call to call would otherwise be built again in every call, and an
+    image or bundle built in an earlier call would carry an older copy of
+    it than the one deployed last.
 
     For example you can write
 
@@ -564,10 +597,11 @@ class KAS:
         self.bh.exec0("pwd")
         # setup task and target
         task = "build"
-        if "bitbake" in t and "-c" not in t:
+        # "-c" as a word, a target name like linux-cxx is no task option
+        if "bitbake" in t and "-c" not in t.split():
             cmds = t.split(" ")
             target = cmds[-1]
-        elif "-c" in t:
+        elif "-c" in t.split():
             cmds = t.split(" ")
             target = cmds[-1]
             foundtask = False
@@ -641,7 +675,7 @@ class KAS:
                 raise RuntimeError("please specify buildtargets (array of strings)")
 
         self.kas_env_init()
-        for t in buildtargets:
+        for t in kas_group_targets(buildtargets):
             if self.container:
                 self.kas_call_container(t)
             else:

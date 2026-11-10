@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 ### Changed
+- KAS builds plain build targets that follow each other in `buildtargets`
+  in one bitbake call instead of one call per target. A recipe whose task
+  hash changes from call to call was built again in every call, so a
+  bundle built in an earlier call carried an older copy of an image than
+  the one deployed last. `-c` in a build target counts only as a word of
+  its own, a target name like `linux-cxx` is no task option. With unit
+  tests.
 - The dfu-util loader (tbot flag `dfuutilloader`) stops when a file of
   `dfuutil_loader_steps` does not exist on the lab host or dfu-util could
   not download it. Before, its return code was not looked at, so tbot went

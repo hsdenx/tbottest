@@ -344,3 +344,57 @@ class TestKasBuildDir:
         assert obj.kas_get_deploypath()._local_str() == (
             "/work/bh/VENDOR/BOARDNAME/build-glibc/deploy-glibc/images/MACHINE"
         )
+
+
+class TestGroupTargets:
+    def test_plain_targets_in_one_call(self):
+        assert kas.kas_group_targets(["image", "firmware-swu", "rescue-swu"]) == [
+            "image firmware-swu rescue-swu"
+        ]
+
+    def test_command_lines_stay_calls_of_their_own_in_place(self):
+        targets = ["core-image", "DISTRO=poky-rescue bitbake rescueimage-fit", "swu-image", "swu2"]
+        assert kas.kas_group_targets(targets) == [
+            "core-image",
+            "DISTRO=poky-rescue bitbake rescueimage-fit",
+            "swu-image swu2",
+        ]
+
+    def test_empty(self):
+        assert kas.kas_group_targets([]) == []
+
+
+class TestBuildCalls:
+    """kas_build() with the container, as the CI uses it"""
+
+    class Host(TestCheckoutLayerBranch.Host):
+        def __init__(self):
+            super().__init__(clone_exists=True)
+
+    @pytest.fixture(autouse=True)
+    def flags(self, monkeypatch):
+        monkeypatch.setattr(sys.modules["tbot"], "flags", set())
+        return sys.modules["tbot"].flags
+
+    def kas_obj(self, host, **cfg):
+        k = kas.KAS(base_cfg(buildhost=host, **cfg))
+        k.container = True
+        k.kascmd = "kas-container"
+        return k
+
+    def test_targets_in_one_kas_build(self):
+        host = self.Host()
+        self.kas_obj(host, buildtargets=["image", "rescue-fit", "full-swu"]).kas_build()
+        builds = [c for c in host.cmds if "kas-container" in c]
+        assert len(builds) == 1
+        assert "KAS_TARGET='image rescue-fit full-swu'" in builds[0]
+        assert "KAS_TASK=build" in builds[0]
+
+    def test_target_with_c_in_its_name_is_no_task(self):
+        # "-c" inside a name, followed by a second target in the same call
+        host = self.Host()
+        self.kas_obj(host, buildtargets=["linux-cxx", "image"]).kas_build()
+        build = [c for c in host.cmds if "kas-container" in c][0]
+        assert "KAS_TARGET='linux-cxx image'" in build
+        assert "KAS_TASK=build" in build
+
